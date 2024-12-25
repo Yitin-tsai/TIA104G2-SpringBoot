@@ -2,7 +2,7 @@ package chilltrip.admin.model;
 
 import java.util.List;
 
-import chilltrip.announce.model.AnnounceVO;
+
 
 public interface AdminDAO {
 

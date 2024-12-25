@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chill Trip</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/yuki_style.css" rel="stylesheet" >
+    <style>
+     .breadcrumb-item+.breadcrumb-item::before {
+        content: ">";
+        padding: 0 0.5rem;
+        color: #6c757d;
+      }
+
+      .breadcrumb-item a {
+        color: #6c757d !important;
+        /* 更改 a 標籤的預設顏色為灰色 */
+        text-decoration: none;
+        /* 移除下劃線 */
+      }
+
+      .breadcrumb-item a:hover {
+        color: #FF6600 !important;
+        /* 滑鼠移動到 a 標籤上時顯示為橘色 */
+      }
+
+      .breadcrumb-item.active {
+        color: #FF6600 !important;
+        /* 最後一個元素顯示為橘色，並覆蓋 Bootstrap 預設樣式 */
+      }
+
+              /* 父容器，使用 flexbox 使搜尋框和地圖並排 */
+        .map-container {
+            display: flex; /* 使用 flexbox 排列子元素 */
+            justify-content: space-between; /* 分佈空間 */
+            align-items: flex-start; /* 垂直對齊到上方 */
+           
+        }
+
+        /* 搜尋框樣式 */
+        .mapSearch-container {
+            width: 35%; /* 控制搜尋框的寬度 */
+            padding: 20px;
+        }
+
+        #mapBtn{
+          right: 0;
+         
+          width: 100%;
+        }
+        #mapInput{
+          width: 100%;
+        }
+        /* Google 地圖樣式 */
+        .map {
+            width: 65%; /* 控制地圖的寬度 */
+            height: 600px; /* 設置地圖的高度 */
+            background-color: #f1f1f1; /* 背景顏色可以根據需要調整 */
+        }
+
+  
+        /* 搜尋結果的樣式 */
+        #searchResults {
+            max-height: 300px;
+            overflow-y: auto;
+            width: 60%;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        .search-bar {
+            margin: 0; /* 去除外邊距 */
+            padding: 0; /* 去除內邊距 */
+            width: 100%; /* 設置為 100% 寬度，佔滿頁面 */
+            display: flex; /* 使用 flex 排列內部元素 */
+            align-items: center; /* 垂直對齊 */
+            vertical-align: top;
+        }
+
+        /* 搜尋輸入框組 */
+        .search-input-group {
+            position: relative;
+            vertical-align: top;
+            margin: 0; /* 去除外邊距 */
+            padding: 0; /* 去除內邊距 */
+            display: flex; /* 設置為 flex 排列 */
+            width: 350px; /* 設置為滿頁寬度 */
+        }
+
+        /* 搜尋框中的輸入欄位 */
+        .search-input-group input {
+            margin: 0; /* 去除外邊距 */
+            padding: 8px; /* 設置內邊距 */
+            border: 1px solid #ddd; /* 給輸入框加邊框 */
+            border-radius: 4px 0 0 4px; /* 邊框圓角 */
+            width: 60%; /* 設置輸入框寬度為 100% */
+        }
+
+        /* 搜尋按鈕 */
+        .search-input-group button {
+            margin: 0; /* 去除外邊距 */
+            padding: 8px 15px; /* 給按鈕內邊距 */
+            background-color: #FF6600; /* 按鈕背景顏色 */
+            color: white; /* 按鈕文字顏色 */
+            border: none; /* 移除邊框 */
+            border-radius: 0 4px 4px 0; /* 按鈕圓角 */
+            cursor: pointer; /* 游標為手形 */
+}
+        
+        .search-result {
+          
+          width: 60%; /* 設定寬度為頁面除地圖外的 60% */
+          max-height: 300px;
+          overflow-y: auto;
+          background-color: #f9f9f9;
+        }
+       
+       
+
+        .search-result strong {
+            font-size: 16px;
+        }
+
+        .btn-group button {
+        padding: 0.5rem 1rem;
+        background-color: #FF6600;
+        color: white;
+        border: none;
+        border-radius: 0 4px 4px 0;
+        cursor: pointer;
+        margin:0 10px 0 0 ;
+      }
+   
+        .place-item a {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+
+      .place-item a:hover {
+        background-color: #0056b3;
+      }
+      .nearRestBtn{
+          padding: 0.5rem 1rem;
+          background-color: #FF6600;
+          color: white;
+          border: none;
+          border-radius: 0 4px 4px 0;
+          cursor: pointer;
+          margin:0 10px 0 0 ;
+          display: flex;
+          position: relative;
+          left: 10%;
+        }
+    </style>
+</head>
+<body>
+     <!------網站header------>
+     <div id="app">
+        <header>
+          <nav class="top-nav">
+            <div class="nav-left">
+              <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+              <a href="./product.html" class="nav-item nav-link" id="nav-product">購！票券</a>
+              <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
+              <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+            </div>
+            <div class="nav-center">
+              <a href="#"class= "nav-index">
+                <img
+                  src="./img/logo_black.png"
+                  alt="Chill Trip"
+                  style="width: 150px; height: auto"
+                
+                />
+              </a>
+            </div>
+            <div class="nav-right">
+              <div class="nav-item dropdown">
+                <a
+                  href="#"
+                  class="nav-link dropdown-toggle"
+                  data-toggle="dropdown"
+                  style="color: #212529"
+                  >會員中心</a
+                >
+                <div class="dropdown-menu rounded-0 m-0">
+                  <a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a>
+                  <a href="#" class="dropdown-item" id="nav-coupons">我的折價券</a>
+                  <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
+                </div>
+              </div>
+              <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+              <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+            </div>
+          </nav>
+        </header>
+      </div>  
+            <div class="sub-header">
+                <div class="search-container">
+                    <div class="search-bar">
+                        <select id="region" class="search-select">
+                            <option value="">活動類型</option>
+                            <option value="kanto">關東</option>
+                            <option value="kansai">關西</option>
+                            <option value="kyushu">九州</option>
+                        </select>
+                        <select id="city" class="search-select">
+                            <option value="">地區</option>
+                            <option value="tokyo">東京</option>
+                            <option value="kyoto">京都</option>
+                            <option value="osaka">大阪</option>
+                        </select>
+                        
+                        <div class="search-input-group">
+                            <input type="text" placeholder="關鍵字" id="dateInput">
+                            <button type="button" id="dateButton">搜尋</button>
+                        </div>
+                    </div>
+                </div>
+        </header>
+    </div>
+
+    <div aria-label="breadcrumb">
+      <ul class="breadcrumb" id="breadcrumb-nav">
+        <!-- 麵包屑導航項目將由 JavaScript 動態生成 -->
+      </ul>
+    </div>
+      <main class="ticket-grid">
+          <!-- Ticket cards remain unchanged -->
+          <a href="#" class="no-action" style="text-decoration: none;">
+            <div class="ticket-card">
+              <img src="https://okamoto-kimono.tw/common_renewal/img/home/kv_04.jpg" alt="京都和服體驗">
+              <div class="ticket-info">
+                <h3 class="title">京都深度文化五日遊</h3>
+                <p class="author">Yuki</p>
+                <div class="tag-group">
+                  <span class="tag">和服</span>
+                  <span class="tag">體驗</span>
+                </div>
+              </div>
+            </div>
+          </a>
+  
+          <a href="#" class="no-action" style="text-decoration: none;">
+            <div class="ticket-card">
+              <img src="https://today-obs.line-scdn.net/0hthxKI1x2K0dFMjlqFXVUEH1kJzZ2VDFOZwEwImM7JXdvHjwScVN4JGlhJ2s7BThBZQM3KDJhcXFuUWoYeg/w1200" alt="東京迪士尼門票">
+              <div class="ticket-info">
+                <h3 class="title">東京迪士尼全攻略</h3>
+                <p class="author">Yuki</p>
+                <div class="tag-group">
+                  <span class="tag">親子</span>
+                  <span class="tag">熱門</span>
+                </div>
+              </div>
+            </div>
+          </a>
+  
+          <a href="#" class="no-action" style="text-decoration: none;">
+            <div class="ticket-card">
+              <img src="https://media.nownews.com/nn_media/thumbnail/2023/08/1693378260517-fdd388634ad5460589c853eca1c4774e-800x565.webp?unShow=false" alt="大阪環球影城門票">
+              <div class="ticket-info">
+                <h3 class="title">大阪環球影城全攻略</h3>
+                <p class="author">Yuki</p>
+                <div class="tag-group">
+                  <span class="tag">親子</span>
+                  <span class="tag">熱門</span>
+                </div>
+              </div>
+            </div>
+          </a>
+  
+          <a href="#" class="no-action" style="text-decoration: none;">
+            <div class="ticket-card">
+              <img src="https://rimage.gnst.jp/livejapan.com/public/article/detail/a/00/02/a0002944/img/basic/a0002944_main.jpg" alt="富士山巴士一日券">
+              <div class="ticket-info">
+                <h3 class="title">富士山露營體驗</h3>
+                <p class="author">Yuki</p>
+                <div class="tag-group">
+                  <span class="tag">景點</span>
+                  <span class="tag">交通</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </main>
+        <!--頁碼-->
+        <div class="pagination">
+            <a href="#" class="page-number active">1</a>
+            <a href="#" class="page-number">2</a>
+            <a href="#" class="page-number">3</a>
+            <span class="ellipsis">...</span>
+            <a href="#" class="page-number">8</a>
+            <a href="#" class="page-number">9</a>
+            <a href="#" class="page-number">10</a>
+            <span class="label">頁</span>
+          </div>
+          <div class="map-container">
+            <!-- 搜尋框部分 -->
+            <div class="mapSearch-container " style= "padding: 0px; ">
+                <div class="search-bar">
+                    <div class="search-input-group">
+                        <input type="text" placeholder="關鍵字" id="mapInput">
+                        <button type="button" id="mapBtn">搜尋</button>
+                    </div>
+                    <!-- 搜尋結果顯示區域 -->
+                    <div id="searchResults" style="margin-top: 20px; max-height: 300px; overflow-y: auto;"></div>
+                </div>
+                <div class="search-input-group">
+      
+                  <button type="button" class="nearBtn" id = "nearRest">附近餐廳搜尋</button>
+              </div>
+            </div>
+          
+            <!-- Google 地圖部分 -->
+            <div class="map" id="map"></div>
+        </div>
+        
+          
+        <!--我的行程-->
+        <div>
+          <h6 style="text-align: center; font-size: 24px; margin-top: 47px;"  >
+            我的行程
+          </h6>
+        </div>
+        <main class="ticket-grid">
+          
+          <!-- Ticket cards remain unchanged -->
+          <a href="#" class="no-action" style="text-decoration: none;">
+            <div class="ticket-card">
+              <img src="https://okamoto-kimono.tw/common_renewal/img/home/kv_04.jpg" alt="京都和服體驗">
+              <div class="ticket-info">
+                <h3 class="title">我的行程1</h3>
+                <p class="author">用戶名稱</p>
+                <div class="btn-group">
+                  <button type="button" class="editBtn">編輯</button>
+                  <button type="button" class="deleBtn">刪除</button>
+                </div>
+              </div>
+            </div>
+          </a>
+  
+          <a href="#" class="no-action" style="text-decoration: none;">
+            <div class="ticket-card">
+              <img src="https://today-obs.line-scdn.net/0hthxKI1x2K0dFMjlqFXVUEH1kJzZ2VDFOZwEwImM7JXdvHjwScVN4JGlhJ2s7BThBZQM3KDJhcXFuUWoYeg/w1200" alt="東京迪士尼門票">
+              <div class="ticket-info">
+                <h3 class="title">我的行程2</h3>
+                <p class="author">用戶名稱</p>
+                <div class="btn-group">
+                  <button type="button" class="editBtn">編輯</button>
+                  <button type="button" class="deleBtn">刪除</button>
+                </div>
+              </div>
+            </div>
+          </a>
+  
+          <a href="#" class="no-action" style="text-decoration: none;">
+            <div class="ticket-card">
+              <img src="https://media.nownews.com/nn_media/thumbnail/2023/08/1693378260517-fdd388634ad5460589c853eca1c4774e-800x565.webp?unShow=false" alt="大阪環球影城門票">
+              <div class="ticket-info">
+                <h3 class="title">我的行程3</h3>
+                <p class="author">用戶名稱</p>
+                <div class="btn-group">
+                  <button type="button" class="editBtn">編輯</button>
+                  <button type="button" class="deleBtn">刪除</button>
+                </div>
+              </div>
+            </div>
+          </a>
+  
+          <a href="#" class="no-action" style="text-decoration: none;">
+            <div class="ticket-card">
+              <img src="https://rimage.gnst.jp/livejapan.com/public/article/detail/a/00/02/a0002944/img/basic/a0002944_main.jpg" alt="富士山巴士一日券">
+              <div class="ticket-info">
+                <h3 class="title">我的行程4</h3>
+                <p class="author">用戶名稱</p>
+                <div class="btn-group">
+                  <button type="button" class="editBtn">編輯</button>
+                  <button type="button" class="deleBtn">刪除</button>
+                </div>
+              </div>
+            </div>
+          </a>
+        </main>
+        <!--頁碼-->
+        <div class="pagination">
+            <a href="#" class="page-number active">1</a>
+            <a href="#" class="page-number">2</a>
+            <a href="#" class="page-number">3</a>
+            <span class="ellipsis">...</span>
+            <a href="#" class="page-number">8</a>
+            <a href="#" class="page-number">9</a>
+            <a href="#" class="page-number">10</a>
+            <span class="label">頁</span>
+          </div>
+
+
+
+        <footer>
+        
+          <div class="social-links">
+              <div style="display: flex; gap: 10px;">
+                  <a href="https://facebook.com" target="_blank" style="text-decoration: none;">
+                      <div style="width: 50px; height: 50px; background-color: #3b5998; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                          <i class="fab fa-facebook-f" style="color: white; font-size: 24px;"></i>
+                      </div>
+                  </a>
+                  <a href="https://instagram.com" target="_blank" style="text-decoration: none;">
+                      <div style="width: 50px; height: 50px; background-color: #E1306C; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                          <i class="fab fa-instagram" style="color: white; font-size: 24px;"></i>
+                      </div>
+                  </a>
+                  <a href="https://youtube.com" target="_blank" style="text-decoration: none;">
+                      <div style="width: 50px; height: 50px; background-color: #FF0000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                          <i class="fab fa-youtube" style="color: white; font-size: 24px;"></i>
+                      </div>
+                  </a>
+              </div>
+              
+              <!-- 加載 Font Awesome 圖標庫 -->
+              <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+              
+          </div>
+          <div class="copyright">
+            Copyright © 2024 良心鮪魚股份有限公司
+          </div>
+        </footer>
+      </div>
+  
+    <script type="module" src="https://unpkg.com/@googlemaps/extended-component-library@0.6"></script>   
+    <script src ="./js/map.js"></script>
+    
+          <!-- 導航欄nav的href載入器 -->
+     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("nav-go").href = "./go.html";
+            document.getElementById("nav-product").href = "./product.html";
+            document.getElementById("nav-profile").href = "./profile.html";
+            document.getElementById("nav-guide").href = "./guide.html";
+            document.getElementById("nav-basic-info").href = "./basic_info.html";
+            document.getElementById("nav-coupons").href = "./coupons.html";
+            document.getElementById("nav-orders").href = "./orders.html";
+            document.getElementById("nav-support").href = "./support.html";
+            document.getElementById("nav-cart").href = "./cart.html";
+            // document.getElementById("nav-index").href = "./index.html";
+
+
+            const breadcrumbNav = document.getElementById("breadcrumb-nav");
+
+            // 定義麵包屑導航的項目
+            const breadcrumbItems = [
+              { name: "首頁", link: "index.html" },
+              { name: "Go! 行程", link: "go.html" }
+            ];
+
+            // 動態生成麵包屑導航的 HTML 結構
+            breadcrumbItems.forEach((item, index) => {
+              const li = document.createElement("li");
+              li.className = "breadcrumb-item";
+              if (index === breadcrumbItems.length - 1) {
+                li.classList.add("active");
+                li.setAttribute("aria-current", "page");
+                li.textContent = item.name;
+              } else {
+                const a = document.createElement("a");
+                a.href = item.link;
+                a.textContent = item.name;
+                li.appendChild(a);
+              }
+              breadcrumbNav.appendChild(li);
+            });
+      
+        });
+          //綁定編輯及刪除按鈕
+            const editBtns = document.querySelectorAll(".editBtn");
+            editBtns.forEach(button =>{
+              button.addEventListener("click",function(){
+                console.log("編輯");
+              })
+            })
+            const deleBtns = document.querySelectorAll(".deleBtn");
+            deleBtns.forEach(button =>{
+              button.addEventListener("click",function(){
+                console.log("刪除");
+              })
+            })
+     
+            
+           
+          
+    </script>
+
+  
+</body>
+</html>

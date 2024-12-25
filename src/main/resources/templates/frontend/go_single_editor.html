@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Go Single Editor</title>
+
+    <!-- 上稿器api嵌入 -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.js"></script>
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/yuki_style.css" rel="stylesheet" />
+
+    <style>
+      .breadcrumb {
+        background-color: transparent; /* 移除背景色 */
+        list-style: none; /* 移除列表樣式 */
+        display: flex;
+        padding: 0;
+        margin: 1rem 0;
+      }
+
+      .breadcrumb-item {
+        font-size: calc(1rem - 4px); /* 比 dropdown-item 小 4px */
+        color: #6c757d !important; /* 預設顯示為灰色，並覆蓋 Bootstrap 預設樣式 */
+        text-decoration: none;
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+      }
+
+      .breadcrumb-item + .breadcrumb-item::before {
+        content: ">";
+        padding: 0 0.5rem;
+        color: #6c757d;
+      }
+
+      .breadcrumb-item a {
+        color: #6c757d !important; /* 更改 a 標籤的預設顏色為灰色 */
+        text-decoration: none; /* 移除下劃線 */
+      }
+
+      .breadcrumb-item a:hover {
+        color: #ff6600 !important; /* 滑鼠移動到 a 標籤上時顯示為橘色 */
+      }
+
+      .breadcrumb-item.active {
+        color: #ff6600 !important; /* 最後一個元素顯示為橘色，並覆蓋 Bootstrap 預設樣式 */
+      }
+
+      /* FullCalendar 樣式 */
+      #calendar {
+        max-width: 1100px;
+        margin: 40px auto;
+      }
+
+      .fc-today {
+        background: transparent !important; /* hack. because demo will always start out on current day */
+      }
+
+      /* 自定義 Summernote 容器的寬度 */
+      .summernote-container {
+        width: 80%;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+
+      #summernote {
+        width: 80%; /* 設置寬度為 80% */
+        margin: 0 auto; /* 置中 */
+      }
+
+      /* 行程編輯器樣式 */
+      .itinerary-editor {
+        width: 80%;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+
+      .place-item {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .place-item:last-child {
+        border-bottom: none;
+      }
+
+      .avatar-frame {
+        width: 300px;
+        height: 300px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border-radius: 50%;
+        aspect-ratio: 1 / 1;
+        background-color: #eee; /* 可以做為預設的顏色 */
+        background-image: url("https://via.placeholder.com/300");
+        background-size: cover;
+        background-position: center;
+
+        /* 需要列印必須要加上 */
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact; /* for Chrome, Edge, Opera */
+      }
+
+      .place-item img {
+        width: 300px;
+        height: 300px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+      }
+
+      .place-item .place-info {
+        text-align: center;
+      }
+
+      .place-item .place-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .place-item .place-actions button {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .place-item .place-actions button:hover {
+        background-color: #5a6268;
+      }
+
+      .itinerary-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .itinerary-header h2 {
+        margin: 0;
+      }
+
+      .import-button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .import-button:hover {
+        background-color: #0056b3;
+      }
+
+      .place-item input {
+        margin-top: 10px;
+        padding: 5px;
+        width: calc(50% - 10px);
+      }
+
+      /* Google 地圖和收藏夾樣式 */
+      .map-container {
+        display: none; /* 初始隱藏 */
+        width: 80%;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+
+      .map {
+        width: 100%;
+        height: 400px;
+      }
+
+      .tabs {
+        display: flex;
+        margin-top: 20px;
+      }
+
+      .tab {
+        flex: 1;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+        border: 1px solid #ddd;
+        border-radius: 5px 5px 0 0;
+      }
+
+      .tab-content {
+        display: none;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 0 5px 5px 5px;
+        background-color: #f9f9f9;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      /* 彈窗樣式 */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 600px;
+        border-radius: 10px;
+      }
+
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      /* 圖片預覽樣式 */
+      .image-preview {
+        width: 100%;
+        height: 300px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-top: 10px;
+        background-size: cover;
+        background-position: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!------網站header------>
+    <div id="app">
+      <header>
+        <nav class="top-nav">
+          <div class="nav-left">
+            <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+            <a href="./product.html" class="nav-item nav-link" id="nav-product"
+              >購！票券</a
+            >
+            <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
+            <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+          </div>
+          <div class="nav-center">
+            <a href="#">
+              <img
+                src="./img/logo_black.png"
+                alt="Chill Trip"
+                style="width: 150px; height: auto"
+              />
+            </a>
+          </div>
+          <div class="nav-right">
+            <div class="nav-item dropdown">
+              <a
+                href="#"
+                class="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+                style="color: #212529"
+                >會員中心</a
+              >
+              <div class="dropdown-menu rounded-0 m-0">
+                <a href="#" class="dropdown-item" id="nav-basic-info"
+                  >基本資料</a
+                >
+                <a href="#" class="dropdown-item" id="nav-coupons"
+                  >我的折價券</a
+                >
+                <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
+              </div>
+            </div>
+            <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+            <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+          </div>
+        </nav>
+      </header>
+    </div>
+
+    <!------網站Breadcrumb Navigation（麵包屑導航）------>
+    <div aria-label="breadcrumb">
+      <ul class="breadcrumb" id="breadcrumb-nav">
+        <!-- 麵包屑導航項目將由 JavaScript 動態生成 -->
+      </ul>
+    </div>
+
+    <!------FullCalendar行事曆------>
+    <div id="calendar"></div>
+
+    <!------行程編輯器------>
+    <div class="itinerary-editor" id="itinerary-editor">
+      <div class="itinerary-header">
+        <h2>當前行程</h2>
+        <button
+          class="import-button"
+          style="background-color: #001f3f"
+          onclick="showModal()"
+        >
+          添加景點
+        </button>
+      </div>
+      <div class="calendar-container">
+        <button class="btn btn-primary" onclick="addNewDate()">新增日期</button>
+        <div id="calendar"></div>
+
+        <div id="itinerary-list" class="row"></div>
+        <!-- Google Place 物件將由 JavaScript 動態生成 -->
+      </div>
+    </div>
+
+    <!------彈窗------>
+    <div id="importModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>選擇景點並設置時間</h2>
+        <div id="map" class="map"></div>
+        <div>
+          <label for="place-name">景點名稱：</label>
+          <input type="text" id="place-name" />
+        </div>
+        <div>
+          <label for="place-start-date">開始時間：</label>
+          <input type="datetime-local" id="place-start-date" />
+        </div>
+        <div>
+          <label for="place-end-date">結束時間：</label>
+          <input type="datetime-local" id="place-end-date" />
+        </div>
+        <div>
+          <label for="place-photo">上傳照片：</label>
+          <input
+            type="file"
+            id="place-photo"
+            accept="image/*"
+            onchange="previewImage(event)"
+          />
+          <button id="imgCropButton">確定裁切</button>
+          <div id="image-preview" class="image-preview"></div>
+        </div>
+        <button class="import-button" onclick="addPlace()">添加到行程</button>
+      </div>
+    </div>
+
+    <!------文章編輯器------>
+    <div class="summernote-container">
+      <div id="summernote"></div>
+      <button class="summernote-preview">預覽文章</button>
+      <button class="summernote-finish">發布文章</button>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        $("#summernote").summernote({
+          placeholder: "Hello Bootstrap 4",
+          tabsize: 2,
+          height: 500,
+          toolbar: [
+            ["style", ["style"]],
+            ["font", ["bold", "italic", "underline", "clear"]],
+            ["fontname", ["fontname"]],
+            ["color", ["color"]],
+            ["para", ["ul", "ol", "paragraph"]],
+            ["table", ["table"]],
+            ["insert", ["link", "picture"]], // 移除 'video' 按鈕
+            ["view", ["fullscreen", "codeview", "help"]],
+          ],
+        });
+      });
+
+      let selectedPlace = null; // 用於存儲從地圖中選擇的 Place
+
+      function showModal() {
+        document.getElementById("importModal").style.display = "block";
+        initMap();
+      }
+
+      function closeModal() {
+        document.getElementById("importModal").style.display = "none";
+      }
+
+      function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function () {
+          const preview = document.getElementById("image-preview");
+          preview.style.backgroundImage = `url(${reader.result})`;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      }
+
+      function formatDateTime(dateTime) {
+        const date = new Date(dateTime);
+        const formattedDate = date.toLocaleDateString();
+        const formattedTime = date.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        return { formattedDate, formattedTime };
+      }
+
+      function addPlace() {
+        const placeName = document.getElementById("place-name").value;
+        const placeStartDate =
+          document.getElementById("place-start-date").value;
+        const placeEndDate = document.getElementById("place-end-date").value;
+        const placePhotoInput = document.getElementById("place-photo");
+        const itineraryList = document.getElementById("itinerary-list");
+
+        if (placePhotoInput.files && placePhotoInput.files[0]) {
+          const reader = new FileReader();
+          placePhotoInput.addEventListener("change", function () {
+            reader.readAsDataURL(placePhotoInput.files[0]);
+          });
+          reader.onload = function (e) {
+            const placePhoto = e.target.result;
+            const { formattedDate: startDate, formattedTime: startTime } =
+              formatDateTime(placeStartDate);
+            const { formattedDate: endDate, formattedTime: endTime } =
+              formatDateTime(placeEndDate);
+
+            const placeItem = document.createElement("div");
+            placeItem.className = "place-item";
+            placeItem.innerHTML = `
+                  <div class="placephoto-cantainer">
+                    <img src="${placePhoto}" alt="${placeName}">
+                  </div>
+                  <div class="place-info">
+                    <h5>${placeName}</h5>
+                    <p>日期：${startDate}</p>
+                    <p>開始時間：${startTime}</p>
+                    <p>日期：${endDate}</p>
+                    <p>結束時間：${endTime}</p>
+                  </div>
+                  <div class="place-actions">
+                      <button class="btn btn-secondary" onclick="removePlace(this)">刪除</button>
+                      <button class="btn btn-secondary" onclick="editPlace(this)">編輯</button>
+                  </div>
+                  `;
+            itineraryList.appendChild(placeItem);
+
+            closeModal();
+          };
+          reader.readAsDataURL(placePhotoInput.files[0]);
+        } else {
+          alert("請上傳照片");
+        }
+      }
+
+      function removePlace(button) {
+        const placeItem = button.closest(".place-item");
+        placeItem.remove();
+      }
+
+      function editPlace(button) {
+        const placeItem = button.closest(".place-item");
+        const placeName = placeItem.querySelector("h5").textContent;
+        const placeStartDate = placeItem
+          .querySelector("p:nth-child(2)")
+          .textContent.replace("開始時間：", "");
+        const placeEndDate = placeItem
+          .querySelector("p:nth-child(3)")
+          .textContent.replace("結束時間：", "");
+
+        document.getElementById("place-name").value = placeName;
+        document.getElementById("place-start-date").value = placeStartDate;
+        document.getElementById("place-end-date").value = placeEndDate;
+        selectedPlace = { name: placeName }; // 這裡應該是從地圖中選擇的 Place 名稱
+
+        showModal();
+      }
+
+      function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 25.033, lng: 121.5654 },
+          zoom: 8,
+        });
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = "place-search";
+        input.className = "form-control";
+        input.placeholder = "搜尋景點";
+        document
+          .querySelector(".modal-content")
+          .insertBefore(input, document.getElementById("map"));
+
+        const searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        map.addListener("bounds_changed", () => {
+          searchBox.setBounds(map.getBounds());
+        });
+
+        searchBox.addListener("places_changed", () => {
+          const places = searchBox.getPlaces();
+
+          if (places.length == 0) {
+            return;
+          }
+
+          const bounds = new google.maps.LatLngBounds();
+          places.forEach((place) => {
+            if (!place.geometry || !place.geometry.location) {
+              console.log("Returned place contains no geometry");
+              return;
+            }
+
+            const marker = new google.maps.Marker({
+              map,
+              title: place.name,
+              position: place.geometry.location,
+            });
+
+            if (place.geometry.viewport) {
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+
+            selectedPlace = place;
+            document.getElementById("place-name").value = place.name;
+          });
+          map.fitBounds(bounds);
+        });
+        // 在這裡可以添加更多的地圖初始化邏輯，例如添加標記
+        map.addListener("click", function (event) {
+          // 模擬選擇一個 Place
+          selectedPlace = {
+            name: "Selected Place",
+            photos: [
+              {
+                getUrl: function () {
+                  return "https://via.placeholder.com/50";
+                  console.log("getUrl");
+                },
+              },
+            ],
+          };
+        });
+      }
+
+      function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 25.033, lng: 121.5654 },
+          zoom: 8,
+        });
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = "place-search";
+        input.className = "form-control";
+        input.placeholder = "搜尋景點";
+        document
+          .querySelector(".modal-content")
+          .insertBefore(input, document.getElementById("map"));
+
+        const searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        map.addListener("bounds_changed", () => {
+          searchBox.setBounds(map.getBounds());
+        });
+
+        searchBox.addListener("places_changed", () => {
+          const places = searchBox.getPlaces();
+
+          if (places.length == 0) {
+            return;
+          }
+
+          const bounds = new google.maps.LatLngBounds();
+          places.forEach((place) => {
+            if (!place.geometry || !place.geometry.location) {
+              console.log("Returned place contains no geometry");
+              return;
+            }
+
+            const marker = new google.maps.Marker({
+              map,
+              title: place.name,
+              position: place.geometry.location,
+            });
+
+            if (place.geometry.viewport) {
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+
+            selectedPlace = place;
+            document.getElementById("place-name").value = place.name;
+          });
+          map.fitBounds(bounds);
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const breadcrumbNav = document.getElementById("breadcrumb-nav");
+
+        // 定義麵包屑導航的項目
+        const breadcrumbItems = [
+          { name: "首頁", link: "index.html" },
+          { name: "Go！行程", link: "go.html" },
+          { name: "行程詳情", link: "go_single_editor.html" },
+        ];
+
+        // 動態生成麵包屑導航的 HTML 結構
+        breadcrumbItems.forEach((item, index) => {
+          const li = document.createElement("li");
+          li.className = "breadcrumb-item";
+          if (index === breadcrumbItems.length - 1) {
+            li.classList.add("active");
+            li.setAttribute("aria-current", "page");
+            li.textContent = item.name;
+          } else {
+            const a = document.createElement("a");
+            a.href = item.link;
+            a.textContent = item.name;
+            li.appendChild(a);
+          }
+          breadcrumbNav.appendChild(li);
+        });
+
+        // 動態生成行事曆的 Google Calendar 物件
+        let calendar = document.getElementById("calendar");
+
+        function addNewDate() {
+          const newDate = prompt("請輸入日期 (YYYY-MM-DD)：");
+          if (newDate) {
+            const dateContainer = document.createElement("div");
+            dateContainer.className = "date-container";
+            dateContainer.dataset.date = newDate;
+            dateContainer.innerHTML = `
+            <h3>${newDate}</h3>
+            <ul class="itinerary-list"></ul>
+          `;
+            calendar.appendChild(dateContainer);
+          }
+        }
+
+        function addPlaceToDate(date, place) {
+          const dateContainer = document.querySelector(
+            `.date-container[data-date="${date}"] .itinerary-list`
+          );
+          if (dateContainer) {
+            const placeItem = document.createElement("li");
+            placeItem.className = "place-item";
+            placeItem.innerHTML = `
+            <h5>${place.name}</h5>
+            <p>開始時間：${place.startTime}</p>
+            <p>結束時間：${place.endTime}</p>
+            <div class="place-actions">
+              <button class="btn btn-secondary" onclick="removePlace(this)">刪除</button>
+              <button class="btn btn-secondary" onclick="editPlace(this)">編輯</button>
+            </div>
+          `;
+            dateContainer.appendChild(placeItem);
+            sortPlaces(dateContainer);
+          } else {
+            alert("請先新增日期");
+          }
+        }
+
+        function sortPlaces(dateContainer) {
+          const places = Array.from(
+            dateContainer.querySelectorAll(".place-item")
+          );
+          places.sort((a, b) => {
+            const startA = new Date(
+              a
+                .querySelector("p:nth-child(2)")
+                .textContent.replace("開始時間：", "")
+            );
+            const startB = new Date(
+              b
+                .querySelector("p:nth-child(2)")
+                .textContent.replace("開始時間：", "")
+            );
+            return startA - startB;
+          });
+          places.forEach((place) => dateContainer.appendChild(place));
+        }
+
+        // 假設這是你現有的函式，用來添加行程
+
+        function addPlace() {
+          const placeName = document.getElementById("place-name").value;
+          const placeStartDate =
+            document.getElementById("place-start-date").value;
+          const placeEndDate = document.getElementById("place-end-date").value;
+
+          if (new Date(placeStartDate) >= new Date(placeEndDate)) {
+            alert("開始時間必須早於結束時間");
+            return;
+          }
+
+          const date = placeStartDate.split("T")[0]; // 取得日期部分
+          const place = {
+            name: placeName,
+            startTime: placeStartDate,
+            endTime: placeEndDate,
+          };
+
+          addPlaceToDate(date, place);
+        }
+      });
+    </script>
+
+    <!-- 加載 Google Maps API -->
+    <script src="./js/map.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/@googlemaps/extended-component-library@0.6"
+    ></script>
+  </body>
+</html>
