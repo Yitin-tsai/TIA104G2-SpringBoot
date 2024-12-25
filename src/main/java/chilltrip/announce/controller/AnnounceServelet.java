@@ -6,120 +6,56 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import chilltrip.admin.model.AdminDAO;
-import chilltrip.admin.model.AdminDAOImplJDBC;
+import com.google.gson.Gson;
+
 import chilltrip.admin.model.AdminService;
 import chilltrip.admin.model.AdminVO;
 import chilltrip.announce.model.AnnounceService;
 import chilltrip.announce.model.AnnounceVO;
 
-@WebServlet("/announce/announce.do")
-public class AnnounceServelet extends HttpServlet {
+@RestController
+@RequestMapping("/announce")
+public class AnnounceServelet  {
+	
+	@Autowired
+	AnnounceService announceSvc;
+	@Autowired
+	AdminService adminSvc;
 
-	private AnnounceService announceSvc;
-	private AdminService adminSvc;
+	Gson gson = new Gson();
 
-	public void init() {
-		announceSvc = new AnnounceService();
-		adminSvc = new AdminService();
-	}
-
-	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		doPost(req, res);
-	}
-
-//	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-//		req.setCharacterEncoding("UTF-8");
-//		res.setContentType("text/html; charset=UTF-8");
-//		String action = req.getParameter("action");
-//
-//		switch (action) {
-//		case "getAll":
-//			getAllAnnounce(req, res);
-//			break;
-//		case "getAnnounceByAdmin":
-//			getByAdmin(req, res);
-//			break;
-//		case "delete":
-//			deleteAnnounce(req, res);
-//			break;
-//		case "addAnnounce":
-//			addAnnounce(req, res);
-//			break;
-//		case "compositeQuery":
-//			getCompositeQuery(req, res);
-//			break;
-//		case "upadate":
-//			update(req, res);
-//			break;
-//
-//		}
-
-//	}
-
-	private void getAllAnnounce(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		String page = req.getParameter("page");
+	@GetMapping("getAll")
+	private List<AnnounceVO>  getAllAnnounce(String page,HttpServletRequest req) throws IOException {
+		
 		int currentPage = (page == null) ? 1 : Integer.parseInt(page);
 
 		List<AnnounceVO> announceList = announceSvc.getAllAnnounce(currentPage);
-
-		if (req.getSession().getAttribute("announcePageQty") == null) {
-			int announcePageQty = announceSvc.getPageTotal();
-			req.getSession().setAttribute("announcePageQty", announcePageQty);
-		}
-		JSONArray jsonArray = new JSONArray();
-
-		for (AnnounceVO announce : announceList) {
-			JSONObject jsonRes = new JSONObject();
-			jsonRes.put("announceid", announce.getAnnounceid());
-			jsonRes.put("title", announce.getTitle());
-			jsonRes.put("content", announce.getContent());
-			jsonRes.put("starttime", announce.getStarttime());
-			jsonRes.put("endtime", announce.getEndtime());
-			jsonRes.put("coverphoto", announce.getCoverphoto());
-			jsonRes.put("admin", announce.getAdminvo());
-
-			jsonArray.put(jsonRes);
-		}
-		res.setContentType("application/json");
-		res.setCharacterEncoding("UTF-8");
-		res.getWriter().write(jsonArray.toString());
+	
+		req.getSession().setAttribute("announcePageQty", announceSvc.getPageTotal());
+		return announceList;
+	    
 	}
-
-	private void getByAdmin(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		String admin = req.getParameter("adminid");
-		int adminid = Integer.parseInt(admin);
+	@GetMapping("getByAdmin/{id}")
+	private List<AnnounceVO> getByAdmin(@PathVariable("id")Integer adminid) throws IOException {
+		
 		List<AnnounceVO> announceList = announceSvc.getAnnounceByAdminid(adminid);
 
-		JSONArray jsonArray = new JSONArray();
 
-		for (AnnounceVO announce : announceList) {
-			JSONObject jsonRes = new JSONObject();
-			jsonRes.put("announceid", announce.getAnnounceid());
-			jsonRes.put("title", announce.getTitle());
-			jsonRes.put("content", announce.getContent());
-			jsonRes.put("starttime", announce.getStarttime());
-			jsonRes.put("endtime", announce.getEndtime());
-			jsonRes.put("coverphoto", announce.getCoverphoto());
-			jsonRes.put("admin", announce.getAdminvo());
 
-			jsonArray.put(jsonRes);
-		}
-
-		res.setContentType("application/json");
-		res.setCharacterEncoding("UTF-8");
-		res.getWriter().write(jsonArray.toString());
+		return announceList;
 
 		
 	}

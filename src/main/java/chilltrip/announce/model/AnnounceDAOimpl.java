@@ -3,9 +3,7 @@ package chilltrip.announce.model;
 import static chilltrip.util.Constants.PAGE_MAX_RESULT;
 
 import java.sql.Date;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,18 +15,21 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import chilltrip.admin.model.AdminService;
 import chilltrip.admin.model.AdminVO;
-import chilltrip.util.HibernateUtil;
 
+
+@Repository
 public class AnnounceDAOimpl implements AnnounceDAO {
 	
 	private SessionFactory factory;
 
-	public AnnounceDAOimpl() {
-		factory = HibernateUtil.getSessionFactory();
-	}
+	@Autowired
+	 public AnnounceDAOimpl(SessionFactory factory) {
+        this.factory = factory;
+    }
 
 	private Session getSession() {
 		return factory.getCurrentSession();
@@ -67,7 +68,7 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		// TODO Auto-generated method stub
 		AnnounceVO announceVO = getSession().get(AnnounceVO.class, annouceid);
 		try {
-//			getSession().beginTransaction();
+			getSession().beginTransaction();
 			getSession().delete(announceVO);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -79,6 +80,7 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	public List<AnnounceVO> getAll() {
 		// TODO Auto-generated method stub
 //		getSession().beginTransaction();
+		getSession().beginTransaction();
 		return getSession().createQuery("from AnnounceVO", AnnounceVO.class).list();
 		
 	}
@@ -144,36 +146,6 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	public long getTotal() {
 		return getSession().createQuery("select count(*) from AnnounceVO", Long.class).uniqueResult();
 	}
-	public static void main(String[] args) {
-//
-		AnnounceDAOimpl dao = new AnnounceDAOimpl();
-//		java.util.Date now = new java.util.Date();
-//		long long1 = now.getTime();
-//		java.sql.Date date1 = new java.sql.Date(long1);
-//		AnnounceVO announce = new AnnounceVO();
-//		AdminVO et = new AdminVO();
-//		AdminService ser = new AdminService();
-//		et = ser.getOneAdmin(1);
-//		System.out.println(et);
-//
-//		// 新增
-//		announce.setAdminvo(et);
-//		announce.setContent("我今天真的好累");
-//		announce.setTitle("明天看的到太陽嗎");
-//		announce.setStarttime(date1);
-//		announce.setEndtime(date1);
-//		announce.setCoverphoto(null);
-//		System.out.println(announce);
-//		dao.insert(announce);
-//		
-//		System.out.println(dao.getByadminid(1));
-//		
-		Map<String,String> map  =new HashMap<String, String>();
-		map.put("title", "冬季");
-		System.out.println(dao.getByCompositeQuery(map));;
-		System.out.println(dao.getTotal());
-		System.out.println(dao.getAll(1));
-		
-	}
+	
 
 }

@@ -8,17 +8,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import chilltrip.admin.model.AdminDAOImplJDBC;
 import chilltrip.admin.model.AdminVO;
 
 
-
+@Service
 public class AnnounceService {
  
-	private AnnounceDAO dao;
-	 
-	public AnnounceService() {
-		 dao = new AnnounceDAOimpl();
+	private final AnnounceDAOimpl dao ;
+	
+	@Autowired
+	public AnnounceService(AnnounceDAOimpl dao) {
+		 this.dao = dao;
 	}
 	
 

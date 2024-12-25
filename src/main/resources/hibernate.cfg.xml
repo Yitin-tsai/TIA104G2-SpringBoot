@@ -18,17 +18,17 @@
 		<property name="hibernate.current_session_context_class">thread</property>
 		
 
-		<mapping class="chillchip.announce.model.AnnounceVO"/>
-		<mapping class="chillchip.admin.model.AdminVO"/>
+		<mapping class="chilltrip.announce.model.AnnounceVO"/>
+		<mapping class="chilltrip.admin.model.AdminVO"/>
 		<mapping class="chilltrip.locationcomment.model.LocationCommentVO"/>
 		<mapping class="chilltrip.member.model.MemberVO"/>
 		<mapping class="chilltrip.tripcollection.model.TripCollectionVO"/>
-		<mapping class="chillchip.trip.entity.TripVO"/>
+		<mapping class="chilltrip.trip.entity.TripVO"/>
 		<mapping class="chilltrip.triplike.model.TripLikeVO"/>
 		<mapping class="chilltrip.trackmember.model.TrackMemberVO"/>
 		
 		
-		<mapping class="chillchip.location.entity.LocationVO"/>
+		<mapping class="chilltrip.location.model.LocationVO"/>
 		
 		<mapping class="chilltrip.tripactype.model.TripactypeVO"/>
 		<mapping class="chilltrip.tripactyperela.model.TripactyperelaVO"/>
