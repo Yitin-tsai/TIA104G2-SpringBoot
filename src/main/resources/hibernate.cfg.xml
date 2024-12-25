@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/tia104g2?serverTimezone=Asia/Taipei</property>
+		<property name="hibernate.connection.password">123456</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+
+		
+		<property name="hibernate.show_sql">true</property>
+
+		<property name="hibernate.hbm2ddl.auto">validate</property>
+
+		<property name="hibernate.current_session_context_class">thread</property>
+		
+
+		<mapping class="chillchip.announce.model.AnnounceVO"/>
+		<mapping class="chillchip.admin.model.AdminVO"/>
+		<mapping class="chilltrip.locationcomment.model.LocationCommentVO"/>
+		<mapping class="chilltrip.member.model.MemberVO"/>
+		<mapping class="chilltrip.tripcollection.model.TripCollectionVO"/>
+		<mapping class="chillchip.trip.entity.TripVO"/>
+		<mapping class="chilltrip.triplike.model.TripLikeVO"/>
+		<mapping class="chilltrip.trackmember.model.TrackMemberVO"/>
+		
+		
+		<mapping class="chillchip.location.entity.LocationVO"/>
+		
+		<mapping class="chilltrip.tripactype.model.TripactypeVO"/>
+		<mapping class="chilltrip.tripactyperela.model.TripactyperelaVO"/>
+
+	</session-factory>
+</hibernate-configuration>
