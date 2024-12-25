@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Activity Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+
+    <style>
+      /* Header 導航區域 */
+      .top-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        background: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        position: relative;
+      }
+
+      /* 左側導航 */
+      .nav-left {
+        display: flex;
+        align-items: center;
+      }
+
+      /* 中間 Logo */
+      .nav-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      /* 右側導航 */
+      .nav-right {
+        display: flex;
+        align-items: center;
+      }
+
+      /* 導航連結樣式 */
+      .nav-item {
+        text-decoration: none;
+        color: #212529;
+        padding: 20px 15px;
+        display: inline-block;
+        font-size: 18px;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .nav-item:hover {
+        color: #ff6600;
+      }
+
+      /* 下拉選單容器 */
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      /* 下拉選單按鈕 */
+      .dropdown-toggle {
+        cursor: pointer;
+      }
+
+      .dropdown-toggle::after {
+        content: "";
+        display: inline-block;
+        margin-left: 5px;
+        vertical-align: middle;
+        border-top: 5px solid #212529;
+        border-right: 5px solid transparent;
+        border-left: 5px solid transparent;
+      }
+
+      /* 下拉選單 */
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: #fff;
+        min-width: 150px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+        z-index: 1000;
+      }
+
+      /* 下拉選單項目 */
+      .dropdown-item {
+        display: block;
+        padding: 10px 15px;
+        color: #212529;
+        text-decoration: none;
+        transition: background-color 0.3s;
+      }
+
+      .dropdown-item:hover {
+        background-color: #f8f9fa;
+        color: #ff6600;
+      }
+
+      /* 顯示下拉選單 */
+      .dropdown:hover .dropdown-menu {
+        display: block;
+      }
+
+      /* RWD 設計 */
+      @media (max-width: 768px) {
+        .top-nav {
+          flex-direction: column;
+          padding: 10px;
+        }
+
+        .nav-center {
+          position: relative;
+          left: 0;
+          transform: none;
+          margin: 10px 0;
+        }
+
+        .nav-left,
+        .nav-right {
+          flex-direction: column;
+          width: 100%;
+        }
+
+        .nav-item {
+          padding: 10px;
+          width: 100%;
+          text-align: center;
+        }
+
+        .dropdown-menu {
+          position: static;
+          box-shadow: none;
+          background: #f8f9fa;
+        }
+      }
+
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 0;
+      }
+
+      .dropdown-menu.show {
+        display: block;
+      }
+
+      .dropdown-item {
+        padding: 8px 16px;
+        clear: both;
+        font-weight: 400;
+        color: #212529;
+        text-align: inherit;
+        white-space: nowrap;
+        background-color: transparent;
+        border: 0;
+      }
+
+      .dropdown-item:hover {
+        background-color: #f8f9fa;
+        color: #ff6600;
+      }
+
+      .breadcrumb {
+        background-color: transparent;
+        /* 移除背景色 */
+        list-style: none;
+        /* 移除列表樣式 */
+        display: flex;
+        padding: 0;
+        margin: 1rem 0;
+      }
+
+      .breadcrumb-item {
+        font-size: calc(1rem - 4px);
+        /* 比 dropdown-item 小 4px */
+        color: #6c757d !important;
+        /* 預設顯示為灰色，並覆蓋 Bootstrap 預設樣式 */
+        text-decoration: none;
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+      }
+
+      .breadcrumb-item + .breadcrumb-item::before {
+        content: ">";
+        padding: 0 0.5rem;
+        color: #6c757d;
+      }
+
+      .breadcrumb-item a {
+        color: #6c757d !important;
+        /* 更改 a 標籤的預設顏色為灰色 */
+        text-decoration: none;
+        /* 移除下劃線 */
+      }
+
+      .breadcrumb-item a:hover {
+        color: #ff6600 !important;
+        /* 滑鼠移動到 a 標籤上時顯示為橘色 */
+      }
+
+      .breadcrumb-item.active {
+        color: #ff6600 !important;
+        /* 最後一個元素顯示為橘色，並覆蓋 Bootstrap 預設樣式 */
+      }
+
+      /*專屬這一頁的css*/
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+      }
+
+      .container {
+        padding: 20px !important;
+        max-width: 1200px !important;
+        margin: 0 auto !important;
+      }
+
+      .header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-top: 20px !important;
+        margin-bottom: 20px !important;
+      }
+
+      .btn {
+        padding: 8px 16px !important;
+        border: none !important;
+        border-radius: 4px !important;
+        cursor: pointer !important;
+        background-color: #e0e0e0 !important;
+        margin-right: 10px !important;
+      }
+
+      .btn:hover {
+        background-color: #d0d0d0 !important;
+      }
+
+      .btn.active {
+        background-color: #c0c0c0 !important;
+      }
+
+      .search-box {
+        padding: 6px !important;
+        border: 1px solid #ddd !important;
+        border-radius: 4px !important;
+      }
+
+      #activityTable{
+        height: 500px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #f8f8f8;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      th:hover {
+        background-color: #f0f0f0;
+      }
+
+      .type-select {
+        padding: 6px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-left: 8px;
+        background-color: white;
+        cursor: pointer;
+      }
+
+      .truncate {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .action-btn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 5px;
+        background-color: #e0e0e0;
+      }
+
+      .action-btn:hover {
+        background-color: #d0d0d0;
+      }
+
+      .batch-delete-btn {
+        display: none;
+        background-color: #ff4444;
+        color: white;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        width: 300px;
+      }
+
+      .modal-btn {
+        margin-top: 15px;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #e0e0e0;
+        margin-right: 10px;
+      }
+
+      .alert {
+        display: none;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px;
+        border-radius: 4px;
+        background-color: #4caf50;
+        color: white;
+        animation: fadeOut 3s forwards;
+      }
+
+      @keyframes fadeOut {
+        0% {
+          opacity: 1;
+        }
+        70% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* 彈窗樣式 */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+
+      .modal-content {
+        position: relative;
+        background-color: white;
+        margin: 20px auto;
+        padding: 20px;
+        width: 90%;
+        max-width: 800px;
+        border-radius: 8px;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .close-btn {
+        font-size: 24px;
+        cursor: pointer;
+        border: none;
+        background: none;
+      }
+
+      /* 表單樣式 */
+      .form-group {
+        margin-bottom: 20px;
+        flex: 0 0 150px; /* 調整這個值來控制標籤的寬度 */
+        margin-right: 10px;
+        text-align: left;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+
+      .form-group input[type="text"],
+      .form-group select,
+      .form-group input[type="date"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      /* 日期選擇器容器 */
+      .date-range {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .date-range input {
+        flex: 1;
+      }
+
+      /* 圖片上傳區域 */
+      .image-upload {
+        border: 2px dashed #ddd;
+        padding: 20px;
+        text-align: center;
+        border-radius: 4px;
+      }
+
+      .image-preview {
+        margin-top: 10px;
+        width: 100%;
+        height: 300px;
+        background-color: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .image-preview img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+
+      /* 編輯器樣式 */
+      .editor-toolbar {
+        padding: 10px;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-bottom: none;
+        border-radius: 4px 4px 0 0;
+      }
+
+      .editor-content {
+        border: 1px solid #ddd;
+        min-height: 300px;
+        padding: 10px;
+        border-radius: 0 0 4px 4px;
+      }
+
+      /* 必填標記 */
+      .required {
+        color: red;
+        margin-left: 4px;
+      }
+
+      /* 底部按鈕 */
+      .modal-footer {
+        margin-top: 20px;
+        text-align: right;
+      }
+
+      .btn-preview {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .btn-publish {
+        background-color: #2196f3;
+        color: white;
+      }
+
+      /* 錯誤提示 */
+      .error-message {
+        color: red;
+        font-size: 12px;
+        margin-top: 4px;
+        display: none;
+      }
+
+      /* footer */
+      footer {
+        background-color: #f8f9fa;
+        padding: 30px 0;
+        text-align: center;
+      }
+
+      /* 社交媒體連結區域 */
+      .social-links {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      /* 社交媒體圓形按鈕 */
+      .social-button {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: transform 0.3s ease;
+      }
+
+      .social-button:hover {
+        transform: scale(1.1);
+      }
+
+      /* 各社交媒體顏色 */
+      .facebook {
+        background-color: #3b5998;
+      }
+
+      .instagram {
+        background-color: #e1306c;
+      }
+
+      .youtube {
+        background-color: #ff0000;
+      }
+
+      /* 社交媒體圖標 */
+      .social-icon {
+        color: white;
+        font-size: 24px;
+      }
+
+      /* 版權文字 */
+      .copyright {
+        color: #666;
+        font-size: 14px;
+        margin-top: 20px;
+      }
+
+      /* RWD 設計 */
+      @media screen and (max-width: 768px) {
+        .social-links {
+          flex-direction: row;
+          gap: 15px;
+        }
+
+        .social-button {
+          width: 40px;
+          height: 40px;
+        }
+
+        .social-icon {
+          font-size: 20px;
+        }
+
+        .copyright {
+          font-size: 12px;
+        }
+      }
+
+      /* 動畫效果 */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      footer {
+        animation: fadeIn 0.5s ease-out;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!------網站header------>
+    <header>
+      <nav class="top-nav">
+        <div class="nav-left">
+          <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+          <a href="./product.html" class="nav-item nav-link" id="nav-product"
+            >購！票券</a
+          >
+          <a href="#" class="nav-item nav-link" id="nav-profile">活動管理</a>
+        </div>
+        <div class="nav-center">
+          <a href="#">
+            <img
+              id="ChillTrip_logo"
+              src="./img/logo_black.png"
+              alt="Chill Trip"
+              style="width: 150px; height: auto; cursor: pointer"
+            />
+          </a>
+        </div>
+        <div class="nav-right">
+          <div class="nav-item dropdown">
+            <a
+              href="#"
+              class="nav-link dropdown-toggle"
+              data-toggle="dropdown"
+              style="color: #212529"
+              >管理員中心</a
+            >
+            <div class="dropdown-menu rounded-0 m-0">
+              <a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a>
+              <a href="#" class="dropdown-item" id="nav-coupons"
+                >一般會員列表</a
+              >
+              <a href="#" class="dropdown-item" id="nav-orders">管理員列表</a>
+            </div>
+          </div>
+          <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+        </div>
+      </nav>
+    </header>
+
+    <!------網站Breadcrumb Navigation（麵包屑導航）------>
+    <div class="top-nav">
+      <div aria-label="breadcrumb">
+        <ul class="breadcrumb" id="breadcrumb-nav">
+          <!-- 麵包屑導航項目將由 JavaScript 動態生成 -->
+        </ul>
+      </div>
+    </div>
+
+    <div class="header">
+      <div>
+        <button id="batchBtn" class="btn" onclick="toggleBatchMode()">
+          批量操作
+        </button>
+        <button class="btn" onclick="showModal('normal')">新增行程活動</button>
+        <button class="btn" onclick="showAddModal('ticket')">
+          新增票券活動
+        </button>
+        <button
+          id="batchDeleteBtn"
+          class="btn batch-delete-btn"
+          onclick="showBatchDeleteModal()"
+        >
+          刪除所選活動
+        </button>
+      </div>
+      <input type="text" class="search-box" placeholder="搜尋..." />
+    </div>
+
+  <div id="activityTable">
+    <table>
+      <thead>
+        <tr>
+          <th>活動名稱 ▼</th>
+          <th>
+            活動類型
+            <select class="type-select" onchange="filterByType(this.value)">
+              <option value="all">全部</option>
+              <option value="trip">行程活動</option>
+              <option value="ticket">票券活動</option>
+            </select>
+          </th>
+          <th>活動時間 ▼</th>
+          <th>活動簡述 ▼</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-type="trip">
+          <td>
+            <div style="display: flex; align-items: center">
+              <input
+                type="checkbox"
+                class="row-checkbox"
+                style="display: none; margin-right: 8px"
+              />
+              <span>冬季促銷</span>
+            </div>
+          </td>
+          <td>行程活動</td>
+          <td>2024/12/1~2025/1/31</td>
+          <td
+            class="truncate"
+            title="這是一段很長的活動簡述文字，超過20個字會被截斷但是可以透過hover看到完整內容"
+          >
+            這是一段很長的活動簡述文字，超過20個字會被截斷但是可以透過hover看到完整內容
+          </td>
+          <td>
+            <button class="action-btn edit-btn">編輯</button>
+            <button
+              class="action-btn delete-btn"
+              onclick="showDeleteModal('冬季促銷')"
+            >
+              刪除
+            </button>
+          </td>
+        </tr>
+        <tr data-type="ticket">
+          <td>
+            <div style="display: flex; align-items: center">
+              <input
+                type="checkbox"
+                class="row-checkbox"
+                style="display: none; margin-right: 8px"
+              />
+              <span>最佳行程比賽</span>
+            </div>
+          </td>
+          <td>票券活動</td>
+          <td>2024/11/1~2024/12/31</td>
+          <td class="truncate" title="票券活動說明">票券活動說明</td>
+          <td>
+            <button class="action-btn edit-btn">編輯</button>
+            <button
+              class="action-btn delete-btn"
+              onclick="showDeleteModal('最佳行程比賽')"
+            >
+              刪除
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+    <!-- 新增活動彈窗 -->
+    <div id="activityModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>新增行程活動</h2>
+          <button class="close-btn" onclick="closeModal()">&times;</button>
+        </div>
+
+        <form id="activityForm">
+          <div class="form-group">
+            <label><span class="required">*</span>活動名稱</label>
+            <input type="text" id="activityName" required />
+            <div class="error-message">請輸入活動名稱</div>
+          </div>
+
+          <div class="form-group">
+            <label><span class="required">*</span>關鍵字</label>
+            <select id="keywords" required>
+              <option value="">請選擇關鍵字</option>
+              <option value="travel">旅遊</option>
+              <option value="food">美食</option>
+              <option value="culture">文化</option>
+            </select>
+            <div class="error-message">請選擇關鍵字</div>
+          </div>
+
+          <div class="form-group">
+            <label><span class="required">*</span>活動時間</label>
+            <div class="date-range">
+              <input type="date" id="startDate" required />
+              <span>至</span>
+              <input type="date" id="endDate" required />
+            </div>
+            <div class="error-message">請選擇有效的日期範圍</div>
+          </div>
+
+          <div class="form-group">
+            <label><span class="required">*</span>活動首圖</label>
+            <div class="image-upload">
+              <input
+                type="file"
+                id="imageInput"
+                accept="image/*"
+                style="display: none"
+              />
+              <button
+                type="button"
+                class="btn"
+                onclick="document.getElementById('imageInput').click()"
+              >
+                選擇圖片
+              </button>
+              <p style="margin-top: 10px; color: #666">
+                建議尺寸: 頁面寬度 x 300px
+              </p>
+              <div class="image-preview">
+                <img id="imagePreview" style="display: none" />
+                <span id="uploadText">請上傳圖片</span>
+              </div>
+              <div style="margin-top: 10px; display: none" id="imageControls">
+                <button type="button" class="btn" onclick="editImage()">
+                  編輯圖片
+                </button>
+                <button type="button" class="btn" onclick="deleteImage()">
+                  刪除圖片
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label><span class="required">*</span>內文</label>
+            <div class="editor-toolbar">
+              <button type="button" class="btn" onclick="formatDoc('bold')">
+                B
+              </button>
+              <button type="button" class="btn" onclick="formatDoc('italic')">
+                I
+              </button>
+              <button
+                type="button"
+                class="btn"
+                onclick="formatDoc('underline')"
+              >
+                U
+              </button>
+              <button
+                type="button"
+                class="btn"
+                onclick="formatDoc('justifyLeft')"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                class="btn"
+                onclick="formatDoc('justifyCenter')"
+              >
+                ↔
+              </button>
+              <button
+                type="button"
+                class="btn"
+                onclick="formatDoc('justifyRight')"
+              >
+                →
+              </button>
+            </div>
+            <div
+              class="editor-content"
+              id="editor"
+              contenteditable="true"
+            ></div>
+            <div class="error-message">請輸入內文</div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn" onclick="closeModal()">
+              取消
+            </button>
+            <button
+              type="button"
+              class="btn btn-preview"
+              onclick="previewActivity()"
+            >
+              預覽
+            </button>
+            <button
+              type="button"
+              class="btn btn-publish"
+              onclick="publishActivity()"
+            >
+              發佈
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 刪除確認彈窗 -->
+    <div id="deleteModal" class="modal">
+      <div class="modal-content">
+        <p>請確認是否刪除選擇的活動？</p>
+        <button class="modal-btn" onclick="confirmDelete()">確認</button>
+        <button class="modal-btn" onclick="closeModal('deleteModal')">
+          取消
+        </button>
+      </div>
+    </div>
+
+    <!-- 成功提示 -->
+    <div id="successAlert" class="alert"></div>
+
+    <!------網站footer------>
+    <footer>
+      <div class="social-links">
+        <div style="display: flex; gap: 10px">
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #3b5998;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-facebook-f"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #e1306c;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-instagram"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #ff0000;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-youtube"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+        </div>
+
+        <!-- 加載 Font Awesome 圖標庫 -->
+        <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          rel="stylesheet"
+        />
+      </div>
+      <div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
+    </footer>
+
+    <script>
+      //header部分
+      // 監聽螢幕寬度變化
+      window.addEventListener("resize", function () {
+        const dropdowns = document.querySelectorAll(".dropdown");
+        if (window.innerWidth <= 768) {
+          // 移動端點擊切換下拉選單
+          dropdowns.forEach((dropdown) => {
+            const toggle = dropdown.querySelector(".dropdown-toggle");
+            const menu = dropdown.querySelector(".dropdown-menu");
+            toggle.addEventListener("click", (e) => {
+              e.preventDefault();
+              menu.style.display =
+                menu.style.display === "block" ? "none" : "block";
+            });
+          });
+        } else {
+          // 桌面端使用 hover
+          dropdowns.forEach((dropdown) => {
+            const menu = dropdown.querySelector(".dropdown-menu");
+            dropdown.addEventListener("mouseenter", () => {
+              menu.style.display = "block";
+            });
+            dropdown.addEventListener("mouseleave", () => {
+              menu.style.display = "none";
+            });
+          });
+        }
+      });
+
+      // 初始觸發一次 resize 事件
+      window.dispatchEvent(new Event("resize"));
+
+      let batchMode = false;
+
+      function filterByType(type) {
+        const rows = document.querySelectorAll("tbody tr");
+        rows.forEach((row) => {
+          if (type === "all" || row.getAttribute("data-type") === type) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const breadcrumbNav = document.getElementById("breadcrumb-nav");
+
+        // 定義麵包屑導航的項目
+        const breadcrumbItems = [
+          { name: "管理員專區", link: "index.html" },
+          { name: "活動管理", link: "admin_activity_management.html" },
+        ];
+
+        // 動態生成麵包屑導航的 HTML 結構
+        breadcrumbItems.forEach((item, index) => {
+          const li = document.createElement("li");
+          li.className = "breadcrumb-item";
+          if (index === breadcrumbItems.length - 1) {
+            li.classList.add("active");
+            li.setAttribute("aria-current", "page");
+            li.textContent = item.name;
+          } else {
+            const a = document.createElement("a");
+            a.href = item.link;
+            a.textContent = item.name;
+            li.appendChild(a);
+          }
+          breadcrumbNav.appendChild(li);
+        });
+      });
+
+      function toggleBatchMode() {
+        batchMode = !batchMode;
+        const checkboxes = document.querySelectorAll(".row-checkbox");
+        const batchBtn = document.getElementById("batchBtn");
+        const batchDeleteBtn = document.getElementById("batchDeleteBtn");
+
+        checkboxes.forEach((checkbox) => {
+          checkbox.style.display = batchMode ? "inline-block" : "none";
+        });
+
+        batchBtn.classList.toggle("active");
+        batchDeleteBtn.style.display = batchMode ? "inline-block" : "none";
+
+        if (!batchMode) {
+          checkboxes.forEach((checkbox) => {
+            checkbox.checked = false;
+          });
+        }
+      }
+
+      function showBatchDeleteModal() {
+        const selectedCount = document.querySelectorAll(
+          ".row-checkbox:checked"
+        ).length;
+        if (selectedCount === 0) {
+          showAlert("請選擇要刪除的活動");
+          return;
+        }
+        const modal = document.getElementById("deleteModal");
+        modal.querySelector(
+          "p"
+        ).textContent = `請確認是否刪除已選擇的 ${selectedCount} 個活動？`;
+        modal.style.display = "flex";
+      }
+
+      function showDeleteModal(activityName) {
+        if (batchMode) return;
+        const modal = document.getElementById("deleteModal");
+        modal.querySelector(
+          "p"
+        ).textContent = `請確認是否刪除活動 "${activityName}"？`;
+        modal.style.display = "flex";
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+      }
+
+      function showAlert(message) {
+        const alert = document.getElementById("successAlert");
+        alert.textContent = message;
+        alert.style.display = "block";
+        setTimeout(() => {
+          alert.style.display = "none";
+        }, 3000);
+      }
+
+      function confirmDelete() {
+        if (batchMode) {
+          const selectedRows = document.querySelectorAll(
+            ".row-checkbox:checked"
+          );
+          selectedRows.forEach((checkbox) => {
+            checkbox.closest("tr").remove();
+          });
+          toggleBatchMode();
+        } else {
+          const activityName = document
+            .querySelector("#deleteModal p")
+            .textContent.match(/"([^"]+)"/)?.[1];
+          if (activityName) {
+            const rows = document.querySelectorAll("tbody tr");
+            rows.forEach((row) => {
+              if (row.querySelector("span").textContent === activityName) {
+                row.remove();
+              }
+            });
+          }
+        }
+        closeModal("deleteModal");
+        showAlert("刪除成功！");
+      }
+
+      window.onclick = function (event) {
+        if (event.target.className === "modal") {
+          event.target.style.display = "none";
+        }
+      };
+
+      document.querySelectorAll("th").forEach((header) => {
+        header.addEventListener("click", (event) => {
+          // 如果點擊的是select元素，不進行排序
+          if (event.target.tagName === "SELECT") {
+            event.stopPropagation();
+            return;
+          }
+
+          const table = header.closest("table");
+          const tbody = table.querySelector("tbody");
+          const rows = Array.from(
+            tbody.querySelectorAll('tr:not([style*="display: none"])')
+          );
+          const index = Array.from(header.parentElement.children).indexOf(
+            header
+          );
+
+          const direction = header.textContent.includes("▼") ? "asc" : "desc";
+
+          rows.sort((a, b) => {
+            const aValue =
+              index === 0
+                ? a.querySelector("span").textContent
+                : a.children[index].textContent;
+            const bValue =
+              index === 0
+                ? b.querySelector("span").textContent
+                : b.children[index].textContent;
+            return direction === "asc"
+              ? aValue.localeCompare(bValue)
+              : bValue.localeCompare(aValue);
+          });
+
+          const hiddenRows = Array.from(
+            tbody.querySelectorAll('tr[style*="display: none"]')
+          );
+
+          tbody.innerHTML = "";
+          rows.forEach((row) => tbody.appendChild(row));
+          hiddenRows.forEach((row) => tbody.appendChild(row));
+
+          document.querySelectorAll("th").forEach((th) => {
+            th.textContent = th.textContent.replace(" ▼", "").replace(" ▲", "");
+          });
+
+          if (header.querySelector("select")) {
+            const headerText = header.childNodes[0].textContent.trim();
+            header.childNodes[0].textContent =
+              headerText + (direction === "asc" ? " ▲" : " ▼");
+          } else {
+            header.textContent += direction === "asc" ? " ▲" : " ▼";
+          }
+        });
+      });
+
+      window.onclick = function (event) {
+        if (event.target.className === "modal") {
+          event.target.style.display = "none";
+        }
+      };
+
+      // 顯示彈窗
+      function showModal(type) {
+        document.getElementById("activityModal").style.display = "block";
+        // 重置表單
+        document.getElementById("activityForm").reset();
+        document.getElementById("editor").innerHTML = "";
+        document.getElementById("imagePreview").style.display = "none";
+        document.getElementById("uploadText").style.display = "block";
+        document.getElementById("imageControls").style.display = "none";
+      }
+
+      // 關閉彈窗
+      function closeModal() {
+        document.getElementById("activityModal").style.display = "none";
+      }
+
+      // 圖片上傳預覽
+      document
+        .getElementById("imageInput")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const preview = document.getElementById("imagePreview");
+              preview.src = e.target.result;
+              preview.style.display = "block";
+              document.getElementById("uploadText").style.display = "none";
+              document.getElementById("imageControls").style.display = "block";
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+      // 刪除圖片
+      function deleteImage() {
+        document.getElementById("imageInput").value = "";
+        document.getElementById("imagePreview").style.display = "none";
+        document.getElementById("uploadText").style.display = "block";
+        document.getElementById("imageControls").style.display = "none";
+      }
+
+      // 編輯圖片
+      function editImage() {
+        // 這裡可以實現圖片編輯功能
+        console.log("編輯圖片");
+      }
+
+      // 文字編輯器功能
+      function formatDoc(command) {
+        document.execCommand(command, false, null);
+      }
+
+      // 表單驗證
+      function validateForm() {
+        let isValid = true;
+
+        // 驗證活動名稱
+        const name = document.getElementById("activityName").value;
+        if (!name.trim()) {
+          document.querySelector(
+            "#activityName + .error-message"
+          ).style.display = "block";
+          isValid = false;
+        }
+
+        // 驗證關鍵字
+        const keywords = document.getElementById("keywords").value;
+        if (!keywords) {
+          document.querySelector("#keywords + .error-message").style.display =
+            "block";
+          isValid = false;
+        }
+
+        // 驗證日期
+        const startDate = document.getElementById("startDate").value;
+        const endDate = document.getElementById("endDate").value;
+        if (!startDate || !endDate || new Date(startDate) > new Date(endDate)) {
+          document.querySelector(".date-range + .error-message").style.display =
+            "block";
+          isValid = false;
+        }
+
+        // 驗證內文
+        const content = document.getElementById("editor").innerText;
+        if (!content.trim()) {
+          document.querySelector(
+            ".editor-content + .error-message"
+          ).style.display = "block";
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      // 預覽活動
+      function previewActivity() {
+        if (validateForm()) {
+          window.location.href = "activity_blog_pre.html";
+        }
+      }
+
+      // 發佈活動
+      function publishActivity() {
+        if (validateForm()) {
+          window.location.href = "activity_blog.html";
+        }
+      }
+
+      // 點擊彈窗外部關閉
+      window.onclick = function (event) {
+        const modal = document.getElementById("activityModal");
+        if (event.target == modal) {
+          closeModal();
+        }
+      };
+    </script>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+  </body>
+</html>

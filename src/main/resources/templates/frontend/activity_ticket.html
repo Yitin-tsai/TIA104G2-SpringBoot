@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Activity For Tickets</title>
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/yuki_style.css" rel="stylesheet" />
+
+    <style>
+      .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        width: 80%;
+        margin: 0 auto;
+        overflow: hidden;
+        border-bottom: 3px dotted #eee;
+        padding-top: 30px;
+        padding-bottom: 30px;
+      }
+
+      .banner-carousel-box {
+        display: flex;
+        box-sizing: border-box;
+        justify-content: center;
+        align-items: center;
+        height: 300px;
+        transition: transform 0.5s ease-in-out;
+      }
+
+      .banner-carousel {
+        min-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .banner-carousel img {
+        width: 100%;
+        display: block;
+      }
+
+      .row .prev,
+      .row .next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        font-size: 18px;
+        z-index: 10;
+      }
+
+      .row .prev {
+        left: 10px;
+      }
+
+      .row .next {
+        right: 10px;
+      }
+
+      .banner-carousel-box .banner-carousel img {
+        width: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .coupon-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .coupon {
+        border: 1px solid #ccc;
+        padding: 20px;
+        width: 200px;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .coupon h3 {
+        margin: 0 0 10px;
+      }
+
+      .coupon p {
+        margin: 5px 0;
+      }
+
+      .coupon button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .coupon button:hover {
+        background-color: #45a049;
+      }
+
+      .coupon button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .card-body img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .card-body h5 {
+        font-size: 1.5rem;
+        margin: 10px 0;
+        text-align: center;
+      }
+
+      .card-body p {
+        font-size: 1rem;
+        margin: 5px 0;
+        text-align: center;
+      }
+
+      .card-body button {
+        display: block;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!------網站header------>
+    <div id="app">
+      <header>
+        <nav class="top-nav">
+          <div class="nav-left">
+            <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+            <a href="./product.html" class="nav-item nav-link" id="nav-product"
+              >購！票券</a
+            >
+            <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
+            <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+          </div>
+          <div class="nav-center">
+            <a href="./index.html">
+              <img
+                src="./img/logo_black.png"
+                alt="Chill Trip"
+                style="width: 150px; height: auto"
+              />
+            </a>
+          </div>
+          <div class="nav-right">
+            <div class="nav-item dropdown">
+              <a
+                href="#"
+                class="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+                style="color: #212529"
+                >會員中心</a
+              >
+              <div class="dropdown-menu rounded-0 m-0">
+                <a href="#" class="dropdown-item" id="nav-basic-info"
+                  >基本資料</a
+                >
+                <a href="#" class="dropdown-item" id="nav-coupons"
+                  >我的折價券</a
+                >
+                <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
+              </div>
+            </div>
+            <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+            <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+          </div>
+        </nav>
+      </header>
+    </div>
+
+    <!------主頁的幻燈片活動區------>
+    <div class="row">
+      <div class="banner-carousel-box">
+        <div class="banner-carousel">
+          <img src="./img/banner-carousel1.jpg" alt="Banner1" />
+        </div>
+        <div class="banner-carousel">
+          <img src="./img/banner-carousel2.jpg" alt="Banner2" />
+        </div>
+        <div class="banner-carousel">
+          <img src="./img/banner-carousel3.jpg" alt="Banner3" />
+        </div>
+        <div class="banner-carousel">
+          <img src="./img/banner-carousel4.jpg" alt="Banner4" />
+        </div>
+        <div class="banner-carousel">
+          <img src="./img/banner-carousel5.jpg" alt="Banner5" />
+        </div>
+      </div>
+      <button class="prev">❮</button>
+      <button class="next">❯</button>
+    </div>
+
+    <!-----票券活動專區------>
+    <!-- 領取優惠券的頁面（全站折扣） -->
+    <div class="container-fluid py-5">
+      <div class="container pt-5 pb-3">
+        <div class="text-center mb-5">
+          <h5
+            class="text-primary text-uppercase mb-3"
+            style="letter-spacing: 5px"
+          >
+            優惠券領取頁面，介紹優惠套餐
+            Ex：聖誕節優惠券（可能包含不同品類的優惠券）
+          </h5>
+          <h1>Chill・優惠活動名稱</h1>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid py-5">
+      <div class="row pb-3">
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <img src="./img/activity_ticket_newyear.png" alt="新年優惠券" />
+              <h5 class="text-primary">優惠券 1</h5>
+              <p class="text-muted">有效時間：<br />2023/12/01 - 2023/12/31</p>
+              <p class="text-muted">折扣方式：滿100減10</p>
+              <button class="btn btn-primary" onclick="claimCoupon(this, 1)">
+                領取
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <img src="./img/activity_ticket_newyear.png" alt="新年優惠券" />
+              <h5 class="text-primary">優惠券 2</h5>
+              <p class="text-muted">有效時間：<br />2023/12/01 - 2023/12/31</p>
+              <p class="text-muted">折扣方式：滿200減20</p>
+              <button class="btn btn-primary" onclick="claimCoupon(this, 2)">
+                領取
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <img src="./img/activity_ticket_newyear.png" alt="新年優惠券" />
+              <h5 class="text-primary">優惠券 3</h5>
+              <p class="text-muted">有效時間：<br />2023/12/01 - 2023/12/31</p>
+              <p class="text-muted">折扣方式：滿300減30</p>
+              <button class="btn btn-primary" onclick="claimCoupon(this, 3)">
+                領取
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <img
+                src="./img/activity_ticket_christmas.jpg"
+                alt="聖誕節優惠券"
+              />
+              <h5 class="text-primary">優惠券 4</h5>
+              <p class="text-muted">有效時間：<br />2023/12/01 - 2023/12/31</p>
+              <p class="text-muted">折扣方式：滿300減30</p>
+              <button class="btn btn-primary" onclick="claimCoupon(this, 4)">
+                領取
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <img
+                src="./img/activity_ticket_christmas.jpg"
+                alt="聖誕節優惠券"
+              />
+              <h5 class="text-primary">優惠券 5</h5>
+              <p class="text-muted">有效時間：<br />2023/12/01 - 2023/12/31</p>
+              <p class="text-muted">折扣方式：滿300減30</p>
+              <button class="btn btn-primary" onclick="claimCoupon(this, 5)">
+                領取
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <img
+                src="./img/activity_ticket_christmas.jpg"
+                alt="聖誕節優惠券"
+              />
+              <h5 class="text-primary">優惠券 6</h5>
+              <p class="text-muted">有效時間：<br />2023/12/01 - 2023/12/31</p>
+              <p class="text-muted">折扣方式：滿300減30</p>
+              <button class="btn btn-primary" onclick="claimCoupon(this, 6)">
+                領取
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!------網站footer------>
+    <footer>
+      <div class="d-flex justify-content-start mt-4">
+        <a class="btn btn-outline-light btn-square mr-2" href="#"
+          ><i class="fab fa-twitter"></i
+        ></a>
+        <a class="btn btn-outline-light btn-square mr-2" href="#"
+          ><i class="fab fa-facebook-f"></i
+        ></a>
+        <a class="btn btn-outline-light btn-square mr-2" href="#"
+          ><i class="fab fa-linkedin-in"></i
+        ></a>
+        <a class="btn btn-outline-light btn-square" href="#"
+          ><i class="fab fa-instagram"></i
+        ></a>
+      </div>
+      <div class="social-links">
+        <div style="display: flex; gap: 10px">
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #3b5998;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-facebook-f"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #e1306c;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-instagram"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #ff0000;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-youtube"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
+      ><i class="fa fa-angle-double-up"></i
+    ></a>
+
+    <!------ 共用JS ------>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+
+    <!-- 導航欄nav的href載入器 -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("nav-go").href = "./go.html";
+        document.getElementById("nav-product").href = "./product.html";
+        document.getElementById("nav-profile").href = "./profile.html";
+        document.getElementById("nav-guide").href = "./guide.html";
+        document.getElementById("nav-basic-info").href = "./basic_info.html";
+        document.getElementById("nav-coupons").href = "./coupons.html";
+        document.getElementById("nav-orders").href = "./orders.html";
+        document.getElementById("nav-support").href = "./support.html";
+        document.getElementById("nav-cart").href = "./cart.html";
+      });
+    </script>
+
+    <!------修齊的JS------>
+    <!------主頁的幻燈片活動區------>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const carouselInner = document.querySelector(".banner-carousel-box");
+        const items = document.querySelectorAll(".banner-carousel");
+        const totalItems = items.length;
+        let currentIndex = 0;
+
+        document.querySelector(".next").addEventListener("click", function () {
+          currentIndex = (currentIndex + 1) % totalItems;
+          updateCarousel();
+        });
+
+        document.querySelector(".prev").addEventListener("click", function () {
+          currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+          updateCarousel();
+        });
+
+        function updateCarousel() {
+          const offset = -currentIndex * 100;
+          carouselInner.style.transform = `translateX(${offset}%)`;
+        }
+
+        // 自動輪播
+        setInterval(function () {
+          currentIndex = (currentIndex + 1) % totalItems;
+          updateCarousel();
+        }, 3000);
+      });
+    </script>
+
+    <!-- 領取完一張以後會顯示已領取 -->
+    <script>
+      function claimCoupon(button, couponId) {
+        alert("已領取優惠券 " + couponId);
+        button.disabled = true;
+        button.textContent = "已領取";
+        // 在這裡可以添加更多的邏輯，例如發送請求到伺服器
+      }
+    </script>
+  </body>
+</html>
