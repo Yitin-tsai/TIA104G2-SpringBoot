@@ -1,7 +1,6 @@
 package chilltrip.admin.model;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -14,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import chilltrip.announce.model.AnnounceVO;
 
@@ -52,6 +53,7 @@ public class AdminVO implements Serializable {
 	
 	@OneToMany(mappedBy = "adminvo" , cascade = CascadeType.ALL)
 	@OrderBy("announceid asc")
+	@JsonBackReference
 	private Set<AnnounceVO> announces;
 
 	public Set<AnnounceVO> getAnnounces() {

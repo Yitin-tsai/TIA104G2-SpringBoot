@@ -13,10 +13,11 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import chilltrip.admin.model.AdminVO;
 
 @Entity
-
 @Table(name = "announcement")
 public class AnnounceVO {
 	@Id
@@ -26,6 +27,7 @@ public class AnnounceVO {
 	
 	@ManyToOne
 	@JoinColumn(name = "admin_id", referencedColumnName = "administrator_id")
+	 @JsonManagedReference
 	private AdminVO adminvo;
 	
 	@Column(name = "title")
