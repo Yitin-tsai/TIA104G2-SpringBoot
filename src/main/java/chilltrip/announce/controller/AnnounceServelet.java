@@ -34,11 +34,18 @@ public class AnnounceServelet {
 	AdminService adminSvc;
 
 	@GetMapping("getAll")
+	private List<AnnounceVO> getAllAnnounce() throws IOException {
+
+		List<AnnounceVO> announceList = announceSvc.getAllAnnounce();
+		return announceList;
+
+	}
+
 	private List<AnnounceVO> getAllAnnounce(String page, HttpServletRequest req) throws IOException {
 
 		int currentPage = (page == null) ? 1 : Integer.parseInt(page);
 
-		List<AnnounceVO> announceList = announceSvc.getAllAnnounce(currentPage);
+		List<AnnounceVO> announceList = announceSvc.getAllAnnounce();
 
 		req.getSession().setAttribute("announcePageQty", announceSvc.getPageTotal());
 		return announceList;
@@ -64,7 +71,7 @@ public class AnnounceServelet {
 	}
 
 	@PostMapping("add/{id}")
-	private ResponseEntity<String> addAnnounce(@Valid @RequestBody AnnounceVO announce,BindingResult result,
+	private ResponseEntity<String> addAnnounce(@Valid @RequestBody AnnounceVO announce, BindingResult result,
 			@PathVariable("id") Integer adminid) {
 //		Integer adminId = (Integer) req.getSession().getAttribute("adminid");
 		if (result.hasErrors()) {
@@ -85,7 +92,7 @@ public class AnnounceServelet {
 		if (map != null) {
 			return announceSvc.getAnnounceByCompositeQuery(map);
 		} else {
-			return announceSvc.getAllAnnounce(1);
+			return announceSvc.getAllAnnounce();
 		}
 
 	}
@@ -103,5 +110,12 @@ public class AnnounceServelet {
 
 		announceSvc.updateannounce(announce);
 		return ResponseEntity.ok("success");
+	}
+
+	@GetMapping("getById/{id}")
+	private AnnounceVO getAnnounce(@PathVariable("id") Integer announceid) throws IOException {
+
+		return announceSvc.getById(announceid);
+
 	}
 }

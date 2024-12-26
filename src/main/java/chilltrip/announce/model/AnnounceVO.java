@@ -48,7 +48,6 @@ public class AnnounceVO {
 
 	@Column(name = "start_time")
 	@NotNull(message = "開始時間不能為空")
-	@PastOrPresent(message = "開始時間必須是過去或現在的日期")
 	private Date starttime;
 
 	@Column(name = "end_time")
@@ -129,8 +128,8 @@ public class AnnounceVO {
 	}
 
 	public void setCoverphotoFromBase64() {
-		if (this.coverphotoBase64 != null) {
-			byte[] photo = Base64.getDecoder().decode(coverphoto);
+		if (this.coverphotoBase64 != null && !this.coverphotoBase64.isEmpty()) {
+			byte[] photo = Base64.getDecoder().decode(coverphotoBase64);
 			this.coverphoto = photo;
 		}
 	}

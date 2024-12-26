@@ -52,16 +52,16 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	}
 
 	@Override
-	public boolean update(AnnounceVO annouceVO) {
+	public void update(AnnounceVO annouceVO) {
 		// TODO Auto-generated method stub
 		try {
 			getSession().beginTransaction();
 			getSession().update(annouceVO);
-			return true;
+			getSession().getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			getSession().getTransaction().rollback();
-			return false;
+			
 		}
 
 	}
@@ -84,10 +84,11 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	@Override
 	public List<AnnounceVO> getAll() {
 		// TODO Auto-generated method stub
-//		getSession().beginTransaction();
+
 		getSession().beginTransaction();
-		return getSession().createQuery("from AnnounceVO", AnnounceVO.class).list();
-		
+		List<AnnounceVO> list = getSession().createQuery("from AnnounceVO", AnnounceVO.class).list();
+		getSession().getTransaction().commit();
+		return list;
 	}
 
 	@Override
@@ -129,8 +130,10 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	@Override
 	public List<AnnounceVO> getAll(int currentPage) {
 		int first = (currentPage - 1) * PAGE_MAX_RESULT;
+		getSession().beginTransaction();
 		return getSession().createQuery("from AnnounceVO", AnnounceVO.class).setFirstResult(first)
 				.setMaxResults(PAGE_MAX_RESULT).list();
+		
 	}
 	
 	@Override
@@ -150,6 +153,14 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	@Override
 	public long getTotal() {
 		return getSession().createQuery("select count(*) from AnnounceVO", Long.class).uniqueResult();
+	}
+
+	@Override
+	public AnnounceVO getOne(Integer announceid) {
+		getSession().beginTransaction();
+		AnnounceVO announce = getSession().get(AnnounceVO.class, announceid);
+		getSession().getTransaction().commit();
+		return announce;
 	}
 	
 

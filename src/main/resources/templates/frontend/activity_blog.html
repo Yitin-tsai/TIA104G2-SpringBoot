@@ -6,7 +6,7 @@
     <title>Activity For Blogs</title>
 
     <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon" />
+    <link href="/img/favicon.ico" rel="icon" />
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -22,11 +22,11 @@
     />
 
     <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/TIA104G2-SpringBoot/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/style.css" rel="stylesheet" />
-    <link href="css/yuki_style.css" rel="stylesheet" />
+    <link href="/TIA104G2-SpringBoot/css/style.css" rel="stylesheet" />
+    <link href="/TIA104G2-SpringBoot/css/yuki_style.css" rel="stylesheet" />
 
     <style>
      .row {
@@ -137,21 +137,7 @@
     <!------主頁的幻燈片活動區------>
     <div class="row">
       <div class="banner-carousel-box">
-        <div class="banner-carousel">
-          <img src="./img/banner-carousel1.jpg" alt="Banner1" />
-        </div>
-        <div class="banner-carousel">
-          <img src="./img/banner-carousel2.jpg" alt="Banner2" />
-        </div>
-        <div class="banner-carousel">
-          <img src="./img/banner-carousel3.jpg" alt="Banner3" />
-        </div>
-        <div class="banner-carousel">
-          <img src="./img/banner-carousel4.jpg" alt="Banner4" />
-        </div>
-        <div class="banner-carousel">
-          <img src="./img/banner-carousel5.jpg" alt="Banner5" />
-        </div>
+        
       </div>
       <button class="prev">❮</button>
       <button class="next">❯</button>
@@ -165,42 +151,29 @@
           <h5
             class="text-primary text-uppercase mb-3"
             style="letter-spacing: 5px"
+            id ="admin.nickname"
           >
-            活動簡介
+            管理員名稱
           </h5>
-          <h1>Chill・活動名稱</h1>
+          <h5
+            class="text-primary text-uppercase mb-3"
+            style="letter-spacing: 5px"
+            id ="time"
+          >
+            開始時間-結束時間
+          </h5>
+          <h1 id ="title">Chill・活動名稱</h1>
         </div>
         <div class="row">
           <div class="col-lg-6">
             <img
-              src="./img/activityforblog.jpg"
-              alt="Activity1"
-              class="img-fluid rounded"
+              id="photo"
             />
           </div>
           <div class="col-lg-6">
-            <h2 class="text-primary">獎勵發文活動小標題</h2>
-            <br>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
-              voluptates, quod, quae, quibusdam quia quos quas quidem
-              repudiandae, quae quibusdam quia quos quas quidem repudiandae.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
-              voluptates, quod, quae, quibusdam quia quos quas quidem
-              repudiandae, quae quibusdam quia quos quas quidem repudiandae.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
-              voluptates, quod, quae, quibusdam quia quos quas quidem
-              repudiandae, quae quibusdam quia quos quas quidem repudiandae.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
-              voluptates, quod, quae, quibusdam quia quos quas quidem
-              repudiandae, quae quibusdam quia quos quas quidem repudiandae.
-            </p>
+            <h2 class="text-primary" id ="content"></h2>
+            
+            
           </div>
 
         
@@ -326,6 +299,77 @@
         document.getElementById("nav-cart").href = "./cart.html";
       });
     </script>
+    <script>  //動態生成公告圖片
+      document.addEventListener('DOMContentLoaded', function () {
+      
+      const carouselContainer = document.querySelector('.banner-carousel-box');
+  
+      // 动态构建 API 的 URL，基于当前页面的 origin
+      const apiUrl = `${window.location.origin}/TIA104G2-SpringBoot/announce/getAll`;
+  
+      // 使用 fetch 获取公告列表
+      fetch(apiUrl)
+          .then(response => response.json())  // 假设返回的是 JSON
+          .then(announcements => {
+              carouselContainer.innerHTML = '';
+  
+              announcements.forEach(announce => {
+                  const bannerItem = document.createElement('div');
+                  bannerItem.classList.add('banner-carousel');
+  
+                  const link = document.createElement('a');
+                  link.href = `/announce/${announce.announceid}`; // 你可以根据需要设置不同的链接
+  
+                  const img = document.createElement('img');
+                  // 设置图片的 src 属性为 coverphotoBase64
+                  if (announce.coverphotoBase64) {
+                      img.src = announce.coverphotoBase64;  // 将 base64 编码的图片数据设置为 src
+                  }
+                  img.alt = announce.title;       // 设置图片的 alt 属性为公告的标题
+  
+                  link.appendChild(img);
+                  bannerItem.appendChild(link);
+  
+                  carouselContainer.appendChild(bannerItem);
+              });
+          })
+          .catch(error => {
+              console.error('Error fetching announcements:', error);
+          });
+  });</script>
+
+<!-- 頁面內容 -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // 获取 URL 中的路径部分
+  const pathname = window.location.pathname;
+  
+  // 使用正则表达式提取 id
+  const matches = pathname.match(/\/announce\/(\d+)/); // 假设 URL 格式是 /announce/{id}
+  
+  if (matches && matches[1]) {
+    const id = matches[1];  // 获取 id
+    
+    // 使用 fetch 请求数据
+    fetch(`${window.location.origin}/TIA104G2-SpringBoot/announce/getById/${id}`)
+      .then(response => response.json())
+      .then(data => {
+        // 填充页面内容
+        document.getElementById('admin.nickname').innerText = data.adminvo.adminnickname;
+        document.getElementById('time').innerText = `${data.starttime} - ${data.endtime}`;
+        document.getElementById('title').innerText = data.title;
+        document.getElementById('content').innerText = data.content;
+
+        // 填充封面图片，假设封面图片是以 base64 编码的字符串
+        const coverphotoSrc = `data:image/jpeg;base64,${data.coverphoto}`;
+        document.getElementById('photo').src = coverphotoSrc;
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }
+});
+</script>
 
 
     <!------修齊的JS------>
@@ -359,5 +403,6 @@
         }, 3000);
       });
     </script>
+    
   </body>
 </html>
