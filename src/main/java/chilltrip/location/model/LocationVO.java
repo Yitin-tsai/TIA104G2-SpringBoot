@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import chilltrip.locationcomment.model.LocationCommentVO;
 
 @Entity
@@ -44,6 +46,7 @@ public class LocationVO  {
 	
 	@OneToMany(mappedBy= "locationvo",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")
+	@JsonIgnore
 	private Set<LocationCommentVO> locationComment;
 	
 	public Set<LocationCommentVO> getLocationComment() {
