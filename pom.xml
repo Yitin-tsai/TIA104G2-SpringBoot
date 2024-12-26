@@ -8,12 +8,12 @@
 		<version>2.7.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>demoC-Spring-Initializr-SpringBootMVC</groupId>
-	<artifactId>demoC-Spring-Initializr-SpringBootMVC</artifactId>
+	<groupId>TIA104G2-SpringBoot</groupId>
+	<artifactId>TIA104G2-SpringBoot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>demoC-Spring-Initializr-SpringBootMVC</name>
-	<description>demoC-Spring-Initializr-SpringBootMVC</description>
+	<name>TIA104G2-SpringBoot</name>
+	<description>TIA104G2-SpringBoot</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
