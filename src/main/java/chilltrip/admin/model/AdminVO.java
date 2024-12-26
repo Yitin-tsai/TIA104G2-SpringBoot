@@ -15,6 +15,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import chilltrip.announce.model.AnnounceVO;
 
@@ -53,7 +54,7 @@ public class AdminVO implements Serializable {
 	
 	@OneToMany(mappedBy = "adminvo" , cascade = CascadeType.ALL)
 	@OrderBy("announceid asc")
-	@JsonBackReference
+	@JsonIgnore
 	private Set<AnnounceVO> announces;
 
 	public Set<AnnounceVO> getAnnounces() {
