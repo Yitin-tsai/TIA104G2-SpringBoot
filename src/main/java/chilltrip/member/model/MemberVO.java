@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import chilltrip.locationcomment.model.LocationCommentVO;
 import chilltrip.trackmember.model.TrackMemberVO;
 import chilltrip.trip.entity.TripVO;
@@ -90,28 +92,34 @@ public class MemberVO {
 	
 	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")
+	@JsonIgnore
 	private Set<LocationCommentVO> locationComment;
 	
 	
 	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")
+	@JsonIgnore
 	private Set<TripCollectionVO> tripCollectionvo ;
 	
 	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")
+	@JsonIgnore
 	private Set<TripLikeVO> tripLikevo ;
 	
 	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")
+	@JsonIgnore
 	private Set<TripVO> tripvo ;
 	
 	
 	@OneToMany(mappedBy= "fans",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")
+	@JsonIgnore
 	private Set<TrackMemberVO> fans;
 	
 	@OneToMany(mappedBy= "trackedMember",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")
+	@JsonIgnore
 	private Set<TrackMemberVO> trackedMember;
 	
 	
