@@ -5,9 +5,11 @@ import java.util.Map;
 
 public interface AnnounceDAO {
 	
+	
 	public void insert(AnnounceVO annouceVO);
-	public boolean update(AnnounceVO annouceVO);
+	public void update(AnnounceVO annouceVO);
 	public boolean delete(Integer annouceid);
+	public AnnounceVO getOne(Integer announceid);
 	public List<AnnounceVO> getAll();
 	public List<AnnounceVO>  getByCompositeQuery(Map<String, String> map);
 	public List<AnnounceVO> getAll(int currentPage);

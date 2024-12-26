@@ -23,6 +23,12 @@ public class AnnounceService {
 	public AnnounceService(AnnounceDAOimpl dao) {
 		this.dao = dao;
 	}
+	
+	public AnnounceVO getById(Integer announceid) {
+		return dao.getOne(announceid);
+		
+	}
+	
 
 	public AnnounceVO addannounce(AnnounceVO announceVO) {
 		announceVO.setCoverphotoFromBase64();
@@ -30,12 +36,9 @@ public class AnnounceService {
 		return announceVO;
 	}
 
-	public boolean updateannounce(AnnounceVO announceVO) {
-
-		if (dao.update(announceVO)) {
-			return true;
-		}
-		return false;
+	public void updateannounce(AnnounceVO announceVO) {
+		announceVO.setCoverphotoFromBase64();
+		dao.update(announceVO);
 	}
 
 	public boolean deleteannounce(Integer id) {
@@ -61,6 +64,16 @@ public class AnnounceService {
 
 	public List<AnnounceVO> getAllAnnounce(int currentPage) {
 		List<AnnounceVO> announceList = dao.getAll(currentPage);
+		for (AnnounceVO announce : announceList) {
+			if (announce.getCoverphoto() != null) {
+				String photo = announce.getCoverphotoAsBase64();
+				announce.setCoverphotoBase64(photo);
+			}
+		}
+		return announceList;
+	}
+	public List<AnnounceVO> getAllAnnounce() {
+		List<AnnounceVO> announceList = dao.getAll();
 		for (AnnounceVO announce : announceList) {
 			if (announce.getCoverphoto() != null) {
 				String photo = announce.getCoverphotoAsBase64();
