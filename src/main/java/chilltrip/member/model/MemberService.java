@@ -23,16 +23,23 @@ import javax.servlet.http.Part;
 import chilltrip.trackmember.model.TrackMemberDAOimpl;
 import chilltrip.tripcomment.model.TripCommentVO;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 public class MemberService {
+
 
 	private MemberDAO_interface dao;
 	private TrackMemberDAOimpl daotrack;
 	// 使用 Redis
 	private Jedis jedis = new Jedis("localhost", 6379);
 
+	private JedisPool jedisPool; // 使用 JedisPool 進行連線管理
+
 	public MemberService() {
 		dao = new MemberJDBCDAO();
+
+		// 初始化 JedisPool
+		jedisPool = new JedisPool("localhost", 6379);
 	}
 
 	public MemberVO addMember(MemberVO memberVO) {
@@ -62,6 +69,79 @@ public class MemberService {
 
 	public void deleteMember(Integer memberId) {
 		dao.delete(memberId);
+	}
+
+	// 設定臨時密碼
+	public void setTempPassword(String email, int expirationTime, String Token) {
+		try (Jedis jedis = jedisPool.getResource()) {
+			jedis.select(5); // 選擇 db5
+			jedis.setex(email, expirationTime, Token);
+		}
+	}
+
+	// 取得臨時密碼
+	public String getTempPassword(String email) {
+		try (Jedis jedis = jedisPool.getResource()) {
+			jedis.select(5); // 選擇 db5
+			return jedis.get(email);
+		}
+	}
+
+	// 刪除臨時密碼
+	public void deleteTempPassword(String email) {
+		try (Jedis jedis = jedisPool.getResource()) {
+			jedis.select(5); // 選擇 db5
+			jedis.del(email);
+		}
+	}
+
+	public boolean updatePassword(String email, String newPassword) {
+		return dao.updatePasswordByEmail(email, newPassword);
+	}
+
+	public void sendEmail(String to, String subject, String body) {
+		Properties configProps = new Properties();
+		try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+			if (input == null) {
+				System.out.println("找不到 config.properties");
+				return;
+			}
+			// 讀取配置檔案
+			configProps.load(input);
+
+			String from = configProps.getProperty("mail.user"); // 從 config.properties 中讀取信箱
+			String password = configProps.getProperty("mail.password"); // 從 config.properties 中讀取密碼
+
+			Properties props = new Properties();
+			props.put("mail.smtp.host", "smtp.gmail.com");
+			props.put("mail.smtp.socketFactory.port", "465");
+			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.port", "465");
+
+			Session session = Session.getInstance(props, new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(from, password);
+				}
+			});
+
+			try {
+				MimeMessage message = new MimeMessage(session);
+				message.setFrom(new InternetAddress(from));
+				message.addRecipient(Message.RecipientType.TO, new InternetAddress(to)); // 收件者
+				message.setSubject(subject); // 郵件主題
+				message.setText(body); // 郵件內容
+
+				// 發送郵件
+				Transport.send(message);
+				System.out.println("郵件已發送至: " + to);
+			} catch (MessagingException e) {
+				System.err.println("郵件發送失敗: " + e.getMessage());
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	// 根據 email 查詢會員並驗證密碼
@@ -106,32 +186,44 @@ public class MemberService {
 
 	// 發送驗證碼郵件
 	public void sendEmail(String email, String code) {
-		String from = "s9408375@gmail.com"; // 發送者的信箱
-		String password = "gqnpjuoolferejzq"; // 信箱密碼
-
-		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.socketFactory.port", "465");
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", "465");
-
-		Session session = Session.getInstance(props, new Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(from, password);
+		Properties configProps = new Properties();
+		try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+			if (input == null) {
+				System.out.println("找不到 config.properties");
+				return;
 			}
-		});
+			// 讀取配置檔案
+			configProps.load(input);
 
-		try {
-			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(from));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
-			message.setSubject("您的信箱驗證碼");
-			message.setText("親愛的用戶您好,您的信箱驗證碼為: " + code + "，請於 5 分鐘內輸入驗證碼完成註冊。");
+			String from = configProps.getProperty("mail.user"); // 從 config.properties 中讀取信箱
+			String password = configProps.getProperty("mail.password"); // 從 config.properties 中讀取密碼
 
-			Transport.send(message);
-			System.out.println("郵件已發送至: " + email);
-		} catch (MessagingException e) {
+			Properties props = new Properties();
+			props.put("mail.smtp.host", "smtp.gmail.com");
+			props.put("mail.smtp.socketFactory.port", "465");
+			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.port", "465");
+
+			Session session = Session.getInstance(props, new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(from, password);
+				}
+			});
+
+			try {
+				MimeMessage message = new MimeMessage(session);
+				message.setFrom(new InternetAddress(from));
+				message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+				message.setSubject("您的信箱驗證碼");
+				message.setText("親愛的用戶您好,您的信箱驗證碼為: " + code + "，請於 5 分鐘內輸入驗證碼完成註冊。");
+
+				Transport.send(message);
+				System.out.println("郵件已發送至: " + email);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -157,30 +249,30 @@ public class MemberService {
 		}
 
 		if (part == null || part.getSize() == 0) {
-	        // 如果沒有上傳圖片，則使用預設大頭照
-	        System.out.println("未上傳圖片，將使用預設圖片");
-	        photo = getDefaultAvatar(req);
-	    } else {
-	        if (part.getSize() > 5000000) { // 假設限制為 5MB
-	            throw new IOException("圖片檔案過大，請選擇小於 5MB 的檔案");
-	        }
-	        
-	        // 有上傳圖片，讀取圖片
-	        try (InputStream in = part.getInputStream()) {
-	            photo = in.readAllBytes(); // Java 9 的新方法
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	            // 如果讀取圖片時發生錯誤，使用預設圖片
-	            photo = getDefaultAvatar(req);
-	        }
-	    }
-		
+			// 如果沒有上傳圖片，則使用預設大頭照
+			System.out.println("未上傳圖片，將使用預設圖片");
+			photo = getDefaultAvatar(req);
+		} else {
+			if (part.getSize() > 5000000) { // 假設限制為 5MB
+				throw new IOException("圖片檔案過大，請選擇小於 5MB 的檔案");
+			}
+
+			// 有上傳圖片，讀取圖片
+			try (InputStream in = part.getInputStream()) {
+				photo = in.readAllBytes(); // Java 9 的新方法
+			} catch (IOException e) {
+				e.printStackTrace();
+				// 如果讀取圖片時發生錯誤，使用預設圖片
+				photo = getDefaultAvatar(req);
+			}
+		}
+
 		// 如果 photo 還是 null，則返回預設圖片
-		if(photo == null) {
+		if (photo == null) {
 			photo = getDefaultAvatar(req);
 		}
 		return photo;
-    }
+	}
 
 	private byte[] getDefaultAvatar(HttpServletRequest req) throws IOException {
 
@@ -205,5 +297,12 @@ public class MemberService {
 
 	public MemberVO getMemberByEmail(String email) {
 		return dao.findByEmail(email);
+	}
+
+	// 結束時關閉 JedisPool 資源
+	public void closeJedisPool() {
+		if (jedisPool != null) {
+			jedisPool.close();
+		}
 	}
 }

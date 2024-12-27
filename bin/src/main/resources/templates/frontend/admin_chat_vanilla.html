@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Chat Vanilla</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/yuki_style.css" rel="stylesheet" />
+
+    <style>
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 0;
+      }
+
+      .dropdown-menu.show {
+        display: block;
+      }
+
+      .dropdown-item {
+        padding: 8px 16px;
+        clear: both;
+        font-weight: 400;
+        color: #212529;
+        text-align: inherit;
+        white-space: nowrap;
+        background-color: transparent;
+        border: 0;
+      }
+
+      .dropdown-item:hover {
+        background-color: #f8f9fa;
+        color: #ff6600;
+      }
+      .breadcrumb {
+        background-color: transparent;
+        /* 移除背景色 */
+        list-style: none;
+        /* 移除列表樣式 */
+        display: flex;
+        padding: 0;
+        margin: 1rem 0;
+      }
+
+      .breadcrumb-item {
+        font-size: calc(1rem - 4px);
+        /* 比 dropdown-item 小 4px */
+        color: #6c757d !important;
+        /* 預設顯示為灰色，並覆蓋 Bootstrap 預設樣式 */
+        text-decoration: none;
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+      }
+
+      .breadcrumb-item + .breadcrumb-item::before {
+        content: ">";
+        padding: 0 0.5rem;
+        color: #6c757d;
+      }
+
+      .breadcrumb-item a {
+        color: #6c757d !important;
+        /* 更改 a 標籤的預設顏色為灰色 */
+        text-decoration: none;
+        /* 移除下劃線 */
+      }
+
+      .breadcrumb-item a:hover {
+        color: #ff6600 !important;
+        /* 滑鼠移動到 a 標籤上時顯示為橘色 */
+      }
+
+      .breadcrumb-item.active {
+        color: #ff6600 !important;
+        /* 最後一個元素顯示為橘色，並覆蓋 Bootstrap 預設樣式 */
+      }
+
+      .top-nav {
+        background-color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .nav-left,
+      .nav-right {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .nav-item {
+        text-decoration: none;
+        color: #212529;
+      } 
+
+
+      /*專屬這一頁的css*/
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .big-chat-container {
+        margin-top: 30px;
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        background-color: #f5f7fb;
+      }
+
+      /* 左側用戶列表 */
+      .sidebar {
+        width: 320px;
+        background: #fff;
+        border-right: 1px solid #e1e4ea;
+      }
+
+      .user-list {
+        overflow-y: auto;
+        height: 100%;
+      }
+
+      .user-item {
+        display: flex;
+        padding: 15px;
+        cursor: pointer;
+        border-bottom: 1px solid #e1e4ea;
+        transition: background-color 0.2s;
+      }
+
+      .user-item:hover {
+        background-color: #f8f9fa;
+      }
+
+      .user-item.active {
+        background-color: #e9ecef;
+      }
+
+      .avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        margin-right: 12px;
+      }
+
+      .user-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .user-name {
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .last-message {
+        font-size: 14px;
+        color: #6c757d;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .message-time {
+        font-size: 12px;
+        color: #adb5bd;
+        margin-top: 4px;
+      }
+
+      /* 右側聊天區域 */
+      .chat-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .chat-header {
+        padding: 15px;
+        background: #fff;
+        border-bottom: 1px solid #e1e4ea;
+        display: flex;
+        align-items: center;
+      }
+
+      .chat-title {
+        font-weight: 600;
+        margin-left: 12px;
+      }
+
+      .messages-container {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+      }
+
+      .message {
+        display: flex;
+        flex-direction: column;
+        max-width: 70%;
+        margin-bottom: 20px;
+      }
+
+      .message.sent {
+        align-self: flex-end;
+      }
+
+      .message-bubble {
+        padding: 12px 16px;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .message.sent .message-bubble {
+        background: #0084ff;
+        color: #fff;
+      }
+
+      .message-time {
+        font-size: 12px;
+        color: #adb5bd;
+        margin-top: 4px;
+        align-self: flex-start;
+      }
+
+      .message.sent .message-time {
+        align-self: flex-end;
+      }
+
+      /* 輸入區域 */
+      .input-container {
+        padding: 15px;
+        background: #fff;
+        border-top: 1px solid #e1e4ea;
+      }
+
+      .input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .input-actions {
+        position: relative;
+      }
+
+      .plus-menu {
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        background: #fff;
+        border: 1px solid #e1e4ea;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: none;
+        margin-bottom: 8px;
+        min-width: 160px;
+      }
+
+      .plus-menu.active {
+        display: block;
+      }
+
+      .plus-menu-item {
+        padding: 8px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .plus-menu-item:hover {
+        background-color: #f8f9fa;
+      }
+
+      .message-input {
+        flex: 1;
+        padding: 10px 16px;
+        border: 1px solid #e1e4ea;
+        border-radius: 24px;
+        outline: none;
+        font-size: 14px;
+      }
+
+      .message-input:focus {
+        border-color: #0084ff;
+      }
+
+      .action-btn {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        background: none;
+        border-radius: 50%;
+        cursor: pointer;
+        color: #6c757d;
+        transition: background-color 0.2s;
+      }
+
+      .action-btn:hover {
+        background-color: #f8f9fa;
+        color: #0084ff;
+      }
+
+      footer {
+        margin-top: auto;
+        padding: 20px;
+        background: white;
+        text-align: center;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .social-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        transition: opacity 0.3s;
+      }
+
+      .social-icon:hover {
+        opacity: 0.8;
+      }
+
+      .facebook {
+        background-color: #3b5998;
+      }
+
+      .instagram {
+        background-color: #e1306c;
+      }
+
+      .youtube {
+        background-color: #ff0000;
+      }
+
+      .copyright {
+        color: #666;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!------網站header------>
+    <div id="app">
+      <header>
+        <nav class="top-nav">
+          <div class="nav-left">
+            <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+            <a href="./product.html" class="nav-item nav-link" id="nav-product"
+              >購！票券</a
+            >
+            <a href="#" class="nav-item nav-link" id="nav-profile">活動管理</a>
+          </div>
+          <div class="nav-center">
+            <a href="#">
+              <img
+                id="ChillTrip_logo"
+                src="./img/logo_black.png"
+                alt="Chill Trip"
+                style="width: 150px; height: auto; cursor: pointer"
+              />
+            </a>
+          </div>
+          <div class="nav-right">
+            <div class="nav-item dropdown">
+              <a
+                href="#"
+                class="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+                style="color: #212529"
+                >管理員中心</a
+              >
+              <div class="dropdown-menu rounded-0 m-0">
+                <a href="#" class="dropdown-item" id="nav-basic-info"
+                  >基本資料</a
+                >
+                <a href="#" class="dropdown-item" id="nav-coupons"
+                  >一般會員列表</a
+                >
+                <a href="#" class="dropdown-item" id="nav-orders">管理員列表</a>
+              </div>
+            </div>
+            <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+          </div>
+        </nav>
+      </header>
+    </div>
+
+    <!------網站Breadcrumb Navigation（麵包屑導航）------>
+    <div class="top-nav">
+      <div aria-label="breadcrumb">
+        <ul class="breadcrumb" id="breadcrumb-nav">
+          <!-- 麵包屑導航項目將由 JavaScript 動態生成 -->
+        </ul>
+      </div>
+    </div>
+
+    <div class="big-chat-container">
+      <!-- 左側用戶列表 -->
+      <div class="sidebar">
+        <div class="user-list" id="userList">
+          <!-- 用戶列表項目將由 JavaScript 動態生成 -->
+        </div>
+      </div>
+
+      <!-- 右側聊天區域 -->
+      <div class="chat-container">
+        <div class="chat-header" id="chatHeader">
+          <!-- 聊天室標題將由 JavaScript 動態生成 -->
+        </div>
+        <div class="messages-container" id="messagesContainer">
+          <!-- 訊息內容將由 JavaScript 動態生成 -->
+        </div>
+        <div class="input-container">
+          <div class="input-wrapper">
+            <div class="input-actions">
+              <button class="action-btn" id="plusBtn">
+                <i class="fas fa-plus"></i>
+              </button>
+              <div class="plus-menu" id="plusMenu">
+                <div class="plus-menu-item">
+                  <i class="fas fa-image"></i>
+                  <span>選擇圖片</span>
+                </div>
+                <div class="plus-menu-item">
+                  <i class="fas fa-paperclip"></i>
+                  <span>選擇檔案</span>
+                </div>
+                <div class="plus-menu-item">
+                  <i class="fas fa-video"></i>
+                  <span>選擇影片</span>
+                </div>
+              </div>
+            </div>
+            <input
+              type="text"
+              class="message-input"
+              id="messageInput"
+              placeholder="輸入訊息..."
+            />
+            <button class="action-btn">
+              <i class="fas fa-phone"></i>
+            </button>
+            <button class="action-btn">
+              <i class="fas fa-video"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     <!------網站footer------>
+     <footer>
+      <div class="d-flex justify-content-start mt-4">
+        <a class="btn btn-outline-light btn-square mr-2" href="#"
+          ><i class="fab fa-twitter"></i
+        ></a>
+        <a class="btn btn-outline-light btn-square mr-2" href="#"
+          ><i class="fab fa-facebook-f"></i
+        ></a>
+        <a class="btn btn-outline-light btn-square mr-2" href="#"
+          ><i class="fab fa-linkedin-in"></i
+        ></a>
+        <a class="btn btn-outline-light btn-square" href="#"
+          ><i class="fab fa-instagram"></i
+        ></a>
+      </div>
+      <div class="social-links">
+        <div style="display: flex; gap: 10px">
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #3b5998;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-facebook-f"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #e1306c;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-instagram"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #ff0000;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-youtube"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+        </div>
+
+        <!-- 加載 Font Awesome 圖標庫 -->
+        <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          rel="stylesheet"
+        />
+      </div>
+      <div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const breadcrumbNav = document.getElementById("breadcrumb-nav");
+
+        // 定義麵包屑導航的項目
+        const breadcrumbItems = [
+          { name: "管理員專區", link: "index.html" },
+          { name: "客服中心", link: "member_login.html" },
+        ];
+
+        // 動態生成麵包屑導航的 HTML 結構
+        breadcrumbItems.forEach((item, index) => {
+          const li = document.createElement("li");
+          li.className = "breadcrumb-item";
+          if (index === breadcrumbItems.length - 1) {
+            li.classList.add("active");
+            li.setAttribute("aria-current", "page");
+            li.textContent = item.name;
+          } else {
+            const a = document.createElement("a");
+            a.href = item.link;
+            a.textContent = item.name;
+            li.appendChild(a);
+          }
+          breadcrumbNav.appendChild(li);
+        });
+      });
+
+      // 模擬用戶數據
+      const users = [
+        {
+          id: 1,
+          name: "王小明",
+          avatar: "/api/placeholder/48/48",
+          lastMessage: "好的，謝謝你的協助！",
+          lastMessageTime: new Date(2024, 11, 13, 14, 30),
+        },
+        {
+          id: 2,
+          name: "李小華",
+          avatar: "/api/placeholder/48/48",
+          lastMessage: "請問商品什麼時候會到貨？",
+          lastMessageTime: new Date(2024, 11, 12, 16, 45),
+        },
+      ];
+
+      // 模擬對話記錄
+      const messages = {
+        1: [
+          {
+            sender: 1,
+            content: "你好，我想詢問退貨的問題",
+            timestamp: new Date(2024, 11, 13, 14, 25),
+          },
+          {
+            sender: "agent",
+            content: "您好，很樂意為您服務，請問是哪筆訂單需要退貨呢？",
+            timestamp: new Date(2024, 11, 13, 14, 28),
+          },
+          {
+            sender: 1,
+            content: "好的，謝謝你的協助！",
+            timestamp: new Date(2024, 11, 13, 14, 30),
+          },
+        ],
+        2: [
+          {
+            sender: 2,
+            content: "請問商品什麼時候會到貨？",
+            timestamp: new Date(2024, 11, 12, 16, 45),
+          },
+        ],
+      };
+
+      // 格式化時間
+      function formatTime(date) {
+        const now = new Date();
+        const isToday = date.toDateString() === now.toDateString();
+
+        if (isToday) {
+          return date.toLocaleTimeString("zh-TW", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        } else {
+          return date.toLocaleDateString("zh-TW", {
+            month: "2-digit",
+            day: "2-digit",
+          });
+        }
+      }
+
+      // 渲染用戶列表
+      function renderUserList() {
+        const userList = document.getElementById("userList");
+        userList.innerHTML = users
+          .map(
+            (user) => `
+                <div class="user-item" data-user-id="${user.id}">
+                    <img src="${user.avatar}" alt="${user.name}" class="avatar">
+                    <div class="user-info">
+                        <div class="user-name">${user.name}</div>
+                        <div class="last-message">${user.lastMessage}</div>
+                        <div class="message-time">${formatTime(
+                          user.lastMessageTime
+                        )}</div>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+
+        // 添加點擊事件
+        userList.querySelectorAll(".user-item").forEach((item) => {
+          item.addEventListener("click", () => {
+            const userId = parseInt(item.dataset.userId);
+            selectUser(userId);
+          });
+        });
+      }
+
+      // 選擇用戶
+      function selectUser(userId) {
+        const user = users.find((u) => u.id === userId);
+
+        // 更新標題
+        document.getElementById("chatHeader").innerHTML = `
+                <img src="${user.avatar}" alt="${user.name}" class="avatar">
+                <div class="chat-title">${user.name}</div>
+            `;
+
+        // 渲染對話
+        renderMessages(userId);
+
+        // 更新選中狀態
+        document.querySelectorAll(".user-item").forEach((item) => {
+          item.classList.remove("active");
+          if (parseInt(item.dataset.userId) === userId) {
+            item.classList.add("active");
+          }
+        });
+      }
+
+      // 渲染訊息
+      function renderMessages(userId) {
+        const messagesList = messages[userId] || [];
+        const messagesContainer = document.getElementById("messagesContainer");
+
+        messagesContainer.innerHTML = messagesList
+          .map(
+            (msg) => `
+                <div class="message ${msg.sender === "agent" ? "sent" : ""}">
+                    <div class="message-bubble">${msg.content}</div>
+                    <div class="message-time">${formatTime(msg.timestamp)}</div>
+                </div>
+            `
+          )
+          .join("");
+
+        // 滾動到最新訊息
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      // 發送訊息
+      function sendMessage(content, userId) {
+        if (!content.trim()) return;
+
+        const newMessage = {
+          sender: "agent",
+          content: content,
+          timestamp: new Date(),
+        };
+
+        if (!messages[userId]) {
+          messages[userId] = [];
+        }
+        messages[userId].push(newMessage);
+
+        // 更新界面
+        renderMessages(userId);
+
+        // 更新用戶列表最後訊息
+        const user = users.find((u) => u.id === userId);
+        if (user) {
+          user.lastMessage = content;
+          user.lastMessageTime = new Date();
+          renderUserList();
+        }
+      }
+
+      // 初始化
+      document.addEventListener("DOMContentLoaded", () => {
+        renderUserList();
+
+        // 預設選擇第一個用戶
+        if (users.length > 0) {
+          selectUser(users[0].id);
+        }
+
+        // 處理訊息輸入
+        const messageInput = document.getElementById("messageInput");
+        messageInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            const content = messageInput.value.trim();
+            const activeUser = document.querySelector(".user-item.active");
+            if (activeUser) {
+              const userId = parseInt(activeUser.dataset.userId);
+              sendMessage(content, userId);
+              messageInput.value = "";
+            }
+          }
+        });
+
+        // 處理加號選單
+        const plusBtn = document.getElementById("plusBtn");
+        const plusMenu = document.getElementById("plusMenu");
+
+        plusBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          plusMenu.classList.toggle("active");
+        });
+
+        // 點擊其他地方關閉選單
+        document.addEventListener("click", () => {
+          plusMenu.classList.remove("active");
+        });
+      });
+    </script>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+  </body>
+</html>
