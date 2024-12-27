@@ -322,7 +322,7 @@
                   bannerItem.classList.add('banner-carousel');
   
                   const link = document.createElement('a');
-                  link.href = `${window.location.origin}/announce/${announce.announceid}`; // 你可以根据需要设置不同的链接
+                  link.href = `${window.location.origin}${window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : ''}/${announce.announceid}`; // 你可以根据需要设置不同的链接
   
                   const img = document.createElement('img');
                   // 设置图片的 src 属性为 coverphotoBase64

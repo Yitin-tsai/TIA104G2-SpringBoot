@@ -2,14 +2,18 @@ package chilltrip.trackmember.model;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import chilltrip.member.model.MemberVO;
-
+@Service
 public class TrackMemberService {
-
+	
+	@Autowired
 	private TrackMemberDAO dao;
 
-	public TrackMemberService() {
-		dao = new TrackMemberDAOimpl();
+	public TrackMemberService(TrackMemberDAOimpl dao) {
+		this.dao = dao;
 	}
 
 	public TrackMemberVO trackMember(TrackMemberVO trackMemberVO) {
@@ -25,7 +29,7 @@ public class TrackMemberService {
 	public List<MemberVO> getAllfans(Integer memberId) {
 		return dao.getAllfans(memberId);
 	}
-	public List<TrackMemberVO> getAllTracks(Integer memberId) {
+	public List<MemberVO> getAllTracks(Integer memberId) {
 		return dao.getAllTracks(memberId);
 	}
 	public Integer getFanQty(Integer memberId) {
