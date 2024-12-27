@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import chilltrip.locationcomment.model.LocationCommentVO;
 import chilltrip.trackmember.model.TrackMemberVO;
-import chilltrip.trip.entity.TripVO;
+import chilltrip.trip.model.TripVO;
 import chilltrip.tripcollection.model.TripCollectionVO;
 import chilltrip.triplike.model.TripLikeVO;
 

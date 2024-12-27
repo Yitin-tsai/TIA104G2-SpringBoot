@@ -23,7 +23,7 @@
 		<mapping class="chilltrip.locationcomment.model.LocationCommentVO"/>
 		<mapping class="chilltrip.member.model.MemberVO"/>
 		<mapping class="chilltrip.tripcollection.model.TripCollectionVO"/>
-		<mapping class="chilltrip.trip.entity.TripVO"/>
+		<mapping class="chilltrip.trip.model.TripVO"/>
 		<mapping class="chilltrip.triplike.model.TripLikeVO"/>
 		<mapping class="chilltrip.trackmember.model.TrackMemberVO"/>
 		

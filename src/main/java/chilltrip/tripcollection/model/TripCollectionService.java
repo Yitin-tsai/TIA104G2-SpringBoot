@@ -5,15 +5,18 @@ import static chilltrip.util.Constants.PAGE_MAX_RESULT;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import chilltrip.util.HibernateUtil;
-
+@Service
 public class TripCollectionService {
-
+	
+	@Autowired
 	private TripCollectionDAO dao;
 
-	public TripCollectionService() {
-		dao = new TripCollectionDAOImpl();
+	public TripCollectionService(TripCollectionDAOImpl dao) {
+		this.dao = dao;
 	}
 
 	public TripCollectionVO addTripCollection(TripCollectionVO tripCollectionVO) {

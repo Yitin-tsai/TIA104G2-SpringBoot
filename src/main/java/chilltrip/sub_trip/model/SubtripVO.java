@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import javax.sql.rowset.serial.SerialClob;
 import javax.sql.rowset.serial.SerialException;
 
-import chilltrip.trip.entity.TripVO;
+import chilltrip.trip.model.TripVO;
 
 @Entity
 
