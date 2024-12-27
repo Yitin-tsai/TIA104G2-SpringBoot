@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+  
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Activity For Blogs</title>
@@ -22,11 +23,11 @@
     />
 
     <!-- Libraries Stylesheet -->
-    <link href="/TIA104G2-SpringBoot/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="/TIA104G2-SpringBoot/css/style.css" rel="stylesheet" />
-    <link href="/TIA104G2-SpringBoot/css/yuki_style.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
+    <link href="/css/yuki_style.css" rel="stylesheet" />
 
     <style>
      .row {
@@ -99,14 +100,14 @@
         <nav class="top-nav">
           <div class="nav-left">
             <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
-            <a href="./product.html" class="nav-item nav-link" id="nav-product">購！票券</a>
+            <a href="#" class="nav-item nav-link" id="nav-product">購！票券</a>
             <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
             <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
           </div>
           <div class="nav-center">
-            <a href="./index.html">
+            <a href="/">
               <img
-                src="./img/logo_black.png"
+                src="/img/logo_black.png"
                 alt="Chill Trip"
                 style="width: 150px; height: auto"
               />
@@ -275,15 +276,15 @@
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="/lib/easing/easing.min.js"></script>
+    <script src="/lib/owlcarousel/owl.carousel.min.js"></script>
 
     <!-- Contact Javascript File -->
-    <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
+    <script src="/mail/jqBootstrapValidation.min.js"></script>
+    <script src="/mail/contact.js"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="/js/main.js"></script>
 
     <!-- 導航欄nav的href載入器 -->
     <script>
@@ -303,12 +304,15 @@
       document.addEventListener('DOMContentLoaded', function () {
       
       const carouselContainer = document.querySelector('.banner-carousel-box');
+   // 獲取當前頁面的 URL 路徑
+      const currentPath = window.location.pathname;
+
+      // 將路徑中的最後一部分替換為 'getAll'
+      const newUrl = currentPath.replace(/\/[^\/]+$/, '/getAll');
   
-      // 动态构建 API 的 URL，基于当前页面的 origin
-      const apiUrl = `${window.location.origin}/TIA104G2-SpringBoot/announce/getAll`;
-  
+      
       // 使用 fetch 获取公告列表
-      fetch(apiUrl)
+      fetch(newUrl)
           .then(response => response.json())  // 假设返回的是 JSON
           .then(announcements => {
               carouselContainer.innerHTML = '';
@@ -318,7 +322,7 @@
                   bannerItem.classList.add('banner-carousel');
   
                   const link = document.createElement('a');
-                  link.href = `/announce/${announce.announceid}`; // 你可以根据需要设置不同的链接
+                  link.href = `${window.location.origin}/announce/${announce.announceid}`; // 你可以根据需要设置不同的链接
   
                   const img = document.createElement('img');
                   // 设置图片的 src 属性为 coverphotoBase64
@@ -341,17 +345,24 @@
 <!-- 頁面內容 -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  // 获取 URL 中的路径部分
-  const pathname = window.location.pathname;
-  
-  // 使用正则表达式提取 id
-  const matches = pathname.match(/\/announce\/(\d+)/); // 假设 URL 格式是 /announce/{id}
-  
-  if (matches && matches[1]) {
-    const id = matches[1];  // 获取 id
-    
-    // 使用 fetch 请求数据
-    fetch(`${window.location.origin}/TIA104G2-SpringBoot/announce/getById/${id}`)
+	
+	 // 获取 URL 中的路径部分
+	  const pathname = window.location.pathname;
+	  
+	  // 使用正则表达式提取 id
+	  const matches = pathname.match(/\/announce\/(\d+)/); // 假设 URL 格式是 /announce/{id}
+	  
+	  if (matches && matches[1]) {
+	    const id = matches[1];  // 获取 id
+	    
+	    // 使用正则表达式将最后的数字部分替换为 '/getById/{id}'
+	    const newUrlPath = pathname.replace(/\/(\d+)$/, `/getById/${id}`);
+	    
+	    // 拼接新的完整 URL
+	    const apiUrl = window.location.origin + newUrlPath;
+	    
+	    // 使用 fetch 请求数据
+	    fetch(apiUrl)
       .then(response => response.json())
       .then(data => {
         // 填充页面内容

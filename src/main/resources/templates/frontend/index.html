@@ -881,7 +881,7 @@
       const carouselContainer = document.querySelector('.banner-carousel-box');
   
       // 动态构建 API 的 URL，基于当前页面的 origin
-      const apiUrl = `${window.location.origin}/TIA104G2-SpringBoot/announce/getAll`;
+      const apiUrl = `${window.location.origin}${window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : ''}/announce/getAll`;
   
       // 使用 fetch 获取公告列表
       fetch(apiUrl)
@@ -895,7 +895,7 @@
 
                   const link = document.createElement('a');
                   const contextPath = window.location.pathname.split('/')[1];
-                  link.href = `/${contextPath}/announce/${announce.announceid}`; 
+                  link.href = `${window.location.origin}${window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : ''}/announce/${announce.announceid}`; 
   
                   const img = document.createElement('img');
                   // 设置图片的 src 属性为 coverphotoBase64
