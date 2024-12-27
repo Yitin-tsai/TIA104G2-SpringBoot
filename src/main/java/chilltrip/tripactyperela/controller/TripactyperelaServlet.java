@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import chillchip.trip.model.TripService;
-import chillchip.trip.model.TripVO;
+import chilltrip.trip.model.TripService;
+import chilltrip.trip.model.TripVO;
 import chilltrip.tripactyperela.model.TripactyperelaService;
 import chilltrip.tripactyperela.model.TripactyperelaVO;
 

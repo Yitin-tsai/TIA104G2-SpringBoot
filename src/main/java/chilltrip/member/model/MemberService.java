@@ -20,16 +20,25 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import chilltrip.trackmember.model.TrackMemberDAO;
 import chilltrip.trackmember.model.TrackMemberDAOimpl;
 import chilltrip.tripcomment.model.TripCommentVO;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+
+@Service
+
 public class MemberService {
 
 
 	private MemberDAO_interface dao;
-	private TrackMemberDAOimpl daotrack;
+	
+	@Autowired
+	private TrackMemberDAO trackDao;
 	// 使用 Redis
 	private Jedis jedis = new Jedis("localhost", 6379);
 
@@ -49,8 +58,8 @@ public class MemberService {
 
 	public MemberVO updateMember(MemberVO memberVO) {
 		Integer id =memberVO.getMemberId();
-		memberVO.setFansNumber(daotrack.getFansQty(id));
-		memberVO.setTrackingNumber(daotrack.getTracksQty(id));		
+		memberVO.setFansNumber(trackDao.getFansQty(id));
+		memberVO.setTrackingNumber(trackDao.getTracksQty(id));		
 		dao.update(memberVO);
 		return memberVO;
 	}

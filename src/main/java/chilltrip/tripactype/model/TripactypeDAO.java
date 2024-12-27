@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import chillchip.trip.model.TripVO;
+import chilltrip.trip.model.TripVO;
 import chilltrip.tripactyperela.model.TripactyperelaVO;
 
 public class TripactypeDAO implements TripactypeDAO_interface  {

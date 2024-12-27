@@ -2,9 +2,9 @@ package chilltrip.triparea.model;
 
 import java.util.List;
 
-import chillchip.trip.dao.TripDAO;
-import chillchip.trip.dao.TripDAOImplJDBC;
-import chillchip.trip.model.TripVO;
+import chilltrip.trip.dao.TripDAO;
+import chilltrip.trip.dao.TripDAOImplJDBC;
+import chilltrip.trip.model.TripVO;
 
 public class TripAreaService {
 

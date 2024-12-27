@@ -2,7 +2,7 @@ package chilltrip.tripactyperela.model;
 
 import java.util.List;
 
-import chillchip.trip.model.TripVO;
+import chilltrip.trip.model.TripVO;
 import chilltrip.tripactype.model.TripactypeVO;
 
 public class TripactyperelaService {

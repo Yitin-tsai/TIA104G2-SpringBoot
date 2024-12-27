@@ -4,16 +4,18 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import chilltrip.util.HibernateUtil;
 
-
+@Repository
 public class TripLikeDAOimpl implements TripLikeDAO {
 	
 	private SessionFactory factory;
-	
-	public TripLikeDAOimpl() {
-		factory = HibernateUtil.getSessionFactory();
+	@Autowired
+	public TripLikeDAOimpl(SessionFactory factory) {
+		this.factory = factory;
 	}
 
 	private Session getSession() {
@@ -55,23 +57,25 @@ public class TripLikeDAOimpl implements TripLikeDAO {
 	public List<TripLikeVO> getByTrip(Integer tripId) {
 		Session session = getSession();
 		session.beginTransaction();
-		return session.createQuery("FROM TripLikeVO tl WHERE tl.tripvo.trip_id = :tripId", TripLikeVO.class)
+		List<TripLikeVO> list =  session.createQuery("FROM TripLikeVO tl WHERE tl.tripvo.trip_id = :tripId", TripLikeVO.class)
 				.setParameter("tripId", tripId)
 				.list();
+		session.getTransaction().commit();
+		return list;
+		
 	}
 
 	@Override
 	public List<TripLikeVO> getByMember(Integer memberId) {
 		Session session = getSession();
 		session.beginTransaction();
-		return session.createQuery("FROM TripLikeVO tl WHERE tl.membervo.memberId = :memberId", TripLikeVO.class)
+		List<TripLikeVO> list =  session.createQuery("FROM TripLikeVO tl WHERE tl.membervo.memberId = :memberId", TripLikeVO.class)
 				.setParameter("memberId", memberId)
 				.list();
+		session.getTransaction().commit();
+		return list;
 	}
 	
-	public static void main(String[] args) {
-		TripLikeDAO dao = new TripLikeDAOimpl();
-		System.out.println(dao.getByTrip(1));
-	}
+	
 	
 }
