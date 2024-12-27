@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import chilltrip.trip.entity.TripVO;
+import chilltrip.trip.model.TripVO;
 import chilltrip.tripactype.model.TripactypeVO;
 
 
