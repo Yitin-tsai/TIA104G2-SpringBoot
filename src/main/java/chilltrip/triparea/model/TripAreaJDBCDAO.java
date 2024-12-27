@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import chillchip.trip.model.TripVO;
+import chilltrip.trip.model.TripVO;
 
 public class TripAreaJDBCDAO implements TripAreaDAO_interface {
 	String driver = "com.mysql.cj.jdbc.Driver";

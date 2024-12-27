@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import chillchip.trip.model.TripVO;
+import chilltrip.trip.model.TripVO;
 import chilltrip.triparea.model.TripAreaService;
 import chilltrip.triparea.model.TripAreaVO;
 

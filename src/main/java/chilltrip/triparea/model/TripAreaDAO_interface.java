@@ -2,7 +2,7 @@ package chilltrip.triparea.model;
 
 import java.util.List;
 
-import chillchip.trip.model.TripVO;
+import chilltrip.trip.model.TripVO;
 
 public interface TripAreaDAO_interface {
 	public void insert(TripAreaVO tripAreaVO);

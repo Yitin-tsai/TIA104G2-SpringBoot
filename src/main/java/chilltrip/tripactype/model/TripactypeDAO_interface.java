@@ -2,7 +2,7 @@ package chilltrip.tripactype.model;
 
 import java.util.List;
 
-import chillchip.trip.model.TripVO;
+import chilltrip.trip.model.TripVO;
 
 
 public interface TripactypeDAO_interface {

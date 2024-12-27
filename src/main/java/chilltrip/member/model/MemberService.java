@@ -27,12 +27,11 @@ import chilltrip.trackmember.model.TrackMemberDAO;
 import chilltrip.trackmember.model.TrackMemberDAOimpl;
 import chilltrip.tripcomment.model.TripCommentVO;
 import redis.clients.jedis.Jedis;
-<<<<<<< Upstream, based on branch 'main' of https://github.com/Yitin-tsai/TIA104G2-SpringBoot.git
 import redis.clients.jedis.JedisPool;
 
-=======
+
 @Service
->>>>>>> 46d5c4b track member triplike location comment  tripcollection  spring boot ver complete
+
 public class MemberService {
 
 

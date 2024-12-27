@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import chillchip.trip.model.TripVO;
+import chilltrip.trip.model.TripVO;
 
 @Entity
 @Table(name = "itinerary_area")
