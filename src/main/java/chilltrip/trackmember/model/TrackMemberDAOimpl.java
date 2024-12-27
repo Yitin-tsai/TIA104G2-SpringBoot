@@ -68,19 +68,19 @@ public class TrackMemberDAOimpl  implements TrackMemberDAO{
 	}
 
 	@Override
-	public long getFansQty(Integer memberId) {
+	public Integer getFansQty(Integer memberId) {
 		getSession().beginTransaction();
-		return getSession().createQuery("select count(*) FROM TrackMemberVO tm WHERE tm.trackedMember.memberId = :memberId", Long.class)
+		return Integer.valueOf(getSession().createQuery("select count(*) FROM TrackMemberVO tm WHERE tm.trackedMember.memberId = :memberId", Integer.class)
 				.setParameter("memberId", memberId)
-				.uniqueResult();
+				.uniqueResult());
 	}
 
 	@Override
-	public long getTracksQty(Integer fansId) {
+	public Integer getTracksQty(Integer fansId) {
 		getSession().beginTransaction();
-		return getSession().createQuery("select count(*) FROM TrackMemberVO tm WHERE tm.fans.memberId = :memberId", Long.class)
+		return Integer.valueOf( getSession().createQuery("select count(*) FROM TrackMemberVO tm WHERE tm.fans.memberId = :memberId", Integer.class)
 				.setParameter("memberId", fansId)
-				.uniqueResult();
+				.uniqueResult());
 		
 	}
 	public static void main(String[] args) {

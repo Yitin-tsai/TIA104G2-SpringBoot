@@ -7,9 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import chilltrip.member.model.MemberService;
 import chilltrip.member.model.MemberVO;
-import chilltrip.trackmember.model.TrackMemberDAO;
 import chilltrip.trackmember.model.TrackMemberService;
 import chilltrip.trackmember.model.TrackMemberVO;
 
@@ -19,9 +20,15 @@ public class TrackMemberServlet {
 	public void init() {
 		trackMemSvc = new TrackMemberService();
 	}
-
-	public void trackMember(/* @RequsetBody */ TrackMemberVO trackMembervo) {
+    @PostMapping("/track")
+	public void trackMember(TrackMemberVO trackMembervo) {
 		trackMemSvc.trackMember(trackMembervo);
+		MemberService membersvc =new MemberService();
+		MemberVO fans = trackMembervo.getFans();
+		MemberVO tracker = trackMembervo.getTrackedMember();
+		membersvc.updateMember(fans);
+		membersvc.updateMember(tracker);
+		
 	}
 
 	public void deleteTrack(/* @PathVariable("id") */ Integer id) {
@@ -67,10 +74,10 @@ public class TrackMemberServlet {
 		}
 	}
 	
-	public Long getFansQty(Integer memberId) {
+	public Integer getFansQty(Integer memberId) {
 		return trackMemSvc.getFanQty(memberId);
 	}
-	public Long getTracksQty(Integer memberId) {
+	public Integer getTracksQty(Integer memberId) {
 		return trackMemSvc.getTracksQty(memberId);
 	}
 }

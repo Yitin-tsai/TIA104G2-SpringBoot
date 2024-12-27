@@ -20,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
+import chilltrip.trackmember.model.TrackMemberDAOimpl;
 import chilltrip.tripcomment.model.TripCommentVO;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -28,6 +29,7 @@ public class MemberService {
 
 
 	private MemberDAO_interface dao;
+	private TrackMemberDAOimpl daotrack;
 	// 使用 Redis
 	private Jedis jedis = new Jedis("localhost", 6379);
 
@@ -46,6 +48,9 @@ public class MemberService {
 	}
 
 	public MemberVO updateMember(MemberVO memberVO) {
+		Integer id =memberVO.getMemberId();
+		memberVO.setFansNumber(daotrack.getFansQty(id));
+		memberVO.setTrackingNumber(daotrack.getTracksQty(id));		
 		dao.update(memberVO);
 		return memberVO;
 	}

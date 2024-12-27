@@ -28,10 +28,10 @@ public class TrackMemberService {
 	public List<TrackMemberVO> getAllTracks(Integer memberId) {
 		return dao.getAllTracks(memberId);
 	}
-	public Long getFanQty(Integer memberId) {
+	public Integer getFanQty(Integer memberId) {
 		return dao.getFansQty(memberId);
 	}
-	public Long getTracksQty(Integer memberId) {
+	public Integer getTracksQty(Integer memberId) {
 		return dao.getTracksQty(memberId);
 	}
 	
