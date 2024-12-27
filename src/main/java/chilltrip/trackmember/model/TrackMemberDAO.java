@@ -14,9 +14,9 @@ public interface TrackMemberDAO {
 
 	public List<TrackMemberVO> getAllTracks(Integer fansId);
 	
-	public long getFansQty(Integer memberId);
+	public Integer getFansQty(Integer memberId);
 	
-	public long getTracksQty(Integer fansId);
+	public Integer getTracksQty(Integer fansId);
 	
 	
 	
