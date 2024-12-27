@@ -28,6 +28,7 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 	private static final String GET_TRIPCOMMENT_BY_MEMBER = "SELECT * FROM tia104g2.trip_comment WHERE member_id=? ORDER BY trip_comment_id";
 	private static final String GET_ONE_BY_EMAIL = "SELECT * FROM member WHERE email = ?";
 	private static final String CHECK_EMAIL = "SELECT 1 FROM member WHERE email = ?";
+	private static final String UPDATE_PASSWORD_BY_EMAIL = "UPDATE member SET password = ? WHERE email = ?";
 
 	@Override
 	public void insert(MemberVO memberVO) {
@@ -533,6 +534,48 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 			}
 		}
 
+    }
+    
+    public boolean updatePasswordByEmail(String email, String newPassword) {
+    	Connection con = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			// 加載 MySQL 驅動程式
+			Class.forName(driver);
+			// 建立連線
+			con = DriverManager.getConnection(url, userid, password);
+			// 準備 SQL 指令執行
+			pstmt = con.prepareStatement(UPDATE_PASSWORD_BY_EMAIL);
+
+			pstmt.setString(1, newPassword);
+	        pstmt.setString(2, email);
+
+	        int rowsUpdated = pstmt.executeUpdate();  // 執行更新操作
+	        return rowsUpdated > 0; // 返回是否有資料被更新
+
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("無法載入資料庫驅動程式" + e.getMessage());
+		} catch (SQLException se) {
+			throw new RuntimeException("發生資料庫錯誤" + se.getMessage());
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+    	
+    	
     }
 
 	public static void main(String[] args) {
