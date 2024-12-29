@@ -1,6 +1,9 @@
 package chilltrip.tripactyperela.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import chilltrip.trip.model.TripService;
+import chilltrip.tripactype.model.TripactypeVO;
 import chilltrip.tripactyperela.model.TripactyperelaService;
 import chilltrip.tripactyperela.model.TripactyperelaVO;
 
@@ -95,18 +99,37 @@ public class TripactyperelaController {
         return result ? ResponseEntity.ok("更新成功") : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("更新失敗");
     }
 
-    // 查詢某個行程的所有關聯
+    // 查詢單一行程的所有關聯並顯示該行程綁定的"行程活動內容"在前端畫面
     @GetMapping("/findRelationsByTripId")
-    public ResponseEntity<List<TripactyperelaVO>> findRelationsByTripId(@RequestParam Integer tripId) {
+    public ResponseEntity<List<Map<String, Object>>> findRelationsByTripId(@RequestParam Integer tripId) {
         System.out.println("查詢的行程id: " + tripId);
 
+        // 查詢所有與該行程相關的活動類型關聯
         List<TripactyperelaVO> relations = tripactyperelaSvc.findAllRelationsByTripId(tripId);
-        relations.forEach(tripactyperelaVO -> {
-            System.out.println("關聯 ID: " + tripactyperelaVO.getRelaid() + ", 行程 ID: "
-                    + tripactyperelaVO.getTripid().getTrip_id() + ", 活動類型 ID: "
-                    + tripactyperelaVO.getEventtypeid().getEventtypeid());
-        });
+        
+        // 準備一個集合來儲存返回的結果
+        List<Map<String, Object>> response = new ArrayList<>();
 
-        return ResponseEntity.ok(relations);
+        // 處理每一條關聯，並將活動類型的內容加入返回的結果中
+        for (TripactyperelaVO relation : relations) {
+            Map<String, Object> relationDetails = new HashMap<>();
+            
+            // 加入關聯ID、行程ID
+            relationDetails.put("relaId", relation.getRelaid());
+            relationDetails.put("tripId", relation.getTripid().getTrip_id());
+            
+            // 加入活動類型的ID與內容
+            TripactypeVO eventType = relation.getEventtypeid();
+            if (eventType != null) {
+                relationDetails.put("eventTypeId", eventType.getEventtypeid());
+                relationDetails.put("eventContent", eventType.getEventcontent());
+            }
+
+            // 加入至結果列表
+            response.add(relationDetails);
+        }
+
+        return ResponseEntity.ok(response);
     }
+
 }

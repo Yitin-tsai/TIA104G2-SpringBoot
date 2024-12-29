@@ -30,35 +30,36 @@ public class TripactypeController{
 	@Autowired
 	private TripactyperelaService tripactyperelaSvc;
 
+	// 和 TripactyperelaController 中的 updateRelation 功能重複
 	// 用戶編輯行程時更新與活動類型的關聯
-	@PostMapping("/update")
-    public ResponseEntity<String> updateTripactype(@RequestParam Integer tripId, @RequestParam List<Integer> eventTypeIds) {
-        System.out.println("Received update request for tripId: " + tripId + ", eventTypeIds: " + eventTypeIds);
-        if (eventTypeIds.isEmpty()) {
-            System.out.println("未選擇任何活動類型");
-            return ResponseEntity.badRequest().body("未選擇任何活動類型");
-        }
+//	@PostMapping("/update")
+//    public ResponseEntity<String> updateTripactype(@RequestParam Integer tripId, @RequestParam List<Integer> eventTypeIds) {
+//        System.out.println("Received update request for tripId: " + tripId + ", eventTypeIds: " + eventTypeIds);
+//        if (eventTypeIds.isEmpty()) {
+//            System.out.println("未選擇任何活動類型");
+//            return ResponseEntity.badRequest().body("未選擇任何活動類型");
+//        }
+//
+//        boolean result = tripactyperelaSvc.updateTripactyperela(tripId, eventTypeIds);
+//        if (result) {
+//            System.out.println("行程與活動類型關聯更新成功");
+//            return ResponseEntity.ok("行程與活動類型關聯更新成功");
+//        } else {
+//            System.out.println("行程與活動類型關聯更新失敗");
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("行程與活動類型關聯更新失敗");
+//        }
+//    }
 
-        boolean result = tripactyperelaSvc.updateTripactyperela(tripId, eventTypeIds);
-        if (result) {
-            System.out.println("行程與活動類型關聯更新成功");
-            return ResponseEntity.ok("行程與活動類型關聯更新成功");
-        } else {
-            System.out.println("行程與活動類型關聯更新失敗");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("行程與活動類型關聯更新失敗");
-        }
-    }
-
-	
+	// 和 TripactyperelaController 中的 deleteRelation 功能重複
 	// 刪除行程活動類型
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteTripactype(@RequestParam Integer tripId, @RequestParam Integer eventTypeId) {
-        System.out.println("刪除tripId:" + tripId);
-        System.out.println("刪除eventTypeId:" + eventTypeId);
-
-        boolean result = tripactyperelaSvc.deleteRelationByTripAndEventType(tripId, eventTypeId);
-        return result ? ResponseEntity.ok("刪除成功") : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("刪除失敗");
-    }
+//    @DeleteMapping("/delete")
+//    public ResponseEntity<String> deleteTripactype(@RequestParam Integer tripId, @RequestParam Integer eventTypeId) {
+//        System.out.println("刪除tripId:" + tripId);
+//        System.out.println("刪除eventTypeId:" + eventTypeId);
+//
+//        boolean result = tripactyperelaSvc.deleteRelationByTripAndEventType(tripId, eventTypeId);
+//        return result ? ResponseEntity.ok("刪除成功") : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("刪除失敗");
+//    }
 
 	
 	// 顯示所有活動類型

@@ -29,10 +29,9 @@ public class TripactyperelaVO {
 	@JoinColumn(name = "trip_id", referencedColumnName = "trip_id")
 	private TripVO tripid;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "event_type_id", referencedColumnName = "event_type_id")
 	private TripactypeVO eventtypeid;
-
 
 	public Integer getRelaid() {
 		return relaid;

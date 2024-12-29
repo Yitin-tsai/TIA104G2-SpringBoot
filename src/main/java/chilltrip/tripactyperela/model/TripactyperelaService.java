@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import chilltrip.trip.model.TripVO;
 import chilltrip.tripactype.model.TripactypeVO;
@@ -22,6 +23,7 @@ public class TripactyperelaService {
 		return dao.getAll();
 	}
 	
+	@Transactional
 	public List<TripactyperelaVO> findAllRelationsByTripId(Integer tripId){
 		return dao.getByTripId(tripId);
 	}
