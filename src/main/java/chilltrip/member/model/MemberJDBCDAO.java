@@ -11,8 +11,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.stereotype.Repository;
+
 import chilltrip.tripcomment.model.TripCommentVO;
 
+@Repository
 public class MemberJDBCDAO implements MemberDAO_interface {
 	String driver = "com.mysql.cj.jdbc.Driver";
 	String url = "jdbc:mysql://localhost:3306/tia104g2?serverTimezone=Asia/Taipei";

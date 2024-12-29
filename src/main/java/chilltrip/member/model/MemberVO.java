@@ -15,6 +15,10 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,7 +29,6 @@ import chilltrip.tripcollection.model.TripCollectionVO;
 import chilltrip.triplike.model.TripLikeVO;
 
 @Entity
-
 @Table(name = "member")
 public class MemberVO {
 	@Id
@@ -33,18 +36,26 @@ public class MemberVO {
 	@Column(name = "member_id", updatable = false)
 	private Integer memberId;
 	
+	@Email(message = "{member.email.pattern}")
+    @NotNull(message = "{member.email.notnull}")
 	@Column(name = "email")
 	private String email;
 	
 	@Column(name = "account")
 	private String account;
 	
+	@NotNull(message = "{member.password.notnull}")
+    @Size(min = 5, max = 15, message = "{member.password.size}")
 	@Column(name = "password")
 	private String password;
 	
+	@NotNull(message = "{member.name.notnull}")
+    @Pattern(regexp = "^[\\u4E00-\\u9FFFa-zA-Z\\s]{2,20}$", message = "{member.name.pattern}")
 	@Column(name = "name")
 	private String name;
 	
+	@NotNull(message = "{member.phone.notnull}")
+    @Pattern(regexp = "^(09[0-9]{8}|0[2-8][0-9]{7,8}|0[2-8]-[0-9]{6,8})$", message = "{member.phone.pattern}")
 	@Column(name = "phone")
 	private String phone;
 	
@@ -54,6 +65,7 @@ public class MemberVO {
 	@Column(name = "create_time")
 	private Timestamp createTime;
 	
+	@NotNull(message = "{member.nickName.notnull}")
 	@Column(name = "nick_name")
 	private String nickName;
 	
@@ -81,14 +93,6 @@ public class MemberVO {
 	@Column(name = "photo")
 	@Lob
 	private byte[] photo;
-	
-//	private String photo_base64;  ET: 為了轉base64更動vo增加一個String photo  以及set方法不是太好，現在看來只是想要把byte[]的屬性轉成base64格式傳給前端才會多出這個屬性
-//									這樣造成hibernate對應問題，還會有重複檔案問題，我覺得在member.daojdbc中的getone方法中應該專注處理資料庫操作，
-//									將資料庫中的byte[]轉成base64 應該在controller中得到member物件後 在req.setattribute這邊在來處理轉型的問題 
-//									會像是 membervo = membersvc.getOneMember(Integer memberId) 之後 我們在將byte[] photo = membervo.getphoto
-//									然後才會是String photoBase64 = Base64.getEncoder().encodeToString(photo) , 在將photoBase64回傳給前端。
-//                                  這樣操作才是mvc分層架構的意義。
-	
 	
 	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
 	@OrderBy("createTime desc")

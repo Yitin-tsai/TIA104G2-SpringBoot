@@ -2,13 +2,18 @@ package chilltrip.tripactyperela.model;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import chilltrip.trip.model.TripVO;
 import chilltrip.tripactype.model.TripactypeVO;
 
+@Service
 public class TripactyperelaService {
 
-private TripactyperelaDAO_interface dao;
+	private TripactyperelaDAO_interface dao;
 	
+	@Autowired
 	public TripactyperelaService() {
 		dao = new TripactyperelaDAO();
 	}
