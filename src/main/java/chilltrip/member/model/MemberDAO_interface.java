@@ -16,4 +16,5 @@ public interface MemberDAO_interface {
 	public MemberVO findByEmail(String email);
 	public boolean isEmailExist(String email);
 	public boolean updatePasswordByEmail(String email, String newPassword);
+	public MemberVO getMemberById(Integer memberId);
 }

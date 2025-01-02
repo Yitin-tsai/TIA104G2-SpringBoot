@@ -65,6 +65,7 @@ public class MemberService {
 		memberVO.setFansNumber(trackDao.getFansQty(id));
 		memberVO.setTrackingNumber(trackDao.getTracksQty(id));
 		dao.update(memberVO);
+		System.out.println("更新後會員資料：" + memberVO);
 		return memberVO;
 	}
 
@@ -104,9 +105,9 @@ public class MemberService {
 			jedis.del(email);
 		}
 	}
-
-	public boolean updatePassword(String email, String newPassword) {
-		return dao.updatePasswordByEmail(email, newPassword);
+    
+	public boolean updatePassword(String email, String password) {
+		return dao.updatePasswordByEmail(email, password);
 	}
 
 	// 這裡的 sendEmail 方法修正為使用從配置文件中讀取的帳號與密碼
@@ -134,6 +135,7 @@ public class MemberService {
 	public String encodePhotoToBase64(MemberVO memberVO) {
 		byte[] photo = memberVO.getPhoto();
 		if (photo != null) {
+			System.out.println("照片Base64: " + Base64.getEncoder().encodeToString(photo));
 			return Base64.getEncoder().encodeToString(photo);
 		}
 		return null;
@@ -200,4 +202,9 @@ public class MemberService {
 	public MemberVO getMemberByEmail(String email) {
 		return dao.findByEmail(email);
 	}
+	
+	// 根據使用者ID查詢使用者資料
+    public MemberVO getMemberById(Integer memberId) {
+        return dao.getMemberById(memberId);
+    }
 }

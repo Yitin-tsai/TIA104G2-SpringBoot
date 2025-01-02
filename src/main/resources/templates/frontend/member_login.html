@@ -268,12 +268,18 @@ h2 {
 
 .modal-content {
 	background-color: white;
-	padding: 1.5rem;
 	border-radius: 8px;
 	text-align: center;
-	width: 90%;
 	max-width: 400px;
 	box-sizing: border-box;
+	position: fixed;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 400px;
+	padding: 20px;
+	border: 1px solid #ccc;
+	z-index: 9999;
 }
 
 /* Success Modal */
@@ -387,13 +393,15 @@ h2 {
 
 	<main>
 		<div class="container">
-			<form id="loginForm" method="post" action="login">
+			<form id="loginForm" method="post"
+				onsubmit="event.preventDefault(); submitLoginForm();">
 				<div class="form-group">
 					<svg class="icon" viewBox="0 0 24 24">
             <path
 							d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
           </svg>
-					<input type="email" id="email" name="email" placeholder="帳號/電子信箱" required>
+					<input type="email" id="email" name="email" placeholder="帳號/電子信箱"
+						required>
 				</div>
 
 				<div class="form-group">
@@ -401,7 +409,8 @@ h2 {
             <path
 							d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
           </svg>
-					<input type="password" id="password" name="password" placeholder="密碼" required>
+					<input type="password" id="password" name="password"
+						placeholder="密碼" required>
 					<button type="button" class="password-toggle"
 						data-target="password">
 						<svg class="eye-open" viewBox="0 0 24 24">
@@ -420,7 +429,8 @@ h2 {
 						href="member_registration.html" style="color: #ff4444">沒有帳號？請點擊註冊</a>
 				</div>
 				<input type="hidden" name="action" value="login">
-				<input type="submit" class="login-button" value="登入"/>
+				<button type="submit" class="login-button">登入</button>
+
 			</form>
 		</div>
 	</main>
@@ -526,8 +536,8 @@ h2 {
     });
 
     document.addEventListener("DOMContentLoaded", function () {
-      const form = document.getElementById("loginForm");
-      const successModal = document.getElementById("successModal");
+//       const form = document.getElementById("loginForm");
+//       const successModal = document.getElementById("successModal");
       const errorModal = document.getElementById("errorModal");
       const confirmBtn = document.getElementById("confirmBtn");
       const errorConfirmBtn = document.getElementById("errorConfirmBtn");
@@ -555,37 +565,49 @@ h2 {
         }
         breadcrumbNav.appendChild(li);
       });
+});
+    
+    const contextPath = "/TIA104G2-SpringBoot"; // 從後端傳來的 context-path
+    
+ // 會員登入
+ function submitLoginForm() {
+	 
+    const loginData = {
+        email: $("#email").val(),
+        password: $("#password").val()
+    };
 
-     /* form.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        // 假設這裡進行簡單的帳號密碼檢查
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        // 這裡使用假資料進行檢查
-        const correctEmail = "user@example.com";
-        const correctPassword = "123";
-
-        if (email === correctEmail && password === correctPassword) {
-          // 顯示成功的彈窗
-          successModal.classList.add('show');
-        } else {
-          // 顯示錯誤的彈窗
-          errorModal.classList.add('show');
+    $.ajax({
+        type: "POST",
+        url: contextPath + "/member/login",  // 確保這裡的 URL 正確
+        data: JSON.stringify(loginData),  // 只傳遞 JSON 格式的資料
+        contentType: "application/json",  // 設置 contentType 為 JSON
+        success: function(response) {
+            // 登入成功後顯示成功彈窗
+            showSuccessModal();
+        },
+        error: function(xhr) {
+            let errorMessage = "登入失敗，請稍後再試";
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage = xhr.responseJSON.message;
+            }
+            alert(errorMessage);
         }
-      });
-
-      confirmBtn.addEventListener('click', function () {
-        successModal.classList.remove('show');
-        window.location.href = './index.html'; // 這裡可以進行頁面跳轉
-      });
-
-      errorConfirmBtn.addEventListener('click', function () {
-        errorModal.classList.remove('show'); // 關閉錯誤彈窗
-      });  */
     });
+}
 
+ 	
+
+    // 顯示成功彈窗
+    function showSuccessModal() {
+    const successModal = document.getElementById("successModal");
+    successModal.style.display = 'block';
+
+    const confirmBtn = document.getElementById("confirmBtn");
+    confirmBtn.addEventListener('click', function () {
+        window.location.href = contextPath + "/viewProfile";  // 動態拼接 context-path
+    });
+    }
   </script>
 </body>
 

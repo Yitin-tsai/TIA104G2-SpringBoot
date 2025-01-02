@@ -92,6 +92,7 @@ public class MemberVO {
 	
 	@Column(name = "photo")
 	@Lob
+	@JsonIgnore
 	private byte[] photo;
 	
 	@OneToMany(mappedBy= "membervo",cascade = CascadeType.ALL)
