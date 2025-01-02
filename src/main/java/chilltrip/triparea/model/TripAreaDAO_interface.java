@@ -15,6 +15,6 @@ public interface TripAreaDAO_interface {
 	
 	// 行程地區在行程的新增及刪除及修改
 	public void addTripAreaToTrip(TripVO tripId, String regionContent);
-	public void removeTripAreaFromTrip(TripVO tripId, String regionContent);
+	public void removeTripAreaFromTrip(TripVO tripVO, String regionContent);
 	public void updateTripArea(Integer tripId, String oldRegionContent, String newRegionContent);
 }

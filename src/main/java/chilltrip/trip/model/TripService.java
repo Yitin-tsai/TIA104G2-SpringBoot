@@ -3,9 +3,12 @@ package chilltrip.trip.model;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import chilltrip.trip.dao.TripDAO;
 import chilltrip.trip.dao.TripDAOImplJDBC;
 
+@Service
 public class TripService {
 	
 	private TripDAO dao;

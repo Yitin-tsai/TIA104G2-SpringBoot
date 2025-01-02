@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>個人資料 - ChillTrip</title>
+<link href="img/favicon.ico" rel="icon" />
+<link rel="preconnect" href="https://fonts.gstatic.com" />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+	rel="stylesheet" />
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+	rel="stylesheet" />
+<link href="css/style.css" rel="stylesheet" />
+<link href="css/yuki_style.css" rel="stylesheet" />
+
+<style>
+.profile-container {
+	max-width: 800px;
+	margin: 2rem auto;
+	padding: 2rem;
+	background: white;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+	display: flex;
+	align-items: center;
+	gap: 2rem;
+	margin-bottom: 2rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid #eee;
+}
+
+.photo {
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.profile-stats {
+	display: flex;
+	gap: 2rem;
+	margin: 1rem 0;
+}
+
+.stat-item {
+	text-align: center;
+}
+
+.profile-info {
+	margin-top: 2rem;
+}
+
+.info-row {
+	display: flex;
+	margin-bottom: 1rem;
+	padding: 0.5rem 0;
+	border-bottom: 1px solid #f5f5f5;
+}
+
+.info-label {
+	width: 120px;
+	font-weight: 600;
+	color: #666;
+}
+
+.info-value {
+	flex: 1;
+}
+
+.profile-actions {
+	display: flex;
+	gap: 1rem;
+	margin-top: 2rem;
+}
+
+.btn-edit {
+	background: #FF6600;
+	color: white;
+	border: none;
+	padding: 0.5rem 1.5rem;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.btn-logout {
+	background: #dc3545;
+	color: white;
+	border: none;
+	padding: 0.5rem 1.5rem;
+	border-radius: 4px;
+	cursor: pointer;
+}
+</style>
+
+</head>
+
+<body>
+	<!------網站header------>
+	<div id="app">
+		<header>
+			<nav class="top-nav">
+				<div class="nav-left">
+					<a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a> <a
+						href="./product.html" class="nav-item nav-link" id="nav-product">購！票券</a>
+					<a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a> <a
+						href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+				</div>
+				<div class="nav-center">
+					<a href="#"> <img src="./img/logo_black.png" alt="Chill Trip"
+						style="width: 150px; height: auto" />
+					</a>
+				</div>
+				<div class="nav-right">
+					<div class="nav-item dropdown">
+						<a href="#" class="nav-link dropdown-toggle"
+							data-toggle="dropdown" style="color: #212529">會員中心</a>
+						<div class="dropdown-menu rounded-0 m-0">
+							<a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a> <a
+								href="#" class="dropdown-item" id="nav-coupons">我的折價券</a> <a
+								href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
+						</div>
+					</div>
+					<a href="#" class="nav-item nav-link" id="nav-support">客服中心</a> <a
+						href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+				</div>
+			</nav>
+		</header>
+	</div>
+
+	<div class="profile-container">
+		<div class="profile-header">
+			<img id="photo" src="" class="photo">
+			<div>
+				<div class="profile-stats">
+					<div class="stat-item">
+						<div class="trackingNumber" id="trackingNumber"></div>
+						<div class="stat-label">追蹤數</div>
+					</div>
+					<div class="stat-item">
+						<div class="fansNumber" id="fansNumber"></div>
+						<div class="stat-label">粉絲數</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="profile-info">
+			<div class="info-row">
+				<div class="info-label">姓名</div>
+				<div class="info-value" id="name"></div>
+			</div>
+			<div class="info-row">
+				<div class="info-label">暱稱</div>
+				<div class="info-value" id="nickName"></div>
+			</div>
+			<div class="info-row">
+				<div class="info-label">電子郵件</div>
+				<div class="info-value" id="email"></div>
+			</div>
+			<div class="info-row">
+				<div class="info-label">密碼</div>
+				<div class="info-value" id="password"></div>
+			</div>
+			<div class="info-row">
+				<div class="info-label">手機號碼</div>
+				<div class="info-value" id="phone"></div>
+			</div>
+			<div class="info-row">
+				<div class="info-label">性別</div>
+				<div class="info-value" id="gender"></div>
+			</div>
+			<div class="info-row">
+				<div class="info-label">生日</div>
+				<div class="info-value" id="birthday"></div>
+			</div>
+			<div class="info-row">
+				<div class="info-label">公司統編</div>
+				<div class="info-value" id="companyId"></div>
+			</div>
+			<div class="info-row">
+				<div class="info-label">載具號碼</div>
+				<div class="info-value" id="receiptCarrier"></div>
+			</div>
+			<div class="info-row">
+				<div class="info-label">信用卡號</div>
+				<div class="info-value" id="creditCard"></div>
+			</div>
+		</div>
+
+		<div class="profile-actions">
+			<button class="btn-edit" id="editButton">編輯資料</button>
+			<button class="btn-logout" id="logoutButton">登出</button>
+		</div>
+	</div>
+
+	<!------網站footer------>
+	<footer>
+		<div class="d-flex justify-content-start mt-4">
+			<a class="btn btn-outline-light btn-square mr-2" href="#"><i
+				class="fab fa-twitter"></i></a> <a
+				class="btn btn-outline-light btn-square mr-2" href="#"><i
+				class="fab fa-facebook-f"></i></a> <a
+				class="btn btn-outline-light btn-square mr-2" href="#"><i
+				class="fab fa-linkedin-in"></i></a> <a
+				class="btn btn-outline-light btn-square" href="#"><i
+				class="fab fa-instagram"></i></a>
+		</div>
+		<div class="social-links">
+			<div style="display: flex; gap: 10px">
+				<a href="https://facebook.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #3b5998; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-facebook-f" style="color: white; font-size: 24px"></i>
+					</div>
+				</a> <a href="https://instagram.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #e1306c; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-instagram" style="color: white; font-size: 24px"></i>
+					</div>
+				</a> <a href="https://youtube.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-youtube" style="color: white; font-size: 24px"></i>
+					</div>
+				</a>
+			</div>
+
+			<!-- 加載 Font Awesome 圖標庫 -->
+			<link
+				href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+				rel="stylesheet" />
+		</div>
+		<div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
+	</footer>
+
+	<!------ 共用JS ------>
+	<!-- Back to Top -->
+	<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i
+		class="fa fa-angle-double-up"></i></a>
+
+	<!-- JavaScript Libraries -->
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+	<script src="lib/easing/easing.min.js"></script>
+	<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+	<!-- Contact Javascript File -->
+	<script src="mail/jqBootstrapValidation.min.js"></script>
+	<script src="mail/contact.js"></script>
+
+	<!-- Template Javascript -->
+	<script src="js/main.js"></script>
+
+	<!-- 導航欄nav的href載入器 -->
+	<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("nav-go").href = "./go.html";
+            document.getElementById("nav-product").href = "./product.html";
+            document.getElementById("nav-profile").href = "./profile.html";
+            document.getElementById("nav-guide").href = "./guide.html";
+            document.getElementById("nav-basic-info").href = "./basic_info.html";
+            document.getElementById("nav-coupons").href = "./coupons.html";
+            document.getElementById("nav-orders").href = "./orders.html";
+            document.getElementById("nav-support").href = "./support.html";
+            document.getElementById("nav-cart").href = "./cart.html";
+        });
+    </script>
+
+	<script>
+	const contextPath = "/TIA104G2-SpringBoot"; // 從後端傳來的 context-path
+
+	// 載入個人資料
+	async function loadProfile() {
+	    try {
+	        const response = await fetch(contextPath + "/member/viewProfile");
+	        if (!response.ok) throw new Error("資料載入失敗");
+
+	        const profile = await response.json();
+
+	        if (profile.photo) {
+// 	            console.log("照片 Base64：", profile.photo);
+	            document.getElementById("photo").src = `data:image/jpeg;base64,${profile.photo}`;
+	        }
+	        
+	        // 填入資料
+	        document.getElementById("name").textContent = profile.name;
+	        document.getElementById("nickName").textContent = profile.nickName;
+	        document.getElementById("email").textContent = profile.email;
+	        document.getElementById("password").textContent = "********"; // 隱藏密碼
+	        document.getElementById("phone").textContent = profile.phone;
+	        document.getElementById("gender").textContent = profile.gender;
+	        document.getElementById("birthday").textContent = profile.birthday;
+	        document.getElementById("companyId").textContent = profile.companyId;
+	        document.getElementById("receiptCarrier").textContent = profile.ereceiptCarrier;
+	        document.getElementById("creditCard").textContent = "*************"; // 隱藏信用卡號
+
+	        // 動態更新追蹤數與粉絲數
+	        document.getElementById("trackingNumber").textContent = profile.trackingNumber || 0;
+	        document.getElementById("fansNumber").textContent = profile.fansNumber || 0;
+	    } catch (error) {
+	        alert(error.message);
+	        window.location.href = contextPath + "/login"; // 跳轉到登入頁
+	    }
+	}
+
+	// 登出邏輯
+	async function handleLogout() {
+	    try {
+	        const response = await fetch(contextPath + "/member/logout", {
+	            method: "POST",
+	        });
+	        if (!response.ok) throw new Error("登出失敗");
+
+	        alert("成功登出！");
+	        window.location.href = contextPath + "/login"; // 跳轉到登入頁
+	    } catch (error) {
+	        alert(error.message);
+	    }
+	}
+
+	// 初始化載入
+	document.addEventListener("DOMContentLoaded", function () {
+	    // 載入個人資料
+	    loadProfile();
+
+	    // 綁定按鈕行為
+	    document.getElementById("editButton").addEventListener("click", function () {
+	        window.location.href = contextPath + "/update";
+	    });
+
+	    document.getElementById("logoutButton").addEventListener("click", handleLogout);
+	});
+
+    </script>
+</body>
+</html>

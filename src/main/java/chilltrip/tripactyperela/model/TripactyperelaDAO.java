@@ -27,7 +27,7 @@ public class TripactyperelaDAO implements TripactyperelaDAO_interface {
 	private static final String UPDATE = "UPDATE itinerary_activity_type_relationship SET trip_id = ?, event_type_id = ? WHERE itinerary_activity_relationship_id = ?";
 	private static final String DELETE = "DELETE FROM itinerary_activity_type_relationship WHERE itinerary_activity_relationship_id = ?";
 	private static final String GET_ALL = "SELECT * FROM itinerary_activity_type_relationship";
-	private static final String GET_BY_TRIPID = "SELECT * FROM itinerary_activity_type_relationship WHERE trip_id = ?";
+	private static final String GET_BY_TRIPID = "SELECT itinerary_activity_type_relationship.*, itinerary_activity_type.event_content FROM itinerary_activity_type_relationship JOIN itinerary_activity_type ON itinerary_activity_type_relationship.event_type_id = itinerary_activity_type.event_type_id WHERE itinerary_activity_type_relationship.trip_id = ?";
 	private static final String GET_BY_EVENTTYPEID = "SELECT * FROM itinerary_activity_type_relationship WHERE event_type_id = ?";
 	private static final String DELETE_BY_TRIPID = "DELETE FROM itinerary_activity_type_relationship WHERE trip_id = ?";
 	private static final String DELETE_RELATION = "DELETE FROM itinerary_activity_type_relationship WHERE trip_id = ? AND event_type_id = ?";
@@ -160,131 +160,143 @@ public class TripactyperelaDAO implements TripactyperelaDAO_interface {
 
 	@Override
 	public List<TripactyperelaVO> getAll() {
-		List<TripactyperelaVO> list = new ArrayList<TripactyperelaVO>();
-		TripactyperelaVO tripactyperelaVO = null;
+	    List<TripactyperelaVO> list = new ArrayList<TripactyperelaVO>();
+	    TripactyperelaVO tripactyperelaVO = null;
 
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
 
-		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, userid, password);
-			pstmt = con.prepareStatement(GET_ALL);
-			rs = pstmt.executeQuery();
+	    try {
+	        Class.forName(driver);
+	        con = DriverManager.getConnection(url, userid, password);
+	        pstmt = con.prepareStatement(GET_ALL);
+	        rs = pstmt.executeQuery();
 
-			TripVO tripVO = new TripVO();
-			pstmt.setInt(1, tripVO.getTrip_id());  // 使用 tripVO 的 tripid
-			
-			while (rs.next()) {
-				tripactyperelaVO = new TripactyperelaVO();
-				tripactyperelaVO.setRelaid(rs.getInt("itinerary_activity_relationship_id"));
+	        while (rs.next()) {
+	            tripactyperelaVO = new TripactyperelaVO();
+	            tripactyperelaVO.setRelaid(rs.getInt("itinerary_activity_relationship_id"));
 
-				tripVO = new TripVO();
-				tripVO.setTrip_id(rs.getInt("trip_id")); // 設置 TripVO 的 trip_id
-				tripactyperelaVO.setTripid(tripVO);
+	            // 建立 TripVO 並設置 trip_id
+	            TripVO tripVO = new TripVO();
+	            tripVO.setTrip_id(rs.getInt("trip_id")); 
+	            tripactyperelaVO.setTripid(tripVO);
 
-				TripactypeVO tripactypeVO = new TripactypeVO();
-				tripactypeVO.setEventtypeid(rs.getInt("event_type_id")); // 設置 TripactypeVO 的 event_type_id
-				tripactyperelaVO.setEventtypeid(tripactypeVO);
+	            // 建立 TripactypeVO 並設置 event_type_id 和 event_content
+	            TripactypeVO tripactypeVO = new TripactypeVO();
+	            tripactypeVO.setEventtypeid(rs.getInt("event_type_id")); // 設置 event_type_id
 
-				list.add(tripactyperelaVO);
-			}
+	            // 查詢 event_content，並設置到 TripactypeVO
+	            String eventContent = rs.getString("event_content");  // 從資料庫查詢 event_content
+	            tripactypeVO.setEventcontent(eventContent); // 設置 event_content
 
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException("無法載入資料庫驅動程式" + e.getMessage());
-		} catch (SQLException se) {
-			throw new RuntimeException("發生資料庫錯誤" + se.getMessage());
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
-				}
-			}
-		}
+	            tripactyperelaVO.setEventtypeid(tripactypeVO);
 
-		return list;
+	            list.add(tripactyperelaVO);
+	        }
+
+	    } catch (ClassNotFoundException e) {
+	        throw new RuntimeException("無法載入資料庫驅動程式" + e.getMessage());
+	    } catch (SQLException se) {
+	        throw new RuntimeException("發生資料庫錯誤" + se.getMessage());
+	    } finally {
+	        if (rs != null) {
+	            try {
+	                rs.close();
+	            } catch (SQLException se) {
+	                se.printStackTrace(System.err);
+	            }
+	        }
+	        if (pstmt != null) {
+	            try {
+	                pstmt.close();
+	            } catch (SQLException se) {
+	                se.printStackTrace(System.err);
+	            }
+	        }
+	        if (con != null) {
+	            try {
+	                con.close();
+	            } catch (Exception e) {
+	                e.printStackTrace(System.err);
+	            }
+	        }
+	    }
+
+	    return list;
 	}
+
 
 	@Override
 	public List<TripactyperelaVO> getByTripId(Integer tripId) {
-		List<TripactyperelaVO> list = new ArrayList<TripactyperelaVO>();
-		TripactyperelaVO tripactyperelaVO = null;
+	    List<TripactyperelaVO> list = new ArrayList<TripactyperelaVO>();
+	    TripactyperelaVO tripactyperelaVO = null;
 
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
 
-		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, userid, password);
-			pstmt = con.prepareStatement(GET_BY_TRIPID);
-			
+	    try {
+	        Class.forName(driver);
+	        con = DriverManager.getConnection(url, userid, password);
+	        pstmt = con.prepareStatement(GET_BY_TRIPID);
+	        
 	        pstmt.setInt(1, tripId); 
-	       
-			rs = pstmt.executeQuery();
+	        rs = pstmt.executeQuery();
 
-			while (rs.next()) {
-				tripactyperelaVO = new TripactyperelaVO();
-				tripactyperelaVO.setRelaid(rs.getInt("itinerary_activity_relationship_id"));
+	        while (rs.next()) {
+	            tripactyperelaVO = new TripactyperelaVO();
+	            tripactyperelaVO.setRelaid(rs.getInt("itinerary_activity_relationship_id"));
 
-				TripVO tripVO = new TripVO();
-				tripVO.setTrip_id(rs.getInt("trip_id")); // 設置 TripVO 的 trip_id
-				tripactyperelaVO.setTripid(tripVO);
+	            // 建立 TripVO 並設置 trip_id
+	            TripVO tripVO = new TripVO();
+	            tripVO.setTrip_id(rs.getInt("trip_id")); 
+	            tripactyperelaVO.setTripid(tripVO);
 
-				TripactypeVO tripactypeVO = new TripactypeVO();
-				tripactypeVO.setEventtypeid(rs.getInt("event_type_id")); // 設置 TripactypeVO 的 event_type_id
-				tripactyperelaVO.setEventtypeid(tripactypeVO);
+	            // 建立 TripactypeVO 並設置 event_type_id 和 event_content
+	            TripactypeVO tripactypeVO = new TripactypeVO();
+	            tripactypeVO.setEventtypeid(rs.getInt("event_type_id")); // 設置 event_type_id
+	            
+	            // 查詢 event_content，並設置到 TripactypeVO
+	            String eventContent = rs.getString("event_content");  // 從資料庫查詢 event_content
+	            tripactypeVO.setEventcontent(eventContent); // 設置 event_content
 
-				list.add(tripactyperelaVO);
-			}
+	            tripactyperelaVO.setEventtypeid(tripactypeVO);
 
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException("無法載入資料庫驅動程式" + e.getMessage());
-		} catch (SQLException se) {
-			throw new RuntimeException("發生資料庫錯誤" + se.getMessage());
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
-				}
-			}
-		}
+	            list.add(tripactyperelaVO);
+	        }
 
-		return list;
+	    } catch (ClassNotFoundException e) {
+	        throw new RuntimeException("無法載入資料庫驅動程式" + e.getMessage());
+	    } catch (SQLException se) {
+	        throw new RuntimeException("發生資料庫錯誤" + se.getMessage());
+	    } finally {
+	        if (rs != null) {
+	            try {
+	                rs.close();
+	            } catch (SQLException se) {
+	                se.printStackTrace(System.err);
+	            }
+	        }
+	        if (pstmt != null) {
+	            try {
+	                pstmt.close();
+	            } catch (SQLException se) {
+	                se.printStackTrace(System.err);
+	            }
+	        }
+	        if (con != null) {
+	            try {
+	                con.close();
+	            } catch (Exception e) {
+	                e.printStackTrace(System.err);
+	            }
+	        }
+	    }
+
+	    return list;
 	}
+
 
 	@Override
 	public List<TripactyperelaVO> getByeventtypeid(Integer eventtypeid) {

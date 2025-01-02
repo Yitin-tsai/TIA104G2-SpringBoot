@@ -349,8 +349,7 @@ select {
 
 
 	<div class="container">
-		<form id="registrationForm" method="post"
-			action="/member/member.register" enctype="multipart/form-data">
+		<form id="registrationForm" method="post" action="/member/register" enctype="multipart/form-data">
 			<div class="form-group">
 				<p>如果您未曾建立 ChillTrip.com 的帳戶，請填寫以下資訊註冊新帳戶。</p>
 				<p style="color: #ff4444">*為必填項目</p>
@@ -358,8 +357,8 @@ select {
 
 			<div class="form-group">
 				<label class="required">會員暱稱</label> <input type="text"
-					id="username" name="nickname" placeholder="輸入暱稱" required>
-				
+					id="username" name="nickName" placeholder="輸入暱稱" required>
+
 			</div>
 
 			<div class="form-group">
@@ -371,8 +370,8 @@ select {
 				<label class="required">性別</label> <select id="gender" name="gender"
 					required>
 					<option value="">請選擇性別</option>
-					<option value="male">男性</option>
-					<option value="female">女性</option>
+					<option value="男性">男性</option>
+					<option value="女性">女性</option>
 				</select>
 			</div>
 
@@ -432,22 +431,22 @@ select {
 			</div>
 
 			<div class="form-group">
-				<label>公司統編</label> <input type="text" id="company" name="companyid" placeholder="輸入公司統編">
+				<label>公司統編</label> <input type="text" id="company" name="companyId"
+					placeholder="輸入公司統編">
 			</div>
 
 			<div class="form-group">
 				<label>手機載具</label> <input type="text" id="mobile"
-					name="ereceiptcarrier" placeholder="輸入手機載具">
+					name="ereceiptCarrier" placeholder="輸入手機載具">
 			</div>
 
 			<div class="form-group">
 				<label>信用卡號</label> <input type="text" id="creditCard"
-					name="creditcard" placeholder="輸入信用卡號">
+					name="creditCard" placeholder="輸入信用卡號">
 			</div>
 			<div class="form-group">
 				<label for="photo">上傳頭貼：</label> <input type="file" id="photo"
-					name="photo" accept="image/*"><br>
-				<br>
+					name="photo" accept="image/*"><br> <br>
 			</div>
 			<input type="hidden" name="register" value="register"> <input
 				type="submit" class="register-button" value="註冊" /> <a
@@ -505,6 +504,7 @@ select {
 	<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i
 		class="fa fa-angle-double-up"></i></a>
 
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 	<!-- JavaScript Libraries -->
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -535,143 +535,158 @@ select {
       document.getElementById("nav-index").href = "./index.html";
     });
   </script>
-
-
 	<script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const breadcrumbNav = document.getElementById("breadcrumb-nav");
+    const contextPath = "/TIA104G2-SpringBoot"; // 從後端傳來的 context-path
+    // 發送驗證碼
+    $(document).ready(function () {
+    $("button[name='randomcode']").click(function () {
+        const email = $("#email").val();
 
-      // 定義麵包屑導航的項目
-      const breadcrumbItems = [
-        { name: "首頁", link: "index.html" },
-        { name: "會員註冊", link: "member_registration.html" }
-      ];
-
-      // 動態生成麵包屑導航的 HTML 結構
-      breadcrumbItems.forEach((item, index) => {
-        const li = document.createElement("li");
-        li.className = "breadcrumb-item";
-        if (index === breadcrumbItems.length - 1) {
-          li.classList.add("active");
-          li.setAttribute("aria-current", "page");
-          li.textContent = item.name;
-        } else {
-          const a = document.createElement("a");
-          a.href = item.link;
-          a.textContent = item.name;
-          li.appendChild(a);
+        if (!email) {
+            alert("請輸入電子信箱");
+            return;
         }
-        breadcrumbNav.appendChild(li);
-      });
-    })
+
+        $.ajax({
+            type: "POST",
+            url: contextPath + "/member/randomcode",
+            data: { email: email },
+            success: function (response) {
+                alert(response); // 提示發送成功
+            },
+            error: function (xhr, status, error) {
+                // 顯示自訂錯誤訊息
+                if (xhr.status === 404) {
+                    alert("找不到該路徑，請檢查 URL 或後端設定");
+                } else if (xhr.status === 500) {
+                    alert("伺服器內部錯誤，請稍後再試");
+                } else {
+                    alert(xhr.responseText || "發送驗證碼時發生錯誤");
+                }
+            }
+        });
+    });
+});
+
+
+    // 確認驗證碼
+    $(document).ready(function () {
+        $("button[name='checkrandomcode']").click(function () {
+            const email = $("#email").val();
+            const emailCode = $("#emailCode").val();
+
+            if (!email || !emailCode) {
+                alert("請輸入電子信箱及驗證碼");
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: contextPath + "/member/checkrandomcode",
+                data: { email: email, emailCode: emailCode },
+                success: function (response) {
+                    alert(response); // 提示驗證成功
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText || "驗證碼驗證失敗");
+                }
+            });
+        });
+    });
 
     // 密碼顯示開關功能
     document.querySelectorAll('.password-toggle').forEach(button => {
-      button.addEventListener('click', function () {
-        const target = document.getElementById(this.getAttribute('data-target'));
-        const isVisible = target.type === 'text'; // 檢查是否顯示密碼
-        target.type = isVisible ? 'password' : 'text'; // 切換密碼顯示/隱藏
-        this.classList.toggle('visible', !isVisible); // 切換 eye-icon
-      });
+        button.addEventListener('click', function () {
+            const target = document.getElementById(this.getAttribute('data-target'));
+            const isVisible = target.type === 'text'; // 檢查是否顯示密碼
+            target.type = isVisible ? 'password' : 'text'; // 切換密碼顯示/隱藏
+            this.classList.toggle('visible', !isVisible); // 切換 eye-icon
+        });
     });
-
-    // 顯示成功註冊視窗
-    function showSuccessModal() {
-      const modal = document.getElementById('successModal');
-      modal.style.display = 'flex'; // 顯示成功視窗
-    }
 
     // 監聽表單提交
     document.getElementById("registrationForm").addEventListener("submit", function (event) {
-      event.preventDefault(); // 防止表單提交刷新頁面
+        event.preventDefault(); // 防止表單提交刷新頁面
 
-      // 檢查密碼與確認密碼是否一致
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirmPassword").value;
+        // 檢查密碼與確認密碼是否一致
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
 
-      if (password !== confirmPassword) {
-        document.getElementById("passwordError").style.display = 'block'; // 顯示錯誤訊息
-      } else {
-        document.getElementById("passwordError").style.display = 'none'; // 隱藏錯誤訊息
-        showSuccessModal(); // 顯示註冊成功視窗
-      }
+        if (password !== confirmPassword) {
+            document.getElementById("passwordError").style.display = 'block'; // 顯示錯誤訊息
+        } else {
+            document.getElementById("passwordError").style.display = 'none'; // 隱藏錯誤訊息
+            submitForm(); // 呼叫提交表單的函數
+        }
     });
 
-    document.getElementById('photo').addEventListener('change', function(event) {
+    
+    // 會員註冊
+    function submitForm() {
+        const formData = new FormData($("#registrationForm")[0]);
+
+        // 動態構建 memberVO 資料
+        const memberVO = {
+            nickName: $("#username").val(),
+            name: $("#realname").val(),
+            phone: $("#phone").val(),
+            email: $("#email").val(),
+            password: $("#password").val(),
+            gender: $("#gender").val(),
+            birthday: $("#birthday").val(),
+            companyId: $("#company").val(),
+            ereceiptCarrier: $("#mobile").val(),
+            creditCard: $("#creditCard").val()
+        };
+
+        // 確保將 memberVO 的資料打包進 FormData
+        formData.append("memberVO", JSON.stringify(memberVO));
+
+        // 處理照片上傳
+        const photo = $("#photo")[0].files[0];
+        if (photo) {
+            formData.append("photo", photo);
+        }
+
+        // 發送 AJAX 請求
+        $.ajax({
+            type: "POST",
+            url: contextPath + "/member/register",
+            data: formData,
+            contentType: false,  // 不設置 contentType，讓瀏覽器自動處理
+            processData: false,  // 不處理資料，讓 FormData 自動處理
+            success: function(response) {
+                alert("註冊成功！");
+                showSuccessModal();
+                window.location.href = contextPath + "/login"; // 註冊成功後跳轉
+            },
+            error: function(xhr) {
+                let errorMessage = "註冊失敗，請稍後再試";
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                alert(errorMessage);
+            }
+        });
+    }
+
+    function showSuccessModal() {
+        document.getElementById("successModal").style.display = 'block';
+        document.getElementById("confirmBtn").addEventListener('click', function () {
+            window.location.href = "\frontend\member_login.html"; // 註冊成功後跳轉至登入頁面
+        });
+    }
+
+    // 會員註冊表單驗證檔案大小
+    document.getElementById('photo').addEventListener('change', function (event) {
         const file = event.target.files[0];
         if (file && file.size > 5000000) { // 限制檔案最大為 5MB
             alert('檔案大小不能超過 5MB');
             event.target.value = ''; // 清空選擇的檔案
         }
     });
-    
-    document.querySelector('.verify-button').addEventListener('click', function() {
-        let email = document.getElementById('email').value;
-        if (!email) {
-            alert('請輸入有效的電子信箱');
-            return;
-        }
+</script>
 
-        // 發送 AJAX 請求至後端發送驗證碼
-        fetch('/send-verification-code', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email: email })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('驗證碼已發送到您的電子信箱');
-            } else {
-                alert('發送驗證碼失敗，請重試');
-            }
-        })
-        .catch(error => {
-            alert('發生錯誤，請稍後再試');
-        });
-    });
-    
-    document.querySelector('.register-button').addEventListener('click', function(event) {
-        let emailCode = document.getElementById('emailCode').value;
-        if (!emailCode) {
-            event.preventDefault(); // 阻止表單提交
-            alert('請輸入驗證碼');
-        }
-
-        // 發送驗證碼至後端進行比對
-        fetch('/verify-email-code', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ emailCode: emailCode })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('驗證碼正確');
-                document.getElementById('registrationForm').submit(); // 提交表單
-            } else {
-                event.preventDefault(); // 阻止表單提交
-                alert('驗證碼錯誤');
-            }
-        })
-        .catch(error => {
-            event.preventDefault();
-            alert('發生錯誤，請稍後再試');
-        });
-    });
-
-    // 成功視窗確認按鈕
-    document.getElementById("confirmBtn").addEventListener("click", function () {
-      const modal = document.getElementById('successModal');
-      modal.style.display = 'none'; // 隱藏成功視窗
-      // 點擊後導向登入頁面
-      window.location.href = '/member/member.login';  // 登入頁面從此進入
-    });
-  </script>
 </body>
 
 </html>

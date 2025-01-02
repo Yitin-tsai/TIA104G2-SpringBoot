@@ -9,4 +9,8 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
+  	<session-config>
+		<session-timeout>60</session-timeout> <!-- 設定為使用者未進行任何操作長達 60 分鐘，session 會自動過期並且資料會被清除 -->
+	</session-config>
 </web-app>

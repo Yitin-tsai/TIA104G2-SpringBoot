@@ -377,42 +377,51 @@ public class TripAreaJDBCDAO implements TripAreaDAO_interface {
 	}
 
 	@Override
-	public void removeTripAreaFromTrip(TripVO tripId, String regionContent) {
+	public void removeTripAreaFromTrip(TripVO tripVO, String regionContent) {
 		Connection con = null;
-		PreparedStatement pstmt = null;
+	    PreparedStatement pstmt = null;
 
-		try {
+	    try {
+	        // 驅動程式加載
+	        Class.forName(driver);
+	        con = DriverManager.getConnection(url, userid, passwd);
 
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, userid, passwd);
-			pstmt = con.prepareStatement(DELETE_TRIPAREA_FROM_TRIP);
+	        pstmt = con.prepareStatement(DELETE_TRIPAREA_FROM_TRIP);
+	        
+	        // 使用傳入的 tripVO 物件設定參數
+	        if (tripVO == null || tripVO.getTrip_id() == null) {
+	            throw new IllegalArgumentException("行程物件或行程 ID 不得為空");
+	        }
 
-			TripVO tripVO = new TripVO();
-			pstmt.setInt(1, tripVO.getTrip_id());  // 使用 tripVO 的 tripid
-			pstmt.setString(2, regionContent);   // 設定地區標註
-			
-	        pstmt.executeUpdate();
+	        pstmt.setInt(1, tripVO.getTrip_id());  // 設定 trip_id
+	        pstmt.setString(2, regionContent);    // 設定地區標註
+	        
+	        int affectedRows = pstmt.executeUpdate();  // 執行刪除
+	        if (affectedRows == 0) {
+	            throw new RuntimeException("刪除失敗，沒有符合條件的紀錄");
+	        }
 
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException("無法載入資料庫驅動程式" + e.getMessage());
-		} catch (SQLException se) {
-			throw new RuntimeException("發生資料庫錯誤" + se.getMessage());
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
-				}
-			}
-		}	
+	    } catch (ClassNotFoundException e) {
+	        throw new RuntimeException("無法載入資料庫驅動程式: " + e.getMessage());
+	    } catch (SQLException se) {
+	        throw new RuntimeException("資料庫錯誤: " + se.getMessage());
+	    } finally {
+	        // 資源釋放
+	        if (pstmt != null) {
+	            try {
+	                pstmt.close();
+	            } catch (SQLException se) {
+	                se.printStackTrace(System.err);
+	            }
+	        }
+	        if (con != null) {
+	            try {
+	                con.close();
+	            } catch (Exception e) {
+	                e.printStackTrace(System.err);
+	            }
+	        }
+	    }	
 	}
 	
 	

@@ -11,8 +11,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.stereotype.Repository;
+
 import chilltrip.tripcomment.model.TripCommentVO;
 
+@Repository
 public class MemberJDBCDAO implements MemberDAO_interface {
 	String driver = "com.mysql.cj.jdbc.Driver";
 	String url = "jdbc:mysql://localhost:3306/tia104g2?serverTimezone=Asia/Taipei";
@@ -29,6 +32,7 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 	private static final String GET_ONE_BY_EMAIL = "SELECT * FROM member WHERE email = ?";
 	private static final String CHECK_EMAIL = "SELECT 1 FROM member WHERE email = ?";
 	private static final String UPDATE_PASSWORD_BY_EMAIL = "UPDATE member SET password = ? WHERE email = ?";
+	private static final String GET_MEMBER_BY_ID = "SELECT * FROM member WHERE member_id = ?";
 
 	@Override
 	public void insert(MemberVO memberVO) {
@@ -574,8 +578,77 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 				}
 			}
 		}
-    	
-    	
+    }
+    
+    // 根據使用者ID查詢使用者資料
+    public MemberVO getMemberById(Integer memberId){
+        MemberVO memberVO = null;
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+        	Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, password);
+			
+            pstmt = con.prepareStatement(GET_MEMBER_BY_ID);
+            pstmt.setInt(1, memberId);  // 設定查詢條件 (member_id)
+
+            rs = pstmt.executeQuery();
+
+            // 如果有查詢到資料，則將資料封裝到 MemberVO 中
+            if (rs.next()) {
+                memberVO = new MemberVO();
+                memberVO.setMemberId(rs.getInt("member_id"));
+                memberVO.setEmail(rs.getString("email"));
+                memberVO.setAccount(rs.getString("account"));
+                memberVO.setPassword(rs.getString("password"));
+                memberVO.setName(rs.getString("name"));
+                memberVO.setPhone(rs.getString("phone"));
+                memberVO.setStatus(rs.getInt("status"));
+                memberVO.setCreateTime(rs.getTimestamp("create_time"));
+                memberVO.setNickName(rs.getString("nick_name"));
+                memberVO.setGender(rs.getInt("gender"));
+                memberVO.setBirthday(rs.getDate("birthday"));
+                memberVO.setCompanyId(rs.getString("company_id"));
+                memberVO.setEreceiptCarrier(rs.getString("E_receipt_carrier"));
+                memberVO.setCreditCard(rs.getString("credit_card"));
+                memberVO.setTrackingNumber(rs.getInt("tracking_number"));
+                memberVO.setFansNumber(rs.getInt("fans_number"));
+                memberVO.setPhoto(rs.getBytes("photo"));
+            }
+
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("無法載入資料庫驅動程式：" + e.getMessage());
+        } catch (SQLException se) {
+            throw new RuntimeException("發生資料庫錯誤：" + se.getMessage());
+        } finally {
+            // 關閉資源
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException se) {
+                    se.printStackTrace(System.err);
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException se) {
+                    se.printStackTrace(System.err);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException se) {
+                    se.printStackTrace(System.err);
+                }
+            }
+        }
+
+        return memberVO;
     }
 
 	public static void main(String[] args) {
