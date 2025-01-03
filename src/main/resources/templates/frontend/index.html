@@ -57,7 +57,7 @@
         width: 100%;
         display: block;
       }
-      
+
       .row .prev,
       .row .next {
         position: absolute;
@@ -80,14 +80,13 @@
         right: 10px;
       }
 
-    .banner-carousel-box .banner-carousel img {
-      width: 100%;
-      display: block;
-      object-fit: cover;
-      object-position: center;
-    }
+      .banner-carousel-box .banner-carousel img {
+        width: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+      }
     </style>
-
   </head>
 
   <body>
@@ -97,12 +96,12 @@
         <nav class="top-nav">
           <div class="nav-left">
             <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
-            <a href="./product.html" class="nav-item nav-link" id="nav-product">購！票券</a>
+            <a href="#" class="nav-item nav-link" id="nav-product">購！票券</a>
             <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
             <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
           </div>
           <div class="nav-center">
-            <a href="#">
+            <a href="#" id="z-index">
               <img
                 src="./img/logo_black.png"
                 alt="Chill Trip"
@@ -120,8 +119,12 @@
                 >會員中心</a
               >
               <div class="dropdown-menu rounded-0 m-0">
-                <a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a>
-                <a href="#" class="dropdown-item" id="nav-coupons">我的折價券</a>
+                <a href="#" class="dropdown-item" id="nav-basic-info"
+                  >基本資料</a
+                >
+                <a href="#" class="dropdown-item" id="nav-coupons"
+                  >我的折價券</a
+                >
                 <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
               </div>
             </div>
@@ -135,23 +138,15 @@
     <!------主頁的幻燈片活動區------>
     <div class="container-fluid">
       <div class="row">
-        <div class="banner-carousel-box">
-          <div class="banner-carousel"><a href="./activity_blog.html"><img src="./img/banner-carousel1.jpg" alt="Banner1"></a></div>
-          <div class="banner-carousel"><a href="./activity_ticket.html"></a><img src="./img/banner-carousel2.jpg" alt="Banner2"></a></div>
-          <div class="banner-carousel"><a href="./activity_ticket.html"></a><img src="./img/banner-carousel3.jpg" alt="Banner3"></a></div>
-          <div class="banner-carousel"><a href="./activity_blog.html"><img src="./img/banner-carousel4.jpg" alt="Banner4"></a></div>
-          <div class="banner-carousel"><a href="./activity_ticket.html"></a><img src="./img/banner-carousel5.jpg" alt="Banner5"></a></div> 
-        </div>
+        <div class="banner-carousel-box"></div>
         <button class="prev">❮</button>
         <button class="next">❯</button>
       </div>
     </div>
 
-
     <!------Chill精選行程文章------>
     <div class="container-fluid py-5">
       <div class="container pt-5 pb-3">
-
         <div class="text-center mb-5">
           <h5
             class="text-primary text-uppercase mb-3"
@@ -164,7 +159,6 @@
 
         <div class="container-fluid py-5">
           <div class="row pb-3">
-
             <div class="col-lg-4 mb-4">
               <div
                 class="blog-item position-relative overflow-hidden rounded mb-2"
@@ -430,9 +424,7 @@
                 </div>
               </div>
             </div>
-
           </div>
-
         </div>
       </div>
     </div>
@@ -867,20 +859,97 @@
     <script src="js/main.js"></script>
 
     <!-- 導航欄nav的href載入器 -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("nav-go").href = "./go.html";
-            document.getElementById("nav-product").href = "./product.html";
-            document.getElementById("nav-profile").href = "./profile.html";
-            document.getElementById("nav-guide").href = "./guide.html";
-            document.getElementById("nav-basic-info").href = "./basic_info.html";
-            document.getElementById("nav-coupons").href = "./coupons.html";
-            document.getElementById("nav-orders").href = "./orders.html";
-            document.getElementById("nav-support").href = "./support.html";
-            document.getElementById("nav-cart").href = "./cart.html";
-        });
-    </script>
+    <!-- <script th:src="@{/templates/js/navigation.js}"></script> -->
 
+    <script>
+      //動態生成公告圖片
+      document.addEventListener("DOMContentLoaded", function () {
+        const baseUrl = "/TIA104G2-SpringBoot";
+
+        fetch(`${baseUrl}/api/navigation-paths`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("網路回應不正常");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("獲取導航路徑成功:", data);
+            // 為每個導航項添加點擊事件處理
+            const navItems = {
+              "nav-go": data.goPath,
+              "nav-product": data.productPath,
+              "nav-profile": data.profilePath,
+              "nav-guide": data.guidePath,
+              "nav-basic-info": data.basicInfoPath,
+              "nav-coupons": data.couponsPath,
+              "nav-orders": data.ordersPath,
+              "nav-support": data.supportPath,
+              "nav-cart": data.cartPath,
+            };
+
+            // 使用迴圈統一處理所有導航項目
+            Object.entries(navItems).forEach(([id, path]) => {
+              const element = document.getElementById(id);
+              if (element) {
+                element.addEventListener("click", function (e) {
+                  e.preventDefault();
+                  window.location.href = `${baseUrl}${path}`;
+                });
+              }
+            });
+          })
+          .catch((error) => {
+            console.error("獲取導航路徑時發生錯誤:", error);
+          });
+
+        const carouselContainer = document.querySelector(
+          ".banner-carousel-box"
+        );
+
+        // 动态构建 API 的 URL，基于当前页面的 origin
+        const apiUrl = `${window.location.origin}${
+          window.location.pathname.split("/")[1]
+            ? "/" + window.location.pathname.split("/")[1]
+            : ""
+        }/announce/getAll`;
+
+        // 使用 fetch 获取公告列表
+        fetch(apiUrl)
+          .then((response) => response.json()) // 假设返回的是 JSON
+          .then((announcements) => {
+            carouselContainer.innerHTML = "";
+
+            announcements.forEach((announce) => {
+              const bannerItem = document.createElement("div");
+              bannerItem.classList.add("banner-carousel");
+
+              const link = document.createElement("a");
+              const contextPath = window.location.pathname.split("/")[1];
+              link.href = `${window.location.origin}${
+                window.location.pathname.split("/")[1]
+                  ? "/" + window.location.pathname.split("/")[1]
+                  : ""
+              }/announce/${announce.announceid}`;
+
+              const img = document.createElement("img");
+              // 设置图片的 src 属性为 coverphotoBase64
+              if (announce.coverphotoBase64) {
+                img.src = announce.coverphotoBase64; // 将 base64 编码的图片数据设置为 src
+              }
+              img.alt = announce.title; // 设置图片的 alt 属性为公告的标题
+
+              link.appendChild(img);
+              bannerItem.appendChild(link);
+
+              carouselContainer.appendChild(bannerItem);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching announcements:", error);
+          });
+      });
+    </script>
     <!------修齊的JS------>
     <!------主頁的幻燈片活動區------>
     <script>
