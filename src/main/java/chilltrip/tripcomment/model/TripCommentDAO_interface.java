@@ -9,4 +9,5 @@ public interface TripCommentDAO_interface {
           public TripCommentVO findByPrimaryKey(Integer tripCommentId);
           public List<TripCommentVO> getAll();
           public List<TripCommentVO> findByTripId(Integer tripId);
+          public List<Map<String, Object>> getCommentsWithMemberInfo(Integer tripId);
 }

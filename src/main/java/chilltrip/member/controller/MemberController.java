@@ -145,39 +145,41 @@ public class MemberController {
 
 	// 會員登入
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody Map<String, String> payload, HttpSession session) {
-		System.out.println("payload是: " + payload); // 確認是否收到資料
+	public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> payload,
+	                                                 HttpSession session) {
+	    System.out.println("payload是: " + payload);
 
-		String email = payload.get("email");
-		String password = payload.get("password");
+	    String email = payload.get("email");
+	    String password = payload.get("password");
 
-		System.out.println("登入請求 信箱: " + email + ", 密碼: " + password);
+	    // 驗證信箱和密碼是否有填
+	    if (email == null || email.trim().isEmpty()) {
+	        return ResponseEntity.badRequest().body(Map.of("message", "請輸入信箱"));
+	    }
+	    if (password == null || password.trim().isEmpty()) {
+	        return ResponseEntity.badRequest().body(Map.of("message", "請輸入密碼"));
+	    }
 
-		// 驗證信箱與密碼是否為空
-		if (email == null || email.trim().isEmpty()) {
-			System.out.println("請輸入信箱");
-			return ResponseEntity.badRequest().body("請輸入信箱");
-		}
+	    // 呼叫 Service
+	    MemberVO memberVO = memberSvc.login(email, password);
 
-		if (password == null || password.trim().isEmpty()) {
-			System.out.println("請輸入密碼");
-			return ResponseEntity.badRequest().body("請輸入密碼");
-		}
+	    if (memberVO == null) {
+	        // 帳號或密碼錯誤
+	        return ResponseEntity.badRequest().body(Map.of("message", "帳號或密碼錯誤"));
+	    }
 
-		// 驗證帳號密碼是否正確
-		MemberVO memberVO = memberSvc.login(email, password);
+	    // 登入成功，將 memberId 放入 server-side session
+	    session.setAttribute("memberId", memberVO.getMemberId());
 
-		if (memberVO == null) {
-			System.out.println("帳號或密碼錯誤");
-			return ResponseEntity.badRequest().body("帳號或密碼錯誤");
-		}
+	    // 回傳 JSON 給前端
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("message", "登入成功");
+	    result.put("memberId", memberVO.getMemberId()); // 這個才是前端要抓的
+	    System.out.println("使用者: " + email + " 登入成功, memberId=" + memberVO.getMemberId());
 
-		// 登入成功，將 memberId 放入 session 中
-		session.setAttribute("memberId", memberVO.getMemberId());
-		System.out.println("使用者: " + email + " 登入成功");
-
-		return ResponseEntity.ok("登入成功，跳轉至個人頁面");
+	    return ResponseEntity.ok(result);
 	}
+
 
 	// 瀏覽個人頁面
 	@GetMapping("/viewProfile")

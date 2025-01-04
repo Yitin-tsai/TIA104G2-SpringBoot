@@ -73,4 +73,11 @@ public class PageController {
 	    model.addAttribute("memberVO", memberVO);
 	    return "frontend/public_member_profile"; // 另一個會員的公開個人頁面
 	}
+	
+	// 行程留言頁面
+	@GetMapping("/tripComment/{tripId}")
+	public String tripComment(@PathVariable int tripId, Model model) {
+	    model.addAttribute("tripId", tripId);
+	    return "frontend/trip_comment"; // 行程留言頁面
+	}
 }

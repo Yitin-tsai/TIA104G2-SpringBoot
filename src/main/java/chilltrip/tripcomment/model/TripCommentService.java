@@ -2,6 +2,7 @@ package chilltrip.tripcomment.model;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,6 +69,10 @@ public class TripCommentService {
 	
 	public List<TripCommentVO> getCommentsByTripId(Integer tripId) {
 	    return dao.findByTripId(tripId);
+	}
+	
+	public List<Map<String, Object>> getCommentsWithMemberInfo(Integer tripId) {
+	    return dao.getCommentsWithMemberInfo(tripId);
 	}
 	
 	public void deleteTripComment(Integer tripCommentId, Integer memberId) {

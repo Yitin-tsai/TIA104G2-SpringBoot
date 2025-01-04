@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import chilltrip.tripcomment.model.TripCommentService;
 import chilltrip.tripcomment.model.TripCommentVO;
@@ -36,7 +37,10 @@ public class TripCommentController {
 			return ResponseEntity.badRequest().body("請先登入");
 		}
 
-		List<TripCommentVO> tripCommentList = tripCommentSvc.getCommentsByTripId(tripId);
+		// 查詢帶有會員資料的留言
+	    List<Map<String, Object>> tripCommentList = tripCommentSvc.getCommentsWithMemberInfo(tripId);
+//		List<TripCommentVO> tripCommentList = tripCommentSvc.getCommentsByTripId(tripId);
+	    
 		if (tripCommentList == null || tripCommentList.isEmpty()) {
 			return ResponseEntity.status(404).body("查無該行程留言");
 		}
