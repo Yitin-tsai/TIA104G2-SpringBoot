@@ -104,8 +104,6 @@
 					</a>
 				</div>
 				<div class="nav-right">
-					<a href="./member_login.html" class="nav-item nav-link  active" id="nav-login"
-						style="color: #FF6600;">登入/註冊</a>
 					<div class="nav-item dropdown">
 						<a href="#" class="nav-link dropdown-toggle"
 							data-toggle="dropdown" style="color: #212529">會員中心</a>
@@ -125,28 +123,7 @@
 	<!------主頁的幻燈片活動區------>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="banner-carousel-box">
-				<div class="banner-carousel">
-					<a href="./activity_blog.html"><img
-						src="./img/banner-carousel1.jpg" alt="Banner1"></a>
-				</div>
-				<div class="banner-carousel">
-					<a href="./activity_ticket.html"></a><img
-						src="./img/banner-carousel2.jpg" alt="Banner2"></a>
-				</div>
-				<div class="banner-carousel">
-					<a href="./activity_ticket.html"></a><img
-						src="./img/banner-carousel3.jpg" alt="Banner3"></a>
-				</div>
-				<div class="banner-carousel">
-					<a href="./activity_blog.html"><img
-						src="./img/banner-carousel4.jpg" alt="Banner4"></a>
-				</div>
-				<div class="banner-carousel">
-					<a href="./activity_ticket.html"></a><img
-						src="./img/banner-carousel5.jpg" alt="Banner5"></a>
-				</div>
-			</div>
+			<div class="banner-carousel-box"></div>
 			<button class="prev">❮</button>
 			<button class="next">❯</button>
 		</div>
@@ -747,57 +724,88 @@
 
 	<!-- 導航欄nav的href載入器 -->
 	<script>
-		document
-				.addEventListener(
-						"DOMContentLoaded",
-						function() {
-							document.getElementById("nav-go").href = "./go.html";
-							document.getElementById("nav-product").href = "./product.html";
-							document.getElementById("nav-profile").href = "./profile.html";
-							document.getElementById("nav-guide").href = "./guide.html";
-							document.getElementById("nav-basic-info").href = "./basic_info.html";
-							document.getElementById("nav-coupons").href = "./coupons.html";
-							document.getElementById("nav-orders").href = "./orders.html";
-							document.getElementById("nav-support").href = "./support.html";
-							document.getElementById("nav-cart").href = "./cart.html";
-						});
-	</script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("nav-go").href = "./go.html";
+            document.getElementById("nav-product").href = "./product.html";
+            document.getElementById("nav-profile").href = "./profile.html";
+            document.getElementById("nav-guide").href = "./guide.html";
+            document.getElementById("nav-basic-info").href = "./basic_info.html";
+            document.getElementById("nav-coupons").href = "./coupons.html";
+            document.getElementById("nav-orders").href = "./orders.html";
+            document.getElementById("nav-support").href = "./support.html";
+            document.getElementById("nav-cart").href = "./cart.html";
+        });
+    </script>
+	<script>  //動態生成公告圖片
+      document.addEventListener('DOMContentLoaded', function () {
+      const carouselContainer = document.querySelector('.banner-carousel-box');
+  
+      // 动态构建 API 的 URL，基于当前页面的 origin
+      const apiUrl = `${window.location.origin}${window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : ''}/announce/getAll`;
+  
+      // 使用 fetch 获取公告列表
+      fetch(apiUrl)
+          .then(response => response.json())  // 假设返回的是 JSON
+          .then(announcements => {
+              carouselContainer.innerHTML = '';
+  
+              announcements.forEach(announce => {
+                  const bannerItem = document.createElement('div');
+                  bannerItem.classList.add('banner-carousel');
 
+                  const link = document.createElement('a');
+                  const contextPath = window.location.pathname.split('/')[1];
+                  link.href = `${window.location.origin}${window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : ''}/announce/${announce.announceid}`; 
+  
+                  const img = document.createElement('img');
+                  // 设置图片的 src 属性为 coverphotoBase64
+                  if (announce.coverphotoBase64) {
+                      img.src = announce.coverphotoBase64;  // 将 base64 编码的图片数据设置为 src
+                  }
+                  img.alt = announce.title;       // 设置图片的 alt 属性为公告的标题
+  
+                  link.appendChild(img);
+                  bannerItem.appendChild(link);
+  
+                  carouselContainer.appendChild(bannerItem);
+              });
+          })
+          .catch(error => {
+              console.error('Error fetching announcements:', error);
+          });
+  });</script>
 	<!------修齊的JS------>
 	<!------主頁的幻燈片活動區------>
 	<script>
-		document.addEventListener("DOMContentLoaded", function() {
-			const carouselInner = document
-					.querySelector(".banner-carousel-box");
-			const items = document.querySelectorAll(".banner-carousel");
-			const totalItems = items.length;
-			let currentIndex = 0;
+      document.addEventListener("DOMContentLoaded", function () {
+        const carouselInner = document.querySelector(".banner-carousel-box");
+        const items = document.querySelectorAll(".banner-carousel");
+        const totalItems = items.length;
+        let currentIndex = 0;
 
-			document.querySelector(".next").addEventListener("click",
-					function() {
-						currentIndex = (currentIndex + 1) % totalItems;
-						updateCarousel();
-					});
+        document.querySelector(".next").addEventListener("click", function () {
+          currentIndex = (currentIndex + 1) % totalItems;
+          updateCarousel();
+        });
 
-			document.querySelector(".prev").addEventListener(
-					"click",
-					function() {
-						currentIndex = (currentIndex - 1 + totalItems)
-								% totalItems;
-						updateCarousel();
-					});
+        document.querySelector(".prev").addEventListener("click", function () {
+          currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+          updateCarousel();
+        });
 
-			function updateCarousel() {
-				const offset = -currentIndex * 100;
-				carouselInner.style.transform = `translateX(${offset}%)`;
-			}
+        function updateCarousel() {
+          const offset = -currentIndex * 100;
+          carouselInner.style.transform = `translateX(${offset}%)`;
+        }
 
-			// 自動輪播
-			setInterval(function() {
-				currentIndex = (currentIndex + 1) % totalItems;
-				updateCarousel();
-			}, 3000);
-		});
-	</script>
+        // 自動輪播
+        setInterval(function () {
+          currentIndex = (currentIndex + 1) % totalItems;
+          updateCarousel();
+        }, 3000);
+      });
+    
+
+    </script>
 </body>
 </html>

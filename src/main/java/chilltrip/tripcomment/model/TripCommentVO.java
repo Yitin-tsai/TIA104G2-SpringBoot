@@ -2,14 +2,42 @@ package chilltrip.tripcomment.model;
 import java.sql.Timestamp;
 import java.util.Arrays;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
+@Table(name = "trip_comment")
 public class TripCommentVO implements java.io.Serializable{
+	@Column(name = "trip_comment_id")
 	private Integer tripCommentId;
+	
+	@Column(name = "member_id")
 	private Integer memberId;
+	
+	@Column(name = "trip_id")
 	private Integer tripId;
+	
+	@Column(name = "score")
 	private Integer score;
+	
+	@Column(name = "photo")
+	@Lob
+	@JsonIgnore
 	private byte[] photo;
+	
+	@Column(name = "create_time")
 	private Timestamp createTime;
+	
+	@Column(name = "content")
 	private String content;
+	
+	@Transient
 	private String photo_base64;
 	
 	public String getPhoto_base64() {

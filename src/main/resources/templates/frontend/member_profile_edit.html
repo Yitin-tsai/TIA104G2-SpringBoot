@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>編輯個人資料 - ChillTrip</title>
+<link href="img/favicon.ico" rel="icon" />
+<link rel="preconnect" href="https://fonts.gstatic.com" />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+	rel="stylesheet" />
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+	rel="stylesheet" />
+<link href="css/style.css" rel="stylesheet" />
+<link href="css/yuki_style.css" rel="stylesheet" />
+
+<style>
+.photo {
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.edit-container {
+	max-width: 800px;
+	margin: 2rem auto;
+	padding: 2rem;
+	background: white;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+	display: flex;
+	align-items: center;
+	gap: 2rem;
+	margin-bottom: 2rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid #eee;
+}
+
+.profile-avatar-container {
+	position: relative;
+	width: 150px;
+	height: 150px;
+}
+
+.profile-avatar {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.avatar-upload {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	background: #FF6600;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.avatar-upload i {
+	color: white;
+	font-size: 16px;
+}
+
+.avatar-upload input {
+	display: none;
+}
+
+.profile-stats {
+	display: flex;
+	gap: 2rem;
+	margin: 1rem 0;
+}
+
+.stat-item {
+	text-align: center;
+}
+
+.form-group {
+	margin-bottom: 1.5rem;
+}
+
+.form-label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: 600;
+	color: #666;
+}
+
+.form-control {
+	width: 100%;
+	padding: 0.5rem;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 1rem;
+}
+
+.form-actions {
+	display: flex;
+	gap: 1rem;
+	margin-top: 2rem;
+}
+
+.btn-save {
+	background: #FF6600;
+	color: white;
+	border: none;
+	padding: 0.5rem 1.5rem;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.cancelButton {
+	background: #6c757d;
+	color: white;
+	border: none;
+	padding: 0.5rem 1.5rem;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.readonly-field {
+	background-color: #f8f9fa;
+	cursor: not-allowed;
+}
+
+.password-input-container {
+	position: relative;
+}
+
+.password-toggle {
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: #666;
+}
+
+.password-requirements {
+	font-size: 0.85rem;
+	color: #666;
+	margin-top: 0.5rem;
+}
+
+.password-match-indicator {
+	font-size: 0.85rem;
+	margin-top: 0.5rem;
+}
+
+.match {
+	color: #7AB730;
+}
+
+.not-match {
+	color: #dc3545;
+}
+</style>
+
+</head>
+
+<body>
+	<!------網站header------>
+	<div id="app">
+		<header>
+			<nav class="top-nav">
+				<div class="nav-left">
+					<a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a> <a
+						href="./product.html" class="nav-item nav-link" id="nav-product">購！票券</a>
+					<a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a> <a
+						href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+				</div>
+				<div class="nav-center">
+					<a href="#"> <img src="./img/logo_black.png" alt="Chill Trip"
+						style="width: 150px; height: auto" />
+					</a>
+				</div>
+				<div class="nav-right">
+					<div class="nav-item dropdown">
+						<a href="#" class="nav-link dropdown-toggle"
+							data-toggle="dropdown" style="color: #212529">會員中心</a>
+						<div class="dropdown-menu rounded-0 m-0">
+							<a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a> <a
+								href="#" class="dropdown-item" id="nav-coupons">我的折價券</a> <a
+								href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
+						</div>
+					</div>
+					<a href="#" class="nav-item nav-link" id="nav-support">客服中心</a> <a
+						href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+				</div>
+			</nav>
+		</header>
+	</div>
+
+	<div class="edit-container">
+		<div class="profile-header">
+			<div class="profile-avatar-container">
+				<!-- 頭像顯示區域 -->
+				<img class="photo" id="photo"> <label class="avatar-upload">
+					<input type="file" accept="image/*" id="avatarInput"
+					onchange="handleAvatarChange(event)"> <i
+					class="fas fa-camera"></i>
+				</label>
+			</div>
+			<div>
+				<div class="profile-stats">
+					<div class="stat-item">
+						<div class="trackingNumber" id="trackingNumber"></div>
+						<div class="stat-label">追蹤數</div>
+					</div>
+					<div class="stat-item">
+						<div class="fansNumber" id="fansNumber"></div>
+						<div class="stat-label">粉絲數</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<form id="editForm" onsubmit="handleSubmit(event)">
+			<!-- 唯讀欄位 -->
+			<div class="form-group">
+				<label class="form-label">姓名</label> <input type="email"
+					class="form-control readonly-field" id="name" readonly>
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">暱稱</label> <input type="text"
+					class="form-control" id="nickName" name="nickName">
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">電子郵件</label> <input type="email"
+					class="form-control readonly-field" id="email" readonly>
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">新密碼</label>
+				<div class="password-input-container">
+					<input type="password" class="form-control" id="password"
+						name="password" onkeyup="checkPasswordMatch()">
+					<button type="button" class="password-toggle"
+						onclick="togglePasswordVisibility('password')">
+						<i class="far fa-eye"></i>
+					</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">確認新密碼</label>
+				<div class="password-input-container">
+					<input type="password" class="form-control" id="confirmPassword"
+						name="confirmPassword" onkeyup="checkPasswordMatch()">
+					<button type="button" class="password-toggle"
+						onclick="togglePasswordVisibility('confirmPassword')">
+						<i class="far fa-eye"></i>
+					</button>
+				</div>
+				<div id="passwordMatchIndicator" class="password-match-indicator"></div>
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">手機號碼</label> <input type="tel"
+					class="form-control" id="phone" name="phone">
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">性別</label> <input type="text"
+					class="form-control readonly-field" id="gender" readonly>
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">生日</label> <input type="date"
+					class="form-control readonly-field" id="birthday" readonly>
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">公司統編</label> <input type="text"
+					class="form-control" id="companyId" name="companyId">
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">載具號碼</label> <input type="text"
+					class="form-control" id="ereceiptCarrier" name="ereceiptCarrier">
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">信用卡號</label> <input type="text"
+					class="form-control" id="creditCard" name="creditCard">
+			</div>
+
+			<div class="form-actions">
+				<button type="submit" class="btn-save">儲存變更</button>
+					<button id="cancelButton" class="cancelButton">取消</button>
+			</div>
+		</form>
+
+	</div>
+
+	<!------網站footer------>
+	<footer>
+		<div class="d-flex justify-content-start mt-4">
+			<a class="btn btn-outline-light btn-square mr-2" href="#"><i
+				class="fab fa-twitter"></i></a> <a
+				class="btn btn-outline-light btn-square mr-2" href="#"><i
+				class="fab fa-facebook-f"></i></a> <a
+				class="btn btn-outline-light btn-square mr-2" href="#"><i
+				class="fab fa-linkedin-in"></i></a> <a
+				class="btn btn-outline-light btn-square" href="#"><i
+				class="fab fa-instagram"></i></a>
+		</div>
+		<div class="social-links">
+			<div style="display: flex; gap: 10px">
+				<a href="https://facebook.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #3b5998; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-facebook-f" style="color: white; font-size: 24px"></i>
+					</div>
+				</a> <a href="https://instagram.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #e1306c; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-instagram" style="color: white; font-size: 24px"></i>
+					</div>
+				</a> <a href="https://youtube.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-youtube" style="color: white; font-size: 24px"></i>
+					</div>
+				</a>
+			</div>
+
+			<!-- 加載 Font Awesome 圖標庫 -->
+			<link
+				href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+				rel="stylesheet" />
+		</div>
+		<div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
+	</footer>
+
+	<!------ 共用JS ------>
+	<!-- Back to Top -->
+	<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i
+		class="fa fa-angle-double-up"></i></a>
+
+	<!-- JavaScript Libraries -->
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+	<script src="lib/easing/easing.min.js"></script>
+	<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+	<!-- Contact Javascript File -->
+	<script src="mail/jqBootstrapValidation.min.js"></script>
+	<script src="mail/contact.js"></script>
+
+	<!-- Template Javascript -->
+	<script src="js/main.js"></script>
+
+	<!-- 導航欄nav的href載入器 -->
+	<script>
+		document
+				.addEventListener(
+						"DOMContentLoaded",
+						function() {
+							document.getElementById("nav-go").href = "./go.html";
+							document.getElementById("nav-product").href = "./product.html";
+							document.getElementById("nav-profile").href = "./profile.html";
+							document.getElementById("nav-guide").href = "./guide.html";
+							document.getElementById("nav-basic-info").href = "./basic_info.html";
+							document.getElementById("nav-coupons").href = "./coupons.html";
+							document.getElementById("nav-orders").href = "./orders.html";
+							document.getElementById("nav-support").href = "./support.html";
+							document.getElementById("nav-cart").href = "./cart.html";
+						});
+	</script>
+
+	<script>
+	const contextPath = "/TIA104G2-SpringBoot"; // 從後端傳來的 context-path
+		// 切換密碼可見性
+		function togglePasswordVisibility(inputId) {
+			const input = document.getElementById(inputId);
+			const icon = input.nextElementSibling.querySelector('i');
+
+			if (input.type === 'password') {
+				input.type = 'text';
+				icon.classList.remove('fa-eye');
+				icon.classList.add('fa-eye-slash');
+			} else {
+				input.type = 'password';
+				icon.classList.remove('fa-eye-slash');
+				icon.classList.add('fa-eye');
+			}
+		}
+
+		// 檢查密碼匹配
+		function checkPasswordMatch() {
+			const password = document.getElementById('password').value;
+			const confirmPassword = document.getElementById('confirmPassword').value;
+			const indicator = document.getElementById('passwordMatchIndicator');
+
+			if (password === '' && confirmPassword === '') {
+				indicator.textContent = '';
+				return;
+			}
+
+			if (password === confirmPassword) {
+				indicator.textContent = '密碼匹配';
+				indicator.classList.add('match');
+				indicator.classList.remove('not-match');
+			} else {
+				indicator.textContent = '密碼不匹配';
+				indicator.classList.add('not-match');
+				indicator.classList.remove('match');
+			}
+		}
+		// 頁面載入時，調用API獲取使用者資料
+		async function loadProfile() {
+			try {
+				const response = await
+				fetch(contextPath + "/member/viewProfile", {
+					method : 'GET'
+				});
+				const profile = await
+				response.json();
+
+				// 原本的頭像
+		        if (profile.photo) {
+//	 	            console.log("照片 Base64：", profile.photo);
+		            document.getElementById("photo").src = `data:image/jpeg;base64,${profile.photo}`;
+		        }
+
+				// 填充可編輯的資料
+				document.getElementById('name').value = profile.name || '';
+				document.getElementById('nickName').value = profile.nickName
+						|| '';
+				document.getElementById('email').value = profile.email || '';
+				document.getElementById('phone').value = profile.phone || '';
+				document.getElementById('gender').value = profile.gender || '';
+				document.getElementById('birthday').value = profile.birthday
+						|| '';
+				document.getElementById('companyId').value = profile.companyId
+						|| '';
+				document.getElementById('ereceiptCarrier').value = profile.ereceiptCarrier
+						|| '';
+				document.getElementById('creditCard').value = profile.creditCard
+						|| '';
+
+				// 其他不可編輯的資料則顯示在只讀欄位
+				document.getElementById('trackingNumber').textContent = profile.trackingNumber || 0;
+				document.getElementById('fansNumber').textContent = profile.fansNumber || 0;
+			} catch (error) {
+				alert("載入資料失敗，請稍後再試");
+			}
+		}
+		
+		
+		
+		function handleAvatarChange(event) {
+		    const file = event.target.files[0]; // 取得選擇的檔案
+		    if (file) {
+		        const reader = new FileReader();
+		        reader.onload = function(e) {
+		            // 顯示上傳的照片
+		            document.getElementById('photo').src = e.target.result;
+		        };
+		        reader.readAsDataURL(file); // 將檔案讀取為 Data URL（Base64 編碼）
+		    }
+		}
+		
+		function handleSubmit(event) {
+		    event.preventDefault();
+
+		    const formData = new FormData();
+		    formData.append('nickName', document.getElementById('nickName').value);
+		    formData.append('phone', document.getElementById('phone').value);
+		    formData.append('companyId', document.getElementById('companyId').value);
+		    formData.append('ereceiptCarrier', document.getElementById('ereceiptCarrier').value);
+		    formData.append('creditCard', document.getElementById('creditCard').value);
+		    
+		 	// 處理密碼欄位，若為空則不提交
+		    const password = document.getElementById('password').value;
+		    if (password.trim()) {
+		        formData.append('password', password);
+		    }
+
+		    // 處理照片：直接將圖片檔案加入 FormData
+		    const photoInput = document.getElementById('avatarInput');
+		    if (photoInput.files.length > 0) {
+		        formData.append('photo', photoInput.files[0]);
+		    }
+
+		    // 只提交修改過的資料
+		    fetch(contextPath + "/member/update", {
+		        method: 'PUT',
+		        body: formData,
+		        contentType: false,  // 不設置 contentType，讓瀏覽器自動處理
+	            processData: false,  // 不處理資料，讓 FormData 自動處理
+		    })
+		    .then(response => response.json())
+		    .then(data => {
+		    	if (data.message === "會員資料更新成功") {
+		            alert('資料更新成功');
+		        } else {
+		            alert('資料更新失敗');
+		        }
+		        window.location.href = contextPath + "/viewProfile";
+		    })
+		    .catch(error => {
+		    	console.error('Error:', error);
+		        alert('更新資料時發生錯誤');
+		    });
+		}
+
+
+		// 更新UI顯示
+		function updateProfileUI(profile) {
+			// 更新頭像
+			const avatarImg = document.getElementById('photo');
+			if (profile.avatarUrl) {
+				avatarImg.src = profile.avatarUrl;
+			}
+
+			// 更新基本資料
+			document.getElementById('name').textContent = profile.name || '未提供';
+			document.getElementById('nickName').value = profile.nickName || '';
+			document.getElementById('email').value = profile.email || '';
+			document.getElementById('phone').value = profile.phone || '';
+			document.getElementById('gender').value = profile.gender || '';
+			document.getElementById('birthday').value = profile.birthday || '';
+			document.getElementById('companyId').value = profile.companyId
+					|| '';
+			document.getElementById('ereceiptCarrier').value = profile.ereceiptCarrier
+					|| '';
+			document.getElementById('creditCard').value = profile.creditCard
+					|| '';
+			document.getElementById('trackingNumber').textContent = profile.trackingNumber || 0;
+			document.getElementById('fansNumber').textContent = profile.fansNumber || 0;
+		}
+
+		// 顯示錯誤提示
+		function showError(message) {
+			alert(message); // 這裡可以做UI提示
+		}
+		
+		// 取消按鈕
+		document.getElementById("cancelButton").addEventListener("click", function(event) {
+		    event.preventDefault();  // 防止表單提交的預設行為
+		    window.location.href = contextPath + "/viewProfile";  // 跳轉到個人頁面
+		});
+
+		// 頁面載入時執行
+		document.addEventListener('DOMContentLoaded', loadProfile);
+	</script>
+</body>
+
+</html>
