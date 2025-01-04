@@ -5,17 +5,20 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import chilltrip.location.model.LocationVO;
 import chilltrip.member.model.MemberVO;
 import chilltrip.util.HibernateUtil;
-
+@Repository
 public class LocationCommentDAOimpl implements LocationCommentDAO{
 	private SessionFactory factory;
 	
-	public LocationCommentDAOimpl() {
-		factory = HibernateUtil.getSessionFactory();
-	}
+	@Autowired
+	public LocationCommentDAOimpl(SessionFactory factory) {
+        this.factory = factory;
+    }
 	private Session getSession() {
 		return factory.getCurrentSession();
 	}
@@ -49,17 +52,19 @@ public class LocationCommentDAOimpl implements LocationCommentDAO{
 	}
 
 	@Override
-	public void delete(Integer locationCommentId) {
+	public boolean delete(Integer locationCommentId) {
 		// TODO Auto-generated method stub
-		LocationCommentVO locationCommentVO =getSession().get(LocationCommentVO.class, locationCommentId);
 		try {
 			Session session = getSession();
 			session.beginTransaction();
+			LocationCommentVO locationCommentVO =session.get(LocationCommentVO.class, locationCommentId);
 			session.delete(locationCommentVO);
 			session.getTransaction().commit();
+			return true;
 		}catch(Exception e) {
 			e.printStackTrace();
 			getSession().getTransaction().rollback();
+			return false;
 		}
 	}
 
@@ -89,9 +94,13 @@ public class LocationCommentDAOimpl implements LocationCommentDAO{
 		return list;
 		
 	}
-	public static void main(String[] args) {
-		LocationCommentDAOimpl dao = new  LocationCommentDAOimpl();
-//		System.out.println(dao.getByLocation(1));;
-		System.out.println(dao.getByMember(2));
+	@Override
+	public LocationCommentVO getById(Integer id) {
+		Session session = getSession();
+		session.beginTransaction();
+		LocationCommentVO comment =  session.get(LocationCommentVO.class, id);
+		session.getTransaction().commit();
+		return comment;
 	}
+	
 }

@@ -1,113 +1,104 @@
 package chilltrip.locationcomment.controller;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import chilltrip.location.model.LocationService;
+import chilltrip.location.model.LocationVO;
 import chilltrip.locationcomment.model.LocationCommentService;
 import chilltrip.locationcomment.model.LocationCommentVO;
+import chilltrip.member.model.MemberService;
+import chilltrip.member.model.MemberVO;
 
-@WebServlet("/LocationCommment")
+@RestController
+@RequestMapping("/locationComment")
 public class LocationCommentServlet {
+	
+	@Autowired
+	LocationCommentService commentSvc;
 
-	private LocationCommentService commentSvc;
+	
 
-	public void init() {
-		commentSvc = new LocationCommentService();
-	}
-
-	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		doPost(req, res);
-	}
-
-	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8");
-		res.setContentType("text/html; charset=UTF-8");
-		String action = req.getParameter("action");
-
-		switch (action) {
-		case "getLocationCommemtByMember":
-			getByMember(req, res);
-			break;
-		case "getLocationCommentByLocation":
-			getByLocation(req, res);
-			break;
-		}
-
-	}
-
-	private void getByLocation(HttpServletRequest req, HttpServletResponse res) throws IOException {
+	@GetMapping("getByLocation/{id}")
+	private List<LocationCommentVO> getByLocation(@PathVariable("id") Integer locationid) throws IOException {
 		// TODO Auto-generated method stub
-		Integer locationid = Integer.valueOf(req.getParameter("locationid"));
+
 		List<LocationCommentVO> commentList = commentSvc.getLocationCommentByLocation(locationid);
-		JSONArray jsonArray = new JSONArray();
 
-		for (LocationCommentVO comment : commentList) {
-			JSONObject jsonRes = new JSONObject();
-			jsonRes.put("locationCommentId", comment.getLocationCommitId());
-			jsonRes.put("member", comment.getMembervo());
-			jsonRes.put("location", comment.getLocationvo());
-			jsonRes.put("score", comment.getScore());
-			jsonRes.put("content", comment.getContent());
-			jsonRes.put("createTime", comment.getCreateTime());
-			jsonRes.put("photo", Base64.getEncoder().encodeToString(comment.getPhoto()));
-
-			jsonArray.put(jsonRes);
-		}
-
-		res.setContentType("application/json");
-		res.setCharacterEncoding("UTF-8");
-		res.getWriter().write(jsonArray.toString());
+		return commentList;
 
 	}
 
-	public void getByMember(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		Integer memberid = Integer.valueOf(req.getParameter("locationid"));
+	@GetMapping("getByMember/{id}")
+	public List<LocationCommentVO> getByMember(@PathVariable("id") Integer memberid) throws IOException {
+
 		List<LocationCommentVO> commentList = commentSvc.getLocationCommentByLocation(memberid);
-		JSONArray jsonArray = new JSONArray();
+		return commentList;
 
-		for (LocationCommentVO comment : commentList) {
-			JSONObject jsonRes = new JSONObject();
-			jsonRes.put("locationCommentId", comment.getLocationCommitId());
-			jsonRes.put("member", comment.getMembervo());
-			jsonRes.put("location", comment.getLocationvo());
-			jsonRes.put("score", comment.getScore());
-			jsonRes.put("content", comment.getContent());
-			jsonRes.put("createTime", comment.getCreateTime());
-			jsonRes.put("photo", Base64.getEncoder().encodeToString(comment.getPhoto()));
+	}
 
-			jsonArray.put(jsonRes);
+	@PostMapping("/update/{mid}/{lid}")
+	private ResponseEntity<String> updateLocationComment(@Valid @RequestBody LocationCommentVO locationCommentVO,
+			BindingResult result,@PathVariable("mid") Integer memberid ,@PathVariable("lid")Integer locationid) {
+		// TODO Auto-generated method stub
+		if (result.hasErrors()) {
+			StringBuilder errorMessage = new StringBuilder();
+			for (ObjectError error : result.getAllErrors()) {
+				errorMessage.append(error.getDefaultMessage()).append("\n");
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed: " + errorMessage.toString());
 		}
-
-		res.setContentType("application/json");
-		res.setCharacterEncoding("UTF-8");
-		res.getWriter().write(jsonArray.toString());
-
-	}
-	/*@PutMapping("/update/{id}")*/
-	private void updateLocationComment(/*@PathVariable("id")*/ Integer id, /*@RequestBody*/ LocationCommentVO locationCommentVO) {
-		// TODO Auto-generated method stub
-		locationCommentVO.setLocationCommitId(id);
+		LocationService locationSvc= new LocationService();
+		MemberService memberSvc= new MemberService();
+		MemberVO member = memberSvc.getOneMember(memberid);
+		LocationVO location = locationSvc.getLocationById(locationid);
+		locationCommentVO.setLocationvo(location);
+		locationCommentVO.setMembervo(member);	
 		commentSvc.updateLocationComment(locationCommentVO);
+		return ResponseEntity.ok("success");
 	}
-	/*@PutMapping("/add")*/
-	private void addLocationComment(/*@RequestBody*/LocationCommentVO locationCommentVO) {
-		// TODO Auto-generated method stub
-		commentSvc.addLocationComment(locationCommentVO);
 
-	}
-	/*@PutMapping("/delete")/{id}*/
-	private void deleteLocationComment(/*@PathVariabl("id")*/Integer id ) {
+	@PostMapping("/add/{mid}/{lid}")
+	private ResponseEntity<String> addLocationComment(@Valid @RequestBody LocationCommentVO locationCommentVO,
+			BindingResult result,@PathVariable("mid") Integer memberid ,@PathVariable("lid") Integer locationid) {
 		// TODO Auto-generated method stub
-		commentSvc.deleteLocationComment(id);
+		if (result.hasErrors()) {
+			StringBuilder errorMessage = new StringBuilder();
+			for (ObjectError error : result.getAllErrors()) {
+				errorMessage.append(error.getDefaultMessage()).append("\n");
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed: " + errorMessage.toString());
+		}
+		LocationService locationSvc= new LocationService();
+		MemberService memberSvc= new MemberService();
+		MemberVO member = memberSvc.getOneMember(memberid);
+		LocationVO location = locationSvc.getLocationById(locationid);
+		locationCommentVO.setLocationvo(location);
+		locationCommentVO.setMembervo(member);	
+		commentSvc.addLocationComment(locationCommentVO);
+		return ResponseEntity.ok("success");
+	}
+
+	 @PostMapping("/delete/{id}")
+	private String deleteLocationComment(@PathVariable("id") Integer id) {
+		// TODO Auto-generated method stub
+		if(commentSvc.deleteLocationComment(id)) {
+			return "sucess";
+		}return "false";
 	}
 
 }

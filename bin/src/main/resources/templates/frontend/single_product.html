@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>ChillTrip's Product</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="Free HTML Templates" name="keywords">
+  <meta content="Free HTML Templates" name="description">
+
+  <!-- Favicon -->
+  <link href="img/favicon.ico" rel="icon">
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Libraries Stylesheet -->
+  <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+  <!-- Customized Bootstrap Stylesheet -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/yuki_style.css" rel="stylesheet">
+
+  <style>
+    .breadcrumb {
+      background-color: transparent;
+      /* 移除背景色 */
+      list-style: none;
+      /* 移除列表樣式 */
+      display: flex;
+      padding: 0;
+      margin: 1rem 0;
+    }
+
+    .breadcrumb-item {
+      font-size: calc(1rem - 4px);
+      /* 比 dropdown-item 小 4px */
+      color: #6c757d !important;
+      /* 預設顯示為灰色，並覆蓋 Bootstrap 預設樣式 */
+      text-decoration: none;
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+    }
+
+    .breadcrumb-item+.breadcrumb-item::before {
+      content: ">";
+      padding: 0 0.5rem;
+      color: #6c757d;
+    }
+
+    .breadcrumb-item a {
+      color: #6c757d !important;
+      /* 更改 a 標籤的預設顏色為灰色 */
+      text-decoration: none;
+      /* 移除下劃線 */
+    }
+
+    .breadcrumb-item a:hover {
+      color: #FF6600 !important;
+      /* 滑鼠移動到 a 標籤上時顯示為橘色 */
+    }
+
+    .breadcrumb-item.active {
+      color: #FF6600 !important;
+      /* 最後一個元素顯示為橘色，並覆蓋 Bootstrap 預設樣式 */
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      /* Increased z-index to ensure it's above everything */
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 400px;
+      position: relative;
+      text-align: center;
+    }
+
+    .modal-content button {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .modal-content button:first-of-type {
+      background-color: #FF6600;
+      color: white;
+    }
+
+    .modal-content button:last-of-type {
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .breadcrumb-item {
+      font-size: calc(1rem - 4px);
+      /* 比 dropdown-item 小 4px */
+      color: #6c757d !important;
+      /* 預設顯示為灰色，並覆蓋 Bootstrap 預設樣式 */
+      text-decoration: none;
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+    }
+
+    .product-details-content {
+      margin-top: 2rem;
+      padding: 2rem;
+      background: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-details-content h3 {
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--primary-color);
+      display: inline-block;
+      padding-bottom: 0.2rem;
+    }
+
+    .product-details-content p {
+      font-size: 1.1rem;
+      color: #333;
+      /* 深灰色文字 */
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .product-details-content img {
+      width: 100%;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      /* 圖片陰影 */
+    }
+
+    .product-details-content ul {
+      list-style-type: disc;
+      padding-left: 1.5rem;
+      color: #555;
+    }
+
+    .product-details-content ul li {
+      margin-bottom: 0.5rem;
+    }
+
+
+    .product-details-content p {
+      font-size: 1rem;
+      color: var(--text-color);
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+
+    .place-picker-container {
+      padding: 20px;
+    }
+
+    .btn-group button {
+      padding: 0.5rem 1rem;
+      background-color: #FF6600;
+      color: white;
+      border: none;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+      margin: 0 10px 0 0;
+    }
+
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --background-color: #f8f9fa;
+      --text-color: #333;
+      --border-color: #ddd;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--background-color);
+    }
+
+    .navbar {
+      background: var(--primary-color);
+      color: white;
+      padding: 1rem 2rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 1% auto;
+      padding: 2rem;
+    }
+
+    .product-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .product-image img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-details {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .product-details h1 {
+      font-size: 2rem;
+      color: var(--primary-color);
+    }
+
+    .price-info {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+
+    .price {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .buttons-container {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn-contact {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+    }
+
+    .btn-cart {
+      background-color: white;
+      color: #FF6600;
+      border: 2px solid;
+    }
+
+    .btn-buy {
+      background-color: #FF6600;
+      color: white;
+      border: none;
+    }
+
+    .tags-container {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      padding: 0.4rem 0.8rem;
+      background: #f0f2f5;
+      color: var(--primary-color);
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .route-search {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    #location-input {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+    }
+
+    .reviews-section {
+      margin-top: 2rem;
+      /* 與上方地圖保持距離 */
+      clear: both;
+      /* 清除上方浮動影響 */
+    }
+
+    .review-item {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .review-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .stars {
+      color: #ffd700;
+      margin-bottom: 0.5rem;
+      font-size: 30px;
+      display: inline-block;
+    }
+
+    .rating-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .route-details {
+      background: white;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-top: 1rem;
+    }
+
+    iframe {
+      width: "100%";
+      height: "400";
+      /* 或其他適合的高度 */
+      display: block;
+      /* 確保是區塊元素 */
+    }
+
+    /* 檢舉按鈕樣式 */
+    .report-button {
+      background-color: #f44336;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 10px;
+      /* 設定按鈕與星星之間的間隔 */
+    }
+
+    .report-button:hover {
+      background-color: #d32f2f;
+    }
+
+    /* 彈跳視窗專屬樣式 */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      text-align: center;
+    }
+
+    .modal-content select {
+      width: 100%;
+      padding: 5px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .modal-content button {
+      margin: 10px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <!------網站header------>
+  <div id="app">
+    <header>
+      <nav class="top-nav">
+        <div class="nav-left">
+          <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+          <a href="./product.html" class="nav-item nav-link  active" id="nav-product" style="color: #FF6600;">購！票券</a>
+          <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
+          <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+        </div>
+        <div class="nav-center">
+          <a id="nav-index">
+            <img src="./img/logo_black.png" alt="Chill Trip" style="width: 150px; height: auto" id="nav-index" />
+          </a>
+        </div>
+        <div class="nav-right">
+          <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" style="color: #212529;">會員中心</a>
+            <div class="dropdown-menu rounded-0 m-0">
+              <a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a>
+              <a href="#" class="dropdown-item" id="nav-coupons">我的折價券</a>
+              <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
+            </div>
+          </div>
+          <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+          <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+        </div>
+      </nav>
+    </header>
+
+    <!------網站Breadcrumb Navigation（麵包屑導航）------>
+    <div aria-label="breadcrumb">
+      <ul class="breadcrumb" id="breadcrumb-nav">
+        <!-- 麵包屑導航項目將由 JavaScript 動態生成 -->
+      </ul>
+    </div>
+    
+    <main>
+
+      <div class="product-container">
+        <div class="product-image">
+          <img
+            src="https://today-obs.line-scdn.net/0hthxKI1x2K0dFMjlqFXVUEH1kJzZ2VDFOZwEwImM7JXdvHjwScVN4JGlhJ2s7BThBZQM3KDJhcXFuUWoYeg/w1200"
+            alt="東京迪士尼">
+        </div>
+
+        <div class="product-details">
+          <h1>東京迪士尼度假區門票</h1>
+          <div class="tags-container">
+            <a href="/tag/theme-park" class="tag" data-tag-id="1">#熱門</a>
+            <a href="/tag/family" class="tag" data-tag-id="2">#親子</a>
+          </div>
+
+          <div class="product-description">
+            <p>體驗夢幻王國的魔法 - 東京迪士尼樂園，一個讓夢想成真的地方！提供全天候娛樂設施、精彩表演和迪士尼明星見面會。</p>
+          </div>
+
+          <div class="rating-container">
+            <div class="stars" data-rating="4.7">
+              <span class="star">★</span>
+              <span class="star">★</span>
+              <span class="star">★</span>
+              <span class="star">★</span>
+              <span class="star">★</span>
+            </div>
+            <span class="rating-count"></span>
+          </div>
+
+          <div class="price-info">
+            <div class="price">NT$ 3,200</div>
+            <div class="buttons-container">
+              <button class="btn btn-contact" onclick="">聯繫客服</button>
+              <button class="btn btn-cart" onclick="addToCart()">加入購物車</button>
+              <button class="btn btn-buy" onclick="buyNow()">直接購買</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 加入購物車談窗 -->
+      <div id="modal" class="modal">
+        <div class="modal-content">
+          <span class="close-btn" onclick="closeModal()">&times;</span>
+          <h2>商品已加入購物車</h2>
+          <p>您已將商品加入購物車，是否繼續購物或前往結帳？</p>
+          <button onclick="proceedToCheckout()">前往結帳</button>
+          <button onclick="continueShopping()">繼續購物</button>
+        </div>
+      </div>
+
+      <h2>商品介紹</h2>
+      <div class="product-details-content">
+        <img
+          src="https://res.klook.com/image/upload/c_fill,w_1265,h_712/q_80/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/jtjfqspnpjakxriqml5t.webp"
+          alt="東京迪士尼" />
+        <h4>樂園介紹</h4>
+        <p>
+          東京迪士尼度假區（Tokyo Disney
+          Resort）是亞洲首座迪士尼主題樂園，並受到全世界人的喜愛，不論年紀，都是能帶給家庭、情侶、大小朋友的夢幻國度。刺激又好玩的遊樂設施、令人目不轉睛的大小遊行，都致力於提供給到場旅客最大的歡樂。
+        </p>
+        <h4>園區介紹</h4>
+        <p>
+          園內必玩景點包括「怪獸電力公司・迷藏巡遊車」、「飛濺山」、「小熊維尼歷險記」和「加勒比海盜」等。迪士尼海洋的地中海港灣（Mediterranean Harbor）和神秘島（Mysterious
+          Island）等七大主題園區，完美演繹了海洋冒險精神。遊客可在園內欣賞世界級的表演秀，品嚐特色美食，購買限定商品。
+        </p>
+        <h4>交通方式</h4>
+        <ul>
+          <li>JR電車：可搭乘 JR 京葉線或武藏野線至「舞濱站」下車，轉乘迪士尼度假區線即可抵達，從南口出站後隨著人潮走即可到達單軌電車東京迪士尼渡假區總站，車程約三十分鐘。</li>
+          <li>巴士：成田機場第一候機樓5號候車處，約65分鐘 / 羽田機場航廈 5 號候車處，約45分鐘。</li>
+        </ul>
+        <p>
+          歡迎來到夢想成真的地方——東京迪士尼樂園！這裡匯聚了奇幻、冒險與歡樂，是全家大小不可錯過的絕佳旅遊勝地。
+          在這片魔法王國中，您可以享受刺激的遊樂設施、觀賞壯觀的遊行表演，並與您最喜愛的迪士尼角色零距離互動。
+        </p>
+        <ul>
+          <li>🌟 全球知名遊樂設施如《太空山》和《加勒比海盜》。</li>
+          <li>🎭 精彩的遊行和表演，讓您沉浸於迪士尼故事世界。</li>
+          <li>🍴 美味的園區限定餐點與甜品，滿足味蕾需求。</li>
+          <li>🛍️ 探索限定紀念品商店，帶回獨家周邊商品。</li>
+        </ul>
+
+        <p>
+          不論您是與親朋好友一同遊玩，還是想要獨自沉浸於童年的回憶中，東京迪士尼樂園都將帶給您滿滿的感動和歡樂！
+        </p>
+
+        <img
+          src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1000,h_1223/w_61,x_11,y_11,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/uequfscq86iksxj2zify/%E6%9D%B1%E4%BA%AC%E8%BF%AA%E5%A3%AB%E5%B0%BC%E5%BA%A6%E5%81%87%E5%8D%80%E9%96%80%E7%A5%A8.webp"
+          alt="活動介紹" />
+        <img
+          src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1028,h_771/w_63,x_11,y_11,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/rfkw1cmgyhjh7joiupr5/%E6%9D%B1%E4%BA%AC%E8%BF%AA%E5%A3%AB%E5%B0%BC%E5%BA%A6%E5%81%87%E5%8D%80%E9%96%80%E7%A5%A8.webp"
+          alt="活動介紹" />
+        <p>▲以電影《美女與野獸》為主題的爆米花桶：當您點亮爆米花桶的燈光後，彩色玻璃鑲嵌畫將散發出更加動人的浪漫光彩</p>
+        <img
+          src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1295,h_862/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/wk67vciclieysesrj9zc/%E6%9D%B1%E4%BA%AC%E8%BF%AA%E5%A3%AB%E5%B0%BC%E5%BA%A6%E5%81%87%E5%8D%80%E9%96%80%E7%A5%A8.webp"
+          alt="活動介紹" />
+        <p>▲玩具總動員瘋狂遊戲屋：「咦？周圍的東西怎麼變大了？」沒錯！當您走入胡迪笑開懷的嘴巴時，您就在不知不覺中縮小成玩具尺寸了！趕緊把握這個大好機會，鑽到安弟的床底下參加玩具世界的射擊遊戲吧！</p>
+
+      </div>
+
+      <section class="reviews-section">
+        <h2>地理位置</h2>
+      </section>
+
+      <!--地圖導入-->
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3242.790276297836!2d139.8803943!3d35.6328964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60187d03114737b3%3A0xe4d93636d509d3cb!2z5p2x5Lqs6L-q5aOr5bC85qiC5ZyS!5e0!3m2!1szh-TW!2stw!4v1732628688854!5m2!1szh-TW!2stw"
+        width="100%"" height=" 200%"" margin="center" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+
+      <section class="reviews-section">
+        <h2>顧客評價</h2>
+        <!-- 顯示評論區域 -->
+        <div id="reviews-section">
+          <!-- 顯示平均評價 -->
+          <div class="rating-container">
+            <div class="stars"></div>
+          </div>
+
+          <!-- 顯示評論列表 -->
+          <div id="reviews-list"></div>
+        </div>
+      </section>
+
+      <!-- 頁碼 -->
+      <div class="pagination">
+        <a href="#" class="page-number active">1</a>
+        <a href="#" class="page-number">2</a>
+        <a href="#" class="page-number">3</a>
+        <span class="ellipsis">...</span>
+        <a href="#" class="page-number">8</a>
+        <a href="#" class="page-number">9</a>
+        <a href="#" class="page-number">10</a>
+        <span class="label">頁</span>
+      </div>
+    </main>
+
+    <footer>
+      <div class="social-links">
+        <div style="display: flex; gap: 10px;">
+          <a href="https://facebook.com" target="_blank" style="text-decoration: none;">
+            <div
+              style="width: 50px; height: 50px; background-color: #3b5998; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <i class="fab fa-facebook-f" style="color: white; font-size: 24px;"></i>
+            </div>
+          </a>
+          <a href="https://instagram.com" target="_blank" style="text-decoration: none;">
+            <div
+              style="width: 50px; height: 50px; background-color: #E1306C; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <i class="fab fa-instagram" style="color: white; font-size: 24px;"></i>
+            </div>
+          </a>
+          <a href="https://youtube.com" target="_blank" style="text-decoration: none;">
+            <div
+              style="width: 50px; height: 50px; background-color: #FF0000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <i class="fab fa-youtube" style="color: white; font-size: 24px;"></i>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="copyright">
+        Copyright © 2024 良心鮪魚股份有限公司
+      </div>
+    </footer>
+  </div>
+
+  <!-- Back to Top -->
+  <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+  <!-- JavaScript Libraries -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  <script src="lib/easing/easing.min.js"></script>
+  <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+  <!-- Contact Javascript File -->
+  <script src="mail/jqBootstrapValidation.min.js"></script>
+  <script src="mail/contact.js"></script>
+
+  <!-- Template Javascript -->
+  <script src="js/main.js"></script>
+  <!-- <script src="js/yuki_main.js"></script> -->
+
+  <!-- 導航欄nav的href載入器 -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("nav-go").href = "./go.html";
+      document.getElementById("nav-product").href = "./product.html";
+      document.getElementById("nav-profile").href = "./profile.html";
+      document.getElementById("nav-guide").href = "./guide.html";
+      document.getElementById("nav-basic-info").href = "./basic_info.html";
+      document.getElementById("nav-coupons").href = "./coupons.html";
+      document.getElementById("nav-orders").href = "./orders.html";
+      document.getElementById("nav-support").href = "./support.html";
+      document.getElementById("nav-cart").href = "./cart.html";
+      document.getElementById("nav-index").href = "./index.html";
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const breadcrumbNav = document.getElementById("breadcrumb-nav");
+
+      // 定義麵包屑導航的項目
+      const breadcrumbItems = [
+        { name: "首頁", link: "index.html" },
+        { name: "購！票券", link: "product.html" },
+        { name: "東京迪士尼度假區門票", link: "single_product.html" }
+      ];
+
+      // 動態生成麵包屑導航的 HTML 結構
+      breadcrumbItems.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.className = "breadcrumb-item";
+        if (index === breadcrumbItems.length - 1) {
+          li.classList.add("active");
+          li.setAttribute("aria-current", "page");
+          li.textContent = item.name;
+        } else {
+          const a = document.createElement("a");
+          a.href = item.link;
+          a.textContent = item.name;
+          li.appendChild(a);
+        }
+        breadcrumbNav.appendChild(li);
+      });
+
+      window.showModal = function () {
+        document.getElementById('modal').style.display = 'flex';
+      };
+
+      window.closeModal = function () {
+        document.getElementById('modal').style.display = 'none';
+      };
+
+      window.addToCart = function () {
+        showModal();
+      };
+
+      window.buyNow = function () {
+        //轉跳結帳頁面
+      };
+
+      window.proceedToCheckout = function () {
+        window.location.href = '/checkout';
+      };
+
+      window.continueShopping = function () {
+        closeModal();
+      };
+
+      window.onclick = function (event) {
+        const modal = document.getElementById('modal');
+        if (event.target === modal) {
+          closeModal();
+        }
+      };
+
+      const reviewsSystem = {
+        reviews: [
+          {
+            rating: 5,
+            text: "太棒了！城堡的夜間投影秀美得讓人屏息，遊行表演也非常精彩。工作人員的服務態度一流，設施都很好玩！",
+            date: "2024-01-15",
+            author: "陳小華"
+          },
+          {
+            rating: 3,
+            text: "整體體驗非常好，特別是迪士尼明星見面會讓孩子們非常開心。建議旺季要提前預訂，現場排隊時間較長。",
+            date: "2024-01-10",
+            author: "林美玲"
+          },
+          {
+            rating: 4,
+            text: "園區很乾淨，表演很精彩，餐點也很美味！最喜歡太空山和加勒比海盜，一定會再來！",
+            date: "2024-01-05",
+            author: "王大明"
+          }
+        ],
+
+        calculateAverageRating() {
+          const total = this.reviews.reduce((sum, review) => sum + review.rating, 0);
+          return (total / this.reviews.length).toFixed(1);
+        },
+
+        displayReviews() {
+          const reviewsList = document.getElementById('reviews-list');
+          reviewsList.innerHTML = '';
+
+          this.reviews.forEach((review, index) => {
+            const reviewElement = document.createElement('div');
+            reviewElement.className = 'review-item';
+
+            const stars = Array(5).fill(0).map((_, i) =>
+              `<span class="star${i < review.rating ? ' filled' : ''}">${i < review.rating ? '★' : '☆'}</span>`
+            ).join('');
+
+            reviewElement.innerHTML = `
+                    <div class="review-header">
+                        <span class="review-author">${review.author}</span>
+                        <span class="review-date">${review.date}</span>
+                    </div>
+                    <div class="review-content">
+                        <div class="stars">${stars}</div>
+                        <button class="report-button" onclick="reviewsSystem.reportReview(${index})">檢舉</button>
+                    </div>
+                    <p class="review-text">${review.text}</p>
+                `;
+            reviewsList.appendChild(reviewElement);
+          });
+        },
+
+        updateAverageRating() {
+          const averageRating = this.calculateAverageRating();
+          const ratingContainers = document.querySelectorAll('.rating-container .stars');
+          const ratingCounts = document.querySelectorAll('.rating-count');
+
+          ratingContainers.forEach(container => {
+            const stars = container.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+              if (index < averageRating) {
+                star.classList.add('filled');
+                star.textContent = '★';
+              } else {
+                star.classList.remove('filled');
+                star.textContent = '☆';
+              }
+            });
+          });
+
+          ratingCounts.forEach(count => {
+            count.textContent = `（${this.reviews.length} 則評價・平均 ${averageRating} 顆星）`;
+          });
+        },
+
+        reportReview(index) {
+          alert(`檢舉成功：評論 ${index + 1} 已經被檢舉！`);
+        }
+      };
+
+      window.reviewsSystem = reviewsSystem;
+      reviewsSystem.displayReviews();
+      reviewsSystem.updateAverageRating();
+
+      document.querySelectorAll('.page-number').forEach(button => {
+        button.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.querySelectorAll('.page-number').forEach(btn => {
+            btn.classList.remove('active');
+          });
+          this.classList.add('active');
+        });
+      });
+    });
+  </script>
+
+</body>
+
+</html>

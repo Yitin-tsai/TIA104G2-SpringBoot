@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" version="4.0">
-  <display-name>demoC-Spring-Initializr-SpringBootMVC</display-name>
+  <display-name>TIA104G2-SpringBoot</display-name>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
@@ -9,4 +9,8 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
+  	<session-config>
+		<session-timeout>60</session-timeout> <!-- 設定為使用者未進行任何操作長達 60 分鐘，session 會自動過期並且資料會被清除 -->
+	</session-config>
 </web-app>

@@ -40,6 +40,7 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		// TODO Auto-generated method stub
 		try {
 			Session session = getSession();
+			session.beginTransaction();
 			session.save(annouceVO);
 			session.getTransaction().commit();
 
@@ -56,33 +57,38 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		try {
 			getSession().beginTransaction();
 			getSession().update(annouceVO);
+			getSession().getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			getSession().getTransaction().rollback();
+			
 		}
 
 	}
 
 	@Override
-	public void delete(Integer annouceid) {
+	public boolean delete(Integer annouceid) {
 		// TODO Auto-generated method stub
 		AnnounceVO announceVO = getSession().get(AnnounceVO.class, annouceid);
 		try {
 			getSession().beginTransaction();
 			getSession().delete(announceVO);
+			return(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			getSession().getTransaction().rollback();
+			return(false);
 		}
 	}
 
 	@Override
 	public List<AnnounceVO> getAll() {
 		// TODO Auto-generated method stub
-//		getSession().beginTransaction();
+
 		getSession().beginTransaction();
-		return getSession().createQuery("from AnnounceVO", AnnounceVO.class).list();
-		
+		List<AnnounceVO> list = getSession().createQuery("from AnnounceVO", AnnounceVO.class).list();
+		getSession().getTransaction().commit();
+		return list;
 	}
 
 	@Override
@@ -124,8 +130,10 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	@Override
 	public List<AnnounceVO> getAll(int currentPage) {
 		int first = (currentPage - 1) * PAGE_MAX_RESULT;
+		getSession().beginTransaction();
 		return getSession().createQuery("from AnnounceVO", AnnounceVO.class).setFirstResult(first)
 				.setMaxResults(PAGE_MAX_RESULT).list();
+		
 	}
 	
 	@Override
@@ -145,6 +153,14 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	@Override
 	public long getTotal() {
 		return getSession().createQuery("select count(*) from AnnounceVO", Long.class).uniqueResult();
+	}
+
+	@Override
+	public AnnounceVO getOne(Integer announceid) {
+		getSession().beginTransaction();
+		AnnounceVO announce = getSession().get(AnnounceVO.class, announceid);
+		getSession().getTransaction().commit();
+		return announce;
 	}
 	
 

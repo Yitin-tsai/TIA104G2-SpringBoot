@@ -6,15 +6,19 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import chilltrip.util.HibernateUtil;
 
+@Repository
 public class TripCollectionDAOImpl implements TripCollectionDAO {
 
 	private SessionFactory factory;
 
-	public TripCollectionDAOImpl() {
-		factory = HibernateUtil.getSessionFactory();
+	@Autowired
+	public TripCollectionDAOImpl(SessionFactory factory) {
+		this.factory = factory;
 	}
 
 	private Session getSession() {
@@ -55,9 +59,11 @@ public class TripCollectionDAOImpl implements TripCollectionDAO {
 	public List<TripCollectionVO> getByTrip(Integer tripId) {
 		Session session = getSession();
 		session.beginTransaction();
-		return session.createQuery("FROM TripCollectionVO tc WHERE tc.tripvo.trip_id = :tripId", TripCollectionVO.class)
-				.setParameter("tripId", tripId)
-				.list();
+		List<TripCollectionVO> list = session
+				.createQuery("FROM TripCollectionVO tc WHERE tc.tripvo.trip_id = :tripId", TripCollectionVO.class)
+				.setParameter("tripId", tripId).list();
+		session.getTransaction().commit();
+		return list;
 	}
 
 	@Override
@@ -65,24 +71,23 @@ public class TripCollectionDAOImpl implements TripCollectionDAO {
 		int first = (currentPage - 1) * PAGE_MAX_RESULT;
 		Session session = getSession();
 		session.beginTransaction();
-		return session.createQuery("FROM TripCollectionVO tc WHERE tc.membervo.memberId = :memberId" ,TripCollectionVO.class)
-				.setParameter("memberId", memberId)
-				.setFirstResult(first)
-				.setMaxResults(PAGE_MAX_RESULT)
-				.list();
-		
+		List<TripCollectionVO> list = session
+				.createQuery("FROM TripCollectionVO tc WHERE tc.membervo.memberId = :memberId", TripCollectionVO.class)
+				.setParameter("memberId", memberId).setFirstResult(first).setMaxResults(PAGE_MAX_RESULT).list();
+		session.getTransaction().commit();
+		return list;
 		// TODO Auto-generated method stub
-	
+
 	}
 
 	@Override
 	public long getTotalByMember(Integer memberId) {
-		return getSession().createQuery("select count(*) FROM TripCollectionVO tc WHERE tc.membervo.memberId = :memberId", Long.class).uniqueResult();
-		
+		return getSession()
+				.createQuery("select count(*) FROM TripCollectionVO tc WHERE tc.membervo.memberId = :memberId",
+						Long.class)
+				.setParameter("memberId", memberId)
+				.uniqueResult();
+
 	}
-	
-	public static void main(String[] args) {
-		TripCollectionDAO dao = new TripCollectionDAOImpl();
-		System.out.println(dao.getByMember(1, 1));
-	}
+
 }

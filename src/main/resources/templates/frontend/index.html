@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -933,6 +934,7 @@
     <script th:src="@{/js/main.js}"></script>
 
     <!-- 導航欄nav的href載入器 -->
+    	<!------修齊的JS------>
     <script th:src="@{/js/navigation.js}"></script>
 
     <script>
@@ -977,56 +979,46 @@
         //       console.error("獲取導航路徑時發生錯誤:", error);
         //     });
 
-        const carouselContainer = document.querySelector(
-          ".banner-carousel-box"
-        );
+       
+      const carouselContainer = document.querySelector('.banner-carousel-box');
+  
+      // 动态构建 API 的 URL，基于当前页面的 origin
+      const apiUrl = `${window.location.origin}${window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : ''}/announce/getAll`;
+  
+      // 使用 fetch 获取公告列表
+      fetch(apiUrl)
+          .then(response => response.json())  // 假设返回的是 JSON
+          .then(announcements => {
+              carouselContainer.innerHTML = '';
+  
+              announcements.forEach(announce => {
+                  const bannerItem = document.createElement('div');
+                  bannerItem.classList.add('banner-carousel');
 
-        // 动态构建 API 的 URL，基于当前页面的 origin
-        const apiUrl = `${window.location.origin}${
-          window.location.pathname.split("/")[1]
-            ? "/" + window.location.pathname.split("/")[1]
-            : ""
-        }/announce/getAll`;
-
-        // 使用 fetch 获取公告列表
-        fetch(apiUrl)
-          .then((response) => response.json()) // 假设返回的是 JSON
-          .then((announcements) => {
-            carouselContainer.innerHTML = "";
-
-            announcements.forEach((announce) => {
-              const bannerItem = document.createElement("div");
-              bannerItem.classList.add("banner-carousel");
-
-              const link = document.createElement("a");
-              const contextPath = window.location.pathname.split("/")[1];
-              link.href = `${window.location.origin}${
-                window.location.pathname.split("/")[1]
-                  ? "/" + window.location.pathname.split("/")[1]
-                  : ""
-              }/announce/${announce.announceid}`;
-
-              const img = document.createElement("img");
-              // 设置图片的 src 属性为 coverphotoBase64
-              if (announce.coverphotoBase64) {
-                img.src = announce.coverphotoBase64; // 将 base64 编码的图片数据设置为 src
-              }
-              img.alt = announce.title; // 设置图片的 alt 属性为公告的标题
-
-              link.appendChild(img);
-              bannerItem.appendChild(link);
-
-              carouselContainer.appendChild(bannerItem);
-            });
+                  const link = document.createElement('a');
+                  const contextPath = window.location.pathname.split('/')[1];
+                  link.href = `${window.location.origin}${window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : ''}/announce/${announce.announceid}`; 
+  
+                  const img = document.createElement('img');
+                  // 设置图片的 src 属性为 coverphotoBase64
+                  if (announce.coverphotoBase64) {
+                      img.src = announce.coverphotoBase64;  // 将 base64 编码的图片数据设置为 src
+                  }
+                  img.alt = announce.title;       // 设置图片的 alt 属性为公告的标题
+  
+                  link.appendChild(img);
+                  bannerItem.appendChild(link);
+  
+                  carouselContainer.appendChild(bannerItem);
+              });
           })
-          .catch((error) => {
-            console.error("Error fetching announcements:", error);
+          .catch(error => {
+              console.error('Error fetching announcements:', error);
           });
-      });
-    </script>
-    <!------修齊的JS------>
-    <!------主頁的幻燈片活動區------>
-    <script>
+  });</script>
+
+	<!------主頁的幻燈片活動區------>
+	<script>
       document.addEventListener("DOMContentLoaded", function () {
         const carouselInner = document.querySelector(".banner-carousel-box");
         const items = document.querySelectorAll(".banner-carousel");
@@ -1054,6 +1046,8 @@
           updateCarousel();
         }, 3000);
       });
+    
+
     </script>
-  </body>
+</body>
 </html>

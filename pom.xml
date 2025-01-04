@@ -9,12 +9,12 @@
 		<version>2.7.0</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>demoC-Spring-Initializr-SpringBootMVC</groupId>
-	<artifactId>demoC-Spring-Initializr-SpringBootMVC</artifactId>
+	<groupId>TIA104G2-SpringBoot</groupId>
+	<artifactId>TIA104G2-SpringBoot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>demoC-Spring-Initializr-SpringBootMVC</name>
-	<description>demoC-Spring-Initializr-SpringBootMVC</description>
+	<name>TIA104G2-SpringBoot</name>
+	<description>TIA104G2-SpringBoot</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -43,17 +43,41 @@
 		</dependency>
 
 
-		<!-- Thymeleaf -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
+<!-- Thymeleaf -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+
+<!-- Redis -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>redis.clients</groupId>
+    <artifactId>jedis</artifactId>
+    <version>3.7.1</version>
+</dependency>
+
+<!-- Mail -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-mail</artifactId>
+</dependency>
 
 		<!-- 用途說明5: Starter for using Spring Data JPA with Hibernate -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+		
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
 
 		<!-- 用途說明6: for log4j.properties -->
 		<!-- Spring Boot日誌系統預設是使用logback -->

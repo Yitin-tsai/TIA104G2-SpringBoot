@@ -15,4 +15,6 @@ public interface MemberDAO_interface {
 	public Set<TripCommentVO> getTripCommentByMember(Integer memberId);
 	public MemberVO findByEmail(String email);
 	public boolean isEmailExist(String email);
+	public boolean updatePasswordByEmail(String email, String newPassword);
+	public MemberVO getMemberById(Integer memberId);
 }

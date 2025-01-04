@@ -7,7 +7,7 @@
     <title>Activity For Blogs</title>
 
     <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon" />
+    <link href="/img/favicon.ico" rel="icon" />
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -22,10 +22,12 @@
       rel="stylesheet"
     />
 
+
     <!-- Customized Bootstrap Stylesheet -->
     <link th:href="@{/css/style.css}" rel="stylesheet" />
     <link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
     
+
     <style>
      .row {
         display: flex;
@@ -91,6 +93,7 @@
   </head>
 
   <body>
+
    <!------網站header------>
    <div id="app">
     <header>
@@ -118,6 +121,7 @@
             <div class="dropdown-menu rounded-0 m-0">
               <a href="#" class="dropdown-item" id="nav-basic-info"
                 >基本資料</a
+
               >
               <a href="#" class="dropdown-item" id="nav-coupons"
                 >我的折價券</a
@@ -274,6 +278,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
 
+
     <!-- 本地資源改用 Thymeleaf 語法 -->
     <script th:src="@{/lib/easing/easing.min.js}"></script>
     <script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
@@ -287,7 +292,6 @@
 
     <!-- 導航欄nav的href載入器 -->
     <script th:src="@{/js/navigation.js}"></script>
-
 
 
     <script>  //動態生成公告圖片

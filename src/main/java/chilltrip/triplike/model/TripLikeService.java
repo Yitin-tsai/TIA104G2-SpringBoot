@@ -2,12 +2,16 @@ package chilltrip.triplike.model;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+@Service
 public class TripLikeService {
-
+	
+	@Autowired
 	private TripLikeDAO dao;
 	
-	public TripLikeService() {
-		dao = new TripLikeDAOimpl();
+	public TripLikeService(TripLikeDAOimpl dao) {
+		this.dao = dao;
 	}
 	
 	public TripLikeVO addTripLike(TripLikeVO tripLikeVO) {

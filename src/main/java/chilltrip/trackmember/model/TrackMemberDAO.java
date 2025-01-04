@@ -12,11 +12,11 @@ public interface TrackMemberDAO {
 	
 	public List<MemberVO> getAllfans(Integer memberId);
 
-	public List<TrackMemberVO> getAllTracks(Integer fansId);
+	public List<MemberVO> getAllTracks(Integer fansId);
 	
-	public long getFansQty(Integer memberId);
+	public Integer getFansQty(Integer memberId);
 	
-	public long getTracksQty(Integer fansId);
+	public Integer getTracksQty(Integer fansId);
 	
 	
 	
