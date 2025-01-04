@@ -22,8 +22,8 @@
     />
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/style.css" rel="stylesheet" />
-    <link href="css/yuki_style.css" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
 
     <style>
       .row {
@@ -103,7 +103,7 @@
           <div class="nav-center">
             <a href="#" id="z-index">
               <img
-                src="./img/logo_black.png"
+                th:src="@{/img/logo_black.png}"
                 alt="Chill Trip"
                 style="width: 150px; height: auto"
               />
@@ -163,7 +163,11 @@
               <div
                 class="blog-item position-relative overflow-hidden rounded mb-2"
               >
-                <img class="img-fluid" src="img/travel-article1.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article1.jpg}"
+                  alt=""
+                />
                 <a class="blog-overlay text-decoration-none" href="">
                   <h5 class="text-white mb-3">
                     東京三日遊，帶你走進日本的文化與美食
@@ -177,7 +181,11 @@
               <div
                 class="blog-item position-relative overflow-hidden rounded mb-2"
               >
-                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article2.jpg}"
+                  alt=""
+                />
                 <a class="blog-overlay text-decoration-none" href="">
                   <h5 class="text-white mb-3">京都和服體驗</h5>
                   <p class="text-primary m-0">Jan 01, 2050</p>
@@ -189,7 +197,11 @@
               <div
                 class="blog-item position-relative overflow-hidden rounded mb-2"
               >
-                <img class="img-fluid" src="img/travel-article3.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article3.jpg}"
+                  alt=""
+                />
                 <a class="blog-overlay text-decoration-none" href="">
                   <h5 class="text-white mb-3">海遊館一日遊</h5>
                   <p class="text-primary m-0">Jan 01, 2050</p>
@@ -201,7 +213,11 @@
               <div
                 class="blog-item position-relative overflow-hidden rounded mb-2"
               >
-                <img class="img-fluid" src="img/travel-article4.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article4.jpg}"
+                  alt=""
+                />
                 <a class="blog-overlay text-decoration-none" href="">
                   <h5 class="text-white mb-3">奈良鹿鹿遊</h5>
                   <p class="text-primary m-0">Jan 01, 2050</p>
@@ -213,7 +229,11 @@
               <div
                 class="blog-item position-relative overflow-hidden rounded mb-2"
               >
-                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article2.jpg}"
+                  alt=""
+                />
                 <a class="blog-overlay text-decoration-none" href="">
                   <h5 class="text-white mb-3">京都和服體驗</h5>
                   <p class="text-primary m-0">Jan 01, 2050</p>
@@ -225,7 +245,11 @@
               <div
                 class="blog-item position-relative overflow-hidden rounded mb-2"
               >
-                <img class="img-fluid" src="img/travel-article3.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article3.jpg}"
+                  alt=""
+                />
                 <a class="blog-overlay text-decoration-none" href="">
                   <h5 class="text-white mb-3">海遊館一日遊</h5>
                   <p class="text-primary m-0">Jan 01, 2050</p>
@@ -244,7 +268,7 @@
             <div class="col-md-6 col-lg-3 text-center team mb-4">
               <div class="team-item rounded overflow-hidden mb-2">
                 <div class="team-img position-relative">
-                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <img class="img-fluid" th:src="@{/img/team-1.jpg}" alt="" />
                   <div class="team-social">
                     <a class="btn btn-outline-light btn-square mx-1" href="#"
                       ><i class="fab fa-twitter"></i
@@ -267,7 +291,7 @@
             <div class="col-md-6 col-lg-3 text-center team mb-4">
               <div class="team-item rounded overflow-hidden mb-2">
                 <div class="team-img position-relative">
-                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <img class="img-fluid" th:src="@{/img/team-1.jpg}" alt="" />
                   <div class="team-social">
                     <a class="btn btn-outline-light btn-square mx-1" href="#"
                       ><i class="fab fa-twitter"></i
@@ -290,7 +314,7 @@
             <div class="col-md-6 col-lg-3 text-center team mb-4">
               <div class="team-item rounded overflow-hidden mb-2">
                 <div class="team-img position-relative">
-                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <img class="img-fluid" th:src="@{/img/team-1.jpg}" alt="" />
                   <div class="team-social">
                     <a class="btn btn-outline-light btn-square mx-1" href="#"
                       ><i class="fab fa-twitter"></i
@@ -313,7 +337,7 @@
             <div class="col-md-6 col-lg-3 text-center team mb-4">
               <div class="team-item rounded overflow-hidden mb-2">
                 <div class="team-img position-relative">
-                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <img class="img-fluid" th:src="@{/img/team-1.jpg}" alt="" />
                   <div class="team-social">
                     <a class="btn btn-outline-light btn-square mx-1" href="#"
                       ><i class="fab fa-twitter"></i
@@ -336,7 +360,7 @@
             <div class="col-md-6 col-lg-3 text-center team mb-4">
               <div class="team-item rounded overflow-hidden mb-2">
                 <div class="team-img position-relative">
-                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <img class="img-fluid" th:src="@{/img/team-1.jpg}" alt="" />
                   <div class="team-social">
                     <a class="btn btn-outline-light btn-square mx-1" href="#"
                       ><i class="fab fa-twitter"></i
@@ -359,7 +383,7 @@
             <div class="col-md-6 col-lg-3 text-center team mb-4">
               <div class="team-item rounded overflow-hidden mb-2">
                 <div class="team-img position-relative">
-                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <img class="img-fluid" th:src="@{/img/team-1.jpg}" alt="" />
                   <div class="team-social">
                     <a class="btn btn-outline-light btn-square mx-1" href="#"
                       ><i class="fab fa-twitter"></i
@@ -382,7 +406,7 @@
             <div class="col-md-6 col-lg-3 text-center team mb-4">
               <div class="team-item rounded overflow-hidden mb-2">
                 <div class="team-img position-relative">
-                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <img class="img-fluid" th:src="@{/img/team-1.jpg}" alt="" />
                   <div class="team-social">
                     <a class="btn btn-outline-light btn-square mx-1" href="#"
                       ><i class="fab fa-twitter"></i
@@ -405,7 +429,7 @@
             <div class="col-md-6 col-lg-3 text-center team mb-4">
               <div class="team-item rounded overflow-hidden mb-2">
                 <div class="team-img position-relative">
-                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <img class="img-fluid" th:src="@{/img/team-1.jpg}" alt="" />
                   <div class="team-social">
                     <a class="btn btn-outline-light btn-square mx-1" href="#"
                       ><i class="fab fa-twitter"></i
@@ -446,7 +470,11 @@
           <div class="row">
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="rounded overflow-hidden mb-2">
-                <img class="img-fluid" src="img/travel-article1.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article1.jpg}"
+                  alt=""
+                />
                 <div class="bg-secondary p-4">
                   <div class="d-flex justify-content-between mb-3">
                     <small class="m-0"
@@ -470,7 +498,11 @@
 
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="rounded overflow-hidden mb-2">
-                <img class="img-fluid" src="img/travel-article1.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article1.jpg}"
+                  alt=""
+                />
                 <div class="bg-secondary p-4">
                   <div class="d-flex justify-content-between mb-3">
                     <small class="m-0"
@@ -494,7 +526,11 @@
 
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="rounded overflow-hidden mb-2">
-                <img class="img-fluid" src="img/travel-article1.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article1.jpg}"
+                  alt=""
+                />
                 <div class="bg-secondary p-4">
                   <div class="d-flex justify-content-between mb-3">
                     <small class="m-0"
@@ -518,7 +554,11 @@
 
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="rounded overflow-hidden mb-2">
-                <img class="img-fluid" src="img/travel-article1.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article1.jpg}"
+                  alt=""
+                />
                 <div class="bg-secondary p-4">
                   <div class="d-flex justify-content-between mb-3">
                     <small class="m-0"
@@ -542,7 +582,11 @@
 
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="rounded overflow-hidden mb-2">
-                <img class="img-fluid" src="img/travel-article1.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article1.jpg}"
+                  alt=""
+                />
                 <div class="bg-secondary p-4">
                   <div class="d-flex justify-content-between mb-3">
                     <small class="m-0"
@@ -566,7 +610,11 @@
 
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="rounded overflow-hidden mb-2">
-                <img class="img-fluid" src="img/travel-article1.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article1.jpg}"
+                  alt=""
+                />
                 <div class="bg-secondary p-4">
                   <div class="d-flex justify-content-between mb-3">
                     <small class="m-0"
@@ -598,7 +646,11 @@
           <div class="row">
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="rounded overflow-hidden mb-2">
-                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article2.jpg}"
+                  alt=""
+                />
                 <div class="bg-secondary p-4">
                   <div class="d-flex justify-content-between mb-3">
                     <small class="m-0"
@@ -622,7 +674,11 @@
 
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="rounded overflow-hidden mb-2">
-                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article2.jpg}"
+                  alt=""
+                />
                 <div class="bg-secondary p-4">
                   <div class="d-flex justify-content-between mb-3">
                     <small class="m-0"
@@ -646,7 +702,11 @@
 
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="rounded overflow-hidden mb-2">
-                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article2.jpg}"
+                  alt=""
+                />
                 <div class="bg-secondary p-4">
                   <div class="d-flex justify-content-between mb-3">
                     <small class="m-0"
@@ -670,7 +730,11 @@
 
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="rounded overflow-hidden mb-2">
-                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article2.jpg}"
+                  alt=""
+                />
                 <div class="bg-secondary p-4">
                   <div class="d-flex justify-content-between mb-3">
                     <small class="m-0"
@@ -694,7 +758,11 @@
 
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="rounded overflow-hidden mb-2">
-                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article2.jpg}"
+                  alt=""
+                />
                 <div class="bg-secondary p-4">
                   <div class="d-flex justify-content-between mb-3">
                     <small class="m-0"
@@ -718,7 +786,11 @@
 
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="rounded overflow-hidden mb-2">
-                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <img
+                  class="img-fluid"
+                  th:src="@{/img/travel-article2.jpg}"
+                  alt=""
+                />
                 <div class="bg-secondary p-4">
                   <div class="d-flex justify-content-between mb-3">
                     <small class="m-0"
@@ -848,60 +920,62 @@
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- 本地資源改用 Thymeleaf 語法 -->
+    <script th:src="@{/lib/easing/easing.min.js}"></script>
+    <script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
 
     <!-- Contact Javascript File -->
-    <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
+    <script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
+    <script th:src="@{/mail/contact.js}"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script th:src="@{/js/main.js}"></script>
 
     <!-- 導航欄nav的href載入器 -->
-    <!-- <script th:src="@{/templates/js/navigation.js}"></script> -->
+    <script th:src="@{/js/navigation.js}"></script>
 
     <script>
       //動態生成公告圖片
       document.addEventListener("DOMContentLoaded", function () {
-        const baseUrl = "/TIA104G2-SpringBoot";
+        //   const baseUrl = "/TIA104G2-SpringBoot";
 
-        fetch(`${baseUrl}/api/navigation-paths`)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("網路回應不正常");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            console.log("獲取導航路徑成功:", data);
-            // 為每個導航項添加點擊事件處理
-            const navItems = {
-              "nav-go": data.goPath,
-              "nav-product": data.productPath,
-              "nav-profile": data.profilePath,
-              "nav-guide": data.guidePath,
-              "nav-basic-info": data.basicInfoPath,
-              "nav-coupons": data.couponsPath,
-              "nav-orders": data.ordersPath,
-              "nav-support": data.supportPath,
-              "nav-cart": data.cartPath,
-            };
+        //   fetch(`${baseUrl}/api/navigation-paths`)
+        //     .then((response) => {
+        //       if (!response.ok) {
+        //         throw new Error("網路回應不正常");
+        //       }
+        //       return response.json();
+        //     })
+        //     .then((data) => {
+        //       console.log("獲取導航路徑成功:", data);
+        //       // 為每個導航項添加點擊事件處理
+        //       const navItems = {
+        //         "nav-go": data.goPath,
+        //         "nav-product": data.productPath,
+        //         "nav-profile": data.profilePath,
+        //         "nav-guide": data.guidePath,
+        //         "nav-basic-info": data.basicInfoPath,
+        //         "nav-coupons": data.couponsPath,
+        //         "nav-orders": data.ordersPath,
+        //         "nav-support": data.supportPath,
+        //         "nav-cart": data.cartPath,
+        //       };
 
-            // 使用迴圈統一處理所有導航項目
-            Object.entries(navItems).forEach(([id, path]) => {
-              const element = document.getElementById(id);
-              if (element) {
-                element.addEventListener("click", function (e) {
-                  e.preventDefault();
-                  window.location.href = `${baseUrl}${path}`;
-                });
-              }
-            });
-          })
-          .catch((error) => {
-            console.error("獲取導航路徑時發生錯誤:", error);
-          });
+        //       // 使用迴圈統一處理所有導航項目
+        //       Object.entries(navItems).forEach(([id, path]) => {
+        //         const element = document.getElementById(id);
+        //         if (element) {
+        //           element.addEventListener("click", function (e) {
+        //             e.preventDefault();
+        //             window.location.href = `${baseUrl}${path}`;
+        //           });
+        //         }
+        //       });
+        //     })
+        //     .catch((error) => {
+        //       console.error("獲取導航路徑時發生錯誤:", error);
+        //     });
 
         const carouselContainer = document.querySelector(
           ".banner-carousel-box"
