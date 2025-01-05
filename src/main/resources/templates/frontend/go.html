@@ -7,7 +7,6 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <meta content="Free HTML Templates" name="keywords">
 <meta content="Free HTML Templates" name="description">
-
 <!-- Favicon -->
 <link href="img/favicon.ico" rel="icon">
 
@@ -565,49 +564,43 @@ $(document).ready(function() {
 
     // 5) renderTripCards
     function renderTripCards(trips) {
-        const $container = $("#tripCardsContainer");
-        $container.empty();
-        if (!trips || trips.length === 0) {
-            $container.append(`<p>目前沒有相關行程...</p>`);
-            return;
-        }
-
-        const startIndex = (currentPage - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        const pageData = trips.slice(startIndex, endIndex);
-
-        pageData.forEach(function(trip) {
-            const tripTitle = trip.article_title || "未命名行程";
-            const tripAbstract = trip.trip_abstract || "沒有行程簡介";
-            const base64Photo = trip.coverImageUrl; 
-
-            const coverImgUrl = base64Photo 
-                ? base64Photo
-                : "https://via.placeholder.com/350x200?text=NoImage";
-
-            let authorName = "未知作者";
-            if (trip.membervo && trip.membervo.nickName) {
-                authorName = trip.membervo.nickName;
-            }
-            // or if you used "member_nickName", then => authorName = trip.member_nickName || "未知作者";
-
-            const cardHtml = `
-                <div class="ticket-card">
-                    <img src="${coverImgUrl}"
-                         onerror="this.onerror=null;this.src='https://via.placeholder.com/350x200?text=NoImage';"
-                         alt="${tripTitle}">
-                    <div class="ticket-info">
-                        <h3 class="title">${tripTitle}</h3>
-                        <p class="author">${authorName}</p>
-                        <p class="abstract">${tripAbstract}</p>
-                        <!-- ...其他資訊 -->
-                    </div>
-                </div>
-            `;
-            $container.append(cardHtml);
-        });
+    const $container = $("#tripCardsContainer");
+    $container.empty();
+    if (!trips || trips.length === 0) {
+        $container.append(`<p>目前沒有相關行程...</p>`);
+        return;
     }
 
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const pageData = trips.slice(startIndex, endIndex);
+
+    pageData.forEach(function(trip) {
+        const tripTitle = trip.article_title || "未命名行程";
+        const tripAbstract = trip.trip_abstract || "沒有行程簡介";
+        const base64Photo = trip.coverImageUrl;
+        const coverImgUrl = base64Photo 
+            ? base64Photo
+            : "https://via.placeholder.com/350x200?text=NoImage";
+
+        let authorName = trip.member_nickName || "未知作者";
+
+        const cardHtml = `
+            <div class="ticket-card">
+                <img src="${coverImgUrl}"
+                     onerror="this.onerror=null;this.src='https://via.placeholder.com/350x200?text=NoImage';"
+                     alt="${tripTitle}">
+                <div class="ticket-info">
+                    <h3 class="title">${tripTitle}</h3>
+                    <p class="author">${authorName}</p>
+                    <p class="abstract">${tripAbstract}</p>
+                    <!-- ...其他資訊 -->
+                </div>
+            </div>
+        `;
+        $container.append(cardHtml);
+    });
+}
     // 6) renderPagination
     function renderPagination() {
         const $pagination = $(".pagination");
