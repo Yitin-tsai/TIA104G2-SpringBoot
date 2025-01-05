@@ -31,13 +31,15 @@ import oracle.jdbc.proxy.annotation.Post;
 public class TripLikeServlet {
 	@Autowired
 	private TripLikeService tripLikeSvc;
+	@Autowired
+	private MemberService memberSvc;
 	
 	
 	@PostMapping("/add")
 	public String addTripLike(@RequestParam Integer tripId, HttpServletRequest request) {
 		Integer memberId = (Integer) request.getSession().getAttribute("memberId");
 		TripService tripSvc = new TripService();
-		MemberService memberSvc = new MemberService();
+	
 		if (memberId == null) {
             return "false not login";
         }

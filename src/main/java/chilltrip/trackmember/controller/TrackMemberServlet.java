@@ -52,8 +52,8 @@ public class TrackMemberServlet {
 
 	@GetMapping("getAllFans/{id}")
 	public List<MemberVO> getAllfans(@PathVariable("id") Integer memberId) {
-		MemberService memberSvc = new MemberService();
-		if (memberSvc.getOneMember(memberId) != null) {
+		
+		if (membersvc.getOneMember(memberId) != null) {
 			List<MemberVO> list = trackMemSvc.getAllfans(memberId);
 			return list;
 		}else {
@@ -66,8 +66,7 @@ public class TrackMemberServlet {
 	@GetMapping("getAllTracks/{id}")
 	public List<MemberVO>  getAllTracks(@PathVariable("id")Integer memberId) {
 
-		MemberService memberSvc = new MemberService();
-		if (memberSvc.getOneMember(memberId) != null) {
+		if (membersvc.getOneMember(memberId) != null) {
 			List<MemberVO> list = trackMemSvc.getAllTracks(memberId);
 			return list;
 		}else {

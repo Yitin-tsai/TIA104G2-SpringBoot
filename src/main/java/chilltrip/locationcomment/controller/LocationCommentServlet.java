@@ -30,7 +30,8 @@ public class LocationCommentServlet {
 	
 	@Autowired
 	LocationCommentService commentSvc;
-
+	@Autowired
+	MemberService memberSvc;
 	
 
 	@GetMapping("getByLocation/{id}")
@@ -63,7 +64,6 @@ public class LocationCommentServlet {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed: " + errorMessage.toString());
 		}
 		LocationService locationSvc= new LocationService();
-		MemberService memberSvc= new MemberService();
 		MemberVO member = memberSvc.getOneMember(memberid);
 		LocationVO location = locationSvc.getLocationById(locationid);
 		locationCommentVO.setLocationvo(location);
@@ -84,7 +84,7 @@ public class LocationCommentServlet {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed: " + errorMessage.toString());
 		}
 		LocationService locationSvc= new LocationService();
-		MemberService memberSvc= new MemberService();
+		
 		MemberVO member = memberSvc.getOneMember(memberid);
 		LocationVO location = locationSvc.getLocationById(locationid);
 		locationCommentVO.setLocationvo(location);
