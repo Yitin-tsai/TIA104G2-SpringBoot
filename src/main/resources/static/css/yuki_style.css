@@ -200,7 +200,10 @@ footer {
   margin-top: 2rem;
 }
 
-.pagination {
+/* pagination 和 pagination-custom 共享相同的樣式 */
+
+/* 主要分頁樣式 */
+.pagination, .pagination-custom {
   margin-bottom: 1rem;
   display: flex;
   justify-content: center;
@@ -208,7 +211,9 @@ footer {
   gap: 0.5rem;
 }
 
-.pagination .page-number {
+/* 分頁數字樣式 */
+.pagination .page-number,
+.pagination-custom .page-number {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: 4px;
@@ -217,24 +222,33 @@ footer {
   cursor: pointer;
 }
 
-.pagination .page-number:hover {
+/* 滑鼠懸停樣式 */
+.pagination .page-number:hover,
+.pagination-custom .page-number:hover {
   background-color: #eee;
 }
 
-.pagination .page-number.active {
+/* 當前頁面樣式 */
+.pagination .page-number.active,
+.pagination-custom .page-number.active {
   background-color: #FF6600;
   color: white;
 }
 
-.pagination .ellipsis {
+/* 省略號樣式 */
+.pagination .ellipsis,
+.pagination-custom .ellipsis {
   color: #666;
   padding: 0 0.5rem;
 }
 
-.pagination .label {
+/* 分頁文字樣式 */
+.pagination .label,
+.pagination-custom .label {
   margin-left: 0.5rem;
   color: #666;
 }
+
 
 .social-links {
   display: flex;

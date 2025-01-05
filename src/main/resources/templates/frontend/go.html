@@ -241,13 +241,9 @@
 	<main class="ticket-grid" id="tripCardsContainer">
 		<!-- 這裡的內容將由 JavaScript 動態插入行程卡片 -->
 	</main>
-	<!--頁碼-->
+	<!--搜尋標籤行程的頁碼-->
 	<div class="pagination">
-		<a href="#" class="page-number active">1</a> <a href="#"
-			class="page-number">2</a> <a href="#" class="page-number">3</a> <span
-			class="ellipsis">...</span> <a href="#" class="page-number">8</a> <a
-			href="#" class="page-number">9</a> <a href="#" class="page-number">10</a>
-		<span class="label">頁</span>
+		<!-- 動態產生分頁按鈕 -->
 	</div>
 	<div class="map-container">
 		<!-- 搜尋框部分 -->
@@ -338,16 +334,14 @@
 			</div>
 		</a>
 	</main>
-	<!--頁碼-->
-	<div class="pagination">
+	<!-- 自己行程的頁碼 -->
+	<div class="pagination-custom">
 		<a href="#" class="page-number active">1</a> <a href="#"
 			class="page-number">2</a> <a href="#" class="page-number">3</a> <span
 			class="ellipsis">...</span> <a href="#" class="page-number">8</a> <a
 			href="#" class="page-number">9</a> <a href="#" class="page-number">10</a>
 		<span class="label">頁</span>
 	</div>
-
-
 
 	<footer>
 
@@ -464,171 +458,186 @@
             })
     </script>
 	<script>
+// 	行程搜尋出現的行程卡片
+$(document).ready(function() {
     const contextPath = "/TIA104G2-SpringBoot"; 
+    let currentTrips = [];      // 暫存目前的資料 (trips)
+    let currentPage = 1;        // 當前頁碼
+    const pageSize = 4;         // 一頁顯示幾筆資料
+    
+    // === A. 綁定/載入 預設資料 (活動類型、地區) ===
+    $.ajax({
+        url: contextPath + "/tripactype/all",  
+        type: "GET",
+        dataType: "json",
+        success: function(eventTypes) {
+            const $activitySelect = $("#activityTypeSelect");
+            $activitySelect.empty(); 
+            $activitySelect.append(`<option value="">請選擇活動類型</option>`);
 
- $(document).ready(function() {
-     // 1. 進入頁面後，先動態取得「活動類型」清單並填入 activityTypeSelect
-     $.ajax({
-         url: contextPath + "/tripactype/all",  
-         type: "GET",
-         dataType: "json",
-         success: function(eventTypes) {
-             // eventTypes 會是一個 String Array，如 ["文化體驗", "戶外登山", "美食之旅", ...]
-             const $activitySelect = $("#activityTypeSelect");
-             $activitySelect.empty();  // 先清空
-             $activitySelect.append(`<option value="">請選擇活動類型</option>`); // 加回第一個提示
+            eventTypes.forEach(function(typeStr) {
+                $activitySelect.append(`<option value="${typeStr}">${typeStr}</option>`);
+            });
+        },
+        error: function(xhr) {
+            console.error("無法取得行程活動類型清單:", xhr);
+        }
+    });
 
-             eventTypes.forEach(function(typeStr) {
-                 // 追加 <option value="typeStr">typeStr</option>
-                 $activitySelect.append(`
-                     <option value="${typeStr}">${typeStr}</option>
-                 `);
-             });
-         },
-         error: function(xhr) {
-             console.error("無法取得行程活動類型清單:", xhr);
-         }
-     });
+    $.ajax({
+        url: contextPath + "/triparea/all",  
+        type: "GET",
+        dataType: "json",
+        success: function(regionList) {
+            const $regionSelect = $("#regionSelect");
+            $regionSelect.empty(); 
+            $regionSelect.append(`<option value="">請選擇行程地區</option>`); 
 
-     // 2. 同樣取得「行程地區」清單並填入 regionSelect
-     $.ajax({
-         url: contextPath + "/triparea/all",  
-         type: "GET",
-         dataType: "json",
-         success: function(regionList) {
-             // regionList 會是一個 String Array，如 ["東京", "大阪", "京都", ...]
-             const $regionSelect = $("#regionSelect");
-             $regionSelect.empty(); 
-             $regionSelect.append(`<option value="">請選擇行程地區</option>`); 
-
-             regionList.forEach(function(region) {
-                 $regionSelect.append(`
-                     <option value="${region}">${region}</option>
-                 `);
-             });
-         },
-         error: function(xhr) {
-             console.error("無法取得行程地區清單:", xhr);
-         }
-     });
+            regionList.forEach(function(region) {
+                $regionSelect.append(`<option value="${region}">${region}</option>`);
+            });
+        },
+        error: function(xhr) {
+            console.error("無法取得行程地區清單:", xhr);
+        }
+    });
 
 
-     // 3. 監聽「活動類型」下拉的 change 事件，一旦使用者選了某個活動類型，就查詢行程
-     $("#activityTypeSelect").on("change", function() {
-         const selectedEventType = $(this).val();
-         if (!selectedEventType) {
-             // 如果沒有選或選空白，就清空卡片區
-             $("#tripCardsContainer").empty();
-             return;
-         }
+    // === B. 監聽活動類型、地區下拉選擇 ===
+    $("#activityTypeSelect").on("change", function() {
+        const selectedEventType = $(this).val();
+        if (!selectedEventType) {
+            $("#tripCardsContainer").empty();
+            return;
+        }
+        // 查詢
+        $.ajax({
+            url: contextPath + "/tripactype/trips",
+            type: "GET",
+            data: { eventType: selectedEventType },
+            dataType: "json",
+            success: function(trips) {
+                console.log("共拿到幾筆資料?", trips.length);
+                currentTrips = trips;
+                currentPage = 1;
+                renderTripCards();   // 第 1 頁
+                renderPagination();  // 生成分頁按鈕
+            },
+            error: function(xhr) {
+                console.error("查詢行程活動失敗:", xhr);
+            }
+        });
+    });
 
-         // 呼叫後端: GET /tripactype/trips?eventType=xxx
-         $.ajax({
-             url: contextPath + "/tripactype/trips",
-             type: "GET",
-             data: { eventType: selectedEventType },
-             dataType: "json",
-             success: function(trips) {
-                 // trips 會是一個 TripVO 陣列
-                 // 清空畫面舊卡片
-                 $("#tripCardsContainer").empty();
-
-                 // 動態生成卡片
-                 renderTripCards(trips, "activity");
-             },
-             error: function(xhr) {
-                 console.error("查詢行程活動失敗:", xhr);
-             }
-         });
-     });
-
-
-     // 4. 監聽「行程地區」下拉的 change 事件，一旦使用者選了某個地區，就查詢行程
-     $("#regionSelect").on("change", function() {
-         const selectedRegion = $(this).val();
-         if (!selectedRegion) {
-             // 如果沒有選或選空白，就清空卡片區
-             $("#tripCardsContainer").empty();
-             return;
-         }
-
-         // 呼叫後端: GET /triparea/search?regionContent=xxx
-         $.ajax({
-             url: contextPath + "/triparea/search",
-             type: "GET",
-             data: { regionContent: selectedRegion },
-             dataType: "json",
-             success: function(tripAreas) {
-                 // tripAreas 其實是 TripAreaVO 陣列，每個元素內有 .tripid (對應 TripVO)
-                 $("#tripCardsContainer").empty();
-                 
-                 // 取得純粹的 tripVO 陣列 (若後端回傳 tripid 內含 TripVO)
-                 const trips = tripAreas.map(item => item.tripid);
-
-                 // 動態生成卡片
-                 renderTripCards(trips, "area");
-             },
-             error: function(xhr) {
-                 if (xhr.status === 404) {
-                     // 後端回傳 404 代表查無資料
-                     $("#tripCardsContainer").empty();
-                     console.log("沒有找到相關行程");
-                 } else {
-                     console.error("查詢行程地區失敗:", xhr);
-                 }
-             }
-         });
-     });
+    $("#regionSelect").on("change", function() {
+        const selectedRegion = $(this).val();
+        if (!selectedRegion) {
+            $("#tripCardsContainer").empty();
+            return;
+        }
+        // 查詢
+        $.ajax({
+            url: contextPath + "/triparea/search",
+            type: "GET",
+            data: { regionContent: selectedRegion },
+            dataType: "json",
+            success: function(tripAreas) {
+                // tripAreas -> 取得純粹的 TripVO 陣列
+                const trips = tripAreas.map(item => item.tripid);
+                console.log("地區查詢共拿到幾筆?", trips.length);
+                currentTrips = trips;
+                currentPage = 1;
+                renderTripCards();
+                renderPagination();
+            },
+            error: function(xhr) {
+                if (xhr.status === 404) {
+                    $("#tripCardsContainer").empty();
+                    console.log("沒有找到相關行程");
+                } else {
+                    console.error("查詢行程地區失敗:", xhr);
+                }
+            }
+        });
+    });
 
 
-     // ============= 生成行程卡片的通用函式 =============
-     // trips: 後端回傳的 TripVO 陣列
-     // sourceType: "activity" 或 "area" 只是給你辨識用，可自行延伸
-     function renderTripCards(trips, sourceType) {
-         const $container = $("#tripCardsContainer");
+    // === C. 定義「渲染行程卡片」函式 (同一個 scope) ===
+    function renderTripCards() {
+        const $container = $("#tripCardsContainer");
+        $container.empty();
 
-         if (!trips || trips.length === 0) {
-             $container.append(`<p>目前沒有相關行程...</p>`);
-             return;
-         }
+        if (!currentTrips || currentTrips.length === 0) {
+            $container.append(`<p>目前沒有相關行程...</p>`);
+            return;
+        }
 
-         trips.forEach(function(trip) {
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const pageData = currentTrips.slice(startIndex, endIndex);
 
-             const tripTitle = trip.article_title || "未命名行程";
-             const tripAbstract = trip.trip_abstract || "沒有行程簡介";
-             const tripLikes = trip.likes || 0;
-             const tripVisitors = trip.visitors_number || 0;
+        pageData.forEach(function(trip) {
+            const tripTitle = trip.article_title || "未命名行程";
+            const tripAbstract = trip.trip_abstract || "沒有行程簡介";
+            const tripLikes = trip.likes || 0;
+            const tripVisitors = trip.visitors_number || 0;
 
-             // 作者(暱稱)若存在在 trip.memberId 裏 (看你後端 VO 的實作)
-             // const authorNickname = trip.memberId ? trip.memberId.nick_name : "未知作者";
-             const authorNickname = "假作者"; // Demo
+            let authorNickname = "未知作者"; 
+            if (trip.membervo && trip.membervo.nickName) {
+                authorNickname = trip.membervo.nickName;
+            }
 
-             // 沒有圖片的話可放預設圖 url
-             const coverImgUrl = "https://via.placeholder.com/350x200?text=TripCover";
+            const coverImgUrl = "https://via.placeholder.com/350x200?text=TripCover";
 
-             // 產生一個卡片
-             const cardHtml = `
-                 <div class="ticket-card">
-                   <img src="${coverImgUrl}" alt="${tripTitle}">
-                   <div class="ticket-info">
-                     <h3 class="title">${tripTitle}</h3>
-                     <p class="author">${authorNickname}</p>
-                     <p class="abstract">${tripAbstract}</p>
-                     <div>
-                       <span style="color: red;">♥</span> ${tripLikes} &nbsp; 
-                       <span>瀏覽: ${tripVisitors}</span>
-                     </div>
-                   </div>
-                 </div>
-             `;
-             // 注意: 這裡只是示範，你可以根據設計切版更動 class 與結構。
-             $container.append(cardHtml);
-         });
-     }
- });
+            const cardHtml = `
+                <div class="ticket-card">
+                    <img src="${coverImgUrl}" alt="${tripTitle}">
+                    <div class="ticket-info">
+                        <h3 class="title">${tripTitle}</h3>
+                        <p class="author">${authorNickname}</p>
+                        <p class="abstract">${tripAbstract}</p>
+                        <div>
+                            <span style="color: red;">♥</span> ${tripLikes} 
+                        </div>
+                    </div>
+                </div>
+            `;
+            $container.append(cardHtml);
+        });
+    }
+
+    // === D. 定義「渲染分頁按鈕」函式 (同一個 scope) ===
+    function renderPagination() {
+        const $pagination = $(".pagination");
+        $pagination.empty();
+
+        if (!currentTrips || currentTrips.length === 0) {
+            return;
+        }
+
+        const totalPages = Math.ceil(currentTrips.length / pageSize);
+        console.log("總頁數:", totalPages, "目前頁:", currentPage);
+
+        for (let p = 1; p <= totalPages; p++) {
+            const $pageLink = $(`<a href="#" class="page-number">${p}</a>`);
+            if (p === currentPage) {
+                $pageLink.addClass("active");
+            }
+            // 監聽點擊事件
+            $pageLink.on("click", function(e) {
+                e.preventDefault();
+                console.log("使用者點擊第" + p + "頁");
+                currentPage = p;
+                renderTripCards();
+                renderPagination();
+            });
+
+            $pagination.append($pageLink);
+        }
+    }
+
+});
  </script>
-
-	</script>
 
 
 </body>

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import chilltrip.member.model.MemberDAO_interface;
 import chilltrip.member.model.MemberJDBCDAO;
+import chilltrip.member.model.MemberVO;
 import chilltrip.trip.dao.TripDAO;
 import chilltrip.trip.dao.TripDAOImplJDBC;
 import chilltrip.trip.model.TripVO;
@@ -18,14 +19,14 @@ public class TripAreaService {
 	private TripAreaDAO_interface dao;
 	private TripDAO tripdao;  // TripDAO_interface 的參數
 	private MemberDAO_interface memberDao;
-	private TripPhotoDAO photoDao;
+//	private TripPhotoDAO photoDao;
 
 	@Autowired
 	public TripAreaService() {
 		dao = new TripAreaJDBCDAO();
 		tripdao = new TripDAOImplJDBC();
 		memberDao = new MemberJDBCDAO();
-		photoDao = new TripPhotoDAOImpl();
+//		photoDao = new TripPhotoDAOImpl();
 	}
 
 	public TripAreaVO addTripArea(TripAreaVO tripAreaVO) {
@@ -60,12 +61,13 @@ public class TripAreaService {
 	                MemberVO member = memberDao.findByPrimaryKey(trip.getMemberId());
 	                trip.setMembervo(member);
 	            }
+	            System.out.println("發文者暱稱: " + trip.getMembervo().getNickName());
 	            // 取得封面照
-	            TripPhotoVO cover = photoDao.findCoverPhotoByTripId(trip.getTrip_id());
-	            if (cover != null && cover.getPhoto() != null) {
-	                String base64 = Base64.getEncoder().encodeToString(cover.getPhoto());
-	                trip.setCoverPhotoBase64(base64);
-	            }
+//	            TripPhotoVO cover = photoDao.findCoverPhotoByTripId(trip.getTrip_id());
+//	            if (cover != null && cover.getPhoto() != null) {
+//	                String base64 = Base64.getEncoder().encodeToString(cover.getPhoto());
+//	                trip.setCoverPhotoBase64(base64);
+//	            }
 	        }
 	    }
 	    return list;
