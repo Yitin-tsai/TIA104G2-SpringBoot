@@ -32,12 +32,15 @@ public class TripCollectionServlet extends HttpServlet {
 
 	@Autowired
 	private TripCollectionService tripColSvc;
+	@Autowired
+	private MemberService memberSvc;
+	@Autowired
+	private TripService tripSvc;
 
 	@PostMapping("/add")
 	public String addTripCollection(@RequestParam Integer tripId, HttpServletRequest request) {
 		Integer memberId = (Integer) request.getSession().getAttribute("memberId");
-		TripService tripSvc = new TripService();
-		MemberService memberSvc = new MemberService();
+		
 		if (memberId == null) {
             return "false not login";
         }
@@ -57,7 +60,7 @@ public class TripCollectionServlet extends HttpServlet {
 
 	@GetMapping("getByTrip/{id}")
 	public List<TripCollectionVO> getByTrip(@PathVariable("id") Integer tripId) throws IOException {
-		TripService tripSvc = new TripService();
+		
 		if (tripSvc.getById(tripId) != null) {
 			List<TripCollectionVO> list = tripColSvc.getByTrip(tripId);
 			return list;
@@ -71,7 +74,7 @@ public class TripCollectionServlet extends HttpServlet {
 	@GetMapping("getByMember/{id}")
 	public ResponseEntity<Map<String, Object>> getByMember(@PathVariable("id")Integer memberId, Integer page) {
 		int currentPage = (page == null) ? 1 : page;
-		MemberService memberSvc = new MemberService();
+		
 		Map<String, Object> responseMap = new HashMap<>();
 		if (memberSvc.getOneMember(memberId) != null) {
 			List<TripCollectionVO> list = tripColSvc.getByMember(memberId, currentPage);
