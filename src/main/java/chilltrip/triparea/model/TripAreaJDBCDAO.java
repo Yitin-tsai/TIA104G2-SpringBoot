@@ -22,7 +22,7 @@ public class TripAreaJDBCDAO implements TripAreaDAO_interface {
 	private static final String DELETE = "DELETE FROM itinerary_area WHERE trip_location_id = ?";
 	private static final String UPDATE = "UPDATE itinerary_area SET trip_id=?, region_content=? WHERE trip_location_id = ?";
 	private static final String UPDATE_TRIP_AREA = "UPDATE itinerary_area SET region_content=? WHERE trip_id = ? AND region_content=?";
-	private static final String GET_TRIP_BY_TRIPAREA = "SELECT itinerary_area.trip_location_id,itinerary_area.region_content,trip.trip_id, trip.article_title, trip.abstract AS trip_abstract, trip.visitors_number, trip.likes FROM itinerary_area JOIN trip ON itinerary_area.trip_id = trip.trip_id WHERE itinerary_area.region_content = ?";
+	private static final String GET_TRIP_BY_TRIPAREA = "SELECT itinerary_area.trip_location_id,itinerary_area.region_content,trip.trip_id,trip.member_id, trip.article_title, trip.abstract AS trip_abstract, trip.visitors_number, trip.likes FROM itinerary_area JOIN trip ON itinerary_area.trip_id = trip.trip_id WHERE itinerary_area.region_content = ?";
 	private static final String DELETE_TRIPAREA_FROM_TRIP = "DELETE FROM itinerary_area WHERE trip_id=? AND region_content=?";
 	
 	
@@ -287,11 +287,12 @@ public class TripAreaJDBCDAO implements TripAreaDAO_interface {
 			while(rs.next()) {
 				tripAreaVO = new TripAreaVO();
 				// 設定 TripAreaVO 的屬性
-//				tripAreaVO.setTriplocationid(rs.getInt("trip_location_id"));
+				tripAreaVO.setTriplocationid(rs.getInt("trip_location_id"));
 				tripAreaVO.setRegioncontent(rs.getString("region_content"));
 				
 				TripVO tripVO = new TripVO();
-//				tripVO.setTrip_id(rs.getInt("trip_id"));
+				tripVO.setTrip_id(rs.getInt("trip_id"));
+				tripVO.setMemberId(rs.getInt("member_id")); 
 	            tripVO.setArticle_title(rs.getString("article_title"));
 	            tripVO.setTrip_abstract(rs.getString("trip_abstract"));
 	            tripVO.setVisitors_number(rs.getInt("visitors_number"));
@@ -348,9 +349,8 @@ public class TripAreaJDBCDAO implements TripAreaDAO_interface {
 			con = DriverManager.getConnection(url, userid, passwd);
 			pstmt = con.prepareStatement(INSERT_STMT);
 
-			TripVO tripVO = new TripVO();
-			pstmt.setInt(1, tripVO.getTrip_id());  // 使用 tripVO 的 tripid
-			pstmt.setString(2, regionContent);
+			pstmt.setInt(1, tripId.getTrip_id());
+	        pstmt.setString(2, regionContent);
 
 			pstmt.executeUpdate();
 
