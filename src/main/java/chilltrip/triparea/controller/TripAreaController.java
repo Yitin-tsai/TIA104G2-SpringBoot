@@ -2,6 +2,7 @@ package chilltrip.triparea.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,25 +29,12 @@ public class TripAreaController{
 
 	// 查詢行程地區的行程
 	@GetMapping("/search")
-    public ResponseEntity<List<TripAreaVO>> getTripByTripArea(@RequestParam String regionContent) {
-		System.out.println("選擇的行程地區：" + regionContent);
-        List<TripAreaVO> tripList = tripAreaSvc.getTripBytripArea(regionContent);
-
-        if (tripList == null || tripList.isEmpty()) {
-            System.out.println("沒有找到相關行程");
+    public ResponseEntity<List<Map<String,Object>>> getTripByTripArea(@RequestParam String regionContent) {
+        List<Map<String,Object>> resultList = tripAreaSvc.getTripBytripArea(regionContent);
+        if (resultList == null || resultList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-
-        tripList.forEach(tripArea -> {
-            System.out.println("行程地區：" + tripArea.getRegioncontent());
-            System.out.println("行程標題：" + tripArea.getTripid().getArticle_title());
-            System.out.println("行程摘要：" + tripArea.getTripid().getTrip_abstract());
-            System.out.println("遊客數：" + tripArea.getTripid().getVisitors_number());
-            System.out.println("喜歡數：" + tripArea.getTripid().getLikes());
-            System.out.println("-------------------------------");
-        });
-
-        return ResponseEntity.ok(tripList);
+        return ResponseEntity.ok(resultList);
     }
 
 	// 新增地區標註到行程

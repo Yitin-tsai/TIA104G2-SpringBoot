@@ -1,6 +1,7 @@
 package chilltrip.tripactype.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServlet;
@@ -83,19 +84,11 @@ public class TripactypeController{
 	
 	// 查詢指定行程活動類型的所有行程
     @GetMapping("/trips")
-    public ResponseEntity<List<TripVO>> getTripsByTripActype(@RequestParam String eventType) {
-        System.out.println("eventType = " + eventType);
-        List<TripVO> tripList = tripactypeSvc.findTripsByEventType(eventType);
-        if (tripList != null && !tripList.isEmpty()) {
-            System.out.println("找到的行程列表：");
-            tripList.forEach(trip -> {
-                System.out.println("行程標題：" + trip.getArticle_title());
-                System.out.println("行程摘要：" + trip.getTrip_abstract());
-                System.out.println("-------------------------------");
-            });
-        } else {
-            System.out.println("沒有找到相關行程");
+    public ResponseEntity<List<Map<String, Object>>> getTripsByTripActype(@RequestParam String eventType) {
+        List<Map<String, Object>> tripDataList = tripactypeSvc.findTripsByEventType(eventType);
+        if (tripDataList == null || tripDataList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return ResponseEntity.ok(tripList);
+        return ResponseEntity.ok(tripDataList);
     }
 }

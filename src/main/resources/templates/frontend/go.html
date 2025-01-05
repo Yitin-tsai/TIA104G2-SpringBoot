@@ -460,12 +460,12 @@
 	<script>
 // 	行程搜尋出現的行程卡片
 $(document).ready(function() {
-    const contextPath = "/TIA104G2-SpringBoot"; 
-    let currentTrips = [];      // 暫存目前的資料 (trips)
-    let currentPage = 1;        // 當前頁碼
-    const pageSize = 4;         // 一頁顯示幾筆資料
-    
-    // === A. 綁定/載入 預設資料 (活動類型、地區) ===
+    const contextPath = "/TIA104G2-SpringBoot";
+    let currentTrips = [];
+    let currentPage = 1;
+    const pageSize = 4;
+
+    // 1) 載入活動類型
     $.ajax({
         url: contextPath + "/tripactype/all",  
         type: "GET",
@@ -474,7 +474,6 @@ $(document).ready(function() {
             const $activitySelect = $("#activityTypeSelect");
             $activitySelect.empty(); 
             $activitySelect.append(`<option value="">請選擇活動類型</option>`);
-
             eventTypes.forEach(function(typeStr) {
                 $activitySelect.append(`<option value="${typeStr}">${typeStr}</option>`);
             });
@@ -484,6 +483,7 @@ $(document).ready(function() {
         }
     });
 
+    // 2) 載入行程地區
     $.ajax({
         url: contextPath + "/triparea/all",  
         type: "GET",
@@ -491,8 +491,7 @@ $(document).ready(function() {
         success: function(regionList) {
             const $regionSelect = $("#regionSelect");
             $regionSelect.empty(); 
-            $regionSelect.append(`<option value="">請選擇行程地區</option>`); 
-
+            $regionSelect.append(`<option value="">請選擇行程地區</option>`);
             regionList.forEach(function(region) {
                 $regionSelect.append(`<option value="${region}">${region}</option>`);
             });
@@ -502,15 +501,14 @@ $(document).ready(function() {
         }
     });
 
-
-    // === B. 監聽活動類型、地區下拉選擇 ===
+    // 3) 監聽活動類型
     $("#activityTypeSelect").on("change", function() {
         const selectedEventType = $(this).val();
         if (!selectedEventType) {
             $("#tripCardsContainer").empty();
             return;
         }
-        // 查詢
+        // 呼叫 /tripactype/trips
         $.ajax({
             url: contextPath + "/tripactype/trips",
             type: "GET",
@@ -520,34 +518,38 @@ $(document).ready(function() {
                 console.log("共拿到幾筆資料?", trips.length);
                 currentTrips = trips;
                 currentPage = 1;
-                renderTripCards();   // 第 1 頁
-                renderPagination();  // 生成分頁按鈕
+                renderTripCards(trips);  
+                renderPagination();
             },
             error: function(xhr) {
-                console.error("查詢行程活動失敗:", xhr);
+                if (xhr.status === 404) {
+                    $("#tripCardsContainer").empty();
+                    console.log("沒有找到相關行程");
+                } else {
+                    console.error("查詢行程活動失敗:", xhr);
+                }
             }
         });
     });
 
+    // 4) 監聽地區
     $("#regionSelect").on("change", function() {
         const selectedRegion = $(this).val();
         if (!selectedRegion) {
             $("#tripCardsContainer").empty();
             return;
         }
-        // 查詢
+        // 呼叫 /triparea/search
         $.ajax({
             url: contextPath + "/triparea/search",
             type: "GET",
             data: { regionContent: selectedRegion },
             dataType: "json",
-            success: function(tripAreas) {
-                // tripAreas -> 取得純粹的 TripVO 陣列
-                const trips = tripAreas.map(item => item.tripid);
-                console.log("地區查詢共拿到幾筆?", trips.length);
-                currentTrips = trips;
+            success: function(resultList) {
+                console.log("地區查詢共拿到幾筆?", resultList.length);
+                currentTrips = resultList;
                 currentPage = 1;
-                renderTripCards();
+                renderTripCards(resultList); 
                 renderPagination();
             },
             error: function(xhr) {
@@ -561,44 +563,44 @@ $(document).ready(function() {
         });
     });
 
-
-    // === C. 定義「渲染行程卡片」函式 (同一個 scope) ===
-    function renderTripCards() {
+    // 5) renderTripCards
+    function renderTripCards(trips) {
         const $container = $("#tripCardsContainer");
         $container.empty();
-
-        if (!currentTrips || currentTrips.length === 0) {
+        if (!trips || trips.length === 0) {
             $container.append(`<p>目前沒有相關行程...</p>`);
             return;
         }
 
         const startIndex = (currentPage - 1) * pageSize;
         const endIndex = startIndex + pageSize;
-        const pageData = currentTrips.slice(startIndex, endIndex);
+        const pageData = trips.slice(startIndex, endIndex);
 
         pageData.forEach(function(trip) {
             const tripTitle = trip.article_title || "未命名行程";
             const tripAbstract = trip.trip_abstract || "沒有行程簡介";
-            const tripLikes = trip.likes || 0;
-            const tripVisitors = trip.visitors_number || 0;
+            const base64Photo = trip.coverImageUrl; 
 
-            let authorNickname = "未知作者"; 
+            const coverImgUrl = base64Photo 
+                ? base64Photo
+                : "https://via.placeholder.com/350x200?text=NoImage";
+
+            let authorName = "未知作者";
             if (trip.membervo && trip.membervo.nickName) {
-                authorNickname = trip.membervo.nickName;
+                authorName = trip.membervo.nickName;
             }
-
-            const coverImgUrl = "https://via.placeholder.com/350x200?text=TripCover";
+            // or if you used "member_nickName", then => authorName = trip.member_nickName || "未知作者";
 
             const cardHtml = `
                 <div class="ticket-card">
-                    <img src="${coverImgUrl}" alt="${tripTitle}">
+                    <img src="${coverImgUrl}"
+                         onerror="this.onerror=null;this.src='https://via.placeholder.com/350x200?text=NoImage';"
+                         alt="${tripTitle}">
                     <div class="ticket-info">
                         <h3 class="title">${tripTitle}</h3>
-                        <p class="author">${authorNickname}</p>
+                        <p class="author">${authorName}</p>
                         <p class="abstract">${tripAbstract}</p>
-                        <div>
-                            <span style="color: red;">♥</span> ${tripLikes} 
-                        </div>
+                        <!-- ...其他資訊 -->
                     </div>
                 </div>
             `;
@@ -606,37 +608,31 @@ $(document).ready(function() {
         });
     }
 
-    // === D. 定義「渲染分頁按鈕」函式 (同一個 scope) ===
+    // 6) renderPagination
     function renderPagination() {
         const $pagination = $(".pagination");
         $pagination.empty();
-
         if (!currentTrips || currentTrips.length === 0) {
             return;
         }
-
         const totalPages = Math.ceil(currentTrips.length / pageSize);
-        console.log("總頁數:", totalPages, "目前頁:", currentPage);
-
         for (let p = 1; p <= totalPages; p++) {
             const $pageLink = $(`<a href="#" class="page-number">${p}</a>`);
             if (p === currentPage) {
                 $pageLink.addClass("active");
             }
-            // 監聽點擊事件
             $pageLink.on("click", function(e) {
                 e.preventDefault();
-                console.log("使用者點擊第" + p + "頁");
                 currentPage = p;
-                renderTripCards();
+                renderTripCards(currentTrips);
                 renderPagination();
             });
-
             $pagination.append($pageLink);
         }
     }
 
 });
+
  </script>
 
 
