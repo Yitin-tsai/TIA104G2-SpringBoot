@@ -37,7 +37,7 @@ public class PageController {
 
     @GetMapping("/profile")
     public String profilePage() {
-        return "/frontend/profile";
+        return "/frontend/member_profile";
     }
 
     @GetMapping("/guide")

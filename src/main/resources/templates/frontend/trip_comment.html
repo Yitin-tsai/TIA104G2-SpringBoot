@@ -373,9 +373,16 @@ button:hover {
 
                 let innerHTML = `
                     <div class="message-header">
-                        <img src="data:image/jpeg;base64,${memberPhoto || ''}" alt="大頭貼" class="user-avatar">
+                		<a href="${contextPath}/viewPublicProfile/${memberId}">
+                	           <img src="data:image/jpeg;base64,${memberPhoto || ''}" alt="大頭貼" class="user-avatar">
+                	    </a>
                         <div class="user-info">
-                            <h4 class="username">${nickName || ''}</h4>
+                        			<h4 class="username">
+                                       <a href="${contextPath}/viewPublicProfile/${memberId}" 
+                                          style="color:inherit; text-decoration:none;">
+                                           ${nickName || ''}
+                                       </a>
+                                   	</h4>
                         </div>
                     </div>
                     <div class="message-content">
