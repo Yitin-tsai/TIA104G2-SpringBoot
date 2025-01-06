@@ -354,6 +354,7 @@ button:hover {
 
             // 取得前端 sessionStorage 中的 memberId
             const currentMemberId = parseInt(sessionStorage.getItem("memberId") || '0');
+            console.log("前端抓到的 currentMemberId =", currentMemberId);
 
             messages.forEach(msg => {
                 const {
