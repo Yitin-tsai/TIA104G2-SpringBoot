@@ -1,6 +1,7 @@
 package chilltrip.announce.model;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
 
@@ -15,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -58,6 +58,11 @@ public class AnnounceVO {
 	@Lob
 	private byte[] coverphoto;
 	
+	@Transient
+    private String starttimeStr; // 格式化后的开始时间
+
+    @Transient
+    private String endtimeStr;   // 格式化后的结束时间
 
 	@Transient
 	private String coverphotoBase64;
@@ -145,6 +150,30 @@ public class AnnounceVO {
 		this.coverphotoBase64 = coverphotoAsBase64;
 		this.coverphoto = null;
 	}
+	  public String getStarttimeStr() {
+	        if (starttime != null) {
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	            return sdf.format(starttime);
+	        }
+	        return null;
+	    }
+
+	    public String getEndtimeStr() {
+	        if (endtime != null) {
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	            return sdf.format(endtime);
+	        }
+	        return null;
+	    }
+	    
+	    
+	public void setStarttimeStr(String starttimeStr) {
+			this.starttimeStr = starttimeStr;
+		}
+
+		public void setEndtimeStr(String endtimeStr) {
+			this.endtimeStr = endtimeStr;
+		}
 
 	@Override
 	public String toString() {

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>個人資料 - ChillTrip</title>
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
+
+<style>
+.profile-container {
+    max-width: 1200px; /* 增加寬度以容納並排區塊 */
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 2rem; /* 增加區塊之間的間距 */
+    align-items: center; /* 垂直居中 */
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-stats {
+    display: flex;
+    gap: 2rem;
+    margin: 1rem 0;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.profile-info {
+    margin-top: 2rem;
+    flex: 1; /* 確保這一塊佔據剩餘的空間 */
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.info-label {
+    width: 120px;
+    font-weight: 600;
+    color: #666;
+}
+
+.info-value {
+    flex: 1;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-edit {
+    background: #FF6600;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-logout {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+/* 搜尋框區域樣式 */
+#searchContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;  /* 确保在垂直方向上居中 */
+    gap: 20px; /* 在搜尋框與搜尋按鈕之間添加間距 */
+    height: 120px; /* 設置搜尋框的高度，讓它比表格高50px */
+    margin-bottom: 20px; /* 為搜尋框區域和表格之間添加一些間距 */
+    box-sizing: border-box;
+    text-align: center; /* 使文字居中 */
+}
+
+#searchContainer label {
+    margin-right: 10px; /* 為標籤添加右邊距 */
+}
+
+#searchContainer input {
+    padding: 5px;
+    margin: 5px;
+}
+
+#searchContainer button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#searchContainer button:hover {
+    background-color: #45a049;
+}
+
+/* 中間區域的 table */
+#tableContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75%;  /* 剩餘的 75% 高度 */
+    box-sizing: border-box;
+}
+
+/* 表格樣式 */
+table {
+    width: 80%; /* 表格寬度 */
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #CCCCFF;
+}
+
+/* 讓頁面更加響應式，確保表格在小螢幕上也能顯示良好 */
+@media (max-width: 768px) {
+    table {
+        width: 100%;
+    }
+}
+
+
+
+</style>
+
+</head>
+
+<body>
+	<!------網站header------>
+    <div id="app">
+      <header>
+        <nav class="top-nav">
+          <div class="nav-left">
+            <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+            <a href="#" class="nav-item nav-link" id="nav-product">購！票券</a>
+            <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
+            <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+          </div>
+          <div class="nav-center">
+            <a href="#" id="z-index">
+              <img
+                th:src="@{/img/logo_black.png}"
+                alt="Chill Trip"
+                style="width: 150px; height: auto"
+              />
+            </a>
+          </div>
+          <div class="nav-right">
+            <div class="nav-item dropdown">
+              <a
+                href="#"
+                class="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+                style="color: #212529"
+                >會員中心</a
+              >
+              <div class="dropdown-menu rounded-0 m-0">
+                <a href="#" class="dropdown-item" id="nav-basic-info"
+                  >基本資料</a
+                >
+                <a href="#" class="dropdown-item" id="nav-coupons"
+                  >我的折價券</a
+                >
+                <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
+              </div>
+            </div>
+            <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+            <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+          </div>
+        </nav>
+      </header>
+    </div>
+    <div id="searchContainer">
+      <label for="starttime">開始時間:</label>
+      <input type="date" id="starttime" name="starttime">
+      
+      <label for="endtime">結束時間:</label>
+      <input type="date" id="endtime" name="endtime">
+      
+      <label for="title">標題:</label>
+      <input type="text" id="title" name="title" placeholder="輸入標題關鍵字">
+      
+      <button id="searchButton">搜尋</button>
+  </div>
+    <div id="tableContainer">
+      <table id="announceList" class="display">
+          <thead>
+              <tr style="background-color:#CCCCFF">
+                  <th>活動編號</th>
+                  <th>活動標題</th>
+                  <th>活動照片</th>
+                    
+                  <th>管理人暱稱</th>
+                  <th>開始時間</th>   
+                  <th>結束時間</th> 
+              </tr>
+          </thead>
+          <tbody id="announceTableBody">
+              <!-- 這裡會填充從後端取得的資料 -->
+          </tbody>
+      </table>
+  </div>
+  
+
+	<!------網站footer------>
+	<footer>
+		<div class="d-flex justify-content-start mt-4">
+			<a class="btn btn-outline-light btn-square mr-2" href="#"><i
+				class="fab fa-twitter"></i></a> <a
+				class="btn btn-outline-light btn-square mr-2" href="#"><i
+				class="fab fa-facebook-f"></i></a> <a
+				class="btn btn-outline-light btn-square mr-2" href="#"><i
+				class="fab fa-linkedin-in"></i></a> <a
+				class="btn btn-outline-light btn-square" href="#"><i
+				class="fab fa-instagram"></i></a>
+		</div>
+		<div class="social-links">
+			<div style="display: flex; gap: 10px">
+				<a href="https://facebook.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #3b5998; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-facebook-f" style="color: white; font-size: 24px"></i>
+					</div>
+				</a> <a href="https://instagram.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #e1306c; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-instagram" style="color: white; font-size: 24px"></i>
+					</div>
+				</a> <a href="https://youtube.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-youtube" style="color: white; font-size: 24px"></i>
+					</div>
+				</a>
+			</div>
+		</div>
+	</footer>
+</body>
+
+	<!------ 共用JS ------>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
+      ><i class="fa fa-angle-double-up"></i
+    ></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 本地資源改用 Thymeleaf 語法 -->
+    <script th:src="@{/lib/easing/easing.min.js}"></script>
+    <script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+
+    <!-- Contact Javascript File -->
+    <script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
+    <script th:src="@{/mail/contact.js}"></script>
+
+    <!-- Template Javascript -->
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+      
+    </script>
+
+    <!-- 導航欄nav的href載入器 -->
+    	<!------修齊的JS------>
+    <script th:src="@{/js/navigation.js}"></script>
+    <script>
+      $(document).ready(function() {
+          // 發送 AJAX 請求以取得所有活動資料
+          function fetchAnnounces(queryParams) {
+              $.ajax({
+                  url: "/TIA104G2-SpringBoot/announce/CompositeQuery",  // 使用複合查詢接口
+                  type: "GET",
+                  data: queryParams,
+                  success: function(data) {
+                      // 清空現有的表格資料
+                      $('#announceTableBody').empty();
+  
+                      // 迴圈處理所有活動資料
+                      $.each(data, function(index, announce) {
+                          // 動態生成活動標題的超連結
+                          var titleLink = '<a href="/TIA104G2-SpringBoot/announce/' + announce.announceid + '">' + announce.title + '</a>';
+  
+                          // 生成活動圖片的 <img> 標籤，並將 Base64 字串放入 src 屬性
+                          var coverphotoImg = announce.coverphotoBase64 ? 
+                              '<img src="' + announce.coverphotoBase64 + '" alt="活動封面" style="max-width: 100px; max-height: 100px;" />' : 
+                              '無圖片';
+  
+                          // 創建修改和刪除按鈕的連結
+                          var editButton = '<a href="/TIA104G2-SpringBoot/announce/edit/' + announce.announceid + '" class="btn btn-primary">修改</a>';
+                          var deleteButton = '<button class="btn btn-danger delete-btn" data-id="' + announce.announceid + '">刪除</button>';
+  
+                          // 建立一列包含所有欄位的資料
+                          var row = '<tr>' +
+                              '<td>' + announce.announceid + '</td>' +
+                              '<td>' + titleLink + '</td>' +
+                              '<td>' + coverphotoImg + '</td>' +
+                              '<td>' + announce.adminvo.adminnickname + '</td>' +
+                              '<td>' + announce.starttimeStr + '</td>' +  
+                              '<td>' + announce.endtimeStr + '</td>' +    
+                              '<td>' + editButton + '</td>' + // 顯示修改按鈕
+                              '<td>' + deleteButton + '</td>' + // 顯示刪除按鈕
+                          '</tr>';
+  
+                          // 將這一列加入到表格中
+                          $('#announceTableBody').append(row);
+                      });
+  
+                      // 處理刪除按鈕的點擊事件
+                      $('.delete-btn').on('click', function() {
+                          var announceid = $(this).data('id');
+                          
+                          // 顯示確認刪除的對話框
+                          if (confirm("確認刪除嗎?")) {
+                              // 用戶點擊確認後發送刪除請求
+                              $.ajax({
+                                  url: '/TIA104G2-SpringBoot/announce/delete/' + announceid,
+                                  type: 'POST',
+                                  success: function(response) {
+                                      if (response === "delete success") {
+                                          alert("刪除成功");
+                                          // 刪除成功後可以選擇刷新頁面或刪除該行
+                                          location.reload();  // 重新載入頁面
+                                      } else {
+                                          alert("刪除失敗");
+                                      }
+                                  },
+                                  error: function() {
+                                      alert("無法執行刪除操作");
+                                  }
+                              });
+                          } else {
+                              // 用戶取消，則什麼也不做
+                              alert("刪除已取消");
+                          }
+                      });
+                  },
+                  error: function() {
+                      alert("無法載入活動資料");
+                  }
+              });
+          }
+  
+          // 預設載入所有資料
+          fetchAnnounces({});
+  
+          // 當點擊搜尋按鈕時，觸發複合查詢
+          $('#searchButton').click(function() {
+              var starttime = $('#starttime').val();
+              var endtime = $('#endtime').val();
+              var title = $('#title').val();
+  
+              // 構建查詢參數
+              var queryParams = {};
+              if (starttime) queryParams.starttime = starttime;
+              if (endtime) queryParams.endtime = endtime;
+              if (title) queryParams.title = title;
+              console.log(queryParams);
+              // 發送複合查詢請求
+              fetchAnnounces(queryParams);
+          });
+      });
+  </script>
+	
+
+
+
+    
+</body>
+</html>

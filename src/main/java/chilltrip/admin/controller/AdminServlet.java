@@ -305,6 +305,9 @@ public class AdminServlet {
 	        }
 	    }
 	}
-
+	@GetMapping("getall")
+	public List<AdminVO> getAll(){
+		return adminSvc.getAll();
+	}
 
 }
