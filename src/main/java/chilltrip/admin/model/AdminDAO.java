@@ -11,6 +11,7 @@ public interface AdminDAO {
 	public void delete(Integer adminid);
 	public List<AdminVO> getAll();
 	public AdminVO getById(Integer adminid);
-	
+	public AdminVO getByAccount(String account);
+	public AdminVO getByPhone(String phone);
 	
 }

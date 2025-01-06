@@ -571,40 +571,47 @@ h2 {
 
     const contextPath = "/TIA104G2-SpringBoot"; // 根據您的實際 context-path
 
-    function submitLoginForm() {
-        // 1. 取得使用者輸入
-        const loginData = {
-            email: $("#email").val(),
-            password: $("#password").val()
-        };
+		function submitLoginForm() {
+		// 1. 取得使用者輸入
+		const loginData = {
+			account: $("#email").val(),
+			password: $("#password").val()
+		};
 
-        // 2. 送出 AJAX
-        $.ajax({
-            type: "POST",
-            url: contextPath + "/member/login",  // 這裡要確保後端路徑正確
-            data: JSON.stringify(loginData),
-            contentType: "application/json",  
-            success: function(response) {
-//                 console.log("登入成功回傳：", response);
-                
-                // 假設後端回傳 JSON 結構包含 memberId
-                if (response.memberId) {
-                    // 3. 將後端回傳的 memberId 存入 sessionStorage
-                    sessionStorage.setItem("memberId", response.memberId);
-                }
+		// 2. 送出 AJAX
+		$.ajax({
+			type: "POST",
+			url: contextPath + "/login",  // 正確的後端路徑
+			data: JSON.stringify(loginData),
+			contentType: "application/json",
+			success: function(response) {
+				// 登入成功處理
+				if (response.message === "登入成功") {
+					// 顯示成功彈窗
+					$("#successModal").show();
+				}
+			},
+			error: function(xhr) {
+				// 登入失敗處理
+				const errorMessage = xhr.responseJSON.message;
+				$("#errorModal p").text(errorMessage);
+				$("#errorModal").show();
+			}
+		});
+	}
 
-                // 4. 顯示成功彈窗或直接跳轉
-                showSuccessModal();
-            },
-            error: function(xhr) {
-                let errorMessage = "登入失敗，請稍後再試";
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMessage = xhr.responseJSON.message;
-                }
-                alert(errorMessage);
-            }
-        });
-    }
+// 這裡可以為 modal 的確認按鈕加上事件處理
+$("#confirmBtn").click(function() {
+    // 跳轉到首頁
+    window.location.href = contextPath + "/";
+});
+
+$("#errorConfirmBtn").click(function() {
+    // 讓使用者重新輸入帳號和密碼
+    $("#email").val("");
+    $("#password").val("");
+    $("#errorModal").hide();
+});
 
     // 顯示成功彈窗
     function showSuccessModal() {
