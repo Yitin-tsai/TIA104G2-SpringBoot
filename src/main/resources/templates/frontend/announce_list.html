@@ -357,42 +357,14 @@ table th {
                               '<td>' + announce.adminvo.adminnickname + '</td>' +
                               '<td>' + announce.starttimeStr + '</td>' +  
                               '<td>' + announce.endtimeStr + '</td>' +    
-                              '<td>' + editButton + '</td>' + // 顯示修改按鈕
-                              '<td>' + deleteButton + '</td>' + // 顯示刪除按鈕
+                          
                           '</tr>';
   
                           // 將這一列加入到表格中
                           $('#announceTableBody').append(row);
                       });
   
-                      // 處理刪除按鈕的點擊事件
-                      $('.delete-btn').on('click', function() {
-                          var announceid = $(this).data('id');
-                          
-                          // 顯示確認刪除的對話框
-                          if (confirm("確認刪除嗎?")) {
-                              // 用戶點擊確認後發送刪除請求
-                              $.ajax({
-                                  url: '/TIA104G2-SpringBoot/announce/delete/' + announceid,
-                                  type: 'POST',
-                                  success: function(response) {
-                                      if (response === "delete success") {
-                                          alert("刪除成功");
-                                          // 刪除成功後可以選擇刷新頁面或刪除該行
-                                          location.reload();  // 重新載入頁面
-                                      } else {
-                                          alert("刪除失敗");
-                                      }
-                                  },
-                                  error: function() {
-                                      alert("無法執行刪除操作");
-                                  }
-                              });
-                          } else {
-                              // 用戶取消，則什麼也不做
-                              alert("刪除已取消");
-                          }
-                      });
+                      
                   },
                   error: function() {
                       alert("無法載入活動資料");
