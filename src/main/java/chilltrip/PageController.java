@@ -128,4 +128,10 @@ public class PageController {
     public String adminForgotPasswordPage(Model model) {
         return "/frontend/admin_forget_password";
     }
+    
+    @GetMapping("/adminProfile")
+    public String adminProfile(Model model) {
+        return "/frontend/admin_profile";
+    }
+    
 }

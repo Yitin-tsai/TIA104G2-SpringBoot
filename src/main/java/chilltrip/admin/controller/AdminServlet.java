@@ -40,25 +40,30 @@ public class AdminServlet {
 	private Gson gson = new Gson();
 
 	@GetMapping("getOne/{id}")
-	public String getOneAdmin(@PathVariable("id") Integer adminid) {
-		Map<String, String> errorMsgs = new HashMap<String, String>();
-
-		// 查詢資料
-
+	public AdminVO getOneAdmin(@PathVariable("id") Integer adminid) {	
+		
 		AdminVO adminVO = adminSvc.getOneAdmin(adminid);
-		if (adminVO == null) {
-			errorMsgs.put("adminid", "查無此管理員，請重新確認id");
-		}
-		if (!errorMsgs.isEmpty()) {
-			String errorMsGson = gson.toJson(errorMsgs);
-			return errorMsGson;
-		}
 
-		String adminjson = gson.toJson(adminVO);
-		return adminjson;
+		return adminVO;
 
 	}
+	
+	@GetMapping("profile")
+	public ResponseEntity<Map<String, Object>> getOneAdmin(HttpSession session) {	
+		Integer adminId = (Integer) session.getAttribute("adminId");
 
+		// 確認 session 中的使用者是否存在
+		if (adminId == null) {
+			Map<String, Object> errorResponse = new HashMap<>();
+			errorResponse.put("message", "未登入，請先登入");
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+		}
+		AdminVO adminVO = adminSvc.getOneAdmin(adminId);
+		Map<String, Object> sucess = new HashMap<>();
+		sucess.put("message", adminVO);
+		return ResponseEntity.ok(sucess);		
+
+	}
 	@PostMapping("update")
 	public String update(@RequestBody AdminVO adminvo) {
 		Map<String, String> errorMsgs = new HashMap<String, String>();
@@ -273,7 +278,7 @@ public class AdminServlet {
 	        AdminVO adminVO = adminSvc.login(account, password);
 
 	        // 登入成功，將 adminId 放入 server-side session
-	        session.setAttribute("memberId", adminVO.getAdminid());
+	        session.setAttribute("adminId", adminVO.getAdminid());
 
 	        // 回傳 JSON 給前端
 	        Map<String, Object> result = new HashMap<>();

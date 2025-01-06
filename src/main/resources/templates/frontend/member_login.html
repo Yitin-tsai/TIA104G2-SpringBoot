@@ -581,7 +581,7 @@ h2 {
 		// 2. 送出 AJAX
 		$.ajax({
 			type: "POST",
-			url: contextPath + "/login",  // 正確的後端路徑
+			url: contextPath + "/member/login",  // 正確的後端路徑
 			data: JSON.stringify(loginData),
 			contentType: "application/json",
 			success: function(response) {
