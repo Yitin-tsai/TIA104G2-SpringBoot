@@ -1,0 +1,570 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif;
+  }
+
+  :root {
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+    --accent-color: #3498db;
+    --gray-light: #f5f6fa;
+    --border-color: #dcdde1;
+  }
+
+  body {
+    background-color: var(--gray-light);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* 導航欄樣式 */
+  .navbar {
+    background-color: white;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary-color);
+  }
+
+  /* 搜尋區域樣式 */
+  .search-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .search-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  select,
+  input[type="text"] {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    flex: 1;
+  }
+
+  /* 文章卡片樣式 */
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  @media (min-width: 1200px) {
+    .articles-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .article-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+  }
+
+  .article-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .article-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .article-content {
+    padding: 15px;
+  }
+
+  .article-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #666;
+  }
+
+  .follow-btn {
+    border: 1px solid #9ca3af;
+    background: transparent;
+    color: #6b7280;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: normal;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    min-width: 52px;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .follow-btn:hover {
+    background-color: #f3f4f6;
+    border-color: #6b7280;
+  }
+
+  .follow-btn.followed {
+    background-color: #6b7280;
+    border-color: #6b7280;
+    color: white;
+  }
+
+  .follow-btn.followed:hover {
+    background-color: #4b5563;
+    border-color: #4b5563;
+  }
+
+  .article-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+  }
+
+  .article-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.5;
+  }
+
+  .article-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+
+  .tag {
+    background-color: var(--gray-light);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--secondary-color);
+  }
+
+  .article-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+  }
+
+  /* 地圖區域樣式 */
+  .map-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .map-search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .map-search input {
+    flex: 1;
+  }
+
+  .map-search button {
+    padding: 10px 20px;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .map-container {
+    height: 400px;
+    margin-bottom: 20px;
+    background-color: #eee;
+  }
+
+  .place-list {
+    margin-top: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .place-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .place-item:hover {
+    background-color: #f5f5f5;
+  }
+
+  .place-content {
+    display: flex;
+    gap: 15px;
+  }
+
+  .place-photo {
+    flex-shrink: 0;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  .place-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .place-info {
+    flex-grow: 1;
+  }
+
+  .place-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #333;
+  }
+
+  .distance {
+    color: #2196f3;
+    margin: 5px 0;
+    font-weight: 500;
+  }
+
+  .address {
+    color: #666;
+    margin: 5px 0;
+    font-size: 14px;
+  }
+
+  .rating-info {
+    margin-top: 10px;
+  }
+
+  .rating {
+    color: #ff9800;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .rating-count {
+    color: #666;
+    font-size: 14px;
+    font-weight: normal;
+  }
+
+  /* 收藏列表選擇彈窗 */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .modal.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .list-select {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .create-list-input {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 8px;
+  }
+
+  .modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .modal-buttons button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .create-list-btn {
+    background-color: var(--accent-color);
+    color: white;
+  }
+
+  .cancel-btn {
+    background-color: #ccc;
+    color: white;
+  }
+
+  .place-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .place-info {
+    flex: 1;
+  }
+
+  .place-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .place-address {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .save-btn {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .save-btn:hover {
+    opacity: 0.9;
+  }
+
+  .rating {
+    color: #f1c40f;
+  }
+
+  .breadcrumb {
+    background-color: transparent;
+    /* 移除背景色 */
+    list-style: none;
+    /* 移除列表樣式 */
+    display: flex;
+    padding: 0;
+    margin: 1rem 0;
+    top: 10px;
+  }
+
+  .breadcrumb-item {
+    font-size: calc(1rem - 4px);
+    /* 比 dropdown-item 小 4px */
+    color: #6c757d !important;
+    /* 預設顯示為灰色，並覆蓋 Bootstrap 預設樣式 */
+    text-decoration: none;
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+  }
+
+  .breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    padding: 0 0.5rem;
+    color: #6c757d;
+  }
+
+  .breadcrumb-item a {
+    color: #6c757d !important;
+    /* 更改 a 標籤的預設顏色為灰色 */
+    text-decoration: none;
+    /* 移除下劃線 */
+  }
+
+  .breadcrumb-item a:hover {
+    color: #ff6600 !important;
+    /* 滑鼠移動到 a 標籤上時顯示為橘色 */
+  }
+
+  .breadcrumb-item.active {
+    color: #ff6600 !important;
+    /* 最後一個元素顯示為橘色，並覆蓋 Bootstrap 預設樣式 */
+  }
+  /* 父容器，使用 flexbox 使搜尋框和地圖並排 */
+  .map-container {
+    display: flex; /* 使用 flexbox 排列子元素 */
+    justify-content: space-between; /* 分佈空間 */
+    align-items: flex-start; /* 垂直對齊到上方 */
+  }
+
+  /* 搜尋框樣式 */
+  .mapSearch-container {
+    width: 35%; /* 控制搜尋框的寬度 */
+    padding: 20px;
+  }
+
+  #mapBtn {
+    right: 0;
+
+    width: 100%;
+  }
+  #mapInput {
+    width: 100%;
+  }
+  /* Google 地圖樣式 */
+  .map {
+    width: 65%; /* 控制地圖的寬度 */
+    height: 600px; /* 設置地圖的高度 */
+    background-color: #f1f1f1; /* 背景顏色可以根據需要調整 */
+  }
+
+  /* 搜尋結果的樣式 */
+  #searchResults {
+    max-height: 300px;
+    overflow-y: auto;
+    width: 60%;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+  }
+  .search-bar {
+    margin: 0; /* 去除外邊距 */
+    padding: 0; /* 去除內邊距 */
+    width: 100%; /* 設置為 100% 寬度，佔滿頁面 */
+    display: flex; /* 使用 flex 排列內部元素 */
+    align-items: center; /* 垂直對齊 */
+    vertical-align: top;
+  }
+
+  /* 搜尋輸入框組 */
+  .search-input-group {
+    position: relative;
+    vertical-align: top;
+    margin: 0; /* 去除外邊距 */
+    padding: 0; /* 去除內邊距 */
+    display: flex; /* 設置為 flex 排列 */
+    width: 350px; /* 設置為滿頁寬度 */
+  }
+
+  /* 搜尋框中的輸入欄位 */
+  .search-input-group input {
+    margin: 0; /* 去除外邊距 */
+    padding: 8px; /* 設置內邊距 */
+    border: 1px solid #ddd; /* 給輸入框加邊框 */
+    border-radius: 4px 0 0 4px; /* 邊框圓角 */
+    width: 60%; /* 設置輸入框寬度為 100% */
+  }
+
+  /* 搜尋按鈕 */
+  .search-input-group button {
+    margin: 0; /* 去除外邊距 */
+    padding: 8px 15px; /* 給按鈕內邊距 */
+    background-color: #ff6600; /* 按鈕背景顏色 */
+    color: white; /* 按鈕文字顏色 */
+    border: none; /* 移除邊框 */
+    border-radius: 0 4px 4px 0; /* 按鈕圓角 */
+    cursor: pointer; /* 游標為手形 */
+  }
+
+  .search-result {
+    width: 60%; /* 設定寬度為頁面除地圖外的 60% */
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+  }
+
+  .search-result strong {
+    font-size: 16px;
+  }
+
+  .btn-group button {
+    padding: 0.5rem 1rem;
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    margin: 0 10px 0 0;
+  }
+
+  .place-item a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+
+  .place-item a:hover {
+    background-color: #0056b3;
+  }
+  .nearRestBtn {
+    padding: 0.5rem 1rem;
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    margin: 0 10px 0 0;
+    display: flex;
+    position: relative;
+    left: 10%;
+  }

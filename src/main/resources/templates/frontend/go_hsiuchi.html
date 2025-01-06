@@ -20,8 +20,8 @@
 
     <!-- Font Awesome -->
     <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
       rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
 
     <!-- Libraries Stylesheet -->
@@ -32,343 +32,502 @@
     <link href="/static/css/yuki_style.css" rel="stylesheet" />
 
     <style>
-     * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
 
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --accent-color: #3498db;
-            --gray-light: #f5f6fa;
-            --border-color: #dcdde1;
-        }
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --accent-color: #3498db;
+        --gray-light: #f5f6fa;
+        --border-color: #dcdde1;
+      }
 
-        body {
-            background-color: var(--gray-light);
-        }
+      body {
+        background-color: var(--gray-light);
+      }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
 
-        /* 導航欄樣式 */
-        .navbar {
-            background-color: white;
-            padding: 15px 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+      /* 導航欄樣式 */
+      .navbar {
+        background-color: white;
+        padding: 15px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
+      .logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--primary-color);
+      }
 
-        /* 搜尋區域樣式 */
-        .search-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+      /* 搜尋區域樣式 */
+      .search-section {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
 
-        .search-container {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+      .search-container {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
 
-        select, input[type="text"] {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            flex: 1;
-        }
+      select,
+      input[type="text"] {
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        flex: 1;
+      }
 
-        /* 文章卡片樣式 */
+      /* 文章卡片樣式 */
+      .articles-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      @media (min-width: 1200px) {
         .articles-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
+          grid-template-columns: repeat(4, 1fr);
         }
-        
-        @media (min-width: 1200px) {
-            .articles-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
+      }
 
-        .article-card {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
+      .article-card {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+      }
 
-        .article-card:hover {
-            transform: translateY(-5px);
-        }
+      .article-card:hover {
+        transform: translateY(-5px);
+      }
 
-        .article-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
+      .article-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
 
-        .article-content {
-            padding: 15px;
-        }
+      .article-content {
+        padding: 15px;
+      }
 
-        .article-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: #666;
-        }
+      .article-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #666;
+      }
 
-        .follow-btn {
-            border: 1px solid #9ca3af;
-            background: transparent;
-            color: #6b7280;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: normal;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            min-width: 52px;
-            display: inline-block;
-            text-align: center;
-        }
+      .follow-btn {
+        border: 1px solid #9ca3af;
+        background: transparent;
+        color: #6b7280;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: normal;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+        min-width: 52px;
+        display: inline-block;
+        text-align: center;
+      }
 
-        .follow-btn:hover {
-            background-color: #f3f4f6;
-            border-color: #6b7280;
-        }
+      .follow-btn:hover {
+        background-color: #f3f4f6;
+        border-color: #6b7280;
+      }
 
-        .follow-btn.followed {
-            background-color: #6b7280;
-            border-color: #6b7280;
-            color: white;
-        }
+      .follow-btn.followed {
+        background-color: #6b7280;
+        border-color: #6b7280;
+        color: white;
+      }
 
-        .follow-btn.followed:hover {
-            background-color: #4b5563;
-            border-color: #4b5563;
-        }
+      .follow-btn.followed:hover {
+        background-color: #4b5563;
+        border-color: #4b5563;
+      }
 
-        .article-title {
-            font-size: 18px;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
+      .article-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: var(--primary-color);
+      }
 
-        .article-description {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
+      .article-description {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 15px;
+        line-height: 1.5;
+      }
 
-        .article-tags {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
+      .article-tags {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 15px;
+      }
 
-        .tag {
-            background-color: var(--gray-light);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            color: var(--secondary-color);
-        }
+      .tag {
+        background-color: var(--gray-light);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        color: var(--secondary-color);
+      }
 
-        .article-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            color: #666;
-        }
+      .article-stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        color: #666;
+      }
 
-        /* 地圖區域樣式 */
-        .map-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+      /* 搜尋區域樣式 */
+      .map-search {
+        padding: 15px;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+        display: flex;
+        gap: 10px;
+      }
 
-        .map-search {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+      #place-search {
+        flex-grow: 1;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
 
-        .map-search input {
-            flex: 1;
-        }
+      #search-place-btn {
+        padding: 8px 16px;
+        background: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
 
-        .map-search button {
-            padding: 10px 20px;
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+      #search-place-btn:hover {
+        background: #1557b0;
+      }
+
+      /* 地圖容器樣式 */
+      .map-container {
+        height: 400px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      /* 地點列表樣式 */
+      .place-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .place-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .place-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .card-content {
+        padding: 15px;
+      }
+
+      .place-photo {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        margin-bottom: 12px;
+        border-radius: 4px;
+      }
+
+      .place-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .place-name {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a73e8;
+        margin-bottom: 8px;
+      }
+
+      .distance {
+        color: #34a853;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      .address {
+        color: #5f6368;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .rating {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #fbbc04;
+        font-weight: 500;
+      }
+
+      .rating-count {
+        color: #5f6368;
+        font-size: 14px;
+        font-weight: normal;
+      }
+
+      /* RWD 調整 */
+      @media (max-width: 768px) {
+        .place-list {
+          grid-template-columns: 1fr;
         }
 
         .map-container {
-            height: 400px;
-            margin-bottom: 20px;
-            background-color: #eee;
+          height: 300px;
         }
+      }
 
-        .place-list {
-            max-height: 300px;
-            overflow-y: auto;
-            display: none;
-        }
+      /* 收藏列表選擇彈窗 */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
 
-        .place-list.active {
-            display: block;
-        }
+      .modal.active {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-        /* 收藏列表選擇彈窗 */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
+      .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 400px;
+      }
 
-        .modal.active {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
 
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 400px;
-        }
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+      }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+      .list-select {
+        width: 100%;
+        margin-bottom: 15px;
+      }
 
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-        }
+      .create-list-input {
+        width: 100%;
+        margin-bottom: 15px;
+        padding: 8px;
+      }
 
-        .list-select {
-            width: 100%;
-            margin-bottom: 15px;
-        }
+      .modal-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
 
-        .create-list-input {
-            width: 100%;
-            margin-bottom: 15px;
-            padding: 8px;
-        }
+      .modal-buttons button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
 
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
+      .create-list-btn {
+        background-color: var(--accent-color);
+        color: white;
+      }
 
-        .modal-buttons button {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+      .cancel-btn {
+        background-color: #ccc;
+        color: white;
+      }
 
-        .create-list-btn {
-            background-color: var(--accent-color);
-            color: white;
-        }
+      .place-item {
+        background: white;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
 
-        .cancel-btn {
-            background-color: #ccc;
-            color: white;
-        }
+      .place-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
 
-        .place-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid var(--border-color);
-        }
+      .place-content {
+        position: relative;
+      }
 
-        .place-info {
-            flex: 1;
-        }
+      .place-photo {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+      }
 
-        .place-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+      .place-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
 
-        .place-address {
-            font-size: 14px;
-            color: #666;
-        }
+      .save-btn {
+        position: absolute;
+        right: 12px;
+        bottom: 12px;
+        background: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 16px;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: background-color 0.2s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
 
-        .save-btn {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+      .save-btn:hover {
+        background: #1557b0;
+      }
 
-        .save-btn:hover {
-            opacity: 0.9;
-        }
+      .save-btn i {
+        font-size: 14px;
+      }
 
-        .rating {
-            color: #f1c40f;
-        }
+      .place-info {
+        padding: 16px;
+      }
+
+      .place-name {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a73e8;
+        margin-bottom: 8px;
+      }
+
+      .distance {
+        color: #34a853;
+        font-weight: 500;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .place-address {
+        color: #5f6368;
+        font-size: 14px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .place-address i {
+        color: #ea4335;
+        margin-top: 3px;
+      }
+
+      .rating-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .stars {
+        color: #fbbc04;
+        letter-spacing: 2px;
+      }
+
+      .rating-score {
+        font-weight: 600;
+        color: #fbbc04;
+      }
+
+      .rating-count {
+        color: #5f6368;
+        font-size: 14px;
+      }
 
       .breadcrumb {
         background-color: transparent;
@@ -594,49 +753,54 @@
 
     <div class="container">
       <section class="search-section">
-          <div class="search-container">
-              <select id="activity-type">
-                  <option value="">活動類型</option>
-                  <option value="culture">文化景點</option>
-                  <option value="nature">自然景觀</option>
-                  <option value="food">美食</option>
-              </select>
-              <select id="region">
-                  <option value="">地區</option>
-                  <option value="taipei">台北</option>
-                  <option value="tokyo">東京</option>
-                  <option value="osaka">大阪</option>
-              </select>
-              <input type="text" placeholder="搜尋文章..." id="search-input">
-          </div>
+        <div class="search-container">
+          <select id="activity-type">
+            <option value="">活動類型</option>
+            <option value="culture">文化景點</option>
+            <option value="nature">自然景觀</option>
+            <option value="food">美食</option>
+          </select>
+          <select id="region">
+            <option value="">地區</option>
+            <option value="taipei">台北</option>
+            <option value="tokyo">東京</option>
+            <option value="osaka">大阪</option>
+          </select>
+          <input type="text" placeholder="搜尋文章..." id="search-input" />
+        </div>
       </section>
 
       <div class="articles-grid">
-          <!-- 文章卡片範例 -->
-          <article class="article-card">
-              <img src="/api/placeholder/400/320" alt="文章封面" class="article-image">
-              <div class="article-content">
-                  <div class="article-meta">
-                      <span class="author">作者：旅行家</span>
-                      <button class="follow-btn">追蹤</button>
-                  </div>
-                  <h2 class="article-title">日本結緣神社10選</h2>
-                  <p class="article-description">除了東京大神宮，還有這些絕美景點！</p>
-                  <div class="article-tags">
-                      <span class="tag">文化景點</span>
-                      <span class="tag">東京</span>
-                      <span class="tag">神社</span>
-                  </div>
-                  <div class="article-stats">
-                      <span>👁️ 100</span>
-                      <span>❤️ 50</span>
-                      <span class="rating">★★★★★ 5.0</span>
-                  </div>
-              </div>
-          </article>
-          <!-- 更多文章卡片 -->
+        <!-- 文章卡片範例 -->
+        <article class="article-card">
+          <img
+            src="/api/placeholder/400/320"
+            alt="文章封面"
+            class="article-image"
+          />
+          <div class="article-content">
+            <div class="article-meta">
+              <span class="author">作者：旅行家</span>
+              <button class="follow-btn">追蹤</button>
+            </div>
+            <h2 class="article-title">日本結緣神社10選</h2>
+            <p class="article-description">
+              除了東京大神宮，還有這些絕美景點！
+            </p>
+            <div class="article-tags">
+              <span class="tag">文化景點</span>
+              <span class="tag">東京</span>
+              <span class="tag">神社</span>
+            </div>
+            <div class="article-stats">
+              <span>👁️ 100</span>
+              <span>❤️ 50</span>
+              <span class="rating">★★★★★ 5.0</span>
+            </div>
+          </div>
+        </article>
+        <!-- 更多文章卡片 -->
       </div>
-
 
       <!--頁碼-->
       <div class="pagination">
@@ -650,6 +814,7 @@
         <span class="label">頁</span>
       </div>
 
+      <!--Google地圖-->
       <section class="map-section">
         <div class="map-search">
           <input type="text" id="place-search" placeholder="搜尋景點..." />
@@ -659,7 +824,7 @@
           <!-- Google Maps will be loaded here -->
         </div>
         <div class="place-list">
-          <!-- 景點列表將通過 JavaScript 動態生成 -->
+          <!-- 搜尋結果將在這裡動態生成 -->
         </div>
       </section>
 
@@ -769,13 +934,12 @@
       <div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
     </footer>
 
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script
       type="module"
       src="https://unpkg.com/@googlemaps/extended-component-library@0.6"
     ></script>
-    <script src="/static/js/map.js"></script>
+    <script src="/static/js/maphsiuchi.js"></script>
 
     <!-- 導航欄nav的href載入器 -->
     <script>
@@ -832,276 +996,308 @@
     </script>
 
     <script>
-        $(document).ready(function() {
-            // 模擬文章數據
-            const articles = [
-                {
-                    id: 1,
-                    title: '日本結緣神社10選',
-                    author: '旅行家',
-                    description: '除了東京大神宮，還有這些絕美景點！',
-                    image: '/api/placeholder/400/320',
-                    views: 100,
-                    likes: 50,
-                    rating: 5.0,
-                    tags: ['文化景點', '東京', '神社']
-                },
-                {
-                    id: 2,
-                    title: '大阪美食地圖',
-                    author: '美食獵人',
-                    description: '從道頓堀到黑門市場，帶你吃遍大阪精選美食！',
-                    image: '/api/placeholder/400/320',
-                    views: 850,
-                    likes: 320,
-                    rating: 4.8,
-                    tags: ['美食', '大阪', '市集']
-                },
-                {
-                    id: 3,
-                    title: '京都賞楓秘境',
-                    author: '攝影師小王',
-                    description: '避開人潮，獨享京都最美紅葉時節',
-                    image: '/api/placeholder/400/320',
-                    views: 1200,
-                    likes: 460,
-                    rating: 4.9,
-                    tags: ['自然景觀', '京都', '紅葉']
-                },
-                {
-                    id: 4,
-                    title: '福岡溫泉之旅',
-                    author: '小悠遊',
-                    description: '精選5家福岡近郊絕美溫泉旅館',
-                    image: '/api/placeholder/400/320',
-                    views: 680,
-                    likes: 230,
-                    rating: 4.7,
-                    tags: ['溫泉', '福岡', '住宿']
-                },
-                {
-                    id: 5,
-                    title: '東京藝術巡禮',
-                    author: '藝術愛好者',
-                    description: '打卡網美必訪的東京當代藝術館',
-                    image: '/api/placeholder/400/320',
-                    views: 920,
-                    likes: 410,
-                    rating: 4.6,
-                    tags: ['文化景點', '東京', '藝術館']
-                },
-                {
-                    id: 6,
-                    title: '沖繩離島探索',
-                    author: '島嶼漫遊者',
-                    description: '遠離本島，探訪人少景美的沖繩秘境',
-                    image: '/api/placeholder/400/320',
-                    views: 750,
-                    likes: 280,
-                    rating: 4.9,
-                    tags: ['自然景觀', '沖繩', '海灘']
-                },
-                {
-                    id: 7,
-                    title: '奈良一日散策',
-                    author: '慢遊達人',
-                    description: '與小鹿共遊，體驗奈良的古都風情',
-                    image: '/api/placeholder/400/320',
-                    views: 560,
-                    likes: 190,
-                    rating: 4.5,
-                    tags: ['文化景點', '奈良', '古蹟']
-                },
-                {
-                    id: 8,
-                    title: '北海道滑雪指南',
-                    author: '雪地悍將',
-                    description: '新手到高手都適用的滑雪場全攻略',
-                    image: '/api/placeholder/400/320',
-                    views: 1500,
-                    likes: 680,
-                    rating: 4.8,
-                    tags: ['運動', '北海道', '滑雪']
-                },
-                {
-                    id: 9,
-                    title: '神戶港夜景攻略',
-                    author: '夜景獵人',
-                    description: '摩賽克廣場到美利堅公園的最佳觀景點',
-                    image: '/api/placeholder/400/320',
-                    views: 830,
-                    likes: 360,
-                    rating: 4.7,
-                    tags: ['夜景', '神戶', '港口']
-                },
-                {
-                    id: 10,
-                    title: '名古屋老街探訪',
-                    author: '懷舊控',
-                    description: '走訪昭和時期的復古商店街',
-                    image: '/api/placeholder/400/320',
-                    views: 420,
-                    likes: 180,
-                    rating: 4.6,
-                    tags: ['文化景點', '名古屋', '老街']
-                },
-                {
-                    id: 11,
-                    title: '箱根溫泉酒店精選',
-                    author: '奢華體驗家',
-                    description: '最美的富士山view溫泉房推薦',
-                    image: '/api/placeholder/400/320',
-                    views: 2100,
-                    likes: 890,
-                    rating: 4.9,
-                    tags: ['住宿', '箱根', '溫泉']
-                },
-                {
-                    id: 12,
-                    title: '金澤茶屋街漫步',
-                    author: '文青散策',
-                    description: '體驗百年老茶屋的優雅時光',
-                    image: '/api/placeholder/400/320',
-                    views: 640,
-                    likes: 270,
-                    rating: 4.7,
-                    tags: ['文化景點', '金澤', '茶屋']
-                }
-            ];
+      $(document).ready(function () {
+        // 模擬文章數據
+        const articles = [
+          {
+            id: 1,
+            title: "日本結緣神社10選",
+            author: "旅行家",
+            description: "除了東京大神宮，還有這些絕美景點！",
+            image: "/api/placeholder/400/320",
+            views: 100,
+            likes: 50,
+            rating: 5.0,
+            tags: ["文化景點", "東京", "神社"],
+          },
+          {
+            id: 2,
+            title: "大阪美食地圖",
+            author: "美食獵人",
+            description: "從道頓堀到黑門市場，帶你吃遍大阪精選美食！",
+            image: "/api/placeholder/400/320",
+            views: 850,
+            likes: 320,
+            rating: 4.8,
+            tags: ["美食", "大阪", "市集"],
+          },
+          {
+            id: 3,
+            title: "京都賞楓秘境",
+            author: "攝影師小王",
+            description: "避開人潮，獨享京都最美紅葉時節",
+            image: "/api/placeholder/400/320",
+            views: 1200,
+            likes: 460,
+            rating: 4.9,
+            tags: ["自然景觀", "京都", "紅葉"],
+          },
+          {
+            id: 4,
+            title: "福岡溫泉之旅",
+            author: "小悠遊",
+            description: "精選5家福岡近郊絕美溫泉旅館",
+            image: "/api/placeholder/400/320",
+            views: 680,
+            likes: 230,
+            rating: 4.7,
+            tags: ["溫泉", "福岡", "住宿"],
+          },
+          {
+            id: 5,
+            title: "東京藝術巡禮",
+            author: "藝術愛好者",
+            description: "打卡網美必訪的東京當代藝術館",
+            image: "/api/placeholder/400/320",
+            views: 920,
+            likes: 410,
+            rating: 4.6,
+            tags: ["文化景點", "東京", "藝術館"],
+          },
+          {
+            id: 6,
+            title: "沖繩離島探索",
+            author: "島嶼漫遊者",
+            description: "遠離本島，探訪人少景美的沖繩秘境",
+            image: "/api/placeholder/400/320",
+            views: 750,
+            likes: 280,
+            rating: 4.9,
+            tags: ["自然景觀", "沖繩", "海灘"],
+          },
+          {
+            id: 7,
+            title: "奈良一日散策",
+            author: "慢遊達人",
+            description: "與小鹿共遊，體驗奈良的古都風情",
+            image: "/api/placeholder/400/320",
+            views: 560,
+            likes: 190,
+            rating: 4.5,
+            tags: ["文化景點", "奈良", "古蹟"],
+          },
+          {
+            id: 8,
+            title: "北海道滑雪指南",
+            author: "雪地悍將",
+            description: "新手到高手都適用的滑雪場全攻略",
+            image: "/api/placeholder/400/320",
+            views: 1500,
+            likes: 680,
+            rating: 4.8,
+            tags: ["運動", "北海道", "滑雪"],
+          },
+          {
+            id: 9,
+            title: "神戶港夜景攻略",
+            author: "夜景獵人",
+            description: "摩賽克廣場到美利堅公園的最佳觀景點",
+            image: "/api/placeholder/400/320",
+            views: 830,
+            likes: 360,
+            rating: 4.7,
+            tags: ["夜景", "神戶", "港口"],
+          },
+          {
+            id: 10,
+            title: "名古屋老街探訪",
+            author: "懷舊控",
+            description: "走訪昭和時期的復古商店街",
+            image: "/api/placeholder/400/320",
+            views: 420,
+            likes: 180,
+            rating: 4.6,
+            tags: ["文化景點", "名古屋", "老街"],
+          },
+          {
+            id: 11,
+            title: "箱根溫泉酒店精選",
+            author: "奢華體驗家",
+            description: "最美的富士山view溫泉房推薦",
+            image: "/api/placeholder/400/320",
+            views: 2100,
+            likes: 890,
+            rating: 4.9,
+            tags: ["住宿", "箱根", "溫泉"],
+          },
+          {
+            id: 12,
+            title: "金澤茶屋街漫步",
+            author: "文青散策",
+            description: "體驗百年老茶屋的優雅時光",
+            image: "/api/placeholder/400/320",
+            views: 640,
+            likes: 270,
+            rating: 4.7,
+            tags: ["文化景點", "金澤", "茶屋"],
+          },
+        ];
 
-            // 渲染文章卡片
-            function renderArticles(articles) {
-                $('.articles-grid').empty();
-                articles.forEach(article => {
-                    const articleHTML = `
+        // 渲染文章卡片
+        function renderArticles(articles) {
+          $(".articles-grid").empty();
+          articles.forEach((article) => {
+            const articleHTML = `
                         <article class="article-card">
-                            <img src="${article.image}" alt="${article.title}" class="article-image">
+                            <img src="${article.image}" alt="${
+              article.title
+            }" class="article-image">
                             <div class="article-content">
                                 <div class="article-meta">
-                                    <span class="author">作者：${article.author}</span>
+                                    <span class="author">作者：${
+                                      article.author
+                                    }</span>
                                     <button class="follow-btn">追蹤</button>
                                 </div>
                                 <h2 class="article-title">${article.title}</h2>
-                                <p class="article-description">${article.description}</p>
+                                <p class="article-description">${
+                                  article.description
+                                }</p>
                                 <div class="article-tags">
-                                    ${article.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                                    ${article.tags
+                                      .map(
+                                        (tag) =>
+                                          `<span class="tag">${tag}</span>`
+                                      )
+                                      .join("")}
                                 </div>
                                 <div class="article-stats">
                                     <span>👁️ ${article.views}</span>
                                     <span>❤️ ${article.likes}</span>
-                                    <span class="rating">★★★★★ ${article.rating}</span>
+                                    <span class="rating">★★★★★ ${
+                                      article.rating
+                                    }</span>
                                 </div>
                             </div>
                         </article>
                     `;
-                    $('.articles-grid').append(articleHTML);
-                });
-            }
+            $(".articles-grid").append(articleHTML);
+          });
+        }
 
-            // 初始渲染
-            renderArticles(articles);
+        // 初始渲染
+        renderArticles(articles);
 
-            // 搜尋功能
-            $('#search-input, #activity-type, #region').on('input change', function() {
-                const searchText = $('#search-input').val().toLowerCase();
-                const activityType = $('#activity-type').val();
-                const region = $('#region').val();
+        // 搜尋功能
+        $("#search-input, #activity-type, #region").on(
+          "input change",
+          function () {
+            const searchText = $("#search-input").val().toLowerCase();
+            const activityType = $("#activity-type").val();
+            const region = $("#region").val();
 
-                const filteredArticles = articles.filter(article => {
-                    const matchesSearch = article.title.toLowerCase().includes(searchText);
-                    const matchesActivity = !activityType || article.tags.includes(activityType);
-                    const matchesRegion = !region || article.tags.includes(region);
-                    return matchesSearch && matchesActivity && matchesRegion;
-                });
-
-                renderArticles(filteredArticles);
+            const filteredArticles = articles.filter((article) => {
+              const matchesSearch = article.title
+                .toLowerCase()
+                .includes(searchText);
+              const matchesActivity =
+                !activityType || article.tags.includes(activityType);
+              const matchesRegion = !region || article.tags.includes(region);
+              return matchesSearch && matchesActivity && matchesRegion;
             });
 
-            // 追蹤按鈕事件
-            $(document).on('click', '.follow-btn', function() {
-                const $btn = $(this);
-                const isFollowed = $btn.hasClass('followed');
-                
-                if (isFollowed) {
-                    $btn.removeClass('followed')
-                        .text('追蹤');
-                } else {
-                    $btn.addClass('followed')
-                        .text('已追蹤');
-                }
-            });
+            renderArticles(filteredArticles);
+          }
+        );
 
-            // 景點搜尋功能
-            let currentPlace = null;
-            
-            $('#search-place-btn').click(function() {
-                const searchQuery = $('#place-search').val();
-                if (searchQuery) {
-                    // 模擬搜尋結果
-                    const mockResults = [
-                        { name: '淺草寺', address: '東京都台東區淺草2丁目3-1', rating: 4.5 },
-                        { name: '晴空塔', address: '東京都墨田區押上1丁目1-2', rating: 4.8 },
-                        { name: '明治神宮', address: '東京都渋谷区代々木神園町1-1', rating: 4.7 }
-                    ];
-                    
-                    renderPlaceList(mockResults);
-                }
-            });
+        // 追蹤按鈕事件
+        $(document).on("click", ".follow-btn", function () {
+          const $btn = $(this);
+          const isFollowed = $btn.hasClass("followed");
 
-            // 渲染景點列表
-            function renderPlaceList(places) {
-                const placeList = $('.place-list');
-                placeList.empty();
-                
-                places.forEach(place => {
-                    const placeHTML = `
+          if (isFollowed) {
+            $btn.removeClass("followed").text("追蹤");
+          } else {
+            $btn.addClass("followed").text("已追蹤");
+          }
+        });
+
+        // 景點搜尋功能
+        let currentPlace = null;
+
+        $("#search-place-btn").click(function () {
+          const searchQuery = $("#place-search").val();
+          if (searchQuery) {
+            // 模擬搜尋結果
+            const mockResults = [
+              {
+                name: "淺草寺",
+                address: "東京都台東區淺草2丁目3-1",
+                rating: 4.5,
+              },
+              {
+                name: "晴空塔",
+                address: "東京都墨田區押上1丁目1-2",
+                rating: 4.8,
+              },
+              {
+                name: "明治神宮",
+                address: "東京都渋谷区代々木神園町1-1",
+                rating: 4.7,
+              },
+            ];
+
+            renderPlaceList(mockResults);
+          }
+        });
+
+        // 渲染景點列表
+        function renderPlaceList(places) {
+          const placeList = $(".place-list");
+          placeList.empty();
+
+          places.forEach((place) => {
+            const placeHTML = `
                         <div class="place-item">
                             <div class="place-info">
                                 <div class="place-name">${place.name}</div>
-                                <div class="place-address">${place.address}</div>
+                                <div class="place-address">${
+                                  place.address
+                                }</div>
                                 <div class="rating">★★★★☆ ${place.rating}</div>
                             </div>
-                            <button class="save-btn" data-place='${JSON.stringify(place)}'>收藏</button>
+                            <button class="save-btn" data-place='${JSON.stringify(
+                              place
+                            )}'>收藏</button>
                         </div>
                     `;
-                    placeList.append(placeHTML);
-                });
-                
-                placeList.addClass('active');
-            }
+            placeList.append(placeHTML);
+          });
 
-            // 收藏按鈕事件
-            $(document).on('click', '.save-btn', function() {
-                currentPlace = $(this).data('place');
-                $('#save-modal').addClass('active');
-            });
+          placeList.addClass("active");
+        }
 
-            // 關閉彈窗
-            $('.modal-close, .cancel-btn').click(function() {
-                $('#save-modal').removeClass('active');
-                currentPlace = null;
-            });
-
-            // 確認收藏
-            $('.create-list-btn').click(function() {
-                if (!currentPlace) return;
-                
-                const selectedList = $('.list-select').val();
-                const newListName = $('.create-list-input').val();
-                
-                if (selectedList || newListName) {
-                    const listName = newListName || selectedList;
-                    console.log(`已將 ${currentPlace.name} 收藏到 ${listName}`);
-                    
-                    // 這裡可以添加實際的收藏邏輯
-                    
-                    $('#save-modal').removeClass('active');
-                    currentPlace = null;
-                    $('.create-list-input').val('');
-                }
-            });
+        // 收藏按鈕事件
+        $(document).on("click", ".save-btn", function () {
+          currentPlace = $(this).data("place");
+          $("#save-modal").addClass("active");
         });
+
+        // 關閉彈窗
+        $(".modal-close, .cancel-btn").click(function () {
+          $("#save-modal").removeClass("active");
+          currentPlace = null;
+        });
+
+        // 確認收藏
+        $(".create-list-btn").click(function () {
+          if (!currentPlace) return;
+
+          const selectedList = $(".list-select").val();
+          const newListName = $(".create-list-input").val();
+
+          if (selectedList || newListName) {
+            const listName = newListName || selectedList;
+            console.log(`已將 ${currentPlace.name} 收藏到 ${listName}`);
+
+            // 這裡可以添加實際的收藏邏輯
+
+            $("#save-modal").removeClass("active");
+            currentPlace = null;
+            $(".create-list-input").val("");
+          }
+        });
+      });
     </script>
   </body>
-  
 </html>
