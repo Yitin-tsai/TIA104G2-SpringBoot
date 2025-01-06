@@ -134,4 +134,9 @@ public class PageController {
         return "/frontend/admin_profile";
     }
     
+    @GetMapping("/adminUpdate")
+    public String adminUpdate(Model model) {
+    	return "/frontend/admin_update";
+    }
+    
 }

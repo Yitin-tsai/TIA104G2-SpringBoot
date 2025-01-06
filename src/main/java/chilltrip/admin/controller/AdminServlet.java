@@ -47,6 +47,14 @@ public class AdminServlet {
 		return adminVO;
 
 	}
+	@GetMapping("getOneSession")
+	public AdminVO getOneAdminBySession(HttpSession session) {	
+		Integer adminid = (Integer) session.getAttribute("adminId");
+		AdminVO adminVO = adminSvc.getOneAdmin(adminid);
+		
+		return adminVO;
+		
+	}
 	
 	@GetMapping("profile")
 	public ResponseEntity<Map<String, Object>> getOneAdmin(HttpSession session) {	
@@ -65,11 +73,11 @@ public class AdminServlet {
 
 	}
 	@PostMapping("update")
-	public String update(@RequestBody AdminVO adminvo) {
+	public  ResponseEntity<Map<String, String>> update(@RequestBody AdminVO adminvo , HttpSession session) {
 		Map<String, String> errorMsgs = new HashMap<String, String>();
 
 		// 輸入格式的錯誤處理
-		Integer adminid = adminvo.getAdminid();
+		Integer adminid = (Integer) session.getAttribute("adminId");
 		AdminVO check = adminSvc.getOneAdmin(adminid);
 		if (check == null) {
 			errorMsgs.put("adminid", "查無此管理員請再確認編號");
@@ -78,8 +86,6 @@ public class AdminServlet {
 		String adminacReg = "^[(a-zA-Z0-9_)]{5,20}$";
 		if (adminaccount == null || adminaccount.trim().length() == 0) {
 			errorMsgs.put("adminaccount", "管理員帳號請勿空白");
-		} else if (adminSvc.checkAccount(adminaccount)) {
-			errorMsgs.put("adminaccount", "管理員帳號已經存在請更換帳號");
 		} else if (!adminaccount.trim().matches(adminacReg)) {
 			errorMsgs.put("adminaccount", "管理員帳號只能是英文字母數字和_，長度需在5~20之間");
 		}
@@ -95,9 +101,9 @@ public class AdminServlet {
 		String email = adminvo.getEmail();
 		String emailReg = "^\\w{1,63}@[a-zA-Z0-9]{2,63}\\.[a-zA-Z]{2,63}(\\.[a-zA-Z]{5,50})?$";
 		if (email == null || email.trim().length() == 0) {
-			errorMsgs.put("adminemail", "信箱請勿空白");
+			errorMsgs.put("email", "信箱請勿空白");
 		} else if (!email.trim().matches(emailReg)) {
-			errorMsgs.put("adminemail", "管理員信箱格式不符");
+			errorMsgs.put("email", "管理員信箱格式不符");
 		}
 
 		String adminname = adminvo.getAdminname();
@@ -114,9 +120,7 @@ public class AdminServlet {
 			errorMsgs.put("phone", "電話號碼請勿空白");
 		} else if (!phone.trim().matches(phoneReg)) {
 			errorMsgs.put("phone", "電話號碼只能是數字, 且長度必需是9到13之間");
-		} else if (adminSvc.checkPhone(phone)) {
-			errorMsgs.put("phone", "電話號碼已被註冊, 請再確認");
-		}
+		} 
 
 		Integer status = null;
 		status = adminvo.getStatus();
@@ -145,15 +149,18 @@ public class AdminServlet {
 		adminVO.setAdminid(adminid);
 
 		if (!errorMsgs.isEmpty()) {
-			String errorMsGson = gson.toJson(errorMsgs);
-			return errorMsGson; // 程式中斷
+			return ResponseEntity.badRequest().body(errorMsgs); // 程式中斷
 		}
 		// 開始修改資料
-		AdminService adminSvc = new AdminService();
 		adminVO = adminSvc.updateAdmin(adminid, email, adminaccount, adminpassword, adminname, phone, status,
 				adminnickname);
 		// 修改完成準備轉交
-		return "/admin/listOneAdmin.jsp";
+		// 新增完成準備轉交
+				Map<String, String> result = new HashMap<>();
+				result.put("message", "更新成功");
+				result.put("message2", ""); // 這個才是前端要抓的
+
+				return ResponseEntity.ok(result);
 
 	}
 

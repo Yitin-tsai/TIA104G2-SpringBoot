@@ -26,84 +26,128 @@
 
 <style>
 .profile-container {
-	max-width: 800px;
-	margin: 2rem auto;
-	padding: 2rem;
-	background: white;
-	border-radius: 8px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 1200px; /* 增加寬度以容納並排區塊 */
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 2rem; /* 增加區塊之間的間距 */
+    align-items: center; /* 垂直居中 */
 }
 
 .profile-header {
-	display: flex;
-	align-items: center;
-	gap: 2rem;
-	margin-bottom: 2rem;
-	padding-bottom: 1rem;
-	border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
 }
 
 .photo {
-	width: 150px;
-	height: 150px;
-	border-radius: 50%;
-	object-fit: cover;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .profile-stats {
-	display: flex;
-	gap: 2rem;
-	margin: 1rem 0;
+    display: flex;
+    gap: 2rem;
+    margin: 1rem 0;
 }
 
 .stat-item {
-	text-align: center;
+    text-align: center;
 }
 
 .profile-info {
-	margin-top: 2rem;
+    margin-top: 2rem;
+    flex: 1; /* 確保這一塊佔據剩餘的空間 */
 }
 
 .info-row {
-	display: flex;
-	margin-bottom: 1rem;
-	padding: 0.5rem 0;
-	border-bottom: 1px solid #f5f5f5;
+    display: flex;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f5f5f5;
 }
 
 .info-label {
-	width: 120px;
-	font-weight: 600;
-	color: #666;
+    width: 120px;
+    font-weight: 600;
+    color: #666;
 }
 
 .info-value {
-	flex: 1;
+    flex: 1;
 }
 
 .profile-actions {
-	display: flex;
-	gap: 1rem;
-	margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
 }
 
 .btn-edit {
-	background: #FF6600;
-	color: white;
-	border: none;
-	padding: 0.5rem 1.5rem;
-	border-radius: 4px;
-	cursor: pointer;
+    background: #FF6600;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .btn-logout {
-	background: #dc3545;
-	color: white;
-	border: none;
-	padding: 0.5rem 1.5rem;
-	border-radius: 4px;
-	cursor: pointer;
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
 }
+
+/* 新增管理員專區的樣式 */
+.profile-links {
+    flex-basis: 300px; /* 設定管理員專區區域的最小寬度 */
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 垂直置中內容 */
+    align-items: flex-start; /* 左對齊文字 */
+    height: 100%; /* 確保內容有足夠的高度 */
+}
+
+.profile-links h4 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.profile-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.profile-links ul li {
+    margin-bottom: 1rem;
+}
+
+.profile-links ul li a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.profile-links ul li a:hover {
+    text-decoration: underline;
+}
+
+
 </style>
 
 </head>
@@ -155,40 +199,53 @@
     </div>
 
 	<div class="profile-container">
-		<div class="profile-header">
-			<img id="photo" th:src="@{/img/logo_black.png}" class="photo">
-		</div>
-
+		<!-- 個人資料區 -->
 		<div class="profile-info">
-			<div class="info-row">
-				<div class="info-label">帳號</div>
-				<div class="info-value" id="account"></div>
+			<div class="profile-header">
+				<img id="photo" th:src="@{/img/logo_black.png}" class="photo">
 			</div>
-			<div class="info-row">
-				<div class="info-label">姓名</div>
-				<div class="info-value" id="name"></div>
+
+			<div class="profile-info">
+				<div class="info-row">
+					<div class="info-label">帳號</div>
+					<div class="info-value" id="account"></div>
+				</div>
+				<div class="info-row">
+					<div class="info-label">姓名</div>
+					<div class="info-value" id="name"></div>
+				</div>
+				<div class="info-row">
+					<div class="info-label">暱稱</div>
+					<div class="info-value" id="nickName"></div>
+				</div>
+				<div class="info-row">
+					<div class="info-label">電子郵件</div>
+					<div class="info-value" id="email"></div>
+				</div>
+				<div class="info-row">
+					<div class="info-label">密碼</div>
+					<div class="info-value" id="password"></div>
+				</div>
+				<div class="info-row">
+					<div class="info-label">手機號碼</div>
+					<div class="info-value" id="phone"></div>
+				</div>
 			</div>
-			<div class="info-row">
-				<div class="info-label">暱稱</div>
-				<div class="info-value" id="nickName"></div>
-			</div>
-			<div class="info-row">
-				<div class="info-label">電子郵件</div>
-				<div class="info-value" id="email"></div>
-			</div>
-			<div class="info-row">
-				<div class="info-label">密碼</div>
-				<div class="info-value" id="password"></div>
-			</div>
-			<div class="info-row">
-				<div class="info-label">手機號碼</div>
-				<div class="info-value" id="phone"></div>
+
+			<div class="profile-actions">
+				<a class="btn-edit" id="editButton" href="/TIA104G2-SpringBoot/adminUpdate">編輯資料</a>
+				<button class="btn-logout" id="logoutButton">登出</button>
 			</div>
 		</div>
 
-		<div class="profile-actions">
-			<button class="btn-edit" id="editButton">編輯資料</button>
-			<button class="btn-logout" id="logoutButton">登出</button>
+		<!-- 管理員專區 -->
+		<div class="profile-links">
+			<h4>管理員專區</h4>
+			<ul>
+				<li><a href="#">查看管理員清單</a></li>
+				<li><a href="#">查看公告清單</a></li>
+				<li><a href="#">我的公告清單</a></li>
+			</ul>
 		</div>
 	</div>
 
@@ -226,14 +283,9 @@
 					</div>
 				</a>
 			</div>
-
-			<!-- 加載 Font Awesome 圖標庫 -->
-			<link
-				href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-				rel="stylesheet" />
 		</div>
-		<div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
 	</footer>
+</body>
 
 	<!------ 共用JS ------>
     <!-- Back to Top -->
