@@ -57,6 +57,7 @@ public class AnnounceVO {
 	@Column(name = "cover_photo")
 	@Lob
 	private byte[] coverphoto;
+	
 
 	@Transient
 	private String coverphotoBase64;
@@ -133,6 +134,8 @@ public class AnnounceVO {
 			this.coverphoto = photo;
 		}
 	}
+	
+	
 
 	public String getCoverphotoBase64() {
 		return coverphotoBase64;
@@ -147,7 +150,9 @@ public class AnnounceVO {
 	public String toString() {
 		return "AnnounceVO [announceid=" + announceid + ", adminvo=" + adminvo + ", title=" + title + ", content="
 				+ content + ", starttime=" + starttime + ", endtime=" + endtime + ", coverphoto="
-				+ Arrays.toString(coverphoto) + "]";
+				+ Arrays.toString(coverphoto) + ", coverphotoBase64=" + coverphotoBase64 + "]";
 	}
+
+	
 
 }
