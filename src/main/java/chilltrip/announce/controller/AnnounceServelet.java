@@ -1,10 +1,12 @@
 package chilltrip.announce.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import chilltrip.admin.model.AdminService;
@@ -59,7 +62,15 @@ public class AnnounceServelet {
 
 		return announceList;
 	}
+	
+	@GetMapping("getByAdminId")
+	private List<AnnounceVO> getByAdmin(HttpSession session) throws IOException {
+		Integer adminid = (Integer) session.getAttribute("adminId");
+		List<AnnounceVO> announceList = announceSvc.getAnnounceByAdminid(adminid);
 
+		return announceList;
+	}
+	
 	@PostMapping("delete/{id}")
 	private String deleteAnnounce(@PathVariable("id") Integer announceid) throws IOException {
 
@@ -88,11 +99,27 @@ public class AnnounceServelet {
 	}
 
 	@GetMapping("CompositeQuery")
-	private List<AnnounceVO> getCompositeQuery(@RequestBody Map<String, String> map) {
+	private List<AnnounceVO> getCompositeQuery(@RequestParam Map<String, String> map) {
 		if (map != null) {
-			return announceSvc.getAnnounceByCompositeQuery(map);
+			List<AnnounceVO> announces =  announceSvc.getAnnounceByCompositeQuery(map);
+			 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			    for (AnnounceVO announce : announces) {
+			        // 格式化时间字段
+			        announce.setStarttimeStr(sdf.format(announce.getStarttime()));
+			        announce.setEndtimeStr(sdf.format(announce.getEndtime()));
+			    }
+			    
+			    return announces;
 		} else {
-			return announceSvc.getAllAnnounce();
+			List<AnnounceVO> announces = announceSvc.getAllAnnounce();
+			 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			    for (AnnounceVO announce : announces) {
+			        // 格式化时间字段
+			        announce.setStarttimeStr(sdf.format(announce.getStarttime()));
+			        announce.setEndtimeStr(sdf.format(announce.getEndtime()));
+			    }
+			    
+			    return announces;
 		}
 
 	}

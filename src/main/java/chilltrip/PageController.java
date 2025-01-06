@@ -138,5 +138,17 @@ public class PageController {
     public String adminUpdate(Model model) {
     	return "/frontend/admin_update";
     }
+    @GetMapping("/adminList")
+    public String adminLiset(Model model) {
+    	return "/frontend/admin_list";
+    }
+    @GetMapping("/announceList")
+    public String announceList(Model model) {
+    	return "/frontend/announce_list";
+    }
+    @GetMapping("/announceListById")
+    public String announceListById(Model model) {
+    	return "/frontend/announce_listById";
+    }
     
 }
