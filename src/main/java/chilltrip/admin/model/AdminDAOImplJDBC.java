@@ -25,7 +25,8 @@ public class AdminDAOImplJDBC implements AdminDAO {
 			"DELETE FROM administrator where administrator_id=?";
 	private static final String UPDATE = 
 			"UPDATE administrator set email=?, admin_account=?, admin_password=?, admin_name=?, phone=?, account_status=?, nick_name=? where administrator_id = ?";
-
+	private static final String GET_ONE_BY_account = "SELECT * FROM administrator WHERE admin_account = ?";
+	private static final String GET_ONE_BY_PHONE = "SELECT * FROM administrator WHERE phone = ?";
 	@Override
 	public void insert(AdminVO adminVO) {
 		
@@ -304,49 +305,156 @@ public class AdminDAOImplJDBC implements AdminDAO {
 		return adminVO;
 	}
 
+	@Override
+	public AdminVO getByAccount(String account) {
+		AdminVO adminVO = null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
 
-	public static void main(String[] args) {
+		try {
+
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(GET_ONE_BY_account);
+
+			pstmt.setString(1,account);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				// adminVO 也稱為 Domain objects
+				adminVO = new AdminVO();
+				adminVO.setAdminid(rs.getInt("administrator_id"));
+				adminVO.setEmail(rs.getString("email"));
+				adminVO.setAdminaccount(rs.getString("admin_account"));
+				adminVO.setAdminpassword(rs.getString("admin_password"));
+				adminVO.setAdminname(rs.getString("admin_name"));
+				adminVO.setPhone(rs.getString("phone"));
+				adminVO.setStatus(rs.getInt("account_status"));
+				adminVO.setAdminnickname(rs.getString("nick_name"));
+			}
+
+			// Handle any driver errors
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Couldn't load database driver. "
+					+ e.getMessage());
+			// Handle any SQL errors
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+			// Clean up JDBC resources
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		if(adminVO!=null) {
+		return adminVO;}
+		else { 
+			 AdminVO admin = new AdminVO();
+			 admin.setAdminaccount("");
+			 return admin;
+		}
 		
-		AdminDAOImplJDBC dao = new AdminDAOImplJDBC();
-		
-		//新增
-//		AdminVO adminVO1 =new AdminVO();
-//		adminVO1.setEmail("Smallwu@123.com");
-//		adminVO1.setAdminaccount("DAVID995");
-//		adminVO1.setAdminpassword("DavidIsGod");
-//		adminVO1.setAdminname("David");
-//		adminVO1.setPhone("0939456789");
-//		adminVO1.setStatus(1);
-//		adminVO1.setAdminnickname("SmallWu");
-//		dao.insert(adminVO1);
-//		System.out.println("新增成功");
-		
-		//修改
-//		AdminVO adminVO1 =new AdminVO();
-//		
-//		adminVO1.setEmail("Smallwu@123.com");
-//		adminVO1.setAdminaccount("DAVID995");
-//		adminVO1.setAdminpassword("DavidIsGod");
-//		adminVO1.setAdminname("David");
-//		adminVO1.setPhone("0939456789");
-//		adminVO1.setStatus(1);
-//		adminVO1.setAdminnickname("Smallwu");
-//		adminVO1.setAdminid(3);
-//		dao.update(adminVO1);
-//		System.out.println("更新成功");
-		
-		//刪除
-//		dao.delete(4);
-//		System.out.println("刪除成功");
-		
-		//查詢
-//		List<AdminVO> list =  dao.getAll();
-//		for(AdminVO aAdmin : list) {
-//			System.out.println(aAdmin);
-//		}
-		System.out.println(dao.getById(1));
-	
 	}
-	
+
+
+	@Override
+	public AdminVO getByPhone(String phone) {
+		AdminVO adminVO = null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+
+		try {
+
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(GET_ONE_BY_PHONE);
+
+			pstmt.setString(1,phone);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				// adminVO 也稱為 Domain objects
+				adminVO = new AdminVO();
+				adminVO.setAdminid(rs.getInt("administrator_id"));
+				adminVO.setEmail(rs.getString("email"));
+				adminVO.setAdminaccount(rs.getString("admin_account"));
+				adminVO.setAdminpassword(rs.getString("admin_password"));
+				adminVO.setAdminname(rs.getString("admin_name"));
+				adminVO.setPhone(rs.getString("phone"));
+				adminVO.setStatus(rs.getInt("account_status"));
+				adminVO.setAdminnickname(rs.getString("nick_name"));
+			}
+
+			// Handle any driver errors
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Couldn't load database driver. "
+					+ e.getMessage());
+			// Handle any SQL errors
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+			// Clean up JDBC resources
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		if(adminVO!=null) {
+			return adminVO;}
+			else { 
+				 AdminVO admin = new AdminVO();
+				 admin.setPhone("");
+				 return admin;
+			}
+	}
+	public static void main(String[] args) {
+		AdminDAOImplJDBC dao = new AdminDAOImplJDBC();
+		System.out.println(dao.getByAccount("seal123"));
+		String account = "seal123";
+		System.out.println(account.equals(dao.getByAccount("seal123").getAdminaccount()));
+	}
 }
 	

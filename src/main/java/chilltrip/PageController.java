@@ -113,8 +113,19 @@ public class PageController {
         model.addAttribute("tripId", tripId);
         return "/frontend/trip_comment";
     }
+    //管理員相關頁面
     @GetMapping("/adminLogin")
     public String adminLogin(Model model) {
         return "/frontend/admin_login";
+    }
+    
+    @GetMapping("/adminRegister")
+    public String adminRegister(Model model) {
+        return "/frontend/admin_registration";
+    }
+    
+    @GetMapping("/adminForgotPassword")
+    public String adminForgotPasswordPage(Model model) {
+        return "/frontend/admin_forget_password";
     }
 }

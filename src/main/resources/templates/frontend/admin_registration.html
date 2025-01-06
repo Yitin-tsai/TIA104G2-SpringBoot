@@ -1,568 +1,618 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChillTrip's Admin Registration</title>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ChillTrip's Admin Registration</title>
 
-   <!-- Favicon -->
-  <link href="img/favicon.ico" rel="icon">
+<!-- Favicon -->
+<link href="img/favicon.ico" rel="icon">
 
-  <!-- Google Web Fonts -->
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Google Web Fonts -->
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+	rel="stylesheet">
 
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+	rel="stylesheet">
 
-  <!-- Libraries Stylesheet -->
-  <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+<!-- Libraries Stylesheet -->
+<link href="lib/owlcarousel/assets/owl.carousel.min.css"
+	rel="stylesheet">
 
-  <!-- Customized Bootstrap Stylesheet -->
-  <link href="css/style.css" rel="stylesheet">
-  <link href="css/yuki_style.css" rel="stylesheet">
-  <style>
-    .breadcrumb {
-      background-color: transparent;
-      /* 移除背景色 */
-      list-style: none;
-      /* 移除列表樣式 */
-      display: flex;
-      padding: 0;
-      margin: 1rem 0;
-    }
+<!-- Customized Bootstrap Stylesheet -->
+<link href="css/style.css" rel="stylesheet">
+<link href="css/yuki_style.css" rel="stylesheet">
+<style>
+.breadcrumb {
+	background-color: transparent;
+	/* 移除背景色 */
+	list-style: none;
+	/* 移除列表樣式 */
+	display: flex;
+	padding: 0;
+	margin: 1rem 0;
+}
 
-    .breadcrumb-item {
-      font-size: calc(1rem - 4px);
-      /* 比 dropdown-item 小 4px */
-      color: #6c757d !important;
-      /* 預設顯示為灰色，並覆蓋 Bootstrap 預設樣式 */
-      text-decoration: none;
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-    }
+.breadcrumb-item {
+	font-size: calc(1rem - 4px);
+	/* 比 dropdown-item 小 4px */
+	color: #6c757d !important;
+	/* 預設顯示為灰色，並覆蓋 Bootstrap 預設樣式 */
+	text-decoration: none;
+	display: inline-block;
+	padding: 0.25rem 0.75rem;
+}
 
-    .breadcrumb-item+.breadcrumb-item::before {
-      content: ">";
-      padding: 0 0.5rem;
-      color: #6c757d;
-    }
+.breadcrumb-item+.breadcrumb-item::before {
+	content: ">";
+	padding: 0 0.5rem;
+	color: #6c757d;
+}
 
-    .breadcrumb-item a {
-      color: #6c757d !important;
-      /* 更改 a 標籤的預設顏色為灰色 */
-      text-decoration: none;
-      /* 移除下劃線 */
-    }
+.breadcrumb-item a {
+	color: #6c757d !important;
+	/* 更改 a 標籤的預設顏色為灰色 */
+	text-decoration: none;
+	/* 移除下劃線 */
+}
 
-    .breadcrumb-item a:hover {
-      color: #FF6600 !important;
-      /* 滑鼠移動到 a 標籤上時顯示為橘色 */
-    }
+.breadcrumb-item a:hover {
+	color: #FF6600 !important;
+	/* 滑鼠移動到 a 標籤上時顯示為橘色 */
+}
 
-    .breadcrumb-item.active {
-      color: #FF6600 !important;
-      /* 最後一個元素顯示為橘色，並覆蓋 Bootstrap 預設樣式 */
-    }
+.breadcrumb-item.active {
+	color: #FF6600 !important;
+	/* 最後一個元素顯示為橘色，並覆蓋 Bootstrap 預設樣式 */
+}
 
-    main {
-      margin-top: 80px;
-    }
+main {
+	margin-top: 80px;
+}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: Arial, sans-serif;
+}
 
-    body {
-      background-color: #f5f5f5;
-    }
+body {
+	background-color: #f5f5f5;
+}
 
-    .header {
-      padding: 10px 0;
-    }
+.header {
+	padding: 10px 0;
+}
 
-    .header-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-    }
+.header-content {
+	max-width: 1200px;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 20px;
+}
 
-    .logo {
-      font-size: 24px;
-      color: #333;
-      text-decoration: none;
-    }
+.logo {
+	font-size: 24px;
+	color: #333;
+	text-decoration: none;
+}
 
-    .nav-links a {
-      margin-left: 20px;
-      text-decoration: none;
-      color: #666;
-    }
+.nav-links a {
+	margin-left: 20px;
+	text-decoration: none;
+	color: #666;
+}
 
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      position: relative;
-      top: -50px;
-    }
+.container {
+	max-width: 600px;
+	margin: 40px auto;
+	padding: 20px;
+	background: white;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	position: relative;
+	top: -50px;
+}
 
-    h2 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 30px;
-    }
+h2 {
+	text-align: center;
+	color: #333;
+	margin-bottom: 30px;
+}
 
-    .form-group {
-      margin-bottom: 20px;
-      position: relative;
-    }
+.form-group {
+	margin-bottom: 20px;
+	position: relative;
+}
 
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      color: #666;
-    }
+.form-group label {
+	display: block;
+	margin-bottom: 5px;
+	color: #666;
+}
 
-    .required::after {
-      content: '*';
-      color: #ff4444;
-      margin-left: 4px;
-    }
+.required::after {
+	content: '*';
+	color: #ff4444;
+	margin-left: 4px;
+}
 
-    input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 14px;
-    }
+input {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+}
 
-    .password-toggle {
-      position: absolute;
-      right: 10px;
-      top: 35px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 0;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+.password-toggle {
+	position: absolute;
+	right: 10px;
+	top: 35px;
+	cursor: pointer;
+	background: none;
+	border: none;
+	padding: 0;
+	width: 24px;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
-    .password-toggle svg {
-      width: 20px;
-      height: 20px;
-      fill: #333;
-    }
+.password-toggle svg {
+	width: 20px;
+	height: 20px;
+	fill: #333;
+}
 
-    .password-toggle .eye-open,
-    .password-toggle.visible .eye-closed {
-      display: none;
-    }
+.password-toggle .eye-open, .password-toggle.visible .eye-closed {
+	display: none;
+}
 
-    .password-toggle .eye-closed,
-    .password-toggle.visible .eye-open {
-      display: block;
-    }
+.password-toggle .eye-closed, .password-toggle.visible .eye-open {
+	display: block;
+}
 
-    .verify-button {
-      position: absolute;
-      right: 5px;
-      top: 32px;
-      padding: 5px 10px;
-      background: #666;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+.verify-button {
+	position: absolute;
+	right: 5px;
+	top: 32px;
+	padding: 5px 10px;
+	background: #666;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
 
-    .submit-button {
-      width: 100%;
-      padding: 12px;
-      background: #FF6600;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 20px;
-    }
+.submit-button {
+	width: 100%;
+	padding: 12px;
+	background: #FF6600;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 16px;
+	margin-top: 20px;
+}
 
-    .submit-button:hover {
-      background: #FF6600;
-    }
+.submit-button:hover {
+	background: #FF6600;
+}
 
-    .login-link {
-      display: block;
-      margin-top: 20px;
-      /* 與上方註冊按鈕的間距 */
-      text-align: center;
-      /* 文字置中 */
-      color: #333;
-      text-decoration: none;
-      /* 去除底線 */
-    }
+.login-link {
+	display: block;
+	margin-top: 20px;
+	/* 與上方註冊按鈕的間距 */
+	text-align: center;
+	/* 文字置中 */
+	color: #333;
+	text-decoration: none;
+	/* 去除底線 */
+}
 
-    .social-links {
-      margin-bottom: 10px;
-    }
+.social-links {
+	margin-bottom: 10px;
+}
 
-    .social-links a {
-      margin: 0 10px;
-      color: #333;
-      text-decoration: none;
-    }
+.social-links a {
+	margin: 0 10px;
+	color: #333;
+	text-decoration: none;
+}
 
-    select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 14px;
-    }
+select {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+}
 
-    /* Modal Styles */
-    .modal {
-      display: none;
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 9999;
-    }
+/* Modal Styles */
+.modal {
+	display: none;
+	justify-content: center;
+	align-items: center;
+	padding: 1rem;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 9999;
+}
 
-    .modal-content {
-      background-color: white;
-      padding: 1.5rem;
-      border-radius: 8px;
-      text-align: center;
-      width: 90%;
-      max-width: 400px;
-      box-sizing: border-box;
-    }
+.modal-content {
+	background-color: white;
+	padding: 1.5rem;
+	border-radius: 8px;
+	text-align: center;
+	width: 90%;
+	max-width: 400px;
+	box-sizing: border-box;
+}
 
-    /* Success Modal */
-    .success .modal-content {
-      border: 2px solid #4CAF50;
-      background-color: #d4edda;
-      color: #155724;
-    }
+/* Success Modal */
+.success .modal-content {
+	border: 2px solid #4CAF50;
+	background-color: #d4edda;
+	color: #155724;
+}
 
-    /* Confirm Button Style */
-    .modal-btn {
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      border: none;
-      background-color: #FF6600;
-      color: white;
-      transition: 0.3s;
-    }
+/* Confirm Button Style */
+.modal-btn {
+	padding: 8px 16px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
+	border: none;
+	background-color: #FF6600;
+	color: white;
+	transition: 0.3s;
+}
 
-    /* Hover Effect for the Button */
-    .modal-btn:hover {
-      background-color: #e65c00;
-    }
+/* Hover Effect for the Button */
+.modal-btn:hover {
+	background-color: #e65c00;
+}
 
-    .modal-buttons {
-      margin-top: 1.5rem;
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-    }
+.modal-buttons {
+	margin-top: 1.5rem;
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+}
 
-    .show {
-      display: flex;
-    }
-  </style>
-  </head>
+.show {
+	display: flex;
+}
+/* 使单选按钮水平排列 */
+.radio-buttons {
+  display: flex;
+  gap: 10px; /* 控制单选按钮之间的间距 */
+  align-items: center; /* 垂直对齐 */
+}
 
-  <body>
-    <!------網站header------>
-    <div id="app">
-      <header>
-        <nav class="top-nav">
-          <div class="nav-left">
-            <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
-            <a href="./product.html" class="nav-item nav-link" id="nav-product"
-              >購！票券</a
-            >
-            <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
-            <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
-          </div>
-          <div class="nav-center">
-            <a href="#">
-              <img
-                id="ChillTrip_logo"
-                src="./img/logo_black.png"
-                alt="Chill Trip"
-                style="width: 150px; height: auto; cursor: pointer"
-              />
-            </a>
-          </div>
-          <div class="nav-right">
-            <div class="nav-item dropdown">
-              <a
-                href="#"
-                class="nav-link dropdown-toggle"
-                data-toggle="dropdown"
-                style="color: #212529"
-                >會員中心</a
-              >
-              <div class="dropdown-menu rounded-0 m-0">
-                <a href="#" class="dropdown-item" id="nav-basic-info"
-                  >基本資料</a
-                >
-                <a href="#" class="dropdown-item" id="nav-coupons"
-                  >我的折價券</a
-                >
-                <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
-              </div>
-            </div>
-            <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
-            <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
-          </div>
-        </nav>
-      </header>
-    </div>
+/* 调整单个单选按钮 */
+.radio-buttons input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  appearance: none; /* 去掉默认外观 */
+  border: 2px solid #007bff; /* 蓝色边框 */
+  border-radius: 50%; /* 圆形 */
+  outline: none;
+  cursor: pointer;
+  position: relative;
+}
 
-    <!------網站Breadcrumb Navigation（麵包屑導航）------>
-    <div aria-label="breadcrumb">
-      <ul class="breadcrumb" id="breadcrumb-nav">
-        <!-- 麵包屑導航項目將由 JavaScript 動態生成 -->
-      </ul>
-    </div>
+.radio-buttons input[type="radio"]:checked {
+  background-color: #007bff; /* 被选中的背景颜色 */
+  border-color: #0056b3; /* 选中时的边框颜色 */
+}
 
-    <main>
-      <div class="container">
-        <form id="registrationForm">
-          <div class="form-group">
-            <p>
-              如果您未曾建立 ChillTrip.com
-              的管理員帳戶，請填寫以下資訊註冊新帳戶。
-            </p>
-            <p style="color: #ff4444">*為必填項目</p>
-          </div>
+.radio-buttons input[type="radio"]:checked::after {
+  content: '\2022'; /* 使用圆点符号表示选中 */
+  color: white; /* 圆点颜色 */
+  font-size: 18px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
 
-          <div class="form-group">
-            <label class="required">帳號</label>
-            <input type="text" id="accound_number" required />
-          </div>
+/* 使 radio button 标签和文本对齐 */
+.radio-buttons label {
+  font-size: 16px;
+  cursor: pointer;
+}
+</style>
+</head>
 
-          <div class="form-group">
-            <label class="required">姓名</label>
-            <input type="text" id="realname" required />
-          </div>
+<body>
+	<!------網站header------>
+	<div id="app">
+		<header>
+			<nav class="top-nav">
+				<div class="nav-left">
+					<a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a> <a
+						href="./product.html" class="nav-item nav-link" id="nav-product">購！票券</a>
+					<a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a> <a
+						href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+				</div>
+				<div class="nav-center">
+					<a href="#"> <img id="ChillTrip_logo"
+						src="./img/logo_black.png" alt="Chill Trip"
+						style="width: 150px; height: auto; cursor: pointer" />
+					</a>
+				</div>
+				<div class="nav-right">
+					<div class="nav-item dropdown">
+						<a href="#" class="nav-link dropdown-toggle"
+							data-toggle="dropdown" style="color: #212529">會員中心</a>
+						<div class="dropdown-menu rounded-0 m-0">
+							<a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a>
+							<a href="#" class="dropdown-item" id="nav-coupons">我的折價券</a>
+							<a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
+						</div>
+					</div>
+					<a href="#" class="nav-item nav-link" id="nav-support">客服中心</a> <a
+						href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+				</div>
+			</nav>
+		</header>
+	</div>
 
-          <div class="form-group">
-            <label class="required">暱稱</label>
-            <input type="text" id="username" required />
-          </div>
+	<!------網站Breadcrumb Navigation（麵包屑導航）------>
+	<div aria-label="breadcrumb">
+		<ul class="breadcrumb" id="breadcrumb-nav">
+			<!-- 麵包屑導航項目將由 JavaScript 動態生成 -->
+		</ul>
+	</div>
 
-          <div class="form-group">
-            <label class="required">聯絡電話</label>
-            <input type="tel" id="phone" required />
-          </div>
+	<main>
+		<div class="container">
+			<form id="registrationForm">
+				<div class="form-group">
+					<p>如果您未曾建立 ChillTrip.com 的管理員帳戶，請填寫以下資訊註冊新帳戶。</p>
+					<p style="color: #ff4444">*為必填項目</p>
+				</div>
 
-          <div class="form-group">
-            <label class="required">電子信箱</label>
-            <input type="email" id="email" required />
-            <button type="button" class="verify-button">驗證信箱</button>
-          </div>
+				<div class="form-group">
+					<label class="required">帳號</label> <input type="text"
+						id="accound_number" required />
+					<!-- 顯示錯誤訊息 -->
+					<div id="adminaccountError"
+						style="color: #ff4444; font-size: 14px; display: none;"></div>
+				</div>
 
-          <div class="form-group">
-            <label class="required">信箱驗證碼</label>
-            <input type="text" id="emailCode" required />
-          </div>
+				<div class="form-group">
+					<label class="required">姓名</label> <input type="text"
+						id="adminname" required />
+					<div id="adminnameError"
+						style="color: #ff4444; font-size: 14px; display: none;"></div>
+				</div>
 
-          <div class="form-group">
-            <label class="required">密碼</label>
-            <input type="password" id="password" required />
-            <button
-              type="button"
-              class="password-toggle"
-              data-target="password"
-            >
-              <svg class="eye-open" viewBox="0 0 24 24">
-                <path
-                  d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-                />
-              </svg>
-              <svg class="eye-closed" viewBox="0 0 24 24">
-                <path
-                  d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"
-                />
-              </svg>
-            </button>
-          </div>
+				<div class="form-group">
+					<label class="required">暱稱</label> <input type="text"
+						id="adminnickname" required />
+					<div id="adminnicknameError"
+						style="color: #ff4444; font-size: 14px; display: none;"></div>
+				</div>
 
-          <div class="form-group">
-            <label class="required">密碼確認</label>
-            <input type="password" id="confirmPassword" required />
-            <button
-              type="button"
-              class="password-toggle"
-              data-target="confirmPassword"
-            >
-              <svg class="eye-open" viewBox="0 0 24 24">
-                <path
-                  d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-                />
-              </svg>
-              <svg class="eye-closed" viewBox="0 0 24 24">
-                <path
-                  d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"
-                />
-              </svg>
-            </button>
+				<div class="form-group">
+					<label class="required">聯絡電話</label> <input type="tel" id="phone"
+						required />
+					<div id="phoneError"
+						style="color: #ff4444; font-size: 14px; display: none;"></div>
+				</div>
 
-            <!-- 錯誤訊息顯示區域 -->
-            <div
-              id="passwordError"
-              style="color: #ff4444; font-size: 14px; display: none"
-            >
-              密碼輸入不一致
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="required">電子信箱</label> <input type="email" id="email"
+						required />
+					<div id="emailError"
+						style="color: #ff4444; font-size: 14px; display: none;"></div>
+				</div>
 
-          <button type="submit" class="submit-button">註冊</button>
+				<div class="form-group">
+					<label class="required">管理員階級</label>
+					<div class="radio-buttons">
+					  <input type="radio" id="status0" name="status" value="0" required />
+					  <label for="status0">0</label>
+					  <input type="radio" id="status1" name="status" value="1" required />
+					  <label for="status1">1</label>
+					  <input type="radio" id="status2" name="status" value="2" required />
+					  <label for="status2">2</label>
+					</div>
+				  </div>
 
-          <a href="admin_login.html" class="login-link" style="color: #ff4444"
-            >已有帳號?點擊登入</a
-          >
-        </form>
-      </div>
-    </main>
+				<div class="form-group">
+					<label class="required">密碼</label> <input type="password"
+						id="password" required />
+					<button type="button" class="password-toggle"
+						data-target="password">
+						<svg class="eye-open" viewBox="0 0 24 24">
+      <path
+								d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+    </svg>
+						<svg class="eye-closed" viewBox="0 0 24 24">
+      <path
+								d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z" />
+    </svg>
+					</button>
+				</div>
 
-    <!-- 成功談窗 -->
-    <div class="modal" id="successModal">
-      <div class="modal-content">
-        <p>註冊成功！</p>
-        <div class="modal-buttons">
-          <button class="modal-btn confirm-btn" id="confirmBtn">確認</button>
-        </div>
-      </div>
-    </div>
+				<div class="form-group">
+					<label class="required">密碼確認</label> <input type="password"
+						id="confirmPassword" required />
+					<div id="passwordError"
+						style="color: #ff4444; font-size: 14px; display: none;"></div>
+				</div>
 
-    <footer>
-      <div class="social-links">
-        <div style="display: flex; gap: 10px">
-          <a
-            href="https://facebook.com"
-            target="_blank"
-            style="text-decoration: none"
-          >
-            <div
-              style="
-                width: 50px;
-                height: 50px;
-                background-color: #3b5998;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              "
-            >
-              <i
-                class="fab fa-facebook-f"
-                style="color: white; font-size: 24px"
-              ></i>
-            </div>
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            style="text-decoration: none"
-          >
-            <div
-              style="
-                width: 50px;
-                height: 50px;
-                background-color: #e1306c;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              "
-            >
-              <i
-                class="fab fa-instagram"
-                style="color: white; font-size: 24px"
-              ></i>
-            </div>
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            style="text-decoration: none"
-          >
-            <div
-              style="
-                width: 50px;
-                height: 50px;
-                background-color: #ff0000;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              "
-            >
-              <i
-                class="fab fa-youtube"
-                style="color: white; font-size: 24px"
-              ></i>
-            </div>
-          </a>
-        </div>
+				<button type="submit" class="submit-button">註冊</button>
 
-        <!-- 加載 Font Awesome 圖標庫 -->
-        <link
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-          rel="stylesheet"
-        />
-      </div>
-      <div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
-    </footer>
+			</form>
+		</div>
+	</main>
 
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
-      ><i class="fa fa-angle-double-up"></i
-    ></a>
+		<!-- 成功提示框 -->
+		<div class="modal" id="successModal" style="display: none;">
+			<div class="modal-content">
+			<p>註冊成功！請登入</p>
+			<div class="modal-buttons">
+				<a href="adminLogin" class="modal-btn confirm-btn" id="confirmBtn">確認</a>
+			</div>
+			</div>
+		</div>
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+	<footer>
+		<div class="social-links">
+			<div style="display: flex; gap: 10px">
+				<a href="https://facebook.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #3b5998; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-facebook-f" style="color: white; font-size: 24px"></i>
+					</div>
+				</a> <a href="https://instagram.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #e1306c; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-instagram" style="color: white; font-size: 24px"></i>
+					</div>
+				</a> <a href="https://youtube.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-youtube" style="color: white; font-size: 24px"></i>
+					</div>
+				</a>
+			</div>
 
-    <!-- Contact Javascript File -->
-    <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
+			<!-- 加載 Font Awesome 圖標庫 -->
+			<link
+				href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+				rel="stylesheet" />
+		</div>
+		<div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
+	</footer>
 
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+	<!-- Back to Top -->
+	<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i
+		class="fa fa-angle-double-up"></i></a>
 
-    <!-- 導航欄nav的href載入器 -->
-    <script>
+	<!-- JavaScript Libraries -->
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<!-- <script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script> -->
+	<!-- <script src="lib/easing/easing.min.js"></script> -->
+	<!-- <script src="lib/owlcarousel/owl.carousel.min.js"></script> -->
+
+	<!-- Contact Javascript File -->
+	<!-- <script src="mail/jqBootstrapValidation.min.js"></script> -->
+	<!-- <script src="mail/contact.js"></script> -->
+
+	<!-- Template Javascript -->
+	<!-- <script src="js/main.js"></script> -->
+
+	<script>
+		const contextPath = "/TIA104G2-SpringBoot";  // 后端的 context 路径
+		
+		document.addEventListener('DOMContentLoaded', function () {
+		  // 获取表单和成功提示框
+		  const form = document.getElementById('registrationForm');
+		  const successModal = document.getElementById('successModal');
+		  const confirmBtn = document.getElementById('confirmBtn');
+		  
+		  // 处理表单提交事件
+		  form.addEventListener('submit', function (event) {
+			event.preventDefault(); // 阻止默认表单提交行为
+	  
+			// 手动获取每个表单字段的值
+			const data = {
+			  adminaccount: document.getElementById('accound_number').value,    // 获取 'account_number' 的值
+			  adminname: document.getElementById('adminname').value,            // 获取 'adminname' 的值
+			  adminnickname: document.getElementById('adminnickname').value,    // 获取 'adminnickname' 的值
+			  phone: document.getElementById('phone').value,                    // 获取 'phone' 的值
+			  email: document.getElementById('email').value,                    // 获取 'email' 的值
+			  status: document.querySelector('input[name="status"]:checked')?.value, // 获取选中的状态
+			  adminpassword: document.getElementById('password').value,         // 获取 'password' 的值
+			  confirmPassword: document.getElementById('confirmPassword').value // 获取 'confirmPassword' 的值
+			};
+	  
+			// 检查密码是否匹配
+			if (data.adminpassword !== data.confirmPassword) {
+			  alert("密碼與確認密碼不符");
+			  return;
+			}
+	  
+			// 创建请求头，设置Content-Type为application/json
+			const headers = new Headers();
+			headers.append('Content-Type', 'application/json');
+	  
+			// 发送POST请求
+			fetch(contextPath + '/admin/insert', {
+			  method: 'POST',
+			  headers: headers,
+			  body: JSON.stringify(data)  // 将数据转化为JSON格式
+			})
+			.then(response => response.json())  // 解析返回的JSON
+			.then(result => {
+			  // 如果后端返回注册成功的消息，显示成功提示框
+			  if (result.message === "註冊成功") {
+				successModal.style.display = 'block'; // 显示成功对话框
+			  } else {
+				// 否则显示错误信息
+				handleErrorMessages(result);
+			  }
+			})
+			.catch(error => {
+			  console.error('Error:', error);
+			  alert('發生錯誤，請稍後再試');
+			});
+		  });
+	  
+		  // 处理错误消息的显示
+		  function handleErrorMessages(errorMsgs) {
+			// 清空之前的错误消息
+			const errorFields = ['adminaccount', 'adminpassword', 'adminname', 'phone', 'email', 'adminnickname'];
+			errorFields.forEach(field => {
+			  const errorDiv = document.getElementById(`${field}Error`);
+			  if (errorDiv) {
+				errorDiv.style.display = 'none';
+			  }
+			});
+	  
+			// 显示新的错误消息
+			for (const [field, errorMsg] of Object.entries(errorMsgs)) {
+			  const errorDiv = document.getElementById(`${field}Error`);
+			  if (errorDiv) {
+				errorDiv.textContent = errorMsg;
+				errorDiv.style.display = 'block';
+			  }
+			}
+		  }
+	  
+		  // 点击确认按钮关闭成功提示框
+		  confirmBtn.addEventListener('click', function () {
+			successModal.style.display = 'none'; // 关闭成功对话框
+			form.reset(); // 重置表单
+		  });
+		});
+	  </script>
+	  
+	  
+
+	<!-- 導航欄nav的href載入器 -->
+	<script>
       document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("nav-go").href = "./go.html";
         document.getElementById("nav-product").href = "./product.html";
@@ -573,11 +623,11 @@
         document.getElementById("nav-orders").href = "./orders.html";
         document.getElementById("nav-support").href = "./support.html";
         document.getElementById("nav-cart").href = "./cart.html";
-        document.getElementById("nav-index").href = "./index.html";
+
       });
     </script>
 
-    <script>
+	<script>
       document.addEventListener("DOMContentLoaded", function () {
         const breadcrumbNav = document.getElementById("breadcrumb-nav");
 
@@ -604,6 +654,7 @@
           breadcrumbNav.appendChild(li);
         });
       });
+	  
 
       // 密碼顯示開關功能
       document.querySelectorAll(".password-toggle").forEach((button) => {
@@ -617,51 +668,51 @@
         });
       });
 
-      // 顯示成功註冊視窗
-      function showSuccessModal() {
-        const modal = document.getElementById("successModal");
-        modal.style.display = "flex"; // 顯示成功視窗
-      }
+    //   // 顯示成功註冊視窗
+    //   function showSuccessModal() {
+    //     const modal = document.getElementById("successModal");
+    //     modal.style.display = "flex"; // 顯示成功視窗
+    //   }
 
-      // 監聽表單提交
-      document
-        .getElementById("registrationForm")
-        .addEventListener("submit", function (event) {
-          event.preventDefault(); // 防止表單提交刷新頁面
+    //   // 監聽表單提交
+    //   document
+    //     .getElementById("registrationForm")
+    //     .addEventListener("submit", function (event) {
+    //       event.preventDefault(); // 防止表單提交刷新頁面
 
-          // 檢查密碼與確認密碼是否一致
-          const password = document.getElementById("password").value;
-          const confirmPassword =
-            document.getElementById("confirmPassword").value;
+    //       // 檢查密碼與確認密碼是否一致
+    //       const password = document.getElementById("password").value;
+    //       const confirmPassword =
+    //         document.getElementById("confirmPassword").value;
 
-          if (password !== confirmPassword) {
-            document.getElementById("passwordError").style.display = "block"; // 顯示錯誤訊息
-          } else {
-            document.getElementById("passwordError").style.display = "none"; // 隱藏錯誤訊息
-            showSuccessModal(); // 顯示註冊成功視窗
-          }
-        });
+    //       if (password !== confirmPassword) {
+    //         document.getElementById("passwordError").style.display = "block"; // 顯示錯誤訊息
+    //       } else {
+    //         document.getElementById("passwordError").style.display = "none"; // 隱藏錯誤訊息
+    //         showSuccessModal(); // 顯示註冊成功視窗
+    //       }
+    //     });
 
-      // 成功視窗確認按鈕
-      document
-        .getElementById("confirmBtn")
-        .addEventListener("click", function () {
-          const modal = document.getElementById("successModal");
-          modal.style.display = "none"; // 隱藏成功視窗
-          // 點擊後導向登入頁面
-          window.location.href = "/admin_login.html"; // 登入頁面從此進入
-        });
+    //   // 成功視窗確認按鈕
+    //   document
+    //     .getElementById("confirmBtn")
+    //     .addEventListener("click", function () {
+    //       const modal = document.getElementById("successModal");
+    //       modal.style.display = "none"; // 隱藏成功視窗
+    //       // 點擊後導向登入頁面
+    //       window.location.href = "/admin_login.html"; // 登入頁面從此進入
+    //     });
 
-      document
-        .querySelector(".verify-button")
-        .addEventListener("click", function () {
-          const email = document.getElementById("email").value;
-          if (!email) {
-            alert("請輸入電子信箱！");
-            return;
-          }
-          alert("驗證碼已發送至您的信箱，請前往信箱查看！");
-        });
+    //   document
+    //     .querySelector(".verify-button")
+    //     .addEventListener("click", function () {
+    //       const email = document.getElementById("email").value;
+    //       if (!email) {
+    //         alert("請輸入電子信箱！");
+    //         return;
+    //       }
+    //       alert("驗證碼已發送至您的信箱，請前往信箱查看！");
+    //     });
     </script>
-  </body>
+</body>
 </html>

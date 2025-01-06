@@ -2,7 +2,10 @@ package chilltrip.admin.model;
 
 import java.util.List;
 
+import org.logicalcobwebs.proxool.admin.Admin;
 import org.springframework.stereotype.Service;
+
+import chilltrip.member.model.MemberVO;
 
 @Service("adminService")
 public class AdminService  {
@@ -63,5 +66,21 @@ public class AdminService  {
 		// TODO Auto-generated method stub
 		return dao.getById(adminid);
 	}
+	public AdminVO getOneAdminByPhone(String phone) {
+		// TODO Auto-generated method stub
+		return dao.getByPhone(phone);
+	}
+	
+	public AdminVO getOneAdminByAccount(String account) {
+		// TODO Auto-generated method stub
+		return dao.getByAccount(account);
+	}
+	public boolean checkAccount(String account) {
+		return account.equals(dao.getByAccount(account).getAdminaccount());
+	}
+	public boolean checkPhone(String phone) {
+		return phone.equals(dao.getByPhone(phone).getPhone());
+	}
+	
 
 }
