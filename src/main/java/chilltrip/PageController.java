@@ -113,4 +113,8 @@ public class PageController {
         model.addAttribute("tripId", tripId);
         return "/frontend/trip_comment";
     }
+    @GetMapping("/adminLogin")
+    public String adminLogin(Model model) {
+        return "/frontend/admin_login";
+    }
 }

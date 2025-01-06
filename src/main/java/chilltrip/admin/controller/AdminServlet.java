@@ -1,9 +1,18 @@
 package chilltrip.admin.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +24,7 @@ import com.google.gson.Gson;
 
 import chilltrip.admin.model.AdminService;
 import chilltrip.admin.model.AdminVO;
+import oracle.jdbc.proxy.annotation.Post;
 
 
 
@@ -227,6 +237,7 @@ public class AdminServlet {
 
 	@PostMapping("delete/{id}")
 	public String delete(@PathVariable("id") Integer adminid) {
+		
 	
 		AdminService adminSvc = new AdminService();
 		AdminVO adminvo = adminSvc.getOneAdmin(adminid);
@@ -242,6 +253,42 @@ public class AdminServlet {
 		return  "delete succese";
 		
 
+	}
+	@PostMapping("/login")
+	private ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> payload,
+            HttpSession session)  {
+		
+		boolean checkAccount = false;
+		boolean checklogin = false;
+		
+		String account = payload.get("account");
+	    String password = payload.get("password");
+		List<AdminVO> list = adminSvc.getAll();
+		for (AdminVO admin : list) {
+			if (account.equals(admin.getAdminaccount())) {
+				checkAccount = true;
+				if (password.equals(admin.getAdminpassword())) {
+					session.setAttribute("adminid", admin.getAdminid());
+					checklogin =true;
+					System.out.println("login success");
+					   Map<String, Object> result = new HashMap<>();
+					    result.put("message", "登入成功");
+					    result.put("adminId", admin.getAdminid()); // 這個才是前端要抓的
+					    System.out.println("使用者: " + account + " 登入成功, memberId=" + admin.getAdminid());
+
+					    return ResponseEntity.ok(result);
+				}
+			}
+		}
+		if (!checkAccount) {
+			System.out.println("not found account");
+			return ResponseEntity.badRequest().body(Map.of("message", "帳號錯誤"));
+		}
+		if (checkAccount && !checklogin) {
+			System.out.println("password error");
+			return ResponseEntity.badRequest().body(Map.of("message", "密碼錯誤"));
+		}
+		return null;
 	}
 
 }
