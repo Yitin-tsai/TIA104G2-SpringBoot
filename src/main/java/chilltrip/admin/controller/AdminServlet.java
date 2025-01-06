@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.logicalcobwebs.proxool.admin.Admin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 
 import chilltrip.admin.model.AdminService;
+import chilltrip.admin.model.AdminService.LoginException;
 import chilltrip.admin.model.AdminVO;
+import chilltrip.member.model.MemberVO;
 import oracle.jdbc.proxy.annotation.Post;
 
 @RestController
@@ -36,25 +40,30 @@ public class AdminServlet {
 	private Gson gson = new Gson();
 
 	@GetMapping("getOne/{id}")
-	public String getOneAdmin(@PathVariable("id") Integer adminid) {
-		Map<String, String> errorMsgs = new HashMap<String, String>();
-
-		// 查詢資料
-
+	public AdminVO getOneAdmin(@PathVariable("id") Integer adminid) {	
+		
 		AdminVO adminVO = adminSvc.getOneAdmin(adminid);
-		if (adminVO == null) {
-			errorMsgs.put("adminid", "查無此管理員，請重新確認id");
-		}
-		if (!errorMsgs.isEmpty()) {
-			String errorMsGson = gson.toJson(errorMsgs);
-			return errorMsGson;
-		}
 
-		String adminjson = gson.toJson(adminVO);
-		return adminjson;
+		return adminVO;
 
 	}
+	
+	@GetMapping("profile")
+	public ResponseEntity<Map<String, Object>> getOneAdmin(HttpSession session) {	
+		Integer adminId = (Integer) session.getAttribute("adminId");
 
+		// 確認 session 中的使用者是否存在
+		if (adminId == null) {
+			Map<String, Object> errorResponse = new HashMap<>();
+			errorResponse.put("message", "未登入，請先登入");
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+		}
+		AdminVO adminVO = adminSvc.getOneAdmin(adminId);
+		Map<String, Object> sucess = new HashMap<>();
+		sucess.put("message", adminVO);
+		return ResponseEntity.ok(sucess);		
+
+	}
 	@PostMapping("update")
 	public String update(@RequestBody AdminVO adminvo) {
 		Map<String, String> errorMsgs = new HashMap<String, String>();
@@ -105,7 +114,7 @@ public class AdminServlet {
 			errorMsgs.put("phone", "電話號碼請勿空白");
 		} else if (!phone.trim().matches(phoneReg)) {
 			errorMsgs.put("phone", "電話號碼只能是數字, 且長度必需是9到13之間");
-		} else if (adminSvc.checkPhone(phone)){
+		} else if (adminSvc.checkPhone(phone)) {
 			errorMsgs.put("phone", "電話號碼已被註冊, 請再確認");
 		}
 
@@ -254,38 +263,41 @@ public class AdminServlet {
 
 	@PostMapping("/login")
 	private ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> payload, HttpSession session) {
+	    String account = payload.get("account");
+	    String password = payload.get("password");
 
-		boolean checkAccount = false;
-		boolean checklogin = false;
+	    if (account == null || account.trim().isEmpty()) {
+	        return ResponseEntity.badRequest().body(Map.of("message", "請輸入帳號"));
+	    }
+	    if (password == null || password.trim().isEmpty()) {
+	        return ResponseEntity.badRequest().body(Map.of("message", "請輸入密碼"));
+	    }
 
-		String account = payload.get("account");
-		String password = payload.get("password");
-		List<AdminVO> list = adminSvc.getAll();
-		for (AdminVO admin : list) {
-			if (account.equals(admin.getAdminaccount())) {
-				checkAccount = true;
-				if (password.equals(admin.getAdminpassword())) {
-					session.setAttribute("adminid", admin.getAdminid());
-					checklogin = true;
-					System.out.println("login success");
-					Map<String, Object> result = new HashMap<>();
-					result.put("message", "登入成功");
-					result.put("adminId", admin.getAdminid()); // 這個才是前端要抓的
-					System.out.println("使用者: " + account + " 登入成功, memberId=" + admin.getAdminid());
+	    try {
+	        // 呼叫 Service 進行登入
+	        AdminVO adminVO = adminSvc.login(account, password);
 
-					return ResponseEntity.ok(result);
-				}
-			}
-		}
-		if (!checkAccount) {
-			System.out.println("not found account");
-			return ResponseEntity.badRequest().body(Map.of("message", "帳號錯誤"));
-		}
-		if (checkAccount && !checklogin) {
-			System.out.println("password error");
-			return ResponseEntity.badRequest().body(Map.of("message", "密碼錯誤"));
-		}
-		return null;
+	        // 登入成功，將 adminId 放入 server-side session
+	        session.setAttribute("adminId", adminVO.getAdminid());
+
+	        // 回傳 JSON 給前端
+	        Map<String, Object> result = new HashMap<>();
+	        result.put("message", "登入成功");
+	        result.put("adminId", adminVO.getAdminid()); // 這個才是前端要抓的
+
+	        return ResponseEntity.ok(result);
+
+	    } catch (LoginException e) {
+	        // 根據錯誤類型回傳不同的訊息
+	        if ("ACCOUNT_NOT_FOUND".equals(e.getErrorType())) {
+	            return ResponseEntity.badRequest().body(Map.of("message", "帳號不存在"));
+	        } else if ("INVALID_PASSWORD".equals(e.getErrorType())) {
+	            return ResponseEntity.badRequest().body(Map.of("message", "密碼錯誤"));
+	        } else {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "未知錯誤"));
+	        }
+	    }
 	}
+
 
 }

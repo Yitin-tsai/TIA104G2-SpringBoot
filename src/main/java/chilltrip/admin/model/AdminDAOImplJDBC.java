@@ -368,13 +368,8 @@ public class AdminDAOImplJDBC implements AdminDAO {
 				}
 			}
 		}
-		if(adminVO!=null) {
-		return adminVO;}
-		else { 
-			 AdminVO admin = new AdminVO();
-			 admin.setAdminaccount("");
-			 return admin;
-		}
+		
+		return adminVO;
 		
 	}
 
@@ -442,13 +437,8 @@ public class AdminDAOImplJDBC implements AdminDAO {
 				}
 			}
 		}
-		if(adminVO!=null) {
-			return adminVO;}
-			else { 
-				 AdminVO admin = new AdminVO();
-				 admin.setPhone("");
-				 return admin;
-			}
+		
+			return adminVO;
 	}
 	public static void main(String[] args) {
 		AdminDAOImplJDBC dao = new AdminDAOImplJDBC();

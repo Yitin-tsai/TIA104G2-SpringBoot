@@ -653,7 +653,7 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 
 	public static void main(String[] args) {
 		MemberJDBCDAO dao = new MemberJDBCDAO();
-
+		
 //		// 新增
 //		MemberVO memberVO1 = new MemberVO();
 //		memberVO1.setEmail(new String("123@abc.com"));
