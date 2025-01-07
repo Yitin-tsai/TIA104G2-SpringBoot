@@ -9,27 +9,22 @@
     <meta content="Free HTML Templates" name="description" />
 
     <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon" />
+<link href="img/favicon.ico" rel="icon" />
 
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+<!-- Google Web Fonts -->
+<link rel="preconnect" href="https://fonts.gstatic.com" />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+	rel="stylesheet" />
 
-    <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
+<!-- Font Awesome -->
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+	rel="stylesheet" />
 
-    <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="/static/css/style.css" rel="stylesheet" />
-    <link href="/static/css/yuki_style.css" rel="stylesheet" />
+<!-- Customized Bootstrap Stylesheet -->
+<link th:href="@{/css/style.css}" rel="stylesheet" />
+<link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
 
     <style>
       * {
@@ -707,52 +702,31 @@
   </head>
 
   <body>
-    <!------網站header------>
-    <div id="app">
-      <header>
-        <nav class="top-nav">
-          <div class="nav-left">
-            <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
-            <a href="./product.html" class="nav-item nav-link" id="nav-product"
-              >購！票券</a
-            >
-            <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
-            <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
-          </div>
-          <div class="nav-center">
-            <a href="#" class="nav-index">
-              <img
-                src="./img/logo_black.png"
-                alt="Chill Trip"
-                style="width: 150px; height: auto"
-              />
-            </a>
-          </div>
-          <div class="nav-right">
-            <div class="nav-item dropdown">
-              <a
-                href="#"
-                class="nav-link dropdown-toggle"
-                data-toggle="dropdown"
-                style="color: #212529"
-                >會員中心</a
-              >
-              <div class="dropdown-menu rounded-0 m-0">
-                <a href="#" class="dropdown-item" id="nav-basic-info"
-                  >基本資料</a
-                >
-                <a href="#" class="dropdown-item" id="nav-coupons"
-                  >我的折價券</a
-                >
-                <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
-              </div>
-            </div>
-            <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
-            <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
-          </div>
-        </nav>
-      </header>
-    </div>
+    	<!------網站header------>
+	<div id="app">
+		<header>
+			<nav class="top-nav">
+				<div class="nav-left">
+					<a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a> <a
+						href="#" class="nav-item nav-link" id="nav-mygo">我的行程</a>
+				</div>
+				<div class="nav-center">
+					<a href="#" id="z-index"> <a href="/TIA104G2-SpringBoot/"
+						id="z-index"> <img th:src="@{/img/logo_black.png}"
+							alt="Chill Trip" style="width: 150px; height: auto" />
+					</a>
+					</a>
+				</div>
+				<div class="nav-right">
+					<a href="/TIA104G2-SpringBoot/login"
+						class="nav-item nav-link  active" id="nav-login"
+						style="color: #FF6600;">登入/註冊</a> <a href="#"
+						class="nav-item nav-link" id="nav-profile">會員基本資料</a> <a href="#"
+						class="nav-item nav-link" id="nav-support">客服中心</a>
+				</div>
+			</nav>
+		</header>
+	</div>
 
     <div aria-label="breadcrumb">
       <ul class="breadcrumb" id="breadcrumb-nav">
@@ -943,12 +917,30 @@
       <div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script
-      type="module"
-      src="https://unpkg.com/@googlemaps/extended-component-library@0.6"
-    ></script>
-    <script src="/static/js/maphsiuchi.js"></script>
+    <!------ 共用JS ------>
+	<!-- Back to Top -->
+	<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i
+		class="fa fa-angle-double-up"></i></a>
+
+	<!-- JavaScript Libraries -->
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+	<!-- 本地資源改用 Thymeleaf 語法 -->
+	<script th:src="@{/lib/easing/easing.min.js}"></script>
+	<script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+
+	<!-- Contact Javascript File -->
+	<script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
+	<script th:src="@{/mail/contact.js}"></script>
+
+	<!-- Template Javascript -->
+	<script th:src="@{/js/main.js}"></script>
+
+	<!-- 導航欄nav的href載入器 -->
+	<!------修齊的JS------>
+	<script th:src="@{/js/navigation.js}"></script>
 
     <!-- 導航欄nav的href載入器 -->
     <script>
