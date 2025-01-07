@@ -50,7 +50,7 @@
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    object-fit: cover;
+    object-fit:  contain;
 }
 
 .profile-stats {
@@ -334,7 +334,8 @@
 				},
 				error: function(xhr, status, error) {
 					console.error('錯誤:', error);
-					alert('載入資料時發生錯誤');
+					alert('載入資料時發生錯誤,請登入');
+           window.location.href =  "/TIA104G2-SpringBoot/adminLogin"
 				}
 			});
 		});

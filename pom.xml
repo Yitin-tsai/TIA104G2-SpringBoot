@@ -272,7 +272,14 @@
 			<artifactId>jedis</artifactId>
 			<version>5.2.0</version>
 		</dependency>
-
+		
+    <!-- websocket 聊天室用-->
+	<dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+		
+		
 	</dependencies>
 
 	<build>
