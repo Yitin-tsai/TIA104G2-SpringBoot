@@ -122,19 +122,21 @@ function renderPlaceList(places) {
     const ratingStars = '★'.repeat(Math.round(place.rating)) + 
                        '☆'.repeat(5 - Math.round(place.rating));
 
-    const placeHTML = `
-      <div class="place-item">
-        <div class="place-info">
-          ${photoUrl ? `<img src="${photoUrl}" alt="${place.name}" class="place-photo">` : ''}
-          <div class="place-details">
-            <div class="place-name">${place.name}</div>
-            <div class="place-address">${place.address}</div>
-            <div class="rating">${ratingStars} ${place.rating ? place.rating.toFixed(1) : 'N/A'}</div>
-          </div>
+                       const placeHTML = `
+  <div class="place-item">
+    <div class="place-info">
+      ${photoUrl ? `<img src="${photoUrl}" alt="${place.name}" class="place-photo">` : ''}
+      <div class="place-details">
+        <div class="place-name">${place.name}</div>
+        <div class="place-address">${place.address}</div>
+        <div class="rating">${ratingStars} ${place.rating ? place.rating.toFixed(1) : 'N/A'}</div>
+        <div class="button-container">
+          <button class="save-btn" data-place='${JSON.stringify(place)}'>收藏</button>
         </div>
-        <button class="save-btn" data-place='${JSON.stringify(place)}'>收藏</button>
       </div>
-    `;
+    </div>
+  </div>
+`;
     placeList.append(placeHTML);
   });
 
