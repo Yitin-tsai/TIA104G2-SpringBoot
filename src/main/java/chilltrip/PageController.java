@@ -18,6 +18,12 @@ public class PageController {
         model.addAttribute("contextPath", "/TIA104G2-SpringBoot");
         return "/frontend/index";
     }
+    
+    @GetMapping("/loggedin")
+    public String indexLoggedIn(Model model) {
+    	model.addAttribute("contextPath", "/TIA104G2-SpringBoot");
+    	return "/frontend/index_logged_in";
+    }
 
     @GetMapping("/announce/{id}")
     public String announcePage(@PathVariable int id) {

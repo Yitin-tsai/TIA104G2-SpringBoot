@@ -62,11 +62,31 @@ header {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #eee;
+  position: relative;
 }
 
 .nav-left, .nav-right {
   display: flex;
   gap: 1.5rem;
+}
+
+.nav-center {
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  flex-grow: 1;             /* 讓中間區域占滿可用空間 */
+}
+
+.logo img {
+  max-width: 100%;          /* 確保圖片不會超出容器 */
+  height: auto;
+}
+
+/* Other Styles for the Logo */
+.logo {
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+  font-size: 1.2rem;
 }
 
 .nav-item {
@@ -77,13 +97,6 @@ header {
 
 .nav-item:hover {
   color: #333;
-}
-
-.logo {
-  font-weight: bold;
-  color: #333;
-  text-decoration: none;
-  font-size: 1.2rem;
 }
 
 /* Search Container Styles */
