@@ -346,13 +346,14 @@ select {
 
 			<div class="form-group">
 				<label class="required">會員暱稱</label> <input type="text"
-					id="username" name="nickName" placeholder="輸入暱稱" required>
-
+					id="nickName" name="nickName" placeholder="輸入暱稱" required>
+				<div id="nickNameError" style="color: #ff4444; font-size: 14px; display: none;">暱稱可以包括中文、英文、空格，但不可是特殊符號，長度需在2~15之間，且不允許開頭或結尾有空格</div>
 			</div>
 
 			<div class="form-group">
 				<label class="required">真實姓名</label> <input type="text"
-					id="realname" name="name" placeholder="輸入姓名" required>
+					id="name" name="name" placeholder="輸入姓名" required>
+				<div id="nameError" style="color: #ff4444; font-size: 14px; display: none;">姓名可以包括中文、英文、空格，但不可是特殊符號，長度需在2~10之間，且不允許開頭或結尾有空格</div>
 			</div>
 
 			<div class="form-group">
@@ -371,6 +372,7 @@ select {
 			<div class="form-group">
 				<label class="required">聯絡電話</label> <input type="tel" id="phone"
 					name="phone" placeholder="輸入聯絡電話" required>
+				<div id="phoneError" style="color: #ff4444; font-size: 14px; display: none;">請輸入正確聯絡電話格式，手機或市話皆可，ex: 0912345678 或 02-12345678</div>
 			</div>
 
 			<div class="form-group">
@@ -388,6 +390,7 @@ select {
 			<div class="form-group">
 				<label class="required">密碼</label> <input type="password"
 					id="password" name="password" placeholder="輸入密碼" required>
+				<div id="passwordError" style="color: #ff4444; font-size: 14px; display: none;">密碼只能是英文字母數字和_，長度需在5~15之間</div>
 				<button type="button" class="password-toggle" data-target="password">
 					<svg class="eye-open" viewBox="0 0 24 24">
               <path
@@ -415,7 +418,7 @@ select {
             </svg>
 				</button>
 				<!-- 錯誤訊息顯示區域 -->
-				<div id="passwordError"
+				<div id="confirmpasswordError"
 					style="color: #ff4444; font-size: 14px; display: none;">密碼輸入不一致</div>
 			</div>
 
@@ -515,18 +518,18 @@ select {
 
 	<!-- 導航欄nav的href載入器 -->
 	<script>
-    document.addEventListener("DOMContentLoaded", function () {
-      document.getElementById("nav-go").href = "./go.html";
-      document.getElementById("nav-product").href = "./product.html";
-      document.getElementById("nav-profile").href = "./profile.html";
-      document.getElementById("nav-guide").href = "./guide.html";
-      document.getElementById("nav-basic-info").href = "./basic_info.html";
-      document.getElementById("nav-coupons").href = "./coupons.html";
-      document.getElementById("nav-orders").href = "./orders.html";
-      document.getElementById("nav-support").href = "./support.html";
-      document.getElementById("nav-cart").href = "./cart.html";
-      document.getElementById("nav-index").href = "./index.html";
-    });
+//     document.addEventListener("DOMContentLoaded", function () {
+//       document.getElementById("nav-go").href = "./go.html";
+//       document.getElementById("nav-product").href = "./product.html";
+//       document.getElementById("nav-profile").href = "./profile.html";
+//       document.getElementById("nav-guide").href = "./guide.html";
+//       document.getElementById("nav-basic-info").href = "./basic_info.html";
+//       document.getElementById("nav-coupons").href = "./coupons.html";
+//       document.getElementById("nav-orders").href = "./orders.html";
+//       document.getElementById("nav-support").href = "./support.html";
+//       document.getElementById("nav-cart").href = "./cart.html";
+//       document.getElementById("nav-index").href = "./index.html";
+//     });
   </script>
 	<script>
     const contextPath = "/TIA104G2-SpringBoot"; // 從後端傳來的 context-path
@@ -599,17 +602,63 @@ select {
 
     // 監聽表單提交
     document.getElementById("registrationForm").addEventListener("submit", function (event) {
-        event.preventDefault(); // 防止表單提交刷新頁面
+        event.preventDefault(); // 防止表單提交刷新頁面 
+        
+        let isValid = true;
 
-        // 檢查密碼與確認密碼是否一致
+        // 驗證暱稱
+        const nickName = document.getElementById("nickName").value;
+        const nickNamePattern = /^[\u4E00-\u9FFFa-zA-Z\s]{2,15}$/;
+        if (!nickName || !nickNamePattern.test(nickName)) {
+            document.getElementById("nickNameError").style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById("nickNameError").style.display = 'none';
+        }
+
+        // 驗證姓名
+        const name = document.getElementById("name").value;
+        const namePattern = /^[\u4E00-\u9FFFa-zA-Z\s]{2,10}$/;
+        if (!name || !namePattern.test(name)) {
+            document.getElementById("nameError").style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById("nameError").style.display = 'none';
+        }
+
+        // 驗證電話
+        const phone = document.getElementById("phone").value;
+        const phonePattern = /^(09[0-9]{8}|0[2-8][0-9]{7,8}|0[2-8]-[0-9]{6,8})$/;
+        if (!phone || !phonePattern.test(phone)) {
+            document.getElementById("phoneError").style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById("phoneError").style.display = 'none';
+        }
+
+        // 驗證密碼長度
         const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
+        const passwordPattern = /^[a-zA-Z0-9_]{5,15}$/;
+        if (!password || !passwordPattern.test(password)) {
+            document.getElementById("passwordError").style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById("passwordError").style.display = 'none';
+        }
+
+        // 驗證密碼確認
+		const confirmPassword = document.getElementById("confirmPassword").value;
 
         if (password !== confirmPassword) {
-            document.getElementById("passwordError").style.display = 'block'; // 顯示錯誤訊息
+            document.getElementById("confirmpasswordError").style.display = 'block'; // 顯示錯誤訊息
         } else {
-            document.getElementById("passwordError").style.display = 'none'; // 隱藏錯誤訊息
+            document.getElementById("confirmpasswordError").style.display = 'none'; // 隱藏錯誤訊息
             submitForm(); // 呼叫提交表單的函數
+        }
+
+        // 如果所有欄位驗證通過，提交表單
+        if (isValid) {
+            document.getElementById("registrationForm").submit();
         }
     });
 
