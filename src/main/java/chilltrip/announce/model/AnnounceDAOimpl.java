@@ -72,17 +72,26 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	@Override
 	public boolean delete(Integer annouceid) {
 		// TODO Auto-generated method stub
-		AnnounceVO announceVO = getSession().get(AnnounceVO.class, annouceid);
-		try {
-			Transaction tx = getSession().beginTransaction();
-			getSession().delete(announceVO);
-			return(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Transaction tx = getSession().getTransaction();
-			tx.rollback();
-			return(false);
-		}
+		AnnounceVO announceVO = null;
+	    try {
+	        getSession().beginTransaction();  
+	        announceVO = getSession().get(AnnounceVO.class, annouceid);
+	        
+	        if (announceVO != null) {
+	            getSession().delete(announceVO);  
+	            getSession().getTransaction().commit();  
+	            return true;
+	        } else {
+	            getSession().getTransaction().rollback();  
+	            return false;
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        if (getSession().getTransaction() != null) {
+	            getSession().getTransaction().rollback();  
+	        }
+	        return false;
+	    }
 	}
 
 	@Override
@@ -90,7 +99,7 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		// TODO Auto-generated method stub
 
 		Transaction tx = getSession().beginTransaction();
-		List<AnnounceVO> list = getSession().createQuery("from AnnounceVO", AnnounceVO.class).list();
+		List<AnnounceVO> list = getSession().createQuery("from AnnounceVO order by announceid desc", AnnounceVO.class).list();
 		tx.commit();
 		return list;
 	}

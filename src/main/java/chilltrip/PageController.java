@@ -157,4 +157,10 @@ public class PageController {
     	return "/frontend/announce_listById";
     }
     
+    //聊天室
+    @GetMapping("/chatroom")
+    public String chatroom(Model model) {
+    	return "/frontend/chat_vanilla copy";
+    }
+    
 }

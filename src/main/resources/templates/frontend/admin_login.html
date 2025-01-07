@@ -260,48 +260,42 @@
       /* Modal Styles */
       .modal {
         display: none;
-        justify-content: center;
-        align-items: center;
-        padding: 1rem;
-        position: fixed;
-        top: 50%;
+        position: absolute; /* 改為絕對定位 */
+        top: 50%; /* 讓彈出視窗位於登入按鈕的中心 */
         left: 50%;
-        right: 50%;
-        bottom: 50%;
+        transform: translate(-50%, -50%); /* 使其居中 */
         z-index: 9999;
-      }
-
-      .modal-content {
-        background-color: white;
-        padding: 1.5rem;
-        border-radius: 8px;
-        text-align: center;
         width: 90%;
         max-width: 400px;
-        box-sizing: border-box;
+        padding: 1rem;
+        background-color: white;
+        border-radius: 8px;
+        text-align: center;
       }
 
-      /* Success Modal */
+      /* 當顯示錯誤或成功訊息時 */
+      .modal-content {
+        padding: 1.5rem;
+        box-sizing: border-box;
+        background-color: white;
+        border-radius: 8px;
+        text-align: center;
+        width: 100%;
+      }
+
       .success .modal-content {
         border: 2px solid #4caf50;
-        /* 綠色邊框 */
         background-color: #d4edda;
-        /* 輕綠色背景 */
         color: #155724;
-        /* 綠色文字 */
       }
 
-      /* Error Modal */
       .error .modal-content {
         border: 2px solid #dc3545;
-        /* 紅色邊框 */
         background-color: #f8d7da;
-        /* 淡紅色背景 */
         color: #721c24;
-        /* 紅色文字 */
       }
 
-      /* Confirm Button Style */
+      /* 成功與錯誤彈出視窗按鈕 */
       .modal-btn {
         padding: 8px 16px;
         border-radius: 4px;
@@ -309,18 +303,15 @@
         font-size: 14px;
         border: none;
         background-color: #ff6600;
-        /* 設定按鈕底色 */
         color: white;
-        /* 文字顏色 */
         transition: 0.3s;
       }
 
-      /* Hover Effect for the Button */
       .modal-btn:hover {
         background-color: #e65c00;
-        /* 按鈕懸停時變色 */
       }
 
+      /* 調整彈窗按鈕的顯示位置 */
       .modal-buttons {
         margin-top: 1.5rem;
         display: flex;
@@ -328,6 +319,7 @@
         gap: 1rem;
       }
 
+      /* 這樣可以讓彈出視窗居中並與按鈕重疊 */
       .overlay {
         display: none;
         position: fixed;
