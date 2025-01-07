@@ -614,26 +614,26 @@ var stompClient = null; // 這裡定義 stompClient 變數
 });
       // 初始化 WebSocket 連接
       function initializeWebSocket() {
-    // 确保只有在获取到 userName 后才建立 WebSocket 连接
-    var socket = new SockJS("/TIA104G2-SpringBoot/chat"); // WebSocket URL
-    stompClient = Stomp.over(socket); // 初始化 stompClient
+          // 确保只有在获取到 userName 后才建立 WebSocket 连接
+          var socket = new SockJS("/TIA104G2-SpringBoot/chat"); // WebSocket URL
+          stompClient = Stomp.over(socket); // 初始化 stompClient
 
-    // 传递 userName 到 WebSocket 握手的 headers
-    stompClient.connect({ "userName": userName }, function (frame) {
-        console.log('Connected: ' + frame);
-        
-        // 訂閱接收到的訊息
-        stompClient.subscribe("/topic/messages", function (message) {
-            var chatMessage = JSON.parse(message.body);
+          // 传递 userName 到 WebSocket 握手的 headers
+          stompClient.connect({ "userName": userName }, function (frame) {
+              console.log('Connected: ' + frame +userName);
+              
+              // 訂閱接收到的訊息
+              stompClient.subscribe("/topic/messages", function (message) {
+                  var chatMessage = JSON.parse(message.body);
 
-            // 當收到的訊息是發送給當前聊天對象或者發送者是當前用戶時，顯示訊息
-            if (chatMessage.receiver === userName || chatMessage.sender === userName) {
-                messages.push(chatMessage); // 將接收到的訊息加入訊息列表
-                displayMessages(); // 更新訊息顯示
-            }
-        });
-    });
-}
+                  // 當收到的訊息是發送給當前聊天對象或者發送者是當前用戶時，顯示訊息
+                  if (chatMessage.receiver === userName || chatMessage.sender === userName) {
+                      messages.push(chatMessage); // 將接收到的訊息加入訊息列表
+                      displayMessages(); // 更新訊息顯示
+                  }
+              });
+          });
+      }
 
 
   var currentReceiver = ""; // 當前聊天對象
