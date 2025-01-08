@@ -50,7 +50,7 @@
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    object-fit:  contain;
+    object-fit: cover;
 }
 
 .profile-stats {
@@ -108,44 +108,42 @@
     border-radius: 4px;
     cursor: pointer;
 }
-
-/* 新增管理員專區的樣式 */
-.profile-links {
-    flex-basis: 300px; /* 設定管理員專區區域的最小寬度 */
-    padding: 1rem;
-    background: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+/* 中間區域的 table */
+#tableContainer {
     display: flex;
-    flex-direction: column;
-    justify-content: center; /* 垂直置中內容 */
-    align-items: flex-start; /* 左對齊文字 */
-    height: 100%; /* 確保內容有足夠的高度 */
+    justify-content: center;
+    align-items: center;
+    height: 75%;  /* 剩餘的 50% 高度 */
+    padding-top: 150px ;
+    padding-bottom :100px; ;
+    box-sizing: border-box;
 }
 
-.profile-links h4 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
+/* 表格樣式 */
+table {
+    width: 80%; /* 表格寬度 */
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.profile-links ul {
-    list-style: none;
-    padding: 0;
+table th, table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
 }
 
-.profile-links ul li {
-    margin-bottom: 1rem;
+table th {
+    background-color: #CCCCFF;
 }
 
-.profile-links ul li a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 600;
+/* 讓頁面更加響應式，確保表格在小螢幕上也能顯示良好 */
+@media (max-width: 768px) {
+    table {
+        width: 100%;
+    }
 }
 
-.profile-links ul li a:hover {
-    text-decoration: underline;
-}
 
 
 </style>
@@ -198,56 +196,23 @@
       </header>
     </div>
 
-	<div class="profile-container">
-		<!-- 個人資料區 -->
-		<div class="profile-info">
-			<div class="profile-header">
-				<img id="photo" th:src="@{/img/logo_black.png}" class="photo">
-			</div>
-
-			<div class="profile-info">
-				<div class="info-row">
-					<div class="info-label">帳號</div>
-					<div class="info-value" id="account"></div>
-				</div>
-				<div class="info-row">
-					<div class="info-label">姓名</div>
-					<div class="info-value" id="name"></div>
-				</div>
-				<div class="info-row">
-					<div class="info-label">暱稱</div>
-					<div class="info-value" id="nickName"></div>
-				</div>
-				<div class="info-row">
-					<div class="info-label">電子郵件</div>
-					<div class="info-value" id="email"></div>
-				</div>
-				<div class="info-row">
-					<div class="info-label">密碼</div>
-					<div class="info-value" id="password"></div>
-				</div>
-				<div class="info-row">
-					<div class="info-label">手機號碼</div>
-					<div class="info-value" id="phone"></div>
-				</div>
-			</div>
-
-			<div class="profile-actions">
-				<a class="btn-edit" id="editButton" href="/TIA104G2-SpringBoot/adminUpdate">編輯資料</a>
-				<button class="btn-logout" id="logoutButton">登出</button>
-			</div>
-		</div>
-
-		<!-- 管理員專區 -->
-		<div class="profile-links">
-			<h4>管理員專區</h4>
-			<ul>
-				<li><a href="/TIA104G2-SpringBoot/adminList">查看管理員清單</a></li>
-				<li><a href="/TIA104G2-SpringBoot/announceList">查看公告清單</a></li>
-				<li><a href="/TIA104G2-SpringBoot/announceListById">我的公告清單</a></li>
-			</ul>
-		</div>
-	</div>
+    <div id="tableContainer">
+      <table id="adminList" class="display">
+          <thead>
+              <tr style="background-color:#CCCCFF">
+                  <th>管理員編號</th>
+                  <th>管理員姓名</th>
+                  <th>管理員暱稱</th>
+                  <th>管理員帳號</th>
+                  <th>管理員信箱</th>
+                  <th>管理員電話</th>
+              </tr>
+          </thead>
+          <tbody id="adminTableBody">
+              <!-- 這裡會填充從後端取得的資料 -->
+          </tbody>
+      </table>
+  </div>
 
 	<!------網站footer------>
 	<footer>
@@ -307,38 +272,45 @@
 
     <!-- Template Javascript -->
     <script th:src="@{/js/main.js}"></script>
+    <script>
+      $(document).ready(function() {
+          // 發送 AJAX 請求以取得所有管理員資料
+          $.ajax({
+              url: "/TIA104G2-SpringBoot/admin/getall",  // 確保這是後端 API 路徑
+              type: "GET",
+              dataType: "json",
+              success: function(data) {
+                  // 清空現有的表格資料
+                  $('#adminTableBody').empty();
+      
+                  // 迴圈處理所有的管理員資料
+                  $.each(data, function(index, admin) {
+                      // 建立一列包含所有欄位的資料
+                      var row = '<tr>' +
+                          '<td>' + admin.adminid + '</td>' +
+                          '<td>' + admin.adminname + '</td>' +
+                          '<td>' + admin.adminnickname + '</td>' +
+                          '<td>' + admin.adminaccount + '</td>' +
+                          '<td>' + admin.email + '</td>' +
+                          '<td>' + admin.phone + '</td>' +
+                      '</tr>';
+                      
+                      // 將這一列加入到表格中
+                      $('#adminTableBody').append(row);
+                  });
+              },
+              error: function() {
+                  alert("無法載入管理員資料");
+              }
+          });
+      });
+      </script>
 
     <!-- 導航欄nav的href載入器 -->
     	<!------修齊的JS------>
     <script th:src="@{/js/navigation.js}"></script>
 	<script>
-		$(document).ready(function() {
-			// 頁面載入後，發送請求到後端取得管理員資料
-			$.ajax({
-				url: '/TIA104G2-SpringBoot/admin/profile',
-				type: 'GET',
-				dataType: 'json',
-				success: function(data) {
-					// 檢查是否成功取得資料
-					if (data.message) {
-						const admin = data.message;
-						$('#account').text(admin.adminaccount); // 填充帳號
-						$('#name').text(admin.adminname); // 填充姓名
-						$('#nickName').text(admin.adminnickname); // 填充暱稱
-						$('#email').text(admin.email); // 填充電子郵件
-						$('#password').text(admin.adminpassword); // 填充密碼
-						$('#phone').text(admin.phone); // 填充手機號碼
-					} else {
-						alert('無法取得管理員資料，請確認是否已登入');
-					}
-				},
-				error: function(xhr, status, error) {
-					console.error('錯誤:', error);
-					alert('載入資料時發生錯誤,請登入');
-           window.location.href =  "/TIA104G2-SpringBoot/adminLogin"
-				}
-			});
-		});
+		
 	</script>
 	
 

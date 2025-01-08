@@ -4,16 +4,23 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>個人資料 - ChillTrip</title>
+<!-- Favicon -->
 <link href="img/favicon.ico" rel="icon" />
+
+<!-- Google Web Fonts -->
 <link rel="preconnect" href="https://fonts.gstatic.com" />
 <link
 	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
 	rel="stylesheet" />
+
+<!-- Font Awesome -->
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
 	rel="stylesheet" />
-<link href="css/style.css" rel="stylesheet" />
-<link href="css/yuki_style.css" rel="stylesheet" />
+
+<!-- Customized Bootstrap Stylesheet -->
+<link th:href="@{/css/style.css}" rel="stylesheet" />
+<link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
 
 <style>
 .profile-container {
@@ -100,33 +107,25 @@
 </head>
 
 <body>
-	<!------網站header------>
+		<!------網站header------>
 	<div id="app">
 		<header>
 			<nav class="top-nav">
 				<div class="nav-left">
 					<a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a> <a
-						href="./product.html" class="nav-item nav-link" id="nav-product">購！票券</a>
-					<a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a> <a
-						href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+						href="#" class="nav-item nav-link" id="nav-mygo">我的行程</a>
 				</div>
 				<div class="nav-center">
-					<a href="/TIA104G2-SpringBoot/" id="z-index"> <img th:src="@{/img/logo_black.png}"
-						alt="Chill Trip" style="width: 150px; height: auto" />
+					<a href="#" id="z-index"> <a href="/TIA104G2-SpringBoot/loggedin"
+						id="z-index"> <img th:src="@{/img/logo_black.png}"
+							alt="Chill Trip" style="width: 150px; height: auto" />
+					</a>
 					</a>
 				</div>
 				<div class="nav-right">
-					<div class="nav-item dropdown">
-						<a href="#" class="nav-link dropdown-toggle"
-							data-toggle="dropdown" style="color: #212529">會員中心</a>
-						<div class="dropdown-menu rounded-0 m-0">
-							<a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a> <a
-								href="#" class="dropdown-item" id="nav-coupons">我的折價券</a> <a
-								href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
-						</div>
-					</div>
-					<a href="#" class="nav-item nav-link" id="nav-support">客服中心</a> <a
-						href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+					<a href="#"
+						class="nav-item nav-link" id="nav-profile">會員基本資料</a> <a href="#"
+						class="nav-item nav-link" id="nav-support">客服中心</a>
 				</div>
 			</nav>
 		</header>
@@ -250,15 +249,21 @@
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 	<script
 		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-	<script src="lib/easing/easing.min.js"></script>
-	<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+	<!-- 本地資源改用 Thymeleaf 語法 -->
+	<script th:src="@{/lib/easing/easing.min.js}"></script>
+	<script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
 
 	<!-- Contact Javascript File -->
-	<script src="mail/jqBootstrapValidation.min.js"></script>
-	<script src="mail/contact.js"></script>
+	<script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
+	<script th:src="@{/mail/contact.js}"></script>
 
 	<!-- Template Javascript -->
-	<script src="js/main.js"></script>
+	<script th:src="@{/js/main.js}"></script>
+
+	<!-- 導航欄nav的href載入器 -->
+	<!------修齊的JS------>
+	<script th:src="@{/js/navigation.js}"></script>
 
 	<!-- 導航欄nav的href載入器 -->
 	<script>
@@ -282,7 +287,7 @@
 	async function loadProfile() {
 	    try {
 	        const response = await fetch(contextPath + "/member/viewProfile");
-	        if (!response.ok) throw new Error("資料載入失敗");
+	        if (!response.ok) throw new Error("請先登入會員");
 
 	        const profile = await response.json();
 

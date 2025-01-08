@@ -1,86 +1,92 @@
-  <!DOCTYPE html>
+ 
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChillTrip</title>
 
-    <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon" />
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ChillTrip</title>
 
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+<!-- Favicon -->
+<link href="img/favicon.ico" rel="icon" />
 
-    <!-- Font Awesome -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
-      rel="stylesheet"
-    />
+<!-- Google Web Fonts -->
+<link rel="preconnect" href="https://fonts.gstatic.com" />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+	rel="stylesheet" />
 
-    <!-- Customized Bootstrap Stylesheet -->
-    <link th:href="@{/css/style.css}" rel="stylesheet" />
-    <link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
+<!-- Font Awesome -->
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+	rel="stylesheet" />
 
-    <style>
-      .row {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        width: 80%;
-        margin: 0 auto;
-        overflow: hidden;
-        border-bottom: 3px dotted #eee;
-        padding-top: 30px;
-        padding-bottom: 30px;
-      }
+<!-- Customized Bootstrap Stylesheet -->
+<link th:href="@{/css/style.css}" rel="stylesheet" />
+<link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
 
-      .banner-carousel-box {
-        display: flex;
-        box-sizing: border-box;
-        justify-content: center;
-        align-items: center;
-        height: 300px;
-        transition: transform 0.5s ease-in-out;
-      }
+<style>
+.row {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	width: 80%;
+	margin: 0 auto;
+	overflow: hidden;
+	border-bottom: 3px dotted #eee;
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
 
-      .banner-carousel {
-        min-width: 100%;
-        box-sizing: border-box;
-      }
+.banner-carousel-box {
+	display: flex;
+	box-sizing: border-box;
+	justify-content: center;
+	align-items: center;
+	height: 300px;
+	transition: transform 0.5s ease-in-out;
+}
 
-      .banner-carousel img {
-        width: 100%;
-        display: block;
-      }
+.banner-carousel {
+	min-width: 100%;
+	box-sizing: border-box;
+}
 
-      .row .prev,
-      .row .next {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        border: none;
-        cursor: pointer;
-        padding: 10px;
-        font-size: 18px;
-        z-index: 10;
-      }
+.banner-carousel img {
+	width: 100%;
+	display: block;
+}
 
-      .row .prev {
-        left: 10px;
-      }
+.row .prev, .row .next {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	background-color: rgba(0, 0, 0, 0.5);
+	color: white;
+	border: none;
+	cursor: pointer;
+	padding: 10px;
+	font-size: 18px;
+	z-index: 10;
+}
 
-      .row .next {
-        right: 10px;
-      }
+.row .prev {
+	left: 10px;
+}
 
-      .banner-carousel-box .banner-carousel img {
+.row .next {
+	right: 10px;
+}
+
+.banner-carousel-box .banner-carousel img {
+	width: 100%;
+	display: block;
+	object-fit: cover;
+	object-position: center;
+}
+  
+.banner-carousel-box .banner-carousel img {
         width: 100%;
         display: block;
         object-fit: cover;
@@ -200,7 +206,7 @@
       }
     </style>
   </head>
-
+      
   <body>
     <!------網站header------>
     <div id="app">
@@ -989,8 +995,7 @@
     <!-- 導航欄nav的href載入器 -->
     <!------修齊的JS------>
     <script th:src="@{/js/navigation.js}"></script>
-
-    <script>
+	<script>
       //動態生成公告圖片
       document.addEventListener("DOMContentLoaded", function () {
         loadPopularArticles();
@@ -1039,9 +1044,9 @@
           .catch((error) => {
             console.error("Error fetching announcements:", error);
           });
-
-
-        function loadPopularArticles() {
+    
+      // 熱門文章載入
+      function loadPopularArticles() {
           const articlesGrid = document.querySelector(".articles-grid");
           if (!articlesGrid) {
             console.error("找不到文章列表容器");
@@ -1120,7 +1125,30 @@
           }
         }
       });
-    </script>
+
+  });</script>
+    
+  <script>
+    document.getElementById("goToChatRoom").addEventListener("click", function() {
+  // 發送 AJAX 請求，獲取用戶名稱
+  fetch('/TIA104G2-SpringBoot/chat/go')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      // 假設返回的是 HTML 頁面，進行頁面跳轉
+      if (data.message === "success" ) {
+        window.location.href = '/TIA104G2-SpringBoot/chatroom'; // 重定向到聊天室頁面
+      } else {
+        alert("登入失敗或未授權");
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert("錯誤，請稍後再試");
+    });
+});
+
+  </script>
 
     <!------主頁的幻燈片活動區------>
     <script>

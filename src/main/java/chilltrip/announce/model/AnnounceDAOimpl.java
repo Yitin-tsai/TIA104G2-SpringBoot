@@ -15,6 +15,7 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -41,13 +42,14 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		// TODO Auto-generated method stub
 		try {
 			Session session = getSession();
-			session.beginTransaction();
+			Transaction tx =session.beginTransaction();
 			session.save(annouceVO);
-			session.getTransaction().commit();
+			tx.commit();
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			getSession().getTransaction().rollback();
+			Transaction tx = getSession().beginTransaction();
+			tx.rollback();
 		}
 
 	}
@@ -56,12 +58,13 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	public void update(AnnounceVO annouceVO) {
 		// TODO Auto-generated method stub
 		try {
-			getSession().beginTransaction();
+			Transaction tx = getSession().beginTransaction();
 			getSession().update(annouceVO);
-			getSession().getTransaction().commit();
+			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
-			getSession().getTransaction().rollback();
+			Transaction tx = getSession().beginTransaction();
+			tx.rollback();
 			
 		}
 
@@ -70,25 +73,35 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	@Override
 	public boolean delete(Integer annouceid) {
 		// TODO Auto-generated method stub
-		AnnounceVO announceVO = getSession().get(AnnounceVO.class, annouceid);
-		try {
-			getSession().beginTransaction();
-			getSession().delete(announceVO);
-			return(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			getSession().getTransaction().rollback();
-			return(false);
-		}
+		AnnounceVO announceVO = null;
+	    try {
+	        getSession().beginTransaction();  
+	        announceVO = getSession().get(AnnounceVO.class, annouceid);
+	        
+	        if (announceVO != null) {
+	            getSession().delete(announceVO);  
+	            getSession().getTransaction().commit();  
+	            return true;
+	        } else {
+	            getSession().getTransaction().rollback();  
+	            return false;
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        if (getSession().getTransaction() != null) {
+	            getSession().getTransaction().rollback();  
+	        }
+	        return false;
+	    }
 	}
 
 	@Override
 	public List<AnnounceVO> getAll() {
 		// TODO Auto-generated method stub
 
-		getSession().beginTransaction();
-		List<AnnounceVO> list = getSession().createQuery("from AnnounceVO", AnnounceVO.class).list();
-		getSession().getTransaction().commit();
+		Transaction tx = getSession().beginTransaction();
+		List<AnnounceVO> list = getSession().createQuery("from AnnounceVO order by announceid desc", AnnounceVO.class).list();
+		tx.commit();
 		return list;
 	}
 
@@ -97,7 +110,9 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		// TODO Auto-generated method stub
 		if (map.size() == 0)
 			return getAll();
-		getSession().beginTransaction();
+		 
+	    Session session = getSession();
+	    Transaction tx = session.beginTransaction();
 		CriteriaBuilder builder = getSession().getCriteriaBuilder();
 		CriteriaQuery<AnnounceVO> criteria = builder.createQuery(AnnounceVO.class);
 		Root<AnnounceVO> root = criteria.from(AnnounceVO.class);
@@ -109,13 +124,13 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 			}
 
 			if ("starttime".equals(row.getKey())) {
-				if (!map.containsKey("starttime"))
+				if (map.containsKey("starttime"))
 					predicates.add(builder.greaterThanOrEqualTo(root.get("starttime"), Date.valueOf(row.getValue())));
 			}
 
 			if ("endtime".equals(row.getKey())) {
-				if (!map.containsKey("endtime"))
-					predicates.add(builder.lessThanOrEqualTo(root.get("emdtime"), Date.valueOf(row.getValue())));
+				if (map.containsKey("endtime"))
+					predicates.add(builder.lessThanOrEqualTo(root.get("endtime"), Date.valueOf(row.getValue())));
 
 			}
 
@@ -124,30 +139,32 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 		criteria.where(builder.and(predicates.toArray(new Predicate[predicates.size()])));
 		criteria.orderBy(builder.asc(root.get("announceid")));
 		TypedQuery<AnnounceVO> query = getSession().createQuery(criteria);
-
+		
 		return query.getResultList();
 	}
 
 	@Override
 	public List<AnnounceVO> getAll(int currentPage) {
 		int first = (currentPage - 1) * PAGE_MAX_RESULT;
-		getSession().beginTransaction();
-		return getSession().createQuery("from AnnounceVO", AnnounceVO.class).setFirstResult(first)
+		Transaction tx = getSession().beginTransaction();
+		List<AnnounceVO> list =   getSession().createQuery("from AnnounceVO", AnnounceVO.class).setFirstResult(first)
 				.setMaxResults(PAGE_MAX_RESULT).list();
 		
+		tx.commit();
+		return list;
 	}
 	
 	@Override
 	public List<AnnounceVO> getByadminid(Integer adminid) {
 		// TODO Auto-generated method stub
 		Session session = getSession();
-		session.beginTransaction();
+		Transaction tx =  session.beginTransaction();
 		List<AnnounceVO> list = new ArrayList<AnnounceVO>();
 		AdminVO admin = session.get(AdminVO.class, adminid);
 		for(AnnounceVO a :admin.getAnnounces()) {
 			list.add(a);
 		}
-		
+		tx.commit();
 		return (List)list ;
 	}
 	
@@ -158,9 +175,9 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 
 	@Override
 	public AnnounceVO getOne(Integer announceid) {
-		getSession().beginTransaction();
+		Transaction tx = getSession().beginTransaction();
 		AnnounceVO announce = getSession().get(AnnounceVO.class, announceid);
-		getSession().getTransaction().commit();
+		tx.commit();
 		return announce;
 	}
 	

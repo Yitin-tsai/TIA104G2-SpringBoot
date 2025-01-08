@@ -18,6 +18,12 @@ public class PageController {
         model.addAttribute("contextPath", "/TIA104G2-SpringBoot");
         return "/frontend/index";
     }
+    
+    @GetMapping("/loggedin")
+    public String indexLoggedIn(Model model) {
+    	model.addAttribute("contextPath", "/TIA104G2-SpringBoot");
+    	return "/frontend/index_logged_in";
+    }
 
     @GetMapping("/announce/{id}")
     public String announcePage(@PathVariable int id) {
@@ -137,6 +143,29 @@ public class PageController {
     @GetMapping("/adminProfile")
     public String adminProfile(Model model) {
         return "/frontend/admin_profile";
+    }
+    
+    @GetMapping("/adminUpdate")
+    public String adminUpdate(Model model) {
+    	return "/frontend/admin_update";
+    }
+    @GetMapping("/adminList")
+    public String adminLiset(Model model) {
+    	return "/frontend/admin_list";
+    }
+    @GetMapping("/announceList")
+    public String announceList(Model model) {
+    	return "/frontend/announce_list";
+    }
+    @GetMapping("/announceListById")
+    public String announceListById(Model model) {
+    	return "/frontend/announce_listById";
+    }
+    
+    //聊天室
+    @GetMapping("/chatroom")
+    public String chatroom(Model model) {
+    	return "/frontend/chat_vanilla copy";
     }
     
 }

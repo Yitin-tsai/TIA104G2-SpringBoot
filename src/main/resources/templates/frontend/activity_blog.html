@@ -89,6 +89,51 @@
         object-fit: cover;
         object-position: center;
       }
+      .row {
+  display: flex;
+  flex-direction: column; /* 讓圖片和文字垂直排列 */
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  border-bottom: 3px dotted #eee;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+/* 圖片設定 */
+#photo {
+  width: 75%; /* 設定圖片寬度為螢幕的 75% */
+  object-fit: cover;
+  max-height: 300px; /* 限制圖片最大高度 */
+  margin-bottom: 25px; /* 圖片和文字之間的間隔 */
+}
+
+/* 內容區塊 */
+.content-banner {
+  width: 75%; /* 文字區塊寬度為圖片寬度的 75% */
+  max-width: 900px; /* 設定文字區塊的最大寬度 */
+  height: auto;
+  background-color: white; /* 背景顏色改為白色 */
+  margin-top: 25px; /* 文字和圖片之間的間隔 */
+  padding: 25px; /* 增加內邊距 */
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 文字樣式 */
+#content {
+  font-size: 20px;
+  color: black;
+  line-height: 1.5;
+  text-align: center;
+  margin: 0;
+}
+
+
     </style>
   </head>
 
@@ -167,19 +212,20 @@
           <h1 id ="title">Chill・活動名稱</h1>
         </div>
         <div class="row">
-          <div class="col-lg-6">
+          
             <img
-              id="photo"
+              id="photo" 
             />
-          </div>
-          <div class="col-lg-6">
-            <h2 class="text-primary" id ="content"></h2>
+         
+         
+            <div class="content-banner">
+              <h2 id="content">活動內容</h2>
             
-            
+        
           </div>
 
-        
-      </div>
+
+    
     </div>
 
     <!------網站footer------>
