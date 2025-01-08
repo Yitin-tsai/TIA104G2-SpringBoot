@@ -444,60 +444,38 @@
       </div>
     </div>
 
-    <div class="big-chat-container">
-      <!-- 左側用戶列表 -->
-      <div class="sidebar">
-        <div class="user-list" id="userList">
+    <!-- 聊天室頁面 -->
+<div class="big-chat-container">
+  <!-- 左側用戶列表 -->
+  <div class="sidebar">
+      <div class="user-list" id="userList">
           <!-- 用戶列表項目將由 JavaScript 動態生成 -->
-        </div>
       </div>
+  </div>
 
-      <!-- 右側聊天區域 -->
-      <div class="chat-container">
-        <div class="chat-header" id="chatHeader">
+  <!-- 右側聊天區域 -->
+  <div class="chat-container">
+      <div class="chat-header" id="chatHeader">
           <!-- 聊天室標題將由 JavaScript 動態生成 -->
-        </div>
-        <div class="messages-container" id="messagesContainer">
-          <!-- 訊息內容將由 JavaScript 動態生成 -->
-        </div>
-        <div class="input-container">
-          <div class="input-wrapper">
-            <div class="input-actions">
-              <button class="action-btn" id="plusBtn">
-                <i class="fas fa-plus"></i>
-              </button>
-              <div class="plus-menu" id="plusMenu">
-                <div class="plus-menu-item">
-                  <i class="fas fa-image"></i>
-                  <span>選擇圖片</span>
-                </div>
-                <div class="plus-menu-item">
-                  <i class="fas fa-paperclip"></i>
-                  <span>選擇檔案</span>
-                </div>
-                <div class="plus-menu-item">
-                  <i class="fas fa-video"></i>
-                  <span>選擇影片</span>
-                </div>
-              </div>
-            </div>
-            <input
-              type="text"
-              class="message-input"
-              id="messageInput"
-              placeholder="輸入訊息..."
-            />
-            <button class="action-btn">
-              <i class="fas fa-phone"></i>
-            </button>
-            <button class="action-btn">
-              <i class="fas fa-video"></i>
-            </button>
-          </div>
-        </div>
       </div>
-    </div>
-
+      <div class="messages-container" id="messagesContainer">
+          <!-- 訊息內容將由 JavaScript 動態生成 -->
+      </div>
+      <div class="input-container">
+          <div class="input-wrapper">
+              <input
+                  type="text"
+                  class="message-input"
+                  id="messageInput"
+                  placeholder="輸入訊息..."
+              />
+              <button class="action-btn" id="sendButton">
+                  <i class="fas fa-paper-plane"></i> 發送
+              </button>
+          </div>
+      </div>
+  </div>
+</div>
      <!------網站footer------>
      <footer>
       <div class="d-flex justify-content-start mt-4">

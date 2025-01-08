@@ -9,26 +9,22 @@
 <meta content="Free HTML Templates" name="description">
 
 <!-- Favicon -->
-<link href="img/favicon.ico" rel="icon">
+<link href="img/favicon.ico" rel="icon" />
 
 <!-- Google Web Fonts -->
-<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" />
 <link
 	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-	rel="stylesheet">
+	rel="stylesheet" />
 
 <!-- Font Awesome -->
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
-	rel="stylesheet">
-
-<!-- Libraries Stylesheet -->
-<link href="lib/owlcarousel/assets/owl.carousel.min.css"
-	rel="stylesheet">
+	rel="stylesheet" />
 
 <!-- Customized Bootstrap Stylesheet -->
-<link href="css/style.css" rel="stylesheet">
-<link href="css/yuki_style.css" rel="stylesheet">
+<link th:href="@{/css/style.css}" rel="stylesheet" />
+<link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
 <style>
 .breadcrumb {
 	background-color: transparent;
@@ -307,34 +303,27 @@ select {
 		<nav
 			class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
 	</div>
+		<!------網站header------>
 	<div id="app">
 		<header>
 			<nav class="top-nav">
 				<div class="nav-left">
-					<a href="nav-go" class="nav-item nav-link" id="nav-go">Go！行程</a> <a
-						href="nav-product" class="nav-item nav-link" id="nav-product">購！票券</a>
-					<a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a> <a
-						href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+					<a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a> <a
+						href="#" class="nav-item nav-link" id="nav-mygo">我的行程</a>
 				</div>
 				<div class="nav-center">
-					<a href="/TIA104G2-SpringBoot/" id="z-index"> <img th:src="@{/img/logo_black.png}"
-						alt="Chill Trip" style="width: 150px; height: auto" />
+					<a href="#" id="z-index"> <a href="/TIA104G2-SpringBoot/"
+						id="z-index"> <img th:src="@{/img/logo_black.png}"
+							alt="Chill Trip" style="width: 150px; height: auto" />
+					</a>
 					</a>
 				</div>
 				<div class="nav-right">
-					<a href="/TIA104G2-SpringBoot/login" class="nav-item nav-link  active" id="nav-login"
-						style="color: #FF6600;">登入/註冊</a>
-					<div class="nav-item dropdown">
-						<a href="#" class="nav-link dropdown-toggle"
-							data-toggle="dropdown" style="color: #212529;">會員中心</a>
-						<div class="dropdown-menu rounded-0 m-0">
-							<a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a> <a
-								href="#" class="dropdown-item" id="nav-coupons">我的折價券</a> <a
-								href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
-						</div>
-					</div>
-					<a href="#" class="nav-item nav-link" id="nav-support">客服中心</a> <a
-						href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+					<a href="/TIA104G2-SpringBoot/login"
+						class="nav-item nav-link  active" id="nav-login"
+						style="color: #FF6600;">登入/註冊</a> <a href="#"
+						class="nav-item nav-link" id="nav-profile">會員基本資料</a> <a href="#"
+						class="nav-item nav-link" id="nav-support">客服中心</a>
 				</div>
 			</nav>
 		</header>
@@ -357,13 +346,14 @@ select {
 
 			<div class="form-group">
 				<label class="required">會員暱稱</label> <input type="text"
-					id="username" name="nickName" placeholder="輸入暱稱" required>
-
+					id="nickName" name="nickName" placeholder="輸入暱稱" required>
+				<div id="nickNameError" style="color: #ff4444; font-size: 14px; display: none;">暱稱可以包括中文、英文、空格，但不可是特殊符號，長度需在2~15之間，且不允許開頭或結尾有空格</div>
 			</div>
 
 			<div class="form-group">
 				<label class="required">真實姓名</label> <input type="text"
-					id="realname" name="name" placeholder="輸入姓名" required>
+					id="name" name="name" placeholder="輸入姓名" required>
+				<div id="nameError" style="color: #ff4444; font-size: 14px; display: none;">姓名可以包括中文、英文、空格，但不可是特殊符號，長度需在2~10之間，且不允許開頭或結尾有空格</div>
 			</div>
 
 			<div class="form-group">
@@ -382,6 +372,7 @@ select {
 			<div class="form-group">
 				<label class="required">聯絡電話</label> <input type="tel" id="phone"
 					name="phone" placeholder="輸入聯絡電話" required>
+				<div id="phoneError" style="color: #ff4444; font-size: 14px; display: none;">請輸入正確聯絡電話格式，手機或市話皆可，ex: 0912345678 或 02-12345678</div>
 			</div>
 
 			<div class="form-group">
@@ -399,6 +390,7 @@ select {
 			<div class="form-group">
 				<label class="required">密碼</label> <input type="password"
 					id="password" name="password" placeholder="輸入密碼" required>
+				<div id="passwordError" style="color: #ff4444; font-size: 14px; display: none;">密碼只能是英文字母數字和_，長度需在5~15之間</div>
 				<button type="button" class="password-toggle" data-target="password">
 					<svg class="eye-open" viewBox="0 0 24 24">
               <path
@@ -426,7 +418,7 @@ select {
             </svg>
 				</button>
 				<!-- 錯誤訊息顯示區域 -->
-				<div id="passwordError"
+				<div id="confirmpasswordError"
 					style="color: #ff4444; font-size: 14px; display: none;">密碼輸入不一致</div>
 			</div>
 
@@ -498,42 +490,46 @@ select {
 		</div>
 		<div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
 	</footer>
-	</div>
 
+	<!------ 共用JS ------>
 	<!-- Back to Top -->
 	<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i
 		class="fa fa-angle-double-up"></i></a>
-
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 	<!-- JavaScript Libraries -->
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 	<script
 		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-	<script src="lib/easing/easing.min.js"></script>
-	<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+	<!-- 本地資源改用 Thymeleaf 語法 -->
+	<script th:src="@{/lib/easing/easing.min.js}"></script>
+	<script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
 
 	<!-- Contact Javascript File -->
-	<script src="mail/jqBootstrapValidation.min.js"></script>
-	<script src="mail/contact.js"></script>
+	<script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
+	<script th:src="@{/mail/contact.js}"></script>
 
 	<!-- Template Javascript -->
-	<script src="js/main.js"></script>
+	<script th:src="@{/js/main.js}"></script>
+
+	<!-- 導航欄nav的href載入器 -->
+	<!------修齊的JS------>
+	<script th:src="@{/js/navigation.js}"></script>
 
 	<!-- 導航欄nav的href載入器 -->
 	<script>
-    document.addEventListener("DOMContentLoaded", function () {
-      document.getElementById("nav-go").href = "./go.html";
-      document.getElementById("nav-product").href = "./product.html";
-      document.getElementById("nav-profile").href = "./profile.html";
-      document.getElementById("nav-guide").href = "./guide.html";
-      document.getElementById("nav-basic-info").href = "./basic_info.html";
-      document.getElementById("nav-coupons").href = "./coupons.html";
-      document.getElementById("nav-orders").href = "./orders.html";
-      document.getElementById("nav-support").href = "./support.html";
-      document.getElementById("nav-cart").href = "./cart.html";
-      document.getElementById("nav-index").href = "./index.html";
-    });
+//     document.addEventListener("DOMContentLoaded", function () {
+//       document.getElementById("nav-go").href = "./go.html";
+//       document.getElementById("nav-product").href = "./product.html";
+//       document.getElementById("nav-profile").href = "./profile.html";
+//       document.getElementById("nav-guide").href = "./guide.html";
+//       document.getElementById("nav-basic-info").href = "./basic_info.html";
+//       document.getElementById("nav-coupons").href = "./coupons.html";
+//       document.getElementById("nav-orders").href = "./orders.html";
+//       document.getElementById("nav-support").href = "./support.html";
+//       document.getElementById("nav-cart").href = "./cart.html";
+//       document.getElementById("nav-index").href = "./index.html";
+//     });
   </script>
 	<script>
     const contextPath = "/TIA104G2-SpringBoot"; // 從後端傳來的 context-path
@@ -606,17 +602,63 @@ select {
 
     // 監聽表單提交
     document.getElementById("registrationForm").addEventListener("submit", function (event) {
-        event.preventDefault(); // 防止表單提交刷新頁面
+        event.preventDefault(); // 防止表單提交刷新頁面 
+        
+        let isValid = true;
 
-        // 檢查密碼與確認密碼是否一致
+        // 驗證暱稱
+        const nickName = document.getElementById("nickName").value;
+        const nickNamePattern = /^[\u4E00-\u9FFFa-zA-Z\s]{2,15}$/;
+        if (!nickName || !nickNamePattern.test(nickName)) {
+            document.getElementById("nickNameError").style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById("nickNameError").style.display = 'none';
+        }
+
+        // 驗證姓名
+        const name = document.getElementById("name").value;
+        const namePattern = /^[\u4E00-\u9FFFa-zA-Z\s]{2,10}$/;
+        if (!name || !namePattern.test(name)) {
+            document.getElementById("nameError").style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById("nameError").style.display = 'none';
+        }
+
+        // 驗證電話
+        const phone = document.getElementById("phone").value;
+        const phonePattern = /^(09[0-9]{8}|0[2-8][0-9]{7,8}|0[2-8]-[0-9]{6,8})$/;
+        if (!phone || !phonePattern.test(phone)) {
+            document.getElementById("phoneError").style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById("phoneError").style.display = 'none';
+        }
+
+        // 驗證密碼長度
         const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
+        const passwordPattern = /^[a-zA-Z0-9_]{5,15}$/;
+        if (!password || !passwordPattern.test(password)) {
+            document.getElementById("passwordError").style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById("passwordError").style.display = 'none';
+        }
+
+        // 驗證密碼確認
+		const confirmPassword = document.getElementById("confirmPassword").value;
 
         if (password !== confirmPassword) {
-            document.getElementById("passwordError").style.display = 'block'; // 顯示錯誤訊息
+            document.getElementById("confirmpasswordError").style.display = 'block'; // 顯示錯誤訊息
         } else {
-            document.getElementById("passwordError").style.display = 'none'; // 隱藏錯誤訊息
+            document.getElementById("confirmpasswordError").style.display = 'none'; // 隱藏錯誤訊息
             submitForm(); // 呼叫提交表單的函數
+        }
+
+        // 如果所有欄位驗證通過，提交表單
+        if (isValid) {
+            document.getElementById("registrationForm").submit();
         }
     });
 
