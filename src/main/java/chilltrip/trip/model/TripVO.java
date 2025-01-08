@@ -71,10 +71,10 @@ public class TripVO implements Serializable{
 	private Integer status;
 	
 	@Column(name = "overall_score")
-	private Integer overall_score;
+	private Integer overall_score=0;
 	
 	@Column(name = "overall_scored_people")
-	private Integer overall_scored_people;
+	private Integer overall_scored_people=0;
 	
 	@Column(name = "location_number")
 	private Integer location_number;

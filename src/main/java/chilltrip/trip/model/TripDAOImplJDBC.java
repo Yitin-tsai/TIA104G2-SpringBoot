@@ -1,4 +1,4 @@
-package chilltrip.trip.dao;
+package chilltrip.trip.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Repository;
 
-import chilltrip.trip.model.TripVO;
-
+@Repository
 public class TripDAOImplJDBC implements TripDAO, AutoCloseable {
 
 	// 屬性建立用private，因為只有這個類別會用到

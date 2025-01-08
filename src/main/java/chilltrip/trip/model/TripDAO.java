@@ -1,9 +1,7 @@
-package chilltrip.trip.dao;
+package chilltrip.trip.model;
 
 import java.util.List;
 import java.util.Map;
-
-import chilltrip.trip.model.TripVO;
 
 public interface TripDAO {
 	

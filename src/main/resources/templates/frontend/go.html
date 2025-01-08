@@ -20,545 +20,17 @@
 
     <!-- Font Awesome -->
     <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
 
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="/static/css/style.css" rel="stylesheet" />
-    <link href="/static/css/yuki_style.css" rel="stylesheet" />
-
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/yuki_style.css" rel="stylesheet" />
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          "Helvetica Neue", Arial, sans-serif;
-      }
-
-      :root {
-        --primary-color: #2c3e50;
-        --secondary-color: #34495e;
-        --accent-color: #3498db;
-        --gray-light: #f5f6fa;
-        --border-color: #dcdde1;
-      }
-
-      body {
-        background-color: var(--gray-light);
-      }
-
-      .button-container {
-        margin-top: 8px; /* 與上方內容保持間距 */
-      }
-
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-
-      /* 導航欄樣式 */
-      .navbar {
-        background-color: white;
-        padding: 15px 0;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-
-      .nav-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 20px;
-      }
-
-      .logo {
-        font-size: 24px;
-        font-weight: bold;
-        color: var(--primary-color);
-      }
-
-      /* 搜尋區域樣式 */
-      .search-section {
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-
-      .search-container {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 20px;
-      }
-
-      select,
-      input[type="text"] {
-        padding: 10px;
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        flex: 1;
-      }
-
-      /* 文章卡片樣式 */
-      .articles-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        margin-bottom: 30px;
-      }
-
-      @media (min-width: 1200px) {
-        .articles-grid {
-          grid-template-columns: repeat(4, 1fr);
-        }
-      }
-
-      .article-card {
-        background-color: white;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s;
-      }
-
-      .article-card:hover {
-        transform: translateY(-5px);
-      }
-
-      .article-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-      }
-
-      .article-content {
-        padding: 15px;
-      }
-
-      .article-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-        font-size: 14px;
-        color: #666;
-      }
-
-      .follow-btn {
-        border: 1px solid #9ca3af;
-        background: transparent;
-        color: #6b7280;
-        padding: 2px 10px;
-        border-radius: 12px;
-        font-size: 12px;
-        font-weight: normal;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        position: relative;
-        min-width: 52px;
-        display: inline-block;
-        text-align: center;
-      }
-
-      .follow-btn:hover {
-        background-color: #f3f4f6;
-        border-color: #6b7280;
-      }
-
-      .follow-btn.followed {
-        background-color: #6b7280;
-        border-color: #6b7280;
-        color: white;
-      }
-
-      .follow-btn.followed:hover {
-        background-color: #4b5563;
-        border-color: #4b5563;
-      }
-
-      .article-title {
-        font-size: 18px;
-        margin-bottom: 10px;
-        color: var(--primary-color);
-      }
-
-      .article-description {
-        font-size: 14px;
-        color: #666;
-        margin-bottom: 15px;
-        line-height: 1.5;
-      }
-
-      .article-tags {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 15px;
-      }
-
-      .tag {
-        background-color: var(--gray-light);
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 12px;
-        color: var(--secondary-color);
-      }
-
-      .article-stats {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 14px;
-        color: #666;
-      }
-
-      /* 搜尋區域樣式 */
-      .map-search {
-        padding: 15px;
-        background: white;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin-bottom: 15px;
-        display: flex;
-        gap: 10px;
-      }
-
-      #place-search {
-        flex-grow: 1;
-        padding: 8px 12px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-      }
-
-      #search-place-btn {
-        padding: 8px 16px;
-        background: #1a73e8;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-
-      #search-place-btn:hover {
-        background: #1557b0;
-      }
-
-      /* 地圖容器樣式 */
-      .map-container {
-        height: 400px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        overflow: hidden;
-      }
-
-      /* 地點列表樣式 */
-      .place-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
-        padding: 20px;
-      }
-
-      .place-card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-      }
-
-      .place-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      }
-
-      .card-content {
-        padding: 15px;
-      }
-
-      .place-photo {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        overflow: hidden;
-        margin-bottom: 12px;
-        border-radius: 4px;
-      }
-
-      .place-photo img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-
-      .place-name {
-        font-size: 18px;
-        font-weight: 600;
-        color: #1a73e8;
-        margin-bottom: 8px;
-      }
-
-      .distance {
-        color: #34a853;
-        font-weight: 500;
-        margin-bottom: 8px;
-      }
-
-      .address {
-        color: #5f6368;
-        font-size: 14px;
-        margin-bottom: 8px;
-      }
-
-      .rating {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #fbbc04;
-        font-weight: 500;
-      }
-
-      .rating-count {
-        color: #5f6368;
-        font-size: 14px;
-        font-weight: normal;
-      }
-
-      /* RWD 調整 */
-      @media (max-width: 768px) {
-        .place-list {
-          grid-template-columns: 1fr;
-        }
-
-        .map-container {
-          height: 300px;
-        }
-      }
-
-      /* 收藏列表選擇彈窗 */
-      .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-      }
-
-      .modal.active {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .modal-content {
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        width: 90%;
-        max-width: 400px;
-      }
-
-      .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-      }
-
-      .modal-close {
-        background: none;
-        border: none;
-        font-size: 20px;
-        cursor: pointer;
-      }
-
-      .list-select {
-        width: 100%;
-        margin-bottom: 15px;
-      }
-
-      .create-list-input {
-        width: 100%;
-        margin-bottom: 15px;
-        padding: 8px;
-      }
-
-      .modal-buttons {
-        display: flex;
-        gap: 10px;
-        justify-content: flex-end;
-      }
-
-      .modal-buttons button {
-        padding: 8px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-
-      .create-list-btn {
-        background-color: var(--accent-color);
-        color: white;
-      }
-
-      .cancel-btn {
-        background-color: #ccc;
-        color: white;
-      }
-
-      .place-item {
-        background: white;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s, box-shadow 0.2s;
-      }
-
-      .place-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      }
-
-      .place-content {
-        position: relative;
-      }
-
-      .place-photo {
-        position: relative;
-        width: 100%;
-        height: 200px;
-        overflow: hidden;
-      }
-
-      .place-photo img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .save-btn {
-        right: 12px;
-        bottom: 12px;
-        background: #1a73e8;
-        color: white;
-        border: none;
-        border-radius: 20px;
-        padding: 8px 16px;
-        font-size: 14px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        transition: background-color 0.2s;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      }
-
-      .save-btn:hover {
-        background: #1557b0;
-      }
-
-      .save-btn i {
-        font-size: 14px;
-      }
-
-      .place-info {
-        display: flex;
-        align-items: flex-start;
-        padding: 16px;
-        gap: 16px;
-        width: 100%;
-      }
-
-      .place-name {
-        font-size: 20px;
-        font-weight: 600;
-        color: #1a73e8;
-        margin-bottom: 8px;
-      }
-
-      .distance {
-        color: #34a853;
-        font-weight: 500;
-        margin-bottom: 8px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .place-address {
-        color: #5f6368;
-        font-size: 14px;
-        margin-bottom: 12px;
-        display: flex;
-        align-items: flex-start;
-        gap: 8px;
-      }
-
-      .place-address i {
-        color: #ea4335;
-        margin-top: 3px;
-      }
-
-      .rating-container {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .rating {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-      }
-
-      .stars {
-        color: #fbbc04;
-        letter-spacing: 2px;
-      }
-
-      .rating-score {
-        font-weight: 600;
-        color: #fbbc04;
-      }
-
-      .rating-count {
-        color: #5f6368;
-        font-size: 14px;
-      }
-
-      .breadcrumb {
-        background-color: transparent;
-        /* 移除背景色 */
-        list-style: none;
-        /* 移除列表樣式 */
-        display: flex;
-        padding: 0;
-        margin: 1rem 0;
-        top: 10px;
-      }
-
-      .breadcrumb-item {
-        font-size: calc(1rem - 4px);
-        /* 比 dropdown-item 小 4px */
-        color: #6c757d !important;
-        /* 預設顯示為灰色，並覆蓋 Bootstrap 預設樣式 */
-        text-decoration: none;
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-      }
-
       .breadcrumb-item + .breadcrumb-item::before {
         content: ">";
         padding: 0 0.5rem;
@@ -581,6 +53,7 @@
         color: #ff6600 !important;
         /* 最後一個元素顯示為橘色，並覆蓋 Bootstrap 預設樣式 */
       }
+
       /* 父容器，使用 flexbox 使搜尋框和地圖並排 */
       .map-container {
         display: flex; /* 使用 flexbox 排列子元素 */
@@ -596,9 +69,9 @@
 
       #mapBtn {
         right: 0;
-
         width: 100%;
       }
+
       #mapInput {
         width: 100%;
       }
@@ -618,6 +91,7 @@
         padding: 10px;
         background-color: #f9f9f9;
       }
+
       .search-bar {
         margin: 0; /* 去除外邊距 */
         padding: 0; /* 去除內邊距 */
@@ -691,6 +165,7 @@
       .place-item a:hover {
         background-color: #0056b3;
       }
+
       .nearRestBtn {
         padding: 0.5rem 1rem;
         background-color: #ff6600;
@@ -705,7 +180,6 @@
       }
     </style>
   </head>
-
   <body>
     <!------網站header------>
     <div id="app">
@@ -713,16 +187,14 @@
         <nav class="top-nav">
           <div class="nav-left">
             <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
-            <a href="./product.html" class="nav-item nav-link" id="nav-product"
-              >購！票券</a
-            >
+            <a href="#" class="nav-item nav-link" id="nav-product">購！票券</a>
             <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
             <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
           </div>
           <div class="nav-center">
-            <a href="#" class="nav-index">
+            <a href="/TIA104G2-SpringBoot/" id="z-index">
               <img
-                src="./img/logo_black.png"
+                th:src="@{/img/logo_black.png}"
                 alt="Chill Trip"
                 style="width: 150px; height: auto"
               />
@@ -753,113 +225,146 @@
         </nav>
       </header>
     </div>
+    <div class="sub-header">
+      <div class="search-container">
+        <div class="search-bar">
+          <!-- 活動類型下拉 (空) -->
+          <select id="activityTypeSelect" class="search-select">
+            <option value="">活動類型</option>
+          </select>
+
+          <!-- 行程地區下拉 (空) -->
+          <select id="regionSelect" class="search-select">
+            <option value="">行程地區</option>
+          </select>
+
+          <div class="search-input-group">
+            <input type="text" placeholder="關鍵字" id="dateInput" />
+            <button type="button" id="dateButton">搜尋</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div aria-label="breadcrumb">
       <ul class="breadcrumb" id="breadcrumb-nav">
         <!-- 麵包屑導航項目將由 JavaScript 動態生成 -->
       </ul>
     </div>
-
-    <div class="container">
-      <section class="search-section">
-        <div class="search-container">
-          <select id="activity-type">
-            <option value="">活動類型</option>
-            <option value="culture">文化景點</option>
-            <option value="nature">自然景觀</option>
-            <option value="food">美食</option>
-          </select>
-          <select id="region">
-            <option value="">地區</option>
-            <option value="taipei">台北</option>
-            <option value="tokyo">東京</option>
-            <option value="osaka">大阪</option>
-          </select>
-          <input type="text" placeholder="搜尋文章..." id="search-input" />
+    <main class="ticket-grid" id="tripCardsContainer">
+      <!-- 這裡的內容將由 JavaScript 動態插入行程卡片 -->
+    </main>
+    <!--搜尋標籤行程的頁碼-->
+    <div class="pagination">
+      <!-- 動態產生分頁按鈕 -->
+    </div>
+    <div class="map-container">
+      <!-- 搜尋框部分 -->
+      <div class="mapSearch-container" style="padding: 0px">
+        <div class="search-bar">
+          <div class="search-input-group">
+            <input type="text" placeholder="關鍵字" id="mapInput" />
+            <button type="button" id="mapBtn">搜尋</button>
+          </div>
+          <!-- 搜尋結果顯示區域 -->
+          <div
+            id="searchResults"
+            style="margin-top: 20px; max-height: 300px; overflow-y: auto"
+          ></div>
         </div>
-      </section>
+        <div class="search-input-group">
+          <button type="button" class="nearBtn" id="nearRest">
+            附近餐廳搜尋
+          </button>
+        </div>
+      </div>
 
-      <div class="articles-grid">
-        <!-- 文章卡片範例 -->
-        <article class="article-card">
+      <!-- Google 地圖部分 -->
+      <div class="map" id="map"></div>
+    </div>
+
+    <!--我的行程-->
+    <div>
+      <h6 style="text-align: center; font-size: 24px; margin-top: 47px">
+        我的行程
+      </h6>
+    </div>
+    <main class="ticket-grid">
+      <!-- Ticket cards remain unchanged -->
+      <a href="#" class="no-action" style="text-decoration: none">
+        <div class="ticket-card">
           <img
-            src="/api/placeholder/400/320"
-            alt="文章封面"
-            class="article-image"
+            src="https://okamoto-kimono.tw/common_renewal/img/home/kv_04.jpg"
+            alt="京都和服體驗"
           />
-          <div class="article-content">
-            <div class="article-meta">
-              <span class="author">作者：旅行家</span>
-              <button class="follow-btn">追蹤</button>
-            </div>
-            <h2 class="article-title">日本結緣神社10選</h2>
-            <p class="article-description">
-              除了東京大神宮，還有這些絕美景點！
-            </p>
-            <div class="article-tags">
-              <span class="tag">文化景點</span>
-              <span class="tag">東京</span>
-              <span class="tag">神社</span>
-            </div>
-            <div class="article-stats">
-              <span>👁️ 100</span>
-              <span>❤️ 50</span>
-              <span class="rating">★★★★★ 5.0</span>
+          <div class="ticket-info">
+            <h3 class="title">我的行程1</h3>
+            <p class="author">用戶名稱</p>
+            <div class="btn-group">
+              <button type="button" class="editBtn">編輯</button>
+              <button type="button" class="deleBtn">刪除</button>
             </div>
           </div>
-        </article>
-        <!-- 更多文章卡片 -->
-      </div>
-
-      <!--頁碼-->
-      <div class="pagination">
-        <a href="#" class="page-number active">1</a>
-        <a href="#" class="page-number">2</a>
-        <a href="#" class="page-number">3</a>
-        <span class="ellipsis">...</span>
-        <a href="#" class="page-number">8</a>
-        <a href="#" class="page-number">9</a>
-        <a href="#" class="page-number">10</a>
-        <span class="label">頁</span>
-      </div>
-
-      <!--Google地圖-->
-      <section class="map-section">
-        <div class="map-search">
-          <input type="text" id="place-search" placeholder="搜尋景點..." />
-          <button id="search-place-btn">搜尋</button>
         </div>
-        <div class="map-container" id="map">
-          <!-- Google Maps will be loaded here -->
-        </div>
-        <div class="place-list">
-          <!-- 搜尋結果將在這裡動態生成 -->
-        </div>
-      </section>
-
-      <!-- 收藏列表選擇彈窗 -->
-      <div class="modal" id="save-modal">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h3>選擇收藏列表</h3>
-            <button class="modal-close">&times;</button>
-          </div>
-          <select class="list-select">
-            <option value="">選擇現有列表...</option>
-            <option value="tokyo2024">東京行程2024</option>
-            <option value="osaka2024">大阪行程2024</option>
-          </select>
-          <input
-            type="text"
-            class="create-list-input"
-            placeholder="或建立新的收藏列表"
+      </a>
+      <a href="#" class="no-action" style="text-decoration: none">
+        <div class="ticket-card">
+          <img
+            src="https://today-obs.line-scdn.net/0hthxKI1x2K0dFMjlqFXVUEH1kJzZ2VDFOZwEwImM7JXdvHjwScVN4JGlhJ2s7BThBZQM3KDJhcXFuUWoYeg/w1200"
+            alt="東京迪士尼門票"
           />
-          <div class="modal-buttons">
-            <button class="cancel-btn">取消</button>
-            <button class="create-list-btn">確認</button>
+          <div class="ticket-info">
+            <h3 class="title">我的行程2</h3>
+            <p class="author">用戶名稱</p>
+            <div class="btn-group">
+              <button type="button" class="editBtn">編輯</button>
+              <button type="button" class="deleBtn">刪除</button>
+            </div>
           </div>
         </div>
-      </div>
+      </a>
+      <a href="#" class="no-action" style="text-decoration: none">
+        <div class="ticket-card">
+          <img
+            src="https://media.nownews.com/nn_media/thumbnail/2023/08/1693378260517-fdd388634ad5460589c853eca1c4774e-800x565.webp?unShow=false"
+            alt="大阪環球影城門票"
+          />
+          <div class="ticket-info">
+            <h3 class="title">我的行程3</h3>
+            <p class="author">用戶名稱</p>
+            <div class="btn-group">
+              <button type="button" class="editBtn">編輯</button>
+              <button type="button" class="deleBtn">刪除</button>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="no-action" style="text-decoration: none">
+        <div class="ticket-card">
+          <img
+            src="https://rimage.gnst.jp/livejapan.com/public/article/detail/a/00/02/a0002944/img/basic/a0002944_main.jpg"
+            alt="富士山巴士一日券"
+          />
+          <div class="ticket-info">
+            <h3 class="title">我的行程4</h3>
+            <p class="author">用戶名稱</p>
+            <div class="btn-group">
+              <button type="button" class="editBtn">編輯</button>
+              <button type="button" class="deleBtn">刪除</button>
+            </div>
+          </div>
+        </div>
+      </a>
+    </main>
+    <!-- 自己行程的頁碼 -->
+    <div class="pagination-custom">
+      <a href="#" class="page-number active">1</a>
+      <a href="#" class="page-number">2</a>
+      <a href="#" class="page-number">3</a> <span class="ellipsis">...</span>
+      <a href="#" class="page-number">8</a>
+      <a href="#" class="page-number">9</a>
+      <a href="#" class="page-number">10</a>
+      <span class="label">頁</span>
     </div>
 
     <footer>
@@ -939,18 +444,33 @@
           rel="stylesheet"
         />
       </div>
-
       <div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script
-      type="module"
-      src="https://unpkg.com/@googlemaps/extended-component-library@0.6"
-    ></script>
-    <script src="/static/js/maphsiuchi.js"></script>
+    <!------ 共用JS ------>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
+      ><i class="fa fa-angle-double-up"></i
+    ></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 本地資源改用 Thymeleaf 語法 -->
+    <script th:src="@{/lib/easing/easing.min.js}"></script>
+    <script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+
+    <!-- Contact Javascript File -->
+    <script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
+    <script th:src="@{/mail/contact.js}"></script>
+
+    <!-- Template Javascript -->
+    <script th:src="@{/js/main.js}"></script>
 
     <!-- 導航欄nav的href載入器 -->
+    <!------修齊的JS------>
+    <script th:src="@{/js/navigation.js}"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("nav-go").href = "./go.html";
@@ -1003,223 +523,177 @@
         });
       });
     </script>
-
     <script>
+      // 	行程搜尋出現的行程卡片
       $(document).ready(function () {
-        // 模擬文章數據
-        const articles = [
-          {
-            id: 1,
-            title: "日本結緣神社10選",
-            author: "旅行家",
-            description: "除了東京大神宮，還有這些絕美景點！",
-            image: "/api/placeholder/400/320",
-            views: 100,
-            likes: 50,
-            rating: 5.0,
-            tags: ["文化景點", "東京", "神社"],
-          },
-          {
-            id: 2,
-            title: "大阪美食地圖",
-            author: "美食獵人",
-            description: "從道頓堀到黑門市場，帶你吃遍大阪精選美食！",
-            image: "/api/placeholder/400/320",
-            views: 850,
-            likes: 320,
-            rating: 4.8,
-            tags: ["美食", "大阪", "市集"],
-          },
-          {
-            id: 3,
-            title: "京都賞楓秘境",
-            author: "攝影師小王",
-            description: "避開人潮，獨享京都最美紅葉時節",
-            image: "/api/placeholder/400/320",
-            views: 1200,
-            likes: 460,
-            rating: 4.9,
-            tags: ["自然景觀", "京都", "紅葉"],
-          },
-          {
-            id: 4,
-            title: "福岡溫泉之旅",
-            author: "小悠遊",
-            description: "精選5家福岡近郊絕美溫泉旅館",
-            image: "/api/placeholder/400/320",
-            views: 680,
-            likes: 230,
-            rating: 4.7,
-            tags: ["溫泉", "福岡", "住宿"],
-          },
-          {
-            id: 5,
-            title: "東京藝術巡禮",
-            author: "藝術愛好者",
-            description: "打卡網美必訪的東京當代藝術館",
-            image: "/api/placeholder/400/320",
-            views: 920,
-            likes: 410,
-            rating: 4.6,
-            tags: ["文化景點", "東京", "藝術館"],
-          },
-          {
-            id: 6,
-            title: "沖繩離島探索",
-            author: "島嶼漫遊者",
-            description: "遠離本島，探訪人少景美的沖繩秘境",
-            image: "/api/placeholder/400/320",
-            views: 750,
-            likes: 280,
-            rating: 4.9,
-            tags: ["自然景觀", "沖繩", "海灘"],
-          },
-          {
-            id: 7,
-            title: "奈良一日散策",
-            author: "慢遊達人",
-            description: "與小鹿共遊，體驗奈良的古都風情",
-            image: "/api/placeholder/400/320",
-            views: 560,
-            likes: 190,
-            rating: 4.5,
-            tags: ["文化景點", "奈良", "古蹟"],
-          },
-          {
-            id: 8,
-            title: "北海道滑雪指南",
-            author: "雪地悍將",
-            description: "新手到高手都適用的滑雪場全攻略",
-            image: "/api/placeholder/400/320",
-            views: 1500,
-            likes: 680,
-            rating: 4.8,
-            tags: ["運動", "北海道", "滑雪"],
-          },
-          {
-            id: 9,
-            title: "神戶港夜景攻略",
-            author: "夜景獵人",
-            description: "摩賽克廣場到美利堅公園的最佳觀景點",
-            image: "/api/placeholder/400/320",
-            views: 830,
-            likes: 360,
-            rating: 4.7,
-            tags: ["夜景", "神戶", "港口"],
-          },
-          {
-            id: 10,
-            title: "名古屋老街探訪",
-            author: "懷舊控",
-            description: "走訪昭和時期的復古商店街",
-            image: "/api/placeholder/400/320",
-            views: 420,
-            likes: 180,
-            rating: 4.6,
-            tags: ["文化景點", "名古屋", "老街"],
-          },
-          {
-            id: 11,
-            title: "箱根溫泉酒店精選",
-            author: "奢華體驗家",
-            description: "最美的富士山view溫泉房推薦",
-            image: "/api/placeholder/400/320",
-            views: 2100,
-            likes: 890,
-            rating: 4.9,
-            tags: ["住宿", "箱根", "溫泉"],
-          },
-          {
-            id: 12,
-            title: "金澤茶屋街漫步",
-            author: "文青散策",
-            description: "體驗百年老茶屋的優雅時光",
-            image: "/api/placeholder/400/320",
-            views: 640,
-            likes: 270,
-            rating: 4.7,
-            tags: ["文化景點", "金澤", "茶屋"],
-          },
-        ];
+        const contextPath = "/TIA104G2-SpringBoot";
+        let currentTrips = [];
+        let currentPage = 1;
+        const pageSize = 4;
 
-        // 渲染文章卡片
-        function renderArticles(articles) {
-          $(".articles-grid").empty();
-          articles.forEach((article) => {
-            const articleHTML = `
-                        <article class="article-card">
-                            <img src="${article.image}" alt="${
-              article.title
-            }" class="article-image">
-                            <div class="article-content">
-                                <div class="article-meta">
-                                    <span class="author">作者：${
-                                      article.author
-                                    }</span>
-                                    <button class="follow-btn">追蹤</button>
-                                </div>
-                                <h2 class="article-title">${article.title}</h2>
-                                <p class="article-description">${
-                                  article.description
-                                }</p>
-                                <div class="article-tags">
-                                    ${article.tags
-                                      .map(
-                                        (tag) =>
-                                          `<span class="tag">${tag}</span>`
-                                      )
-                                      .join("")}
-                                </div>
-                                <div class="article-stats">
-                                    <span>👁️ ${article.views}</span>
-                                    <span>❤️ ${article.likes}</span>
-                                    <span class="rating">★★★★★ ${
-                                      article.rating
-                                    }</span>
-                                </div>
-                            </div>
-                        </article>
-                    `;
-            $(".articles-grid").append(articleHTML);
+        // 1) 載入活動類型
+        $.ajax({
+          url: contextPath + "/tripactype/all",
+          type: "GET",
+          dataType: "json",
+          success: function (eventTypes) {
+            const $activitySelect = $("#activityTypeSelect");
+            $activitySelect.empty();
+            $activitySelect.append(`<option value="">請選擇活動類型</option>`);
+            eventTypes.forEach(function (typeStr) {
+              $activitySelect.append(
+                `<option value="${typeStr}">${typeStr}</option>`
+              );
+            });
+          },
+          error: function (xhr) {
+            console.error("無法取得行程活動類型清單:", xhr);
+          },
+        });
+
+        // 2) 載入行程地區
+        $.ajax({
+          url: contextPath + "/triparea/all",
+          type: "GET",
+          dataType: "json",
+          success: function (regionList) {
+            const $regionSelect = $("#regionSelect");
+            $regionSelect.empty();
+            $regionSelect.append(`<option value="">請選擇行程地區</option>`);
+            regionList.forEach(function (region) {
+              $regionSelect.append(
+                `<option value="${region}">${region}</option>`
+              );
+            });
+          },
+          error: function (xhr) {
+            console.error("無法取得行程地區清單:", xhr);
+          },
+        });
+
+        // 3) 監聽活動類型
+        $("#activityTypeSelect").on("change", function () {
+          const selectedEventType = $(this).val();
+          if (!selectedEventType) {
+            $("#tripCardsContainer").empty();
+            return;
+          }
+          // 呼叫 /tripactype/trips
+          $.ajax({
+            url: contextPath + "/tripactype/trips",
+            type: "GET",
+            data: { eventType: selectedEventType },
+            dataType: "json",
+            success: function (trips) {
+              console.log("共拿到幾筆資料?", trips.length);
+              currentTrips = trips;
+              currentPage = 1;
+              renderTripCards(trips);
+              renderPagination();
+            },
+            error: function (xhr) {
+              if (xhr.status === 404) {
+                $("#tripCardsContainer").empty();
+                console.log("沒有找到相關行程");
+              } else {
+                console.error("查詢行程活動失敗:", xhr);
+              }
+            },
+          });
+        });
+
+        // 4) 監聽地區
+        $("#regionSelect").on("change", function () {
+          const selectedRegion = $(this).val();
+          if (!selectedRegion) {
+            $("#tripCardsContainer").empty();
+            return;
+          }
+          // 呼叫 /triparea/search
+          $.ajax({
+            url: contextPath + "/triparea/search",
+            type: "GET",
+            data: { regionContent: selectedRegion },
+            dataType: "json",
+            success: function (resultList) {
+              console.log("地區查詢共拿到幾筆?", resultList.length);
+              currentTrips = resultList;
+              currentPage = 1;
+              renderTripCards(resultList);
+              renderPagination();
+            },
+            error: function (xhr) {
+              if (xhr.status === 404) {
+                $("#tripCardsContainer").empty();
+                console.log("沒有找到相關行程");
+              } else {
+                console.error("查詢行程地區失敗:", xhr);
+              }
+            },
+          });
+        });
+
+        // 5) renderTripCards
+        function renderTripCards(trips) {
+          const $container = $("#tripCardsContainer");
+          $container.empty();
+          if (!trips || trips.length === 0) {
+            $container.append(`<p>目前沒有相關行程...</p>`);
+            return;
+          }
+
+          const startIndex = (currentPage - 1) * pageSize;
+          const endIndex = startIndex + pageSize;
+          const pageData = trips.slice(startIndex, endIndex);
+
+          pageData.forEach(function (trip) {
+            const tripTitle = trip.article_title || "未命名行程";
+            const tripAbstract = trip.trip_abstract || "沒有行程簡介";
+            const base64Photo = trip.coverImageUrl;
+            const coverImgUrl = base64Photo
+              ? base64Photo
+              : "https://via.placeholder.com/350x200?text=NoImage";
+
+            let authorName = trip.member_nickName || "未知作者";
+
+            const cardHtml = `
+            <div class="ticket-card">
+                <img src="${coverImgUrl}"
+                     onerror="this.onerror=null;this.src='https://via.placeholder.com/350x200?text=NoImage';"
+                     alt="${tripTitle}">
+                <div class="ticket-info">
+                    <h3 class="title">${tripTitle}</h3>
+                    <p class="author">${authorName}</p>
+                    <p class="abstract">${tripAbstract}</p>
+                    <!-- ...其他資訊 -->
+                </div>
+            </div>
+        `;
+            $container.append(cardHtml);
           });
         }
-
-        // 初始渲染
-        renderArticles(articles);
-
-        // 搜尋功能
-        $("#search-input, #activity-type, #region").on(
-          "input change",
-          function () {
-            const searchText = $("#search-input").val().toLowerCase();
-            const activityType = $("#activity-type").val();
-            const region = $("#region").val();
-
-            const filteredArticles = articles.filter((article) => {
-              const matchesSearch = article.title
-                .toLowerCase()
-                .includes(searchText);
-              const matchesActivity =
-                !activityType || article.tags.includes(activityType);
-              const matchesRegion = !region || article.tags.includes(region);
-              return matchesSearch && matchesActivity && matchesRegion;
+        // 6) renderPagination
+        function renderPagination() {
+          const $pagination = $(".pagination");
+          $pagination.empty();
+          if (!currentTrips || currentTrips.length === 0) {
+            return;
+          }
+          const totalPages = Math.ceil(currentTrips.length / pageSize);
+          for (let p = 1; p <= totalPages; p++) {
+            const $pageLink = $(`<a href="#" class="page-number">${p}</a>`);
+            if (p === currentPage) {
+              $pageLink.addClass("active");
+            }
+            $pageLink.on("click", function (e) {
+              e.preventDefault();
+              currentPage = p;
+              renderTripCards(currentTrips);
+              renderPagination();
             });
-
-            renderArticles(filteredArticles);
+            $pagination.append($pageLink);
           }
-        );
-
-        // 追蹤按鈕事件
-        $(document).on("click", ".follow-btn", function () {
-          const $btn = $(this);
-          const isFollowed = $btn.hasClass("followed");
-
-          if (isFollowed) {
-            $btn.removeClass("followed").text("追蹤");
-          } else {
-            $btn.addClass("followed").text("已追蹤");
-          }
-        });
+        }
       });
     </script>
   </body>

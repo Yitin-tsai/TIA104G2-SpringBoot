@@ -29,6 +29,11 @@ public class PageController {
     public String goPage() {
         return "/frontend/go";
     }
+    
+    @GetMapping("/sealgo")
+    public String goSealPage() {
+        return "/frontend/sealgo";
+    }
 
     @GetMapping("/product")
     public String productPage() {
