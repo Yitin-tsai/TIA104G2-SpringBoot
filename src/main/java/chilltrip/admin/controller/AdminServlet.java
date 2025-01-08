@@ -286,7 +286,7 @@ public class AdminServlet {
 
 	        // 登入成功，將 adminId 放入 server-side session
 	        session.setAttribute("adminId", adminVO.getAdminid());
-
+	        session.setAttribute("adminName", adminVO.getAdminnickname());
 	        // 回傳 JSON 給前端
 	        Map<String, Object> result = new HashMap<>();
 	        result.put("message", "登入成功");

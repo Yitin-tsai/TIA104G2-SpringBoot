@@ -13,6 +13,12 @@ public class ChatMessage {
 		this.message = message;
 	}
 
+	@Override
+	public String toString() {
+		return "ChatMessage [type=" + type + ", sender=" + sender + ", receiver=" + receiver + ", message=" + message
+				+ "]";
+	}
+
 	public String getSender() {
 		return sender;
 	}

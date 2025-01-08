@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties.Websocket;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -47,16 +48,15 @@ public class ChatRoomController  {
 			MemberVO member = membersvc.getMemberById(memberid);
 			String userName = member.getNickName();
 			connectedSessions.put(memberid,userName);
-			System.out.println("New session connected: " + memberid + " with username " + userName);
+			System.out.println("New session connected member: " + memberid + " with username " + userName);
 		}
 		if (payload.get("adminId") != null) {
 			Integer adminid = Integer.valueOf(payload.get("adminId"));
 			AdminVO admin = adminsvc.getOneAdmin(adminid);
 			String userName = admin.getAdminnickname();
 			connectedSessions.put(adminid,userName);
-			System.out.println("New session connected: " + adminid + " with username " + userName);
-		}else
-			System.out.println("empty");
+			System.out.println("New session connected admin: " + adminid + " with username " + userName);
+		}
 		
 	}
 
@@ -67,31 +67,23 @@ public class ChatRoomController  {
 		connectedSessions.remove(userId,userName);// 當用戶斷開連接時將其從在線用戶列表中移除
 		System.out.println("Session ID " + session.getId() + " disconnected");
 	}
-
-	// 處理錯誤
-
-	public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-		System.out.println("Error occurred: " + exception.getMessage());
-	}
-	
-	 // 透過 STOMP 發送消息
-    public void sendMessageToAll(String message) {
-        messagingTemplate.convertAndSend("/topic/messages", message);  // 發送消息到所有訂閱該主題的客戶端
-    }
 	
     @MessageMapping("/chat")  // 用來處理來自 /app/chat 的消息
-    @SendTo("/topic/messages")
-    protected void handleTextMessage( ChatMessage chatMessage) throws InterruptedException, IOException {
+    protected void handleTextMessage(ChatMessage chatMessage) throws InterruptedException, IOException {
         
-        System.out.println("Received message: " + chatMessage.getMessage());
+        System.out.println(chatMessage);
         Map<Integer,String>  connectedSessions = ChatRoomController.getConnectedSession();
         ObjectMapper objectMapper = new ObjectMapper();
+        
         // 根據 receiver 發送訊息給指定的客戶端
         for (Entry<Integer, String> s : connectedSessions.entrySet()) {
             if (s.getValue().equals(chatMessage.getReceiver())) {
                 // 只有發送給 receiver 的會話
                 String response = objectMapper.writeValueAsString(chatMessage);
-//                 s.getKey().sendMessage(new TextMessage(response)); // 發送消息
+                System.out.println("訊息字串 = " + response);              
+                messagingTemplate.convertAndSend("/user/"+chatMessage.getSender()+"/queue/messages", response);
+                messagingTemplate.convertAndSend("/user/"+chatMessage.getReceiver()+"/queue/messages", response);
+                System.out.println("/user/"+chatMessage.getReceiver()+"/queue/messages");
                 System.out.println("Sent message to: " + chatMessage.getReceiver());
             }if(chatMessage.getReceiver() == null) {
             	System.out.println("no recevicer send to all");

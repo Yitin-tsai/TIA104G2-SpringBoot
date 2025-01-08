@@ -53,6 +53,16 @@ public class ChatController {
        return response ;
        
     }
+	
+//	public String getMemberName(Integer memberid) {
+//		String memberName = memberSvc.getOneMember(memberid).getNickName();
+//		return memberName;
+//	}
+//	public String getAdminName(Integer adminid) {
+//		String adminName = adminSvc.getOneAdmin(adminid).getAdminnickname();
+//		return adminName;
+//	}
+	
 	// 獲取在線用戶列表的 HTTP API
     @GetMapping("/onlineUsers")
     public Set<String> getOnlineUsers() {
