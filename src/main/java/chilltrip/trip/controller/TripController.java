@@ -64,24 +64,80 @@ public class TripController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 		}
 	}
-	
+
 	// 首頁熱門文章 API
 	@GetMapping("/popular")
 	public ResponseEntity<Map<String, Object>> getPopularTrips() {
-	    try {
-	        List<Map<String, Object>> popularTrips = tripSvc.getPopularTrips();
+		try {
+			List<Map<String, Object>> popularTrips = tripSvc.getPopularTrips();
 
-	        Map<String, Object> response = new HashMap<>();
-	        response.put("content", popularTrips);
-	        
-	        return ResponseEntity.ok(response);
-	    } catch (Exception e) {
-	        e.printStackTrace(); // 在控制台打印詳細錯誤
-	        Map<String, Object> errorResponse = new HashMap<>();
-	        errorResponse.put("error", e.getClass().getName());
-	        errorResponse.put("message", e.getMessage());
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-	    }
+			Map<String, Object> response = new HashMap<>();
+			response.put("content", popularTrips);
+
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			e.printStackTrace(); // 在控制台打印詳細錯誤
+			Map<String, Object> errorResponse = new HashMap<>();
+			errorResponse.put("error", e.getClass().getName());
+			errorResponse.put("message", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+		}
+	}
+
+	// 根據活動查詢文章（多表查詢且要分頁）
+	@GetMapping("/activityfilter")
+	public ResponseEntity<Map<String, Object>> getTripsByEvent(@RequestParam String eventContent,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "12") int size) {
+
+		try {
+			// 建立分頁請求
+			Pageable pageable = PageRequest.of(page, size);
+			// 調用 Service 層的地區查詢方法
+			Page<Map<String, Object>> pageResult = tripSvc.getTripsByActivity(eventContent, pageable);
+
+			// 構建回應
+			Map<String, Object> response = new HashMap<>();
+			response.put("content", pageResult.getContent());
+			response.put("totalPages", pageResult.getTotalPages());
+			response.put("totalElements", pageResult.getTotalElements());
+			response.put("currentPage", page);
+
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Map<String, Object> errorResponse = new HashMap<>();
+			errorResponse.put("error", e.getClass().getName());
+			errorResponse.put("message", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+		}
+	}
+
+	// 根據地區查詢文章（多表查詢且要分頁）
+	@GetMapping("/areafilter")
+	public ResponseEntity<Map<String, Object>> getTripsByArea(@RequestParam String regionContent,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "12") int size) {
+
+		try {
+			// 建立分頁請求
+			Pageable pageable = PageRequest.of(page, size);
+			// 調用 Service 層的地區查詢方法
+			Page<Map<String, Object>> pageResult = tripSvc.getTripsByArea(regionContent, pageable);
+
+			// 構建回應
+			Map<String, Object> response = new HashMap<>();
+			response.put("content", pageResult.getContent());
+			response.put("totalPages", pageResult.getTotalPages());
+			response.put("totalElements", pageResult.getTotalElements());
+			response.put("currentPage", page);
+
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Map<String, Object> errorResponse = new HashMap<>();
+			errorResponse.put("error", e.getClass().getName());
+			errorResponse.put("message", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+		}
 	}
 
 }

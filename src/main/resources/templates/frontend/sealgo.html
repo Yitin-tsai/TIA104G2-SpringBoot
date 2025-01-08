@@ -755,52 +755,67 @@
       .error-message {
         color: #dc3545;
       }
+
+      .no-results {
+        text-align: center;
+        padding: 40px;
+        font-size: 1.2em;
+        color: #666;
+        background: #f9f9f9;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
     </style>
   </head>
 
   <body>
     <!------網站header------>
-      <header>
-        <nav class="top-nav">
-          <div class="nav-left">
-            <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
-            <a href="#" class="nav-item nav-link" id="nav-product">購！票券</a>
-            <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
-            <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
-          </div>
-          <div class="nav-center">
-            <a href="#" id="z-index">
-              <a href="/TIA104G2-SpringBoot/" id="z-index"> <img th:src="@{/img/logo_black.png}"
-						alt="Chill Trip" style="width: 150px; height: auto" />
-					</a>
+    <header>
+      <nav class="top-nav">
+        <div class="nav-left">
+          <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+          <a href="#" class="nav-item nav-link" id="nav-product">購！票券</a>
+          <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
+          <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+        </div>
+        <div class="nav-center">
+          <a href="#" id="z-index">
+            <a href="/TIA104G2-SpringBoot/" id="z-index">
+              <img
+                th:src="@{/img/logo_black.png}"
+                alt="Chill Trip"
+                style="width: 150px; height: auto"
+              />
             </a>
-          </div>
-          <div class="nav-right">
-          <a href="/TIA104G2-SpringBoot/login" class="nav-item nav-link  active" id="nav-login"
-						style="color: #FF6600;">登入/註冊</a>
-            <div class="nav-item dropdown">
-              <a
-                href="#"
-                class="nav-link dropdown-toggle"
-                data-toggle="dropdown"
-                style="color: #212529"
-                >會員中心</a
-              >
-              <div class="dropdown-menu rounded-0 m-0">
-                <a href="#" class="dropdown-item" id="nav-basic-info"
-                  >基本資料</a
-                >
-                <a href="#" class="dropdown-item" id="nav-coupons"
-                  >我的折價券</a
-                >
-                <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
-              </div>
+          </a>
+        </div>
+        <div class="nav-right">
+          <a
+            href="/TIA104G2-SpringBoot/login"
+            class="nav-item nav-link active"
+            id="nav-login"
+            style="color: #ff6600"
+            >登入/註冊</a
+          >
+          <div class="nav-item dropdown">
+            <a
+              href="#"
+              class="nav-link dropdown-toggle"
+              data-toggle="dropdown"
+              style="color: #212529"
+              >會員中心</a
+            >
+            <div class="dropdown-menu rounded-0 m-0">
+              <a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a>
+              <a href="#" class="dropdown-item" id="nav-coupons">我的折價券</a>
+              <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
             </div>
-            <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
-            <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
           </div>
-        </nav>
-      </header>
+          <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+          <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+        </div>
+      </nav>
+    </header>
 
     <div aria-label="breadcrumb">
       <ul class="breadcrumb" id="breadcrumb-nav">
@@ -1000,10 +1015,14 @@
     <!-- Template Javascript -->
     <script th:src="@{/js/main.js}"></script>
 
+    <!-- Google Map -->
+    <script th:src="@{/js/maphsiuchi.js}"></script>
+
     <!-- 導航欄nav的href載入器 -->
+    <script th:src="@{/js/navigation.js}"></script>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        
         const breadcrumbNav = document.getElementById("breadcrumb-nav");
         // 定義麵包屑導航的項目
         const breadcrumbItems = [
@@ -1267,16 +1286,106 @@
         }
 
         // 篩選器和搜尋功能 (活動類型、地區選擇、關鍵字搜尋)
+        // 活動類型篩選
         activitySelect.on("change", function () {
-          currentPage = 0; // 重置頁碼
-          loadArticles(currentPage);
+          const selectedActivity = $(this).val();
+          currentPage = 0;
+
+          if (selectedActivity) {
+            $.ajax({
+              url: `${contextPath}/trip/activityfilter`, // 修改為新的後端路徑
+              type: "GET",
+              data: {
+                eventContent: selectedActivity, // 修改參數名稱與後端對應
+                page: currentPage,
+                size: pageSize,
+              },
+              success: function (response) {
+                if (response && response.content) {
+                  // 由於後端返回分頁格式，檢查 response.content
+                  currentArticles = transformTripsToArticles(response.content);
+                  renderArticles(currentArticles);
+                  renderPagination({
+                    content: response.content,
+                    totalPages: response.totalPages,
+                    totalElements: response.totalElements,
+                    number: response.currentPage,
+                  });
+                } else {
+                  articlesGrid.html(
+                    '<p class="no-results">目前沒有這個活動類型的行程</p>'
+                  );
+                  $(".pagination").hide();
+                }
+              },
+              error: function (xhr) {
+                if (xhr.status === 404) {
+                  // 404 錯誤時顯示友善訊息
+                  articlesGrid.html(
+                    '<p class="no-results">目前沒有這個活動類型的行程</p>'
+                  );
+                  $(".pagination").hide();
+                } else {
+                  showErrorMessage("篩選活動類型失敗，請稍後再試");
+                }
+              },
+            });
+          } else {
+            loadArticles(currentPage);
+          }
         });
 
+        // 地區篩選
         regionSelect.on("change", function () {
-          currentPage = 0; // 重置頁碼
-          loadArticles(currentPage);
+          const selectedRegion = $(this).val();
+          currentPage = 0;
+
+          if (selectedRegion) {
+            $.ajax({
+              url: `${contextPath}/trip/areafilter`, // 修改為新的後端路徑
+              type: "GET",
+              data: {
+                regionContent: selectedRegion, // 確保參數名稱與後端一致
+                page: currentPage,
+                size: pageSize,
+              },
+              success: function (response) {
+                if (response && response.content) {
+                  // 後端返回分頁格式
+                  currentArticles = transformTripsToArticles(response.content);
+                  renderArticles(currentArticles);
+                  renderPagination({
+                    content: response.content,
+                    totalPages: response.totalPages,
+                    totalElements: response.totalElements,
+                    number: response.currentPage,
+                  });
+                } else {
+                  articlesGrid.html(
+                    '<p class="no-results">目前沒有這個地區的行程</p>'
+                  );
+                  $(".pagination").hide();
+                }
+              },
+              error: function (xhr) {
+                if (xhr.status === 404) {
+                  // 404 錯誤時顯示友善提示
+                  articlesGrid.html(
+                    '<p class="no-results">目前沒有這個地區的行程</p>'
+                  );
+                  $(".pagination").hide();
+                } else {
+                  console.error("篩選錯誤:", xhr);
+                  showErrorMessage("篩選地區失敗，請稍後再試");
+                }
+              },
+            });
+          } else {
+            loadArticles(currentPage);
+          }
         });
 
+        //輸入框查詢
         searchInput.on("input", function () {
           currentPage = 0; // 重置頁碼
           loadArticles(currentPage);

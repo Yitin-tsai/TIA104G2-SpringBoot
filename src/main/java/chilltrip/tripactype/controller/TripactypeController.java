@@ -85,6 +85,7 @@ public class TripactypeController{
 	// 查詢指定行程活動類型的所有行程
     @GetMapping("/trips")
     public ResponseEntity<List<Map<String, Object>>> getTripsByTripActype(@RequestParam String eventType) {
+    	System.out.println(eventType);
         List<Map<String, Object>> tripDataList = tripactypeSvc.findTripsByEventType(eventType);
         if (tripDataList == null || tripDataList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
