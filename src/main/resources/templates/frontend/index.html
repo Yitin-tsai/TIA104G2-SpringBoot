@@ -1044,16 +1044,14 @@
           .catch((error) => {
             console.error("Error fetching announcements:", error);
           });
-    
-      // 熱門文章載入
-      function loadPopularArticles() {
+
+        //載入熱門文章
+        function loadPopularArticles() {
           const articlesGrid = document.querySelector(".articles-grid");
           if (!articlesGrid) {
             console.error("找不到文章列表容器");
             return;
           }
-
-          console.log("準備載入熱門文章");
 
           const baseUrl = `${window.location.origin}${
             window.location.pathname.split("/")[1]
@@ -1062,16 +1060,11 @@
           }`;
 
           fetch(`${baseUrl}/trip/popular`)
-            .then((response) => {
-              console.log("收到回應:", response); // 加入偵錯資訊
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            .then((response) => response.json())
+            .then((data) => {
+              if (data && data.content) {
+                renderPopularArticles(data.content);
               }
-              return response.json();
-            })
-            .then((articles) => {
-              console.log("接收到的文章資料:", articles); // 加入偵錯資訊
-              renderArticles(articles);
             })
             .catch((error) => {
               console.error("載入熱門文章失敗:", error);
@@ -1079,42 +1072,52 @@
             });
         }
 
-        function renderArticles(articles) {
+        function renderPopularArticles(articles) {
           const articlesGrid = document.querySelector(".articles-grid");
           if (!articlesGrid) return;
 
           articlesGrid.innerHTML = "";
 
+          if (!articles || articles.length === 0) {
+            showNoResultsMessage();
+            return;
+          }
+
           articles.forEach((article) => {
-            const articleCard = `
-                <article class="article-card">
-                    <img src="${
-                      article.image ||
-                      "https://via.placeholder.com/350x200?text=NoImage"
-                    }" 
-                         alt="${article.title}" 
-                         class="article-image" />
-                    <div class="article-content">
-                        <div class="article-meta">
-                            <span class="author">作者：${
-                              article.nickName || "未知作者"
-                            }</span>
-                        </div>
-                        <h2 class="article-title">${
-                          article.articleTitle || "未命名行程"
-                        }</h2>
-                        <p class="article-description">${
-                          article.abstract || "沒有行程簡介"
-                        }</p>
-                        <div class="article-stats">
-                            <span>👁️ ${article.visitorsNumber || 0}</span>
-                            <span>❤️ ${article.likes || 0}</span>
-                            <span class="rating">★ ${article.rating || 0}</span>
-                        </div>
+            // 處理 Base64 圖片
+            const imageUrl = article.image.startsWith("data:")
+              ? article.image
+              : `data:image/jpeg;base64,${article.image}`;
+
+            const articleHTML = `
+            <article class="article-card">
+                <img src="${imageUrl}"
+                     alt="${article.title}"
+                     class="article-image"
+                     onerror="this.src='https://via.placeholder.com/350x200?text=NoImage';" />
+                <div class="article-content">
+                    <div class="article-meta">
+                        <span class="author">作者：${article.author}</span>
+                        <button class="follow-btn">追蹤</button>
                     </div>
-                </article>
-            `;
-            articlesGrid.insertAdjacentHTML("beforeend", articleCard);
+                    <h2 class="article-title">${article.title}</h2>
+                    <p class="article-description">${article.description}</p>
+                    <div class="article-tags">
+                        ${article.tags
+                          .map((tag) => `<span class="tag">${tag}</span>`)
+                          .join("")}
+                    </div>
+                    <div class="article-stats">
+                        <span>👁️ ${article.views}</span>
+                        <span>❤️ ${article.likes}</span>
+                        <span class="rating">★★★★★ ${Number(
+                          article.rating
+                        ).toFixed(1)}</span>
+                    </div>
+                </div>
+            </article>
+        `;
+            articlesGrid.insertAdjacentHTML("beforeend", articleHTML);
           });
         }
 
@@ -1124,9 +1127,16 @@
             articlesGrid.innerHTML = `<div class="error-message">${message}</div>`;
           }
         }
+
+        function showNoResultsMessage() {
+          const articlesGrid = document.querySelector(".articles-grid");
+          if (articlesGrid) {
+            articlesGrid.innerHTML = "<p>目前沒有熱門文章</p>";
+          }
+        }
       });
 
-  });</script>
+  </script>
     
   <script>
     document.getElementById("goToChatRoom").addEventListener("click", function() {

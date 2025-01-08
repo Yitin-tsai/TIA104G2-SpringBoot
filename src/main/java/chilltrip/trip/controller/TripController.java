@@ -66,9 +66,22 @@ public class TripController {
 	}
 	
 	// 首頁熱門文章 API
-    @GetMapping("/popular")
-    public ResponseEntity<Object> getPopularTrips() {
-        return ResponseEntity.ok(tripSvc.getPopularTrips(12));  // 固定返回12篇
-    }
+	@GetMapping("/popular")
+	public ResponseEntity<Map<String, Object>> getPopularTrips() {
+	    try {
+	        List<Map<String, Object>> popularTrips = tripSvc.getPopularTrips();
+
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("content", popularTrips);
+	        
+	        return ResponseEntity.ok(response);
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 在控制台打印詳細錯誤
+	        Map<String, Object> errorResponse = new HashMap<>();
+	        errorResponse.put("error", e.getClass().getName());
+	        errorResponse.put("message", e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+	    }
+	}
 
 }
