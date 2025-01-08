@@ -85,7 +85,7 @@ function handleSearchResults(results, status) {
 
     // 在地圖上添加標記
     formattedResults.forEach(place => {
-      const marker = new google.maps.Marker({
+      const marker = new google.maps.marker.AdvancedMarkerElement({
         map,
         position: place.location,
         title: place.name
@@ -108,6 +108,7 @@ function clearMarkers() {
 
 // 渲染景點列表
 function renderPlaceList(places) {
+  console.log(place);
   const placeList = $(".place-list");
   placeList.empty();
 

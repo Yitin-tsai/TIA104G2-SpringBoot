@@ -187,8 +187,124 @@ public class TripService {
 
 	        result.add(tripMap);
 	    }
-
 	    return result;
+	}
+	
+	
+	
+	@Transactional(readOnly = true)
+	public Page<Map<String, Object>> getTripsByArea(String regionContent, Pageable pageable) {
+	    // 使用地區條件查詢
+	    Page<Object[]> tripsPage = tripRepository.findByRegionContent(regionContent, pageable);
+
+	    return tripsPage.map(tripArray -> {
+	        // 獲取並處理標籤
+	        List<Object[]> tagArrays = tripRepository.findTripTags((Integer) tripArray[0]);
+	        List<String> tags = new ArrayList<>();
+
+	        for (Object[] tagArray : tagArrays) {
+	            String regionTag = (String) tagArray[0];
+	            String eventTag = (String) tagArray[1];
+
+	            // 判斷標籤是否為空
+	            if (regionTag != null && !regionTag.trim().isEmpty()) {
+	                tags.add(regionTag);
+	            }
+	            if (eventTag != null && !eventTag.trim().isEmpty()) {
+	                tags.add(eventTag);
+	            }
+	        }
+
+	        // 直接建立 Map
+	        Map<String, Object> tripMap = new HashMap<>();
+	        tripMap.put("id", tripArray[0]);
+
+	        // 標題判斷
+	        String title = (tripArray[1] == null || ((String)tripArray[1]).trim().isEmpty())
+	            ? "未命名行程"
+	            : (String)tripArray[1];
+	        tripMap.put("title", title);
+
+	        // 描述判斷
+	        String description = (tripArray[2] == null || ((String)tripArray[2]).trim().isEmpty())
+	            ? "沒有行程簡介"
+	            : (String)tripArray[2];
+	        tripMap.put("description", description);
+
+	        tripMap.put("views", tripArray[3]);
+	        tripMap.put("likes", tripArray[4]);
+	        tripMap.put("rating", tripArray[5]);
+
+	        // 作者判斷
+	        String author = (tripArray[6] == null || ((String)tripArray[6]).trim().isEmpty())
+	            ? "未知作者"
+	            : (String)tripArray[6];
+	        tripMap.put("author", author);
+
+	        tripMap.put("image", tripArray[7]);
+	        tripMap.put("tags", tags);
+
+	        System.out.println(tripMap);
+	        return tripMap;
+	    });
+	}
+	
+	
+	@Transactional(readOnly = true)
+	public Page<Map<String, Object>> getTripsByActivity(String eventContent, Pageable pageable) {
+	   // 使用活動類型條件查詢 
+	   Page<Object[]> tripsPage = tripRepository.findByEventContent(eventContent, pageable);
+
+	   return tripsPage.map(tripArray -> {
+	       // 獲取並處理標籤
+	       List<Object[]> tagArrays = tripRepository.findTripTags((Integer) tripArray[0]);
+	       List<String> tags = new ArrayList<>();
+
+	       for (Object[] tagArray : tagArrays) {
+	           String regionTag = (String) tagArray[0];
+	           String eventTag = (String) tagArray[1];
+
+	           // 判斷標籤是否為空
+	           if (regionTag != null && !regionTag.trim().isEmpty()) {
+	               tags.add(regionTag);
+	           }
+	           if (eventTag != null && !eventTag.trim().isEmpty()) {
+	               tags.add(eventTag);
+	           }
+	       }
+
+	       // 直接建立 Map
+	       Map<String, Object> tripMap = new HashMap<>();
+	       tripMap.put("id", tripArray[0]);
+
+	       // 標題判斷
+	       String title = (tripArray[1] == null || ((String)tripArray[1]).trim().isEmpty())
+	           ? "未命名行程"
+	           : (String)tripArray[1];
+	       tripMap.put("title", title);
+
+	       // 描述判斷
+	       String description = (tripArray[2] == null || ((String)tripArray[2]).trim().isEmpty())
+	           ? "沒有行程簡介"
+	           : (String)tripArray[2];
+	       tripMap.put("description", description);
+
+	       tripMap.put("views", tripArray[3]);
+	       tripMap.put("likes", tripArray[4]);
+	       tripMap.put("rating", tripArray[5]);
+
+	       // 作者判斷
+	       String author = (tripArray[6] == null || ((String)tripArray[6]).trim().isEmpty())
+	           ? "未知作者"
+	           : (String)tripArray[6];
+	       tripMap.put("author", author);
+
+	       tripMap.put("image", tripArray[7]);
+	       tripMap.put("tags", tags);
+
+	       System.out.println(tripMap);
+	       return tripMap;
+	   });
 	}
 	
 
