@@ -4,6 +4,9 @@ import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
@@ -14,6 +17,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "trip_comment")
 public class TripCommentVO implements java.io.Serializable{
+	
+	@Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "trip_comment_id")
 	private Integer tripCommentId;
 	

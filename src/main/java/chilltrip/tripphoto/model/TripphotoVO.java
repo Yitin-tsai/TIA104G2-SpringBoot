@@ -23,10 +23,11 @@ public class TripphotoVO {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer trip_photo_id;
 	
+	@Column(name = "trip_id", insertable = false, updatable = false)
 	private Integer trip_id;
 	
 	@ManyToOne
-	@JoinColumn(name = "trip_id" , referencedColumnName = "trip_id" )
+    @JoinColumn(name = "trip_id")
 	private TripVO tripVO;
 	
 	@Lob
