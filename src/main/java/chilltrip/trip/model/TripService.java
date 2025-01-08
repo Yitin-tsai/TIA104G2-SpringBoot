@@ -132,9 +132,63 @@ public class TripService {
         });
     }
 
-	public Object getPopularTrips(int i) {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional(readOnly = true)
+	public List<Map<String, Object>> getPopularTrips() {
+	    List<Object[]> popularTrips = tripRepository.findPopularTrips();
+	    List<Map<String, Object>> result = new ArrayList<>();
+
+	    for (Object[] tripArray : popularTrips) {
+	        // 獲取並處理標籤
+	        List<Object[]> tagArrays = tripRepository.findTripTags((Integer) tripArray[0]);
+	        List<String> tags = new ArrayList<>();
+
+	        for (Object[] tagArray : tagArrays) {
+	            String regionTag = (String) tagArray[0];
+	            String eventTag = (String) tagArray[1];
+
+	            if (regionTag != null && !regionTag.trim().isEmpty()) {
+	                tags.add(regionTag);
+	            }
+	            if (eventTag != null && !eventTag.trim().isEmpty()) {
+	                tags.add(eventTag);
+	            }
+	        }
+
+	        Map<String, Object> tripMap = new HashMap<>();
+	        tripMap.put("id", tripArray[0]);
+
+	        // 標題判斷
+	        String title = (tripArray[1] == null || ((String)tripArray[1]).trim().isEmpty())
+	            ? "未命名行程"
+	            : (String)tripArray[1];
+	        tripMap.put("title", title);
+
+	        // 描述判斷
+	        String description = (tripArray[2] == null || ((String)tripArray[2]).trim().isEmpty())
+	            ? "沒有行程簡介"
+	            : (String)tripArray[2];
+	        tripMap.put("description", description);
+
+	        tripMap.put("views", tripArray[3]);
+	        tripMap.put("likes", tripArray[4]);
+	        tripMap.put("rating", tripArray[5]);
+
+	        // 作者判斷
+	        String author = (tripArray[6] == null || ((String)tripArray[6]).trim().isEmpty())
+	            ? "未知作者"
+	            : (String)tripArray[6];
+	        tripMap.put("author", author);
+
+	        tripMap.put("image", tripArray[7]);
+	        tripMap.put("tags", tags);
+	        
+	        // 可以選擇是否要把熱門度分數也放進 Map
+	        tripMap.put("popularityScore", tripArray[8]);
+
+	        result.add(tripMap);
+	    }
+
+	    return result;
 	}
 	
 
