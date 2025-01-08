@@ -170,7 +170,7 @@ public class MemberController {
 
 	    // 登入成功，將 memberId 放入 server-side session
 	    session.setAttribute("memberId", memberVO.getMemberId());
-
+	    session.setAttribute("memberName", memberVO.getNickName());
 	    // 回傳 JSON 給前端
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("message", "登入成功");

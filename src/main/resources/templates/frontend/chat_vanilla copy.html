@@ -224,18 +224,26 @@
         flex: 1;
         padding: 20px;
         overflow-y: auto;
+        display: flex;
+        flex-direction: column;
       }
 
       .message {
-        display: flex;
-        flex-direction: column;
-        max-width: 70%;
-        margin-bottom: 20px;
-      }
-
-      .message.sent {
-        align-self: flex-end;
-      }
+       
+        margin: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        max-width: 60%;
+        }
+        .message.sent {
+            background-color: #DCF8C6; /* 發送的訊息顏色 */
+            align-self: flex-end; /* 讓訊息靠右 */
+        }
+       
+        .message.received {
+            background-color: #E4E6EB; /* 接收的訊息顏色 */
+            align-self: flex-start; /* 讓訊息靠左 */
+        }
 
       .message-bubble {
         padding: 12px 16px;
@@ -244,10 +252,6 @@
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       }
 
-      .message.sent .message-bubble {
-        background: #0084ff;
-        color: #fff;
-      }
 
       .message-time {
         font-size: 12px;
@@ -590,10 +594,12 @@
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 
 <script>
-
+var messages = [];
 var username1 = ""; // 用戶名稱將從後端獲取
 var memberid ="";
 var adminid = "";
+var currentReceiver = ""; // 當前聊天對象
+var users = [];
 var stompClient = null; // 這裡定義 stompClient 變數
  // 發送請求獲取用戶名稱
  document.addEventListener('DOMContentLoaded', function () {
@@ -616,45 +622,39 @@ var stompClient = null; // 這裡定義 stompClient 變數
         });
 });
       // 初始化 WebSocket 連接
-            function initializeWebSocket() {
-          // 確保只有在獲取到 username 後才建立 WebSocket 連接
-          var socket = new SockJS("/TIA104G2-SpringBoot/chat"); // 使用與後端匹配的 WebSocket URL
-          stompClient = Stomp.over(socket); // 使用 STOMP 包裝 SockJS 連接
+function initializeWebSocket() {
+    // 確保只有在獲取到 username 後才建立 WebSocket 連接
+    var socket = new SockJS("/TIA104G2-SpringBoot/chat"); // 使用與後端匹配的 WebSocket URL
+    stompClient = Stomp.over(socket); // 使用 STOMP 包裝 SockJS 連接
 
-          // 設定 STOMP 客戶端連接
-          stompClient.connect({}, function (frame) {
-              console.log('Connected: ' + frame); // 顯示連接結果
+    // 設定 STOMP 客戶端連接
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame); // 顯示連接結果
 
-              // 訂閱從服務端發來的訊息
-              stompClient.subscribe("/topic/messages", function (message) {
-                  var chatMessage = JSON.parse(message.body); // 解析接收到的訊息
+        // 訂閱從服務端發來的訊息
+        stompClient.subscribe("/user/" + username1 + "/queue/messages", function (message) {
+            var chatMessage = JSON.parse(message.body); // 解析接收到的訊息
+            messages.push(chatMessage); 
+            console.log("Received message: ", chatMessage);
 
-                  // 當收到的訊息是發送給當前聊天對象或者發送者是當前用戶時，顯示訊息
-                  if (chatMessage.receiver === username1 || chatMessage.sender === username1) {
-                      messages.push(chatMessage); // 將接收到的訊息加入訊息列表
-                      displayMessages(); // 更新訊息顯示
-                  }
-              });
-              console.log("username1: ", username1);
-              console.log("memberid: ", memberid);
-              console.log("adminid: ", adminid);
-              stompClient.send("/app/chat.addUser", {}, JSON.stringify({userName: username1, memberId: memberid, adminId: adminid}));
+            // 當收到的訊息是發送給當前聊天對象或者發送者是當前用戶時，顯示訊息
+            if (chatMessage.receiver === username1 || chatMessage.sender === username1) {
+                displayMessages(); // 更新訊息顯示
+            }
+        });
 
-              // 顯示用戶列表或其他初始化操作
-              displayUserList();  
-          });
-      }
+        // 發送用戶初始化訊息
+        stompClient.send("/app/chat.addUser", {}, JSON.stringify({userName: username1, memberId: memberid, adminId: adminid}));
+
+        // 顯示用戶列表或其他初始化操作
+        displayUserList();  
+    });
+}
 
 
 
-  var currentReceiver = ""; // 當前聊天對象
-  var messages = []; // 儲存聊天訊息
-  var users = [];
-  
- 
-
-  // 顯示用戶列表
-  function displayUserList() {
+// 顯示用戶列表
+function displayUserList() {
     var userListContainer = document.getElementById('userList');
     userListContainer.innerHTML = ''; // 清空之前的內容
 
@@ -680,59 +680,70 @@ var stompClient = null; // 這裡定義 stompClient 變數
             console.error('Error fetching online users:', error);
         });
 }
-  
-  // 改變聊天對象
-  function changeChat(receiver) {
-      currentReceiver = receiver;
-      document.getElementById('chatHeader').textContent = "與 " + receiver + " 聊天中";
-      displayMessages(); // 顯示與該用戶的訊息
-  }
-  
-  // 顯示訊息
-  function displayMessages() {
-      var messagesContainer = document.getElementById('messagesContainer');
-      messagesContainer.innerHTML = ''; // 清空之前的訊息
-  
-      // 動態顯示訊息
-      messages.forEach(function(message) {
-          var messageDiv = document.createElement("div");
-          messageDiv.classList.add("message");
-          messageDiv.classList.add(message.sender === username1 ? "sent" : "received");
-  
-          var messageBubble = document.createElement("div");
-          messageBubble.classList.add("message-bubble");
-          messageBubble.textContent = message.message;
-  
-          messageDiv.appendChild(messageBubble);
-          messagesContainer.appendChild(messageDiv);
-      });
-  }
-  
-  // 發送訊息
-  document.getElementById('sendButton').addEventListener('click', function() {
-      var messageInput = document.getElementById('messageInput');
-      var messageContent = messageInput.value.trim();
-      if (messageContent !== "") {
-          var chatMessage = {
-              sender: username1,
-              receiver: currentReceiver,
-              message: messageContent
-          };
-  
-          // 發送訊息到 WebSocket
-          stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
-          messageInput.value = ""; // 發送後清空輸入框
-  
-          // 將發送的訊息暫時添加到訊息列表
-          messages.push({
-              sender: username1,
-              receiver: currentReceiver,
-              message: messageContent
-          });
-          displayMessages(); // 更新訊息顯示
-      }
-  });
-  
+
+//改變聊天對象
+function changeChat(receiver) {
+    currentReceiver = receiver;
+    document.getElementById('chatHeader').textContent = "與 " + receiver + " 聊天中";
+    messages = []; // 清空現有訊息
+
+    // 根據接收者獲取聊天記錄
+    // fetch('/TIA104G2-SpringBoot/chat/messages?receiver=' + receiver)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         messages = data; // 更新訊息內容
+    //         displayMessages(); // 更新顯示
+    //     })
+    //     .catch(error => {
+    //         console.error('Error fetching messages:', error);
+    //     });
+}
+
+
+// 顯示訊息
+function displayMessages() {
+    var messagesContainer = document.getElementById('messagesContainer');
+    messagesContainer.innerHTML = ''; // 清空之前的訊息
+
+    // 動態顯示訊息
+    messages.forEach(function(message) {
+        var messageDiv = document.createElement("div");
+        messageDiv.classList.add("message");
+        messageDiv.classList.add(message.sender === username1 ? "sent" : "received");
+
+        var messageBubble = document.createElement("div");
+        messageBubble.classList.add("message-bubble");
+        messageBubble.textContent = message.message;
+
+        messageDiv.appendChild(messageBubble);
+        messagesContainer.appendChild(messageDiv);  // 把訊息添加到容器中
+    });
+
+    // 確保訊息區域滾動到最底部顯示最新訊息
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// 發送訊息
+document.getElementById('sendButton').addEventListener('click', function() {
+    var messageInput = document.getElementById('messageInput');
+    var messageContent = messageInput.value.trim();
+    if (messageContent !== "") {
+        var chatMessage = {
+            sender: username1,
+            receiver: currentReceiver,
+            message: messageContent
+        };
+
+        // 發送訊息到 WebSocket
+        stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
+
+        // 清空訊息框
+        messageInput.value = "";
+        
+    }
+});
+
+
   
   </script>
 

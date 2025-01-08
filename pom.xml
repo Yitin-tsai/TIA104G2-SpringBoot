@@ -273,11 +273,7 @@
 			<version>5.2.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.tibame</groupId>
-			<artifactId>Spring_0114_IOC_BeanConfig</artifactId>
-			<version>1.0.0</version>
-		</dependency>
+	
 		
     <!-- websocket 聊天室用-->
 	<dependency>
