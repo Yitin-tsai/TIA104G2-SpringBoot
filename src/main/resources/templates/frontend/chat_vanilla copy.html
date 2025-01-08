@@ -592,6 +592,8 @@
 <script>
 
 var username1 = ""; // 用戶名稱將從後端獲取
+var memberid ="";
+var adminid = "";
 var stompClient = null; // 這裡定義 stompClient 變數
  // 發送請求獲取用戶名稱
  document.addEventListener('DOMContentLoaded', function () {
@@ -600,6 +602,8 @@ var stompClient = null; // 這裡定義 stompClient 變數
         .then(data => {
             if (data.message === "success") {
                 username1 = data.userName; // 設置用戶名
+                memberid =data.memberid;
+                adminid =data.adminid;
                 console.log(username1);
                 initializeWebSocket(); // 初始化 WebSocket 連接
                 } else {
@@ -631,6 +635,10 @@ var stompClient = null; // 這裡定義 stompClient 變數
                       displayMessages(); // 更新訊息顯示
                   }
               });
+              console.log("username1: ", username1);
+              console.log("memberid: ", memberid);
+              console.log("adminid: ", adminid);
+              stompClient.send("/app/chat.addUser", {}, JSON.stringify({userName: username1, memberId: memberid, adminId: adminid}));
 
               // 顯示用戶列表或其他初始化操作
               displayUserList();  

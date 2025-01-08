@@ -1,6 +1,7 @@
 package chilltrip.chat.controller;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.socket.WebSocketSession;
 
 import chilltrip.admin.model.AdminService;
 import chilltrip.member.model.MemberService;
@@ -33,6 +35,8 @@ public class ChatController {
         // 把用戶名稱傳遞到前端
         response.put("message", "success");
         response.put("userName", userName);
+        response.put("memberid", memberId);
+        response.put("adminid", null);
         return response;  // 返回聊天頁面
 		}
 		if(session.getAttribute("adminId")!=null) {
@@ -41,6 +45,8 @@ public class ChatController {
 	        // 把用戶名稱傳遞到前端
 	        response.put("message", "success");
 	        response.put("userName", userName);
+	        response.put("adminid", adminId);
+	        response.put("memberid", null);
 	        return response;  // 返回聊天頁面
 		}
 		response.put("message", "false");
@@ -50,7 +56,12 @@ public class ChatController {
 	// 獲取在線用戶列表的 HTTP API
     @GetMapping("/onlineUsers")
     public Set<String> getOnlineUsers() {
-    	System.out.println(ChatRoomController.getOnlineUsers() +"我是誰");
-        return ChatRoomController.getOnlineUsers(); // 調用 WebSocketController 提供的在線用戶列表
+    	System.out.println(ChatRoomController.getConnectedSession() +"我是誰");
+    	Map<Integer,String> connectedsession = ChatRoomController.getConnectedSession();
+    	Set<String> users = new HashSet<String>();
+    	for(String user : connectedsession.values()) {
+    		users.add(user);
+    	}
+        return users;
     }
 }
