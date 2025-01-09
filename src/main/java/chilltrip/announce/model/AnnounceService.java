@@ -25,8 +25,10 @@ public class AnnounceService {
 	}
 	
 	public AnnounceVO getById(Integer announceid) {
-		return dao.getOne(announceid);
 		
+		AnnounceVO  announce = dao.getOne(announceid);
+	
+		return announce;
 	}
 	
 

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>更新公告 - ChillTrip</title>
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
+
+<style>
+ /* 確保頁面結構美觀 */
+/* 用於全頁背景的設定，確保頁面佔滿螢幕 */
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+}
+
+/* 設定表單容器 */
+#announceForm {
+    width: 100%;
+    max-width: 600px;  /* 設定表單的最大寬度 */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin-top: 20px;
+}
+
+/* 表單內各個元素的間距 */
+#announceForm label, #announceForm input, #announceForm textarea, #announceForm button {
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+/* 輸入框與文本區的樣式 */
+#announceForm input[type="text"], #announceForm textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+}
+
+/* 提交按鈕樣式 */
+#announceForm button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* 提交按鈕的懸停效果 */
+#announceForm button:hover {
+    background-color: #45a049;
+}
+
+/* 錯誤訊息的樣式 */
+.error-message {
+    color: red;
+    font-size: 14px;
+}
+
+/* 標題的樣式 */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 設置網站主要內容的區域 */
+.main-content {
+    flex: 1; /* 這會讓內容區域佔滿可用空間 */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* 確保表單從上方開始 */
+    padding: 20px;
+}
+</style>
+
+</head>
+
+<body>
+	<!------網站header------>
+    <div id="app">
+      <header>
+        <nav class="top-nav">
+          <div class="nav-left">
+            <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+            <a href="#" class="nav-item nav-link" id="nav-product">購！票券</a>
+            <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
+            <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+          </div>
+          <div class="nav-center">
+            <a href="#" id="z-index">
+              <img
+                th:src="@{/img/logo_black.png}"
+                alt="Chill Trip"
+                style="width: 150px; height: auto"
+              />
+            </a>
+          </div>
+          <div class="nav-right">
+            <div class="nav-item dropdown">
+              <a
+                href="#"
+                class="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+                style="color: #212529"
+                >會員中心</a
+              >
+              <div class="dropdown-menu rounded-0 m-0">
+                <a href="#" class="dropdown-item" id="nav-basic-info"
+                  >基本資料</a
+                >
+                <a href="#" class="dropdown-item" id="nav-coupons"
+                  >我的折價券</a
+                >
+                <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
+              </div>
+            </div>
+            <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+            <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+          </div>
+        </nav>
+      </header>
+    </div>
+
+    <!-- 主體內容區 -->
+<div class="main-content">
+  <div>
+      <h2>更新公告</h2>
+      <form id="announceForm">
+          <label for="title">標題:</label>
+          <input type="text" id="title" name="title" required>
+          <div id="title-error" class="error-message"></div><br><br>
+
+          <label for="content">內容:</label><br>
+          <textarea id="content" name="content" rows="4" cols="50" required></textarea>
+          <div id="content-error" class="error-message"></div><br><br>
+
+          <label for="starttime">開始時間:</label>
+          <input type="text" id="starttime" name="starttime" required>
+          <div id="starttime-error" class="error-message"></div><br><br>
+
+          <label for="endtime">結束時間:</label>
+          <input type="text" id="endtime" name="endtime" required>
+          <div id="endtime-error" class="error-message"></div><br><br>
+
+          <label for="coverphoto">封面圖片:</label>
+          <input type="file" id="coverphoto" name="coverphoto" accept="image/*">
+          <div id="coverphoto-error" class="error-message"></div><br><br>
+
+          <div id="coverphoto-preview">
+              <!-- 圖片預覽區域 -->
+          </div>
+
+          <button type="submit">更新公告</button>
+      </form>
+  </div>
+</div>
+
+	<!------網站footer------>
+	<footer>
+		<div class="d-flex justify-content-start mt-4">
+			<a class="btn btn-outline-light btn-square mr-2" href="#"><i
+				class="fab fa-twitter"></i></a> <a
+				class="btn btn-outline-light btn-square mr-2" href="#"><i
+				class="fab fa-facebook-f"></i></a> <a
+				class="btn btn-outline-light btn-square mr-2" href="#"><i
+				class="fab fa-linkedin-in"></i></a> <a
+				class="btn btn-outline-light btn-square" href="#"><i
+				class="fab fa-instagram"></i></a>
+		</div>
+		<div class="social-links">
+			<div style="display: flex; gap: 10px">
+				<a href="https://facebook.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #3b5998; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-facebook-f" style="color: white; font-size: 24px"></i>
+					</div>
+				</a> <a href="https://instagram.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #e1306c; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-instagram" style="color: white; font-size: 24px"></i>
+					</div>
+				</a> <a href="https://youtube.com" target="_blank"
+					style="text-decoration: none">
+					<div
+						style="width: 50px; height: 50px; background-color: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<i class="fab fa-youtube" style="color: white; font-size: 24px"></i>
+					</div>
+				</a>
+			</div>
+		</div>
+	</footer>
+</body>
+
+	<!------ 共用JS ------>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
+      ><i class="fa fa-angle-double-up"></i
+    ></a>
+
+    <!-- JavaScript Libraries -->
+    <!-- 加載 jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <!-- 加載 jQuery UI -->
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <!-- 本地資源改用 Thymeleaf 語法 -->
+    <script th:src="@{/lib/easing/easing.min.js}"></script>
+    <script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+
+    <!-- Contact Javascript File -->
+    <script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
+    <script th:src="@{/mail/contact.js}"></script>
+
+    <!-- Template Javascript -->
+    <script th:src="@{/js/main.js}"></script>
+
+    <!-- 導航欄nav的href載入器 -->
+    	<!------修齊的JS------>
+    <script th:src="@{/js/navigation.js}"></script>
+    <script>
+      $(document).ready(function() {
+          var path = window.location.pathname;
+          var announceid = path.split('/').pop();  // 獲取 URL 中的 announceid
+          console.log("id =" +announceid )
+          if (announceid) {
+              // 1. 發送 GET 請求來獲取公告資料
+              $.ajax({
+                  url: "/TIA104G2-SpringBoot/announce/getById/" + announceid,  // API 路徑
+                  type: "GET",
+                  dataType: "json",
+                  success: function(data) {
+                      // 2. 當取得資料成功後，將資料填入表單欄位
+                      $('#title').val(data.title);
+                      $('#content').val(data.content);
+                      $('#starttime').val(data.starttime);
+                      $('#endtime').val(data.endtime);
+  
+                      // 3. 顯示封面圖片預覽
+                      if (data.coverphotoBase64) {
+                          var imagePreview = '<img src="' + data.coverphotoBase64 + '" alt="封面圖片預覽" style="max-width: 100px; max-height: 100px;">';
+                          $('#coverphoto-preview').html(imagePreview);
+                      }
+                  },
+                  error: function() {
+                      alert("無法取得公告資料");
+                  }
+              });
+          }
+  
+          // 初始化日期選擇器
+          $("#starttime, #endtime").datepicker({
+              dateFormat: 'yy-mm-dd',
+          });
+  
+          // 當結束時間被選擇時，檢查開始時間是否為空
+          $("#endtime").datepicker("option", "beforeShowDay", function(date) {
+              var startDate = $("#starttime").datepicker("getDate");
+              if (startDate && date < startDate) {
+                  // 禁止選擇比開始時間早的日期
+                  return [false];
+              }
+              return [true];
+          });
+  
+          // 表單提交處理
+          $("#announceForm").on("submit", function(event) {
+              event.preventDefault();  // 防止表單的默認提交行為
+  
+              // 取得封面圖片文件
+              var coverPhotoFile = $("#coverphoto")[0].files[0];
+  
+              // 檢查圖片大小，限制為 5MB
+              if (coverPhotoFile && coverPhotoFile.size > 5 * 1024 * 1024) {  // 5MB = 5 * 1024 * 1024 bytes
+                  alert("圖片大小不能超過 5MB！");
+                  return;  // 阻止表單提交
+              }
+  
+              // 轉換圖片為 Base64 格式
+              var reader = new FileReader();
+              reader.onloadend = function() {
+                  var coverPhotoBase64 = reader.result.split(',')[1];  // 去除 Base64 前綴
+  
+                  // 準備表單資料，包含 announceid
+                  var announceData = {
+                      announceid: announceid,  // 更新公告需要帶上 announceid
+                      title: $("#title").val(),
+                      content: $("#content").val(),
+                      starttime: $("#starttime").val(),
+                      endtime: $("#endtime").val(),
+                      coverphotoBase64: coverPhotoBase64  // 使用 Base64 編碼的圖片
+                  };
+  
+                  // 發送 AJAX 請求
+                  $.ajax({
+                      url: '/TIA104G2-SpringBoot/announce/update',
+                      type: 'POST',
+                      contentType: 'application/json',
+                      data: JSON.stringify(announceData),  // 將資料轉為 JSON 字符串
+                      success: function(response) {
+                          alert("公告已成功更新！");
+                          window.location.href = "/TIA104G2-SpringBoot/announceListById";
+                      },
+                      error: function(xhr, status, error) {
+                          var errors = xhr.responseText;  // 取得後端的錯誤訊息
+                          var errorMessages = errors.split("\n");
+  
+                          // 清除之前的錯誤訊息
+                          $(".error-message").empty();
+  
+                          // 顯示錯誤訊息
+                          errorMessages.forEach(function(message) {
+                              if (message.includes("標題")) {
+                                  $("#title-error").text(message);
+                              } else if (message.includes("內容")) {
+                                  $("#content-error").text(message);
+                              } else if (message.includes("開始時間")) {
+                                  $("#starttime-error").text(message);
+                              } else if (message.includes("結束時間")) {
+                                  $("#endtime-error").text(message);
+                              } else if (message.includes("封面圖片")) {
+                                  $("#coverphoto-error").text(message);
+                              }
+                          });
+                      }
+                  });
+              };
+  
+              if (coverPhotoFile) {
+                  reader.readAsDataURL(coverPhotoFile);  // 將圖片讀取並轉換為 Base64
+              } else {
+                  // 如果沒有選擇圖片，直接提交表單資料（保留原有封面圖片）
+                  var announceData = {
+                      announceid: announceid,  // 更新公告需要帶上 announceid
+                      title: $("#title").val(),
+                      content: $("#content").val(),
+                      starttime: $("#starttime").val(),
+                      endtime: $("#endtime").val(),
+                      coverphotoBase64: null  // 如果沒有更新圖片，則設為 null
+                  };
+  
+                  // 發送 AJAX 請求
+                  $.ajax({
+                      url: '/TIA104G2-SpringBoot/announce/update',
+                      type: 'POST',
+                      contentType: 'application/json',
+                      data: JSON.stringify(announceData),  // 將資料轉為 JSON 字符串
+                      success: function(response) {
+                          alert("公告已成功更新！");
+                          window.location.href = "/TIA104G2-SpringBoot/announceListById";
+                      },
+                      error: function(xhr, status, error) {
+                          var errors = xhr.responseText;
+                          var errorMessages = errors.split("\n");
+  
+                          $(".error-message").empty();
+  
+                          errorMessages.forEach(function(message) {
+                              if (message.includes("標題")) {
+                                  $("#title-error").text(message);
+                              } else if (message.includes("內容")) {
+                                  $("#content-error").text(message);
+                              } else if (message.includes("開始時間")) {
+                                  $("#starttime-error").text(message);
+                              } else if (message.includes("結束時間")) {
+                                  $("#endtime-error").text(message);
+                              } else if (message.includes("封面圖片")) {
+                                  $("#coverphoto-error").text(message);
+                              }
+                          });
+                      }
+                  });
+              }
+          });
+      });
+  </script>
+	
+  
+
+
+    
+</body>
+</html>
