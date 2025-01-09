@@ -601,6 +601,7 @@ var adminid = "";
 var currentReceiver = ""; // 當前聊天對象
 var users = [];
 var stompClient = null; // 這裡定義 stompClient 變數
+var receiverName= "";
  // 發送請求獲取用戶名稱
  document.addEventListener('DOMContentLoaded', function () {
     fetch('/TIA104G2-SpringBoot/chat/go')
@@ -642,6 +643,27 @@ function initializeWebSocket() {
                 displayMessages(); // 更新訊息顯示
             }
         });
+          stompClient.subscribe("/user/" + username1 + "/queue/history", function (message) {
+              var chatMessage = JSON.parse(message.body); // 解析接收到的訊息
+                // 解析 message 中的 JSON 字串陣列
+                var historyMessages = JSON.parse(chatMessage.message);  // 這會是一個包含 JSON 字串的陣列
+
+                // 遍歷每個 JSON 字串，並將它們解析為物件
+                historyMessages.forEach(function(jsonString) {
+                    var historyMessage = JSON.parse(jsonString); // 解析每個 JSON 字串
+
+                    // 創建要顯示的訊息對象
+                    var messageData = {
+                        sender: historyMessage.sender,
+                        receiver: historyMessage.receiver,
+                        message: historyMessage.message // 顯示實際的訊息內容
+                    };
+
+                    // 將每條歷史訊息添加到訊息列表
+                    messages.push(messageData);
+                });
+              displayMessages(); // 更新訊息顯示
+          });
 
         // 發送用戶初始化訊息
         stompClient.send("/app/chat.addUser", {}, JSON.stringify({userName: username1, memberId: memberid, adminId: adminid}));
@@ -684,19 +706,18 @@ function displayUserList() {
 //改變聊天對象
 function changeChat(receiver) {
     currentReceiver = receiver;
+    receiverName =receiver
     document.getElementById('chatHeader').textContent = "與 " + receiver + " 聊天中";
     messages = []; // 清空現有訊息
-
-    // 根據接收者獲取聊天記錄
-    // fetch('/TIA104G2-SpringBoot/chat/messages?receiver=' + receiver)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         messages = data; // 更新訊息內容
-    //         displayMessages(); // 更新顯示
-    //     })
-    //     .catch(error => {
-    //         console.error('Error fetching messages:', error);
-    //     });
+     // 向後端請求歷史訊息
+     var chatMessage = {
+        sender: username1,
+        receiver: receiver
+    };
+   
+   
+     // 發送請求歷史訊息的請求
+    stompClient.send("/app/chat.getHistory", {}, JSON.stringify(chatMessage));
 }
 
 
