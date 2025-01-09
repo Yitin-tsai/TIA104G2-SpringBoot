@@ -245,6 +245,7 @@
 				<li><a href="/TIA104G2-SpringBoot/adminList">查看管理員清單</a></li>
 				<li><a href="/TIA104G2-SpringBoot/announceList">查看公告清單</a></li>
 				<li><a href="/TIA104G2-SpringBoot/announceListById">我的公告清單</a></li>
+        <li><a href="/TIA104G2-SpringBoot/announceAdd">新增公告</a></li>
 			</ul>
 		</div>
 	</div>
@@ -334,7 +335,7 @@
 				},
 				error: function(xhr, status, error) {
 					console.error('錯誤:', error);
-					alert('載入資料時發生錯誤,請登入');
+					alert('尚未登入,請登入');
            window.location.href =  "/TIA104G2-SpringBoot/adminLogin"
 				}
 			});

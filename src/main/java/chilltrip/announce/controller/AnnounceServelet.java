@@ -81,22 +81,7 @@ public class AnnounceServelet {
 		}
 	}
 
-	@PostMapping("add/{id}")
-	private ResponseEntity<String> addAnnounce(@Valid @RequestBody AnnounceVO announce, BindingResult result,
-			@PathVariable("id") Integer adminid) {
-//		Integer adminId = (Integer) req.getSession().getAttribute("adminid");
-		if (result.hasErrors()) {
-			StringBuilder errorMessage = new StringBuilder();
-			for (ObjectError error : result.getAllErrors()) {
-				errorMessage.append(error.getDefaultMessage()).append("\n");
-			}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed: " + errorMessage.toString());
-		}
-		AdminVO admin = adminSvc.getOneAdmin(adminid);
-		announce.setAdminvo(admin);
-		announceSvc.addannounce(announce);
-		return ResponseEntity.ok("success");
-	}
+	
 
 	@GetMapping("CompositeQuery")
 	private List<AnnounceVO> getCompositeQuery(@RequestParam Map<String, String> map) {
@@ -123,10 +108,37 @@ public class AnnounceServelet {
 		}
 
 	}
-
+	
+	@PostMapping("add")
+	private ResponseEntity<String> addAnnounce(@Valid @RequestBody AnnounceVO announce, BindingResult result
+			,HttpServletRequest req) {
+		Integer adminid = (Integer) req.getSession().getAttribute("adminId");
+		AdminVO admin = adminSvc.getOneAdmin(adminid);
+		announce.setAdminvo(admin);
+		
+		if (result.hasErrors()) {
+			StringBuilder errorMessage = new StringBuilder();
+			for (ObjectError error : result.getAllErrors()) {
+				errorMessage.append(error.getDefaultMessage()).append("\n");
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed: " + errorMessage.toString());
+		}
+		announceSvc.addannounce(announce);
+		
+		return ResponseEntity.ok("success");
+	}
+	
 	@PostMapping("update")
-	private ResponseEntity<String> update(@Valid @RequestBody AnnounceVO announce, BindingResult result) {
-
+	private ResponseEntity<String> update(@RequestBody AnnounceVO announce, BindingResult result,HttpServletRequest req) {
+		Integer adminid = (Integer) req.getSession().getAttribute("adminId");
+		Integer announceid = announce.getAnnounceid();
+		AnnounceVO announceIndata = announceSvc.getById(announceid);
+		
+		if(adminid != announceIndata.getAdminvo().getAdminid()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed: " + "管理人員無權限修改");
+		}
+		AdminVO admin =adminSvc.getOneAdmin(adminid);
+		announce.setAdminvo(admin);
 		if (result.hasErrors()) {
 			StringBuilder errorMessage = new StringBuilder();
 			for (ObjectError error : result.getAllErrors()) {
@@ -141,7 +153,8 @@ public class AnnounceServelet {
 
 	@GetMapping("getById/{id}")
 	private AnnounceVO getAnnounce(@PathVariable("id") Integer announceid) throws IOException {
-
+		AnnounceVO announce = announceSvc.getById(announceid);
+		System.out.println(announce.getCoverphotoBase64());
 		return announceSvc.getById(announceid);
 
 	}

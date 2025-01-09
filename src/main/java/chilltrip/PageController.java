@@ -25,10 +25,7 @@ public class PageController {
     	return "/frontend/index_logged_in";
     }
 
-    @GetMapping("/announce/{id}")
-    public String announcePage(@PathVariable int id) {
-        return "/frontend/activity_blog";
-    }
+  
 
     // 原有的頁面導航
     @GetMapping("/go")
@@ -161,7 +158,18 @@ public class PageController {
     public String announceListById(Model model) {
     	return "/frontend/announce_listById";
     }
-    
+    @GetMapping("/announceAdd")
+    public String announceAdd(Model model) {
+    	return "/frontend/announce_add";
+    }
+    @GetMapping("/announce/{id}")
+    public String announcePage(@PathVariable int id) {
+        return "/frontend/activity_blog";
+    }
+    @GetMapping("/announceUpdate/{id}")
+    public String announceUpdate(@PathVariable int id) {
+    	return "/frontend/announce_update";
+    }
     //聊天室
     @GetMapping("/chatroom")
     public String chatroom(Model model) {
