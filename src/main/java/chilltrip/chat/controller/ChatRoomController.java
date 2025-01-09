@@ -3,27 +3,28 @@ package chilltrip.chat.controller;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties.Websocket;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import chilltrip.admin.model.AdminService;
 import chilltrip.admin.model.AdminVO;
+import chilltrip.chat.jedis.JedisHandleMessage;
 import chilltrip.member.model.MemberService;
 import chilltrip.member.model.MemberVO;
 import chilltrip.message.model.ChatMessage;
+
 
 @Controller
 public class ChatRoomController  {
@@ -59,7 +60,17 @@ public class ChatRoomController  {
 		}
 		
 	}
-
+	@MessageMapping("/chat.getHistory")
+	public void getHistory(ChatMessage chatMessage) {
+		String sender =chatMessage.getSender();
+		String receiver = chatMessage.getReceiver();
+		Gson gson = new Gson();
+		List<String> historyData = JedisHandleMessage.getHistoryMsg(sender, receiver);
+		String historyMsg = gson.toJson(historyData);
+		chatMessage.setMessage(historyMsg);
+		messagingTemplate.convertAndSend("/user/"+chatMessage.getSender()+"/queue/history", chatMessage);
+            System.out.println("這是得到歷史訊息" +chatMessage);
+	}
 	// 當連接被關閉時觸發
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		String userName = (String) session.getAttributes().get("userName");
@@ -83,6 +94,7 @@ public class ChatRoomController  {
                 System.out.println("訊息字串 = " + response);              
                 messagingTemplate.convertAndSend("/user/"+chatMessage.getSender()+"/queue/messages", response);
                 messagingTemplate.convertAndSend("/user/"+chatMessage.getReceiver()+"/queue/messages", response);
+                JedisHandleMessage.saveChatMessage(chatMessage.getSender(), chatMessage.getReceiver(), response);
                 System.out.println("/user/"+chatMessage.getReceiver()+"/queue/messages");
                 System.out.println("Sent message to: " + chatMessage.getReceiver());
             }if(chatMessage.getReceiver() == null) {
