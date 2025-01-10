@@ -406,13 +406,14 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(response => response.json())
       .then(data => {
         // 填充页面内容
+        console.log(data)
         document.getElementById('admin.nickname').innerText = data.adminvo.adminnickname;
         document.getElementById('time').innerText = `${data.starttime} - ${data.endtime}`;
         document.getElementById('title').innerText = data.title;
         document.getElementById('content').innerText = data.content;
 
         // 填充封面图片，假设封面图片是以 base64 编码的字符串
-        const coverphotoSrc = `data:image/jpeg;base64,${data.coverphoto}`;
+        const coverphotoSrc = data.coverphotoBase64;
         document.getElementById('photo').src = coverphotoSrc;
       })
       .catch(error => {
