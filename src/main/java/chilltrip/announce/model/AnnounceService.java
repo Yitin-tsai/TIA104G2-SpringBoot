@@ -27,7 +27,10 @@ public class AnnounceService {
 	public AnnounceVO getById(Integer announceid) {
 		
 		AnnounceVO  announce = dao.getOne(announceid);
-	
+		if (announce.getCoverphoto() != null) {
+			String photo = announce.getCoverphotoAsBase64();
+			announce.setCoverphotoBase64(photo);
+		}
 		return announce;
 	}
 	

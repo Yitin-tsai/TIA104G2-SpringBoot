@@ -292,7 +292,21 @@ h2 {
               }
               return [true];
           });
-  
+
+            // 當用戶選擇新圖片時，即時顯示圖片預覽
+            $("#coverphoto").on("change", function(event) {
+                var file = event.target.files[0];  // 取得選擇的文件
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onloadend = function() {
+                        // 當讀取完成後，顯示預覽圖片
+                        var imagePreview = '<img src="' + reader.result + '" alt="封面圖片預覽" style="max-width: 100px; max-height: 100px;">';
+                        $('#coverphoto-preview').html(imagePreview);  // 更新圖片預覽區域
+                    };
+                    reader.readAsDataURL(file);  // 將圖片轉換為 base64 字符串
+                }
+            });
+        
           // 表單提交處理
           $("#announceForm").on("submit", function(event) {
               event.preventDefault();  // 防止表單的默認提交行為
