@@ -2,6 +2,10 @@ package chilltrip.tripphoto.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,162 +19,153 @@ import javax.servlet.http.Part;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import chilltrip.tripphoto.model.TripphotoService;
 import chilltrip.tripphoto.model.TripphotoVO;
 
-@WebServlet("/tripphoto/tripphoto.do")
+//@WebServlet("/tripphoto/tripphoto.do")
 @MultipartConfig
-public class TripphotoServlet extends HttpServlet{
-	
+@RestController
+@RequestMapping("/tripphoto")
+public class TripphotoController {
+
+	@Autowired
 	private TripphotoService tripphotoSvc;
-	
-	public void init() {
-		tripphotoSvc = new TripphotoService();
-	}
-	
-	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		doPost(req, res);
-	}
-	
-	@Override
-	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8");
-		res.setContentType("text/html; charset=UTF-8");
-		String action = req.getParameter("action");
-		System.out.println(action);
 
-		switch (action) {
-		
-		case "addTripphoto":
-			System.out.println(action);
-			addTripphoto(req,res);
-			System.out.println(action);
-			break;
-		case "updateTripphoto":
-			updateTripphoto(req,res);
-			break;
-		case "deleteTripphoto":
-			deleteTripphoto(req,res);
-			break;
-		case "getOneTripPhotoByType":
-			getOneTripPhotoByType(req,res);
-			break;
-		}
-		
-	}
-	
-	
-	//新增
-	private String addTripphoto (HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		Integer tripid = Integer.valueOf(req.getParameter("trip_id"));
-		Part photo = req.getPart("photo");
-		Integer phototype = Integer.valueOf(req.getParameter("photo_type"));
-		System.out.println(tripid);
-		System.out.println(photo);
-		
-		//將Part轉成 byte array 方式上傳 -->效率比較好
-		if (photo != null && photo.getSize() > 0) {
-            try {
-                // 轉換為 byte array
-                InputStream photoInputStream = photo.getInputStream();
-                byte[] photoBytes = photoInputStream.readAllBytes();
-                tripphotoSvc.determineFileType(photoBytes);
-                
-                TripphotoVO tripphotoVO = new TripphotoVO();
-                tripphotoVO.setTrip_id(tripid);
-                tripphotoVO.setPhoto(photoBytes);
-                tripphotoVO.setPhoto_type(phototype);
-                tripphotoSvc.addTripphoto(tripphotoVO);
-                
-                // 返回成功訊息
-                res.setContentType("application/json");
-                res.getWriter().write("{\"status\": \"success\"}");
-                res.getWriter().write("照片檔案為："+ photoBytes);
-                
-            } catch (Exception e) {
-                res.setContentType("application/json");
-                res.getWriter().write("{\"status\": \"error\", \"message\": \"" + e.getMessage() + "\"}");
-            }
-        }
-		return "新增成功！";
-	}
-	
-	//修改
-	private String updateTripphoto (HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		Integer tripphotoid = Integer.valueOf(req.getParameter("trip_photo_id"));
-		Integer tripid = Integer.valueOf(req.getParameter("trip_id"));
-		Part photo = req.getPart("photo");
-		Integer phototype = Integer.valueOf(req.getParameter("photo_type"));
-		System.out.println(tripid);
-		
-		//將Part轉成 byte array 方式上傳 -->效率比較好
-				if (photo != null && photo.getSize() > 0) {
-		            try {
-		                // 轉換為 byte array
-		                InputStream photoInputStream = photo.getInputStream();
-		                byte[] photoBytes = photoInputStream.readAllBytes();
-		                tripphotoSvc.determineFileType(photoBytes);
-		                System.out.println(photoBytes);
-		                
-		                TripphotoVO tripphotoVO = tripphotoSvc.getTripphotoById(tripphotoid);
-		                System.out.println(tripphotoVO);
-		                tripphotoVO.setTrip_id(tripid);
-		                tripphotoVO.setPhoto(photoBytes);
-		                tripphotoVO.setPhoto_type(phototype);
-		                tripphotoSvc.updateTripphoto(tripphotoVO);
-		                
-		                // 返回成功訊息
-		                res.setContentType("application/json");
-		                res.getWriter().write("{\"status\": \"success\"}");
-		                res.getWriter().write("照片檔案為："+ photoBytes);
-		                
-		            } catch (Exception e) {
-		                res.setContentType("application/json");
-		                res.getWriter().write("{\"status\": \"error\", \"message\": \"" + e.getMessage() + "\"}");
-		            }
-		        }
-		return "修改成功！";
-	}
-	
-	//刪除
-	private String deleteTripphoto (HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		Integer tripphotoid = Integer.valueOf(req.getParameter("trip_photo_id"));
-		tripphotoSvc.deleteTripphoto(tripphotoid);
-		
-		res.setContentType("text/plain");
-		res.setCharacterEncoding("UTF-8");
+	// 新增
+	public ResponseEntity<?> addTripphoto(@RequestParam("trip_id") Integer tripId,
+			@RequestParam("photo_type") Integer photoType, @RequestParam("photo") MultipartFile photo) {
+		try {
+			// 檢查是否有檔案
+			if (photo != null && !photo.isEmpty()) {
+				// 轉換為 byte array
+				byte[] photoBytes = photo.getBytes();
+				tripphotoSvc.determineFileType(photoBytes);
+				// 建立並設置 TripphotoVO
+				TripphotoVO tripphotoVO = new TripphotoVO();
+				tripphotoVO.setTrip_id(tripId);
+				tripphotoVO.setPhoto(photoBytes);
+				tripphotoVO.setPhoto_type(photoType);
 
-		// 回傳成功訊息給前端
-		res.getWriter().write("success");
-		
-		return "刪除成功！";
-	}
-	
-	//拿到某行程中的所有（封面／內文）照片
-	private void getOneTripPhotoByType (HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		Integer tripid = Integer.valueOf(req.getParameter("trip_id"));
-		Integer phototype = Integer.valueOf(req.getParameter("photo_type"));
-
-		List<Map<String, Object>> tripphotolist = tripphotoSvc.getOneTripPhotoByTypeAsBase64(tripid, phototype);
-
-		JSONArray jsonArray = new JSONArray();
-
-		for (Map<String, Object> trip : tripphotolist) {
-			JSONObject jsonRes = new JSONObject();
-			for (String key : trip.keySet()) {
-				jsonRes.put(key, trip.get(key));
+				// 新增照片
+				tripphotoSvc.addTripphoto(tripphotoVO);
+				// 回傳成功訊息
+				return ResponseEntity.ok()
+						.body(Map.of("status", "success", "message", "新增成功！", "photoSize", photoBytes.length));
+			} else {
+				return ResponseEntity.badRequest().body(Map.of("status", "error", "message", "未接收到照片檔案"));
 			}
-			jsonArray.put(jsonRes);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(Map.of("status", "error", "message", e.getMessage()));
 		}
-		res.setContentType("application/json");
-		res.setCharacterEncoding("UTF-8");
-		res.getWriter().write(jsonArray.toString());
-		
 	}
-	
-	
-	
-	
+
+	// 修改
+	@PutMapping("/updateTripphoto")
+	public ResponseEntity<?> updateTripphoto(@RequestParam("trip_photo_id") Integer tripPhotoId,
+			@RequestParam("trip_id") Integer tripId, @RequestParam("photo_type") Integer photoType,
+			@RequestParam("photo") MultipartFile photo) {
+
+		try {
+			// 檢查檔案大小
+			if (photo.getSize() > 20 * 1024 * 1024) { // 20MB 限制
+				return ResponseEntity.badRequest().body(Map.of("status", "error", "message", "檔案大小不能超過 5MB"));
+			}
+
+			// 檢查檔案類型
+			String contentType = photo.getContentType();
+			if (contentType == null || !contentType.startsWith("image/")) {
+				return ResponseEntity.badRequest().body(Map.of("status", "error", "message", "只能上傳圖片檔案"));
+			}
+
+			if (!photo.isEmpty()) {
+				// 轉換為 byte array-->上傳效率較好
+				byte[] photoBytes = photo.getBytes();
+				tripphotoSvc.determineFileType(photoBytes);
+
+				// 取得原有照片資料
+				TripphotoVO tripphotoVO = tripphotoSvc.getTripphotoById(tripPhotoId);
+				if (tripphotoVO == null) {
+					return ResponseEntity.notFound().build();
+				}
+
+				// 更新資料
+				tripphotoVO.setTrip_id(tripId);
+				tripphotoVO.setPhoto(photoBytes);
+				tripphotoVO.setPhoto_type(photoType);
+
+				tripphotoSvc.updateTripphoto(tripphotoVO);
+
+				return ResponseEntity.ok().body(Map.of("status", "success", "message", "修改成功！", "photoSize",
+						photoBytes.length, "contentType", contentType));
+			} else {
+				return ResponseEntity.badRequest().body(Map.of("status", "error", "message", "未接收到照片檔案"));
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(Map.of("status", "error", "message", e.getMessage()));
+		}
+	}
+
+	@DeleteMapping("/deleteTripphoto/{tripPhotoId}")
+	public ResponseEntity<?> deleteTripphoto(@PathVariable Integer tripPhotoId) {
+		try {
+			// 檢查照片是否存在
+			TripphotoVO tripphotoVO = tripphotoSvc.getTripphotoById(tripPhotoId);
+			if (tripphotoVO == null) {
+				 return ((BodyBuilder) ResponseEntity.notFound())
+					        .body(Map.ofEntries(
+					            Map.entry("status", "error"),
+					            Map.entry("message", "找不到指定的照片")
+					        ));
+			}
+
+			// 執行刪除
+			tripphotoSvc.deleteTripphoto(tripPhotoId);
+
+			return ResponseEntity.ok().body(Map.of("status", "success", "message", "刪除成功！"));
+
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(Map.of("status", "error", "message", e.getMessage()));
+		}
+	}
+
+	// 拿到某行程中的所有（封面／內文）照片
+	@GetMapping("/getTripPhotosByType")
+	public ResponseEntity<?> getTripPhotosByType(@RequestParam("trip_id") Integer tripId,
+			@RequestParam("photo_type") Integer photoType) {
+
+		try {
+			// 獲取照片列表
+			List<Map<String, Object>> tripPhotoList = tripphotoSvc.getOneTripPhotoByTypeAsBase64(tripId, photoType);
+
+			// 檢查是否有找到照片
+			if (tripPhotoList.isEmpty()) {
+				return ResponseEntity.ok()
+						.body(Map.of("status", "success", "message", "沒有找到相關照片", "data", new ArrayList<>()));
+			}
+
+			// 直接回傳照片列表
+			return ResponseEntity.ok().body(Map.of("status", "success", "message", "取得照片成功", "data", tripPhotoList));
+
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(Map.of("status", "error", "message", e.getMessage()));
+		}
+	}
+
 }

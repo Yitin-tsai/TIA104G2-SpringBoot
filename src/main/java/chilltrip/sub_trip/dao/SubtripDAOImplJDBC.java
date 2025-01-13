@@ -13,8 +13,11 @@ import java.util.Map;
 
 import javax.sql.rowset.serial.SerialException;
 
+import org.springframework.stereotype.Repository;
+
 import chilltrip.sub_trip.model.SubtripVO;
 
+@Repository
 public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 
 	// 屬性建立用private，因為只有這個類別會用到
@@ -59,7 +62,7 @@ public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 	}
 
 	@Override
-	public void insert(SubtripVO subtripVO) {
+	public SubtripVO insert(SubtripVO subtripVO) {
 		try (PreparedStatement pstmt = getConnection().prepareStatement(INSERT_STMT)) {
 			pstmt.setInt(1, subtripVO.getTripid());
 			pstmt.setInt(2, subtripVO.getIndex());
@@ -69,6 +72,7 @@ public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured. " + se.getMessage());
 		}
+		return subtripVO;
 	}
 
 	@Override

@@ -12,10 +12,12 @@ import java.util.Map;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Repository;
 
 import chilltrip.location.model.LocationVO;
 import chilltrip.util.HibernateUtil;
 
+@Repository
 public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 
 	// 屬性建立用private，因為只有這個類別會用到
@@ -197,6 +199,36 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 		return list;
 	}
 	
+	//用googleID找Location物件 --> 為了要確認這個物件是不是被創建了
+	@Override
+	public LocationVO findByGooglePlaceId(String googlePlaceId) {
+	    LocationVO locationVO = null;
+	    String GET_BY_GOOGLE_PLACE_ID = 
+	        "SELECT * FROM location WHERE google_place_id = ?";
+	    
+	    try (PreparedStatement pstmt = getConnection().prepareStatement(GET_BY_GOOGLE_PLACE_ID)) {
+	        pstmt.setString(1, googlePlaceId);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                locationVO = new LocationVO();
+	                locationVO.setLocationid(rs.getInt("location_id"));
+	                locationVO.setGooglePlaceId(rs.getString("google_place_id"));
+	                locationVO.setLocation_name(rs.getString("location_name"));
+	                locationVO.setAddress(rs.getString("address"));
+	                locationVO.setLatitude(rs.getBigDecimal("latitude"));
+	                locationVO.setLongitude(rs.getBigDecimal("longitude"));
+	                locationVO.setScore(rs.getFloat("score"));
+	                locationVO.setCreate_time(rs.getTimestamp("create_time"));
+	                locationVO.setUpdateTime(rs.getTimestamp("update_time"));
+	                locationVO.setComments_number(rs.getInt("comments_number"));
+	                locationVO.setRatingCount(rs.getInt("rating_count"));
+	            }
+	        }
+	    } catch (SQLException se) {
+	        throw new RuntimeException("A database error occured. " + se.getMessage());
+	    }
+	    return locationVO;
+	}
 
 	@Override
 	public void close() {

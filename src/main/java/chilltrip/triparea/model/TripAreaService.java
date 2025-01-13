@@ -35,7 +35,7 @@ public class TripAreaService {
 		tripdao = new TripDAOImplJDBC();
 		memberDao = new MemberJDBCDAO();
 		photoDao = new TripphotoDAOImplJDBC();
-		tripphotoService = new TripphotoService();
+		tripphotoService = new TripphotoService(photoDao);
 	}
 
 	public TripAreaVO addTripArea(TripAreaVO tripAreaVO) {

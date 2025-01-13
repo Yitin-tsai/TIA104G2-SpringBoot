@@ -38,7 +38,7 @@ public class TripDAOImplJDBC implements TripDAO, AutoCloseable {
 	private static final String GET_ALL_BY_MEMBERID = "SELECT trip_id, member_id, abstract, create_time, collections, status, overall_score, overall_scored_people, location_number, article_title, visitors_number, likes FROM trip WHERE member_id = ?";
 	// 更改文章狀態 Ex:文章下架-->某用戶刪除文章或是文章被檢舉遭到管理員下架
 	private static final String CHANGE_STATUS = "UPDATE trip SET status=? WHERE trip_id = ?";
-	// 拿到某用戶的私人/公開/下架文章
+	// 拿到某用戶的特定狀態的文章
 	private static final String GET_MEMBER_TRIP_BY_STATUS = "SELECT trip_id, member_id, abstract, create_time, collections, status, overall_score, overall_scored_people, location_number, article_title, visitors_number, likes FROM trip WHERE member_id = ? AND status = ?";
 	// 透過景點搜尋到相關文章
 	private static final String GET_TRIP_BY_LOCATION = "SELECT DISTINCT trip.trip_id, trip.member_id, trip.abstract, trip.create_time, trip.collections, trip.status, trip.overall_score, trip.overall_scored_people, trip.location_number, trip.article_title, trip.visitors_number, trip.likes, sub_trip.content, sub_trip.`index`, location.location_name FROM location JOIN trip_location_relation ON location.location_id = trip_location_relation.location_id JOIN sub_trip ON trip_location_relation.sub_trip_id = sub_trip.sub_trip_id JOIN trip ON sub_trip.trip_id = trip.trip_id WHERE location.location_name LIKE ? ORDER BY trip.trip_id, sub_trip.`index`";
@@ -228,11 +228,7 @@ public class TripDAOImplJDBC implements TripDAO, AutoCloseable {
 		}
 	}
 
-	// 拿到某用戶的私人/公開/下架文章 GET_MEMBER_TRIP_BY_STATUS
-	public static final int STATUS_PRIVATE = 0;
-	public static final int STATUS_PUBLIC = 1;
-	public static final int STATUS_REMOVED = 2;
-
+	// 拿到某用戶的某狀態文章 GET_MEMBER_TRIP_BY_STATUS
 	public List<Map<String, Object>> getMemberTripByStatus(Integer memberId, Integer status) {
 
 		List<Map<String, Object>> list = new ArrayList<>();
@@ -270,7 +266,7 @@ public class TripDAOImplJDBC implements TripDAO, AutoCloseable {
 		return list;
 	}
 
-	//用景點查詢行程
+	// 用景點查詢行程
 	public List<Map<String, Object>> getTripByLocation(String location_name) {
 		List<Map<String, Object>> list = new ArrayList<>();
 
@@ -334,11 +330,11 @@ public class TripDAOImplJDBC implements TripDAO, AutoCloseable {
 		return tripVO;
 	}
 
-	//根據文章標題查詢文章
+	// 根據文章標題查詢文章
 	@Override
 	public List<Map<String, Object>> getTripByName(String article_title) {
 		List<Map<String, Object>> list = new ArrayList<>();
-		
+
 		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_TRIP_BY_NAME);) {
 			// 設定參數
 			pstmt.setString(1, "%" + article_title + "%");
@@ -381,6 +377,5 @@ public class TripDAOImplJDBC implements TripDAO, AutoCloseable {
 			}
 		}
 	}
-	
 
 }

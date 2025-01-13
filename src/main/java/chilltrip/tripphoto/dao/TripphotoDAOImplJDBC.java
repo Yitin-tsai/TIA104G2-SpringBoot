@@ -11,9 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Repository;
 
 import chilltrip.tripphoto.model.TripphotoVO;
 
+@Repository
 public class TripphotoDAOImplJDBC implements TripphotoDAO, AutoCloseable {
 
 	// 屬性建立用private，因為只有這個類別會用到

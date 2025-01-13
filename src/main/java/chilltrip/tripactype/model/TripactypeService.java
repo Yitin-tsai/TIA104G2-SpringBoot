@@ -31,7 +31,7 @@ public class TripactypeService {
 		dao = new TripactypeDAO();
 		memberDao = new MemberJDBCDAO();
 		tripPhotoDao = new TripphotoDAOImplJDBC();
-		tripphotoService = new TripphotoService();
+		tripphotoService = new TripphotoService(tripPhotoDao);
 	}
 
 	// 查詢所有活動類型

@@ -9,24 +9,591 @@
     <meta content="Free HTML Templates" name="description" />
 
     <!-- Favicon -->
-<link href="img/favicon.ico" rel="icon" />
+    <link href="img/favicon.ico" rel="icon" />
 
-<!-- Google Web Fonts -->
-<link rel="preconnect" href="https://fonts.gstatic.com" />
-<link
-	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-	rel="stylesheet" />
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-<!-- Font Awesome -->
-<link
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
-	rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
 
-<!-- Customized Bootstrap Stylesheet -->
-<link th:href="@{/css/style.css}" rel="stylesheet" />
-<link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
 
     <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --accent-color: #3498db;
+        --gray-light: #f5f6fa;
+        --border-color: #dcdde1;
+      }
+
+      body {
+        background-color: var(--gray-light);
+      }
+
+      .button-container {
+        margin-top: 8px; /* 與上方內容保持間距 */
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* 導航欄樣式 */
+      .navbar {
+        background-color: white;
+        padding: 15px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+
+      /* 搜尋區域樣式 */
+      .search-section {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-container {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      select,
+      input[type="text"] {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        flex: 1;
+        min-width: 120px; /* 確保選單不會太窄 */
+      }
+
+      /* 文章卡片樣式 */
+      .articles-grid {
+        display: grid;
+        grid-template-columns: repeat(
+          auto-fill,
+          minmax(300px, 1fr)
+        ); /* 改為自適應寬度 */
+        gap: 20px;
+        padding: 20px;
+        width: 100%;
+        max-width: 1200px; /* 配合container的最大寬度 */
+        margin: 0 auto; /* 置中對齊 */
+      }
+
+      @media (min-width: 1200px) {
+        .articles-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .article-card {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        height: 100%; /* 確保所有卡片高度一致 */
+        display: flex;
+        flex-direction: column;
+      }
+
+      .article-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .article-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .article-content {
+        flex: 1; /* 讓內容區塊自動填充剩餘空間 */
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+      }
+
+      .article-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      /* 統一按鈕樣式 */
+      .search-button {
+        background-color: #ff6600; /* 使用網站主色調 */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 16px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .follow-btn {
+        border: 1px solid #9ca3af; /* 恢復原始的邊框樣式 */
+        background: transparent; /* 透明背景 */
+        color: #6b7280; /* 原始的文字顏色 */
+        padding: 2px 10px; /* 原始的內距 */
+        border-radius: 12px; /* 圓角的邊框 */
+        font-size: 12px; /* 原始的文字大小 */
+        font-weight: normal;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+        min-width: 52px; /* 確保按鈕寬度一致 */
+        display: inline-block;
+        text-align: center;
+      }
+
+      .search-button:hover,
+      .follow-btn:hover {
+        background-color: #f3f4f6;
+        border-color: #6b7280;
+      }
+
+      /* 追蹤按鈕特殊狀態 */
+      .follow-btn.followed {
+        background-color: #6b7280;
+        border-color: #6b7280;
+        color: white;
+      }
+
+      .follow-btn.followed:hover {
+        background-color: #4b5563;
+        border-color: #4b5563;
+      }
+
+      .article-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: var(--primary-color);
+      }
+
+      .article-description {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 15px;
+        line-height: 1.5;
+      }
+
+      .article-tags {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 15px;
+      }
+
+      .tag {
+        background-color: var(--gray-light);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        color: var(--secondary-color);
+      }
+
+      .article-stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        color: #666;
+      }
+
+      /* 搜尋區域樣式 */
+      .map-search {
+        padding: 15px;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+        display: flex;
+        gap: 10px;
+      }
+
+      #place-search {
+        flex-grow: 1;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      #search-place-btn {
+        padding: 8px 16px;
+        background: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      #search-place-btn:hover {
+        background: #1557b0;
+      }
+
+      /* 地圖容器樣式 */
+      .map-container {
+        height: 400px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      /* 地點列表樣式 */
+      .place-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .place-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .place-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .card-content {
+        padding: 15px;
+      }
+
+      .place-photo {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        overflow: hidden;
+        margin-bottom: 12px;
+        border-radius: 4px;
+      }
+
+      .place-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .place-name {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a73e8;
+        margin-bottom: 8px;
+      }
+
+      .distance {
+        color: #34a853;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      .address {
+        color: #5f6368;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .rating {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #fbbc04;
+        font-weight: 500;
+      }
+
+      .rating-count {
+        color: #5f6368;
+        font-size: 14px;
+        font-weight: normal;
+      }
+
+      /* RWD 調整 */
+      @media (max-width: 768px) {
+        .search-container {
+          flex-direction: column;
+        }
+
+        .search-container > * {
+          width: 100%;
+        }
+
+        .articles-grid {
+          grid-template-columns: 1fr; /* 手機版單欄顯示 */
+        }
+        .place-list {
+          grid-template-columns: 1fr;
+        }
+
+        .map-container {
+          height: 300px;
+        }
+      }
+
+      /* 收藏列表選擇彈窗 */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+
+      .modal.active {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 400px;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .list-select {
+        width: 100%;
+        margin-bottom: 15px;
+      }
+
+      .create-list-input {
+        width: 100%;
+        margin-bottom: 15px;
+        padding: 8px;
+      }
+
+      .modal-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+
+      .modal-buttons button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .create-btn {
+        background-color: var(--accent-color);
+        color: white;
+      }
+
+      .cancel-btn {
+        background-color: #ccc;
+        color: white;
+      }
+
+      .place-item {
+        background: white;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .place-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .place-content {
+        position: relative;
+      }
+
+      .place-photo {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+      }
+
+      .place-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .save-btn {
+        right: 12px;
+        bottom: 12px;
+        background: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 16px;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: background-color 0.2s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .save-btn:hover {
+        background: #1557b0;
+      }
+
+      .save-btn i {
+        font-size: 14px;
+      }
+
+      .place-info {
+        display: flex;
+        align-items: flex-start;
+        padding: 16px;
+        gap: 16px;
+        width: 100%;
+      }
+
+      .place-name {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a73e8;
+        margin-bottom: 8px;
+      }
+
+      .distance {
+        color: #34a853;
+        font-weight: 500;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .place-address {
+        color: #5f6368;
+        font-size: 14px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .place-address i {
+        color: #ea4335;
+        margin-top: 3px;
+      }
+
+      .rating-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .stars {
+        color: #fbbc04;
+        letter-spacing: 2px;
+      }
+
+      .rating-score {
+        font-weight: 600;
+        color: #fbbc04;
+      }
+
+      .rating-count {
+        color: #5f6368;
+        font-size: 14px;
+      }
+
+      .breadcrumb {
+        background-color: transparent;
+        /* 移除背景色 */
+        list-style: none;
+        /* 移除列表樣式 */
+        display: flex;
+        padding: 0;
+        margin: 1rem 0;
+        top: 10px;
+      }
+
+      .breadcrumb-item {
+        font-size: calc(1rem - 4px);
+        /* 比 dropdown-item 小 4px */
+        color: #6c757d !important;
+        /* 預設顯示為灰色，並覆蓋 Bootstrap 預設樣式 */
+        text-decoration: none;
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+      }
+
       .breadcrumb-item + .breadcrumb-item::before {
         content: ">";
         padding: 0 0.5rem;
@@ -49,7 +616,6 @@
         color: #ff6600 !important;
         /* 最後一個元素顯示為橘色，並覆蓋 Bootstrap 預設樣式 */
       }
-
       /* 父容器，使用 flexbox 使搜尋框和地圖並排 */
       .map-container {
         display: flex; /* 使用 flexbox 排列子元素 */
@@ -65,9 +631,9 @@
 
       #mapBtn {
         right: 0;
+
         width: 100%;
       }
-
       #mapInput {
         width: 100%;
       }
@@ -87,7 +653,6 @@
         padding: 10px;
         background-color: #f9f9f9;
       }
-
       .search-bar {
         margin: 0; /* 去除外邊距 */
         padding: 0; /* 去除內邊距 */
@@ -161,7 +726,6 @@
       .place-item a:hover {
         background-color: #0056b3;
       }
-
       .nearRestBtn {
         padding: 0.5rem 1rem;
         background-color: #ff6600;
@@ -174,155 +738,260 @@
         position: relative;
         left: 10%;
       }
+
+      .pagination .page-number,
+      .pagination .page-btn {
+        background-color: white;
+        border: 1px solid #ddd;
+        color: #333;
+        padding: 8px 16px;
+        margin: 0 4px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.2s;
+      }
+
+      .pagination .page-number.active {
+        background-color: #ff6600;
+        color: white;
+        border-color: #ff6600;
+      }
+
+      .pagination .page-number:hover:not(.active),
+      .pagination .page-btn:hover:not(:disabled) {
+        background-color: #f8f9fa;
+        border-color: #ff6600;
+        color: #ff6600;
+      }
+
+      .page-btn:disabled {
+        background: #f5f5f5;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      .page-numbers {
+        display: flex;
+        gap: 5px;
+      }
+
+      .page-dots {
+        padding: 8px 16px;
+      }
+
+      .no-results,
+      .error-message {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+      }
+
+      .error-message {
+        color: #dc3545;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 40px;
+        font-size: 1.2em;
+        color: #666;
+        background: #f9f9f9;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+
+      .list-type-selection {
+        margin-bottom: 20px;
+      }
+
+      .list-type-selection label {
+        display: block;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+
+      #existing-list-section,
+      #new-list-section {
+        margin-bottom: 20px;
+      }
+
+      .create-list-input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
     </style>
   </head>
-  <body>
 
-    	<!------網站header------>
-	<div id="app">
-		<header>
-			<nav class="top-nav">
-				<div class="nav-left">
-					<a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a> <a
-						href="#" class="nav-item nav-link" id="nav-mygo">我的行程</a>
-				</div>
-				<div class="nav-center">
-					<a href="#" id="z-index"> <a href="/TIA104G2-SpringBoot/"
-						id="z-index"> <img th:src="@{/img/logo_black.png}"
-							alt="Chill Trip" style="width: 150px; height: auto" />
-					</a>
-					</a>
-				</div>
-				<div class="nav-right">
-					<a href="/TIA104G2-SpringBoot/login"
-						class="nav-item nav-link  active" id="nav-login"
-						style="color: #FF6600;">登入/註冊</a> <a href="#"
-						class="nav-item nav-link" id="nav-profile">會員基本資料</a> <a href="#"
-						class="nav-item nav-link" id="nav-support">客服中心</a>
-				</div>
-			</nav>
-		</header>
-	</div>
+  <body>
+    <!------網站header------>
+    <header>
+      <nav class="top-nav">
+        <div class="nav-left">
+          <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+          <a href="#" class="nav-item nav-link" id="nav-product">購！票券</a>
+          <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
+          <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+        </div>
+        <div class="nav-center">
+          <a href="#" id="z-index">
+            <a href="/TIA104G2-SpringBoot/" id="z-index">
+              <img
+                th:src="@{/img/logo_black.png}"
+                alt="Chill Trip"
+                style="width: 150px; height: auto"
+              />
+            </a>
+          </a>
+        </div>
+        <div class="nav-right">
+          <a
+            href="/TIA104G2-SpringBoot/login"
+            class="nav-item nav-link active"
+            id="nav-login"
+            style="color: #ff6600"
+            >登入/註冊</a
+          >
+          <div class="nav-item dropdown">
+            <a
+              href="#"
+              class="nav-link dropdown-toggle"
+              data-toggle="dropdown"
+              style="color: #212529"
+              >會員中心</a
+            >
+            <div class="dropdown-menu rounded-0 m-0">
+              <a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a>
+              <a href="#" class="dropdown-item" id="nav-coupons">我的折價券</a>
+              <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
+            </div>
+          </div>
+          <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+          <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+        </div>
+      </nav>
+    </header>
 
     <div aria-label="breadcrumb">
       <ul class="breadcrumb" id="breadcrumb-nav">
         <!-- 麵包屑導航項目將由 JavaScript 動態生成 -->
       </ul>
     </div>
-    <main class="ticket-grid" id="tripCardsContainer">
-      <!-- 這裡的內容將由 JavaScript 動態插入行程卡片 -->
-    </main>
-    <!--搜尋標籤行程的頁碼-->
+
+    <!-- 行程搜索框 -->
+    <div class="container">
+      <section class="search-section">
+        <div class="search-container">
+          <select id="activity-type">
+            <option value="">活動類型</option>
+          </select>
+          <select id="region">
+            <option value="">行程地區</option>
+          </select>
+          <input type="text" placeholder="搜尋文章..." id="search-input" />
+          <button id="search-btn" class="search-button">搜尋</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="articles-grid">
+      <!-- 文章卡片範例 -->
+      <article class="article-card">
+        <img
+          src="/api/placeholder/400/320"
+          alt="文章封面"
+          class="article-image"
+        />
+        <div class="article-content">
+          <div class="article-meta">
+            <span class="author">作者：旅行家</span>
+            <button class="follow-btn">追蹤</button>
+          </div>
+          <h2 class="article-title">日本結緣神社10選</h2>
+          <p class="article-description">除了東京大神宮，還有這些絕美景點！</p>
+          <div class="article-tags">
+            <span class="tag">文化景點</span>
+            <span class="tag">東京</span>
+            <span class="tag">神社</span>
+          </div>
+          <div class="article-stats">
+            <span>👁️ 100</span>
+            <span>❤️ 50</span>
+            <span class="rating">★★★★★ 5.0</span>
+          </div>
+        </div>
+      </article>
+      <!-- 更多文章卡片 -->
+    </div>
+
+    <!--頁碼-->
     <div class="pagination">
-      <!-- 動態產生分頁按鈕 -->
-    </div>
-    <div class="map-container">
-      <!-- 搜尋框部分 -->
-      <div class="mapSearch-container" style="padding: 0px">
-        <div class="search-bar">
-          <div class="search-input-group">
-            <input type="text" placeholder="關鍵字" id="mapInput" />
-            <button type="button" id="mapBtn">搜尋</button>
-          </div>
-          <!-- 搜尋結果顯示區域 -->
-          <div
-            id="searchResults"
-            style="margin-top: 20px; max-height: 300px; overflow-y: auto"
-          ></div>
-        </div>
-        <div class="search-input-group">
-          <button type="button" class="nearBtn" id="nearRest">
-            附近餐廳搜尋
-          </button>
-        </div>
-      </div>
-
-      <!-- Google 地圖部分 -->
-      <div class="map" id="map"></div>
-    </div>
-
-    <!--我的行程-->
-    <div>
-      <h6 style="text-align: center; font-size: 24px; margin-top: 47px">
-        我的行程
-      </h6>
-    </div>
-    <main class="ticket-grid">
-      <!-- Ticket cards remain unchanged -->
-      <a href="#" class="no-action" style="text-decoration: none">
-        <div class="ticket-card">
-          <img
-            src="https://okamoto-kimono.tw/common_renewal/img/home/kv_04.jpg"
-            alt="京都和服體驗"
-          />
-          <div class="ticket-info">
-            <h3 class="title">我的行程1</h3>
-            <p class="author">用戶名稱</p>
-            <div class="btn-group">
-              <button type="button" class="editBtn">編輯</button>
-              <button type="button" class="deleBtn">刪除</button>
-            </div>
-          </div>
-        </div>
-      </a>
-      <a href="#" class="no-action" style="text-decoration: none">
-        <div class="ticket-card">
-          <img
-            src="https://today-obs.line-scdn.net/0hthxKI1x2K0dFMjlqFXVUEH1kJzZ2VDFOZwEwImM7JXdvHjwScVN4JGlhJ2s7BThBZQM3KDJhcXFuUWoYeg/w1200"
-            alt="東京迪士尼門票"
-          />
-          <div class="ticket-info">
-            <h3 class="title">我的行程2</h3>
-            <p class="author">用戶名稱</p>
-            <div class="btn-group">
-              <button type="button" class="editBtn">編輯</button>
-              <button type="button" class="deleBtn">刪除</button>
-            </div>
-          </div>
-        </div>
-      </a>
-      <a href="#" class="no-action" style="text-decoration: none">
-        <div class="ticket-card">
-          <img
-            src="https://media.nownews.com/nn_media/thumbnail/2023/08/1693378260517-fdd388634ad5460589c853eca1c4774e-800x565.webp?unShow=false"
-            alt="大阪環球影城門票"
-          />
-          <div class="ticket-info">
-            <h3 class="title">我的行程3</h3>
-            <p class="author">用戶名稱</p>
-            <div class="btn-group">
-              <button type="button" class="editBtn">編輯</button>
-              <button type="button" class="deleBtn">刪除</button>
-            </div>
-          </div>
-        </div>
-      </a>
-      <a href="#" class="no-action" style="text-decoration: none">
-        <div class="ticket-card">
-          <img
-            src="https://rimage.gnst.jp/livejapan.com/public/article/detail/a/00/02/a0002944/img/basic/a0002944_main.jpg"
-            alt="富士山巴士一日券"
-          />
-          <div class="ticket-info">
-            <h3 class="title">我的行程4</h3>
-            <p class="author">用戶名稱</p>
-            <div class="btn-group">
-              <button type="button" class="editBtn">編輯</button>
-              <button type="button" class="deleBtn">刪除</button>
-            </div>
-          </div>
-        </div>
-      </a>
-    </main>
-    <!-- 自己行程的頁碼 -->
-    <div class="pagination-custom">
       <a href="#" class="page-number active">1</a>
       <a href="#" class="page-number">2</a>
-      <a href="#" class="page-number">3</a> <span class="ellipsis">...</span>
+      <a href="#" class="page-number">3</a>
+      <span class="ellipsis">...</span>
       <a href="#" class="page-number">8</a>
       <a href="#" class="page-number">9</a>
       <a href="#" class="page-number">10</a>
       <span class="label">頁</span>
+    </div>
+
+    <!--Google地圖-->
+    <section class="map-section">
+      <div class="map-search">
+        <input type="text" id="place-search" placeholder="搜尋景點..." />
+        <button id="search-place-btn">搜尋</button>
+      </div>
+      <div class="map-container" id="map">
+        <!-- Google Maps will be loaded here -->
+      </div>
+      <div class="place-list">
+        <!-- 搜尋結果將在這裡動態生成 -->
+      </div>
+    </section>
+
+    <!-- 收藏列表選擇彈窗 -->
+    <div class="modal" id="save-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>選擇收藏列表</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+
+        <!-- 選擇操作類型的 radio buttons -->
+        <div class="list-type-selection">
+          <label>
+            <input type="radio" name="listType" value="existing" checked />
+            選擇現有清單
+          </label>
+          <label>
+            <input type="radio" name="listType" value="new" />
+            建立新清單
+          </label>
+        </div>
+
+        <!-- 現有清單選擇 -->
+        <div id="existing-list-section">
+          <select class="list-select">
+            <option value="">請選擇收藏清單...</option>
+          </select>
+        </div>
+
+        <!-- 新建清單輸入 -->
+        <div id="new-list-section" style="display: none">
+          <input
+            type="text"
+            class="create-list-input"
+            placeholder="請輸入新清單名稱"
+          />
+        </div>
+
+        <div class="modal-buttons">
+          <button class="cancel-btn">取消</button>
+          <button class="create-btn">確認</button>
+        </div>
+      </div>
     </div>
 
     <footer>
@@ -395,60 +1064,39 @@
             </div>
           </a>
         </div>
-
-        <!-- 加載 Font Awesome 圖標庫 -->
-        <link
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-          rel="stylesheet"
-        />
       </div>
-      <div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
     </footer>
 
     <!------ 共用JS ------>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
+      ><i class="fa fa-angle-double-up"></i
+    ></a>
 
-	<!-- Back to Top -->
-	<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i
-		class="fa fa-angle-double-up"></i></a>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
 
-	<!-- JavaScript Libraries -->
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-	<script
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <!-- 本地資源改用 Thymeleaf 語法 -->
+    <script th:src="@{/lib/easing/easing.min.js}"></script>
+    <script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
 
-	<!-- 本地資源改用 Thymeleaf 語法 -->
-	<script th:src="@{/lib/easing/easing.min.js}"></script>
-	<script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+    <!-- Contact Javascript File -->
+    <script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
+    <script th:src="@{/mail/contact.js}"></script>
 
-	<!-- Contact Javascript File -->
-	<script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
-	<script th:src="@{/mail/contact.js}"></script>
+    <!-- Template Javascript -->
+    <script th:src="@{/js/main.js}"></script>
 
-	<!-- Template Javascript -->
-	<script th:src="@{/js/main.js}"></script>
-
-	<!-- 導航欄nav的href載入器 -->
-	<!------修齊的JS------>
-	<script th:src="@{/js/navigation.js}"></script>
+    <!-- Google Map -->
+    <script th:src="@{/js/maphsiuchi.js}"></script>
 
     <!-- 導航欄nav的href載入器 -->
-    <!------修齊的JS------>
     <script th:src="@{/js/navigation.js}"></script>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("nav-go").href = "./go.html";
-        document.getElementById("nav-product").href = "./product.html";
-        document.getElementById("nav-profile").href = "./profile.html";
-        document.getElementById("nav-guide").href = "./guide.html";
-        document.getElementById("nav-basic-info").href = "./basic_info.html";
-        document.getElementById("nav-coupons").href = "./coupons.html";
-        document.getElementById("nav-orders").href = "./orders.html";
-        document.getElementById("nav-support").href = "./support.html";
-        document.getElementById("nav-cart").href = "./cart.html";
-        // document.getElementById("nav-index").href = "./index.html";
-
         const breadcrumbNav = document.getElementById("breadcrumb-nav");
-
         // 定義麵包屑導航的項目
         const breadcrumbItems = [
           { name: "首頁", link: "index.html" },
@@ -472,6 +1120,7 @@
           breadcrumbNav.appendChild(li);
         });
       });
+
       //綁定編輯及刪除按鈕
       const editBtns = document.querySelectorAll(".editBtn");
       editBtns.forEach((button) => {
@@ -486,177 +1135,390 @@
         });
       });
     </script>
+
     <script>
-      // 	行程搜尋出現的行程卡片
       $(document).ready(function () {
         const contextPath = "/TIA104G2-SpringBoot";
-        let currentTrips = [];
-        let currentPage = 1;
-        const pageSize = 4;
+        let isLoggedIn = false; // 用來追蹤登入狀態
+        const articlesGrid = $(".articles-grid");
+        const activitySelect = $("#activity-type");
+        const regionSelect = $("#region");
+        const searchInput = $("#search-input");
+        let currentArticles = [];
+        const pageSize = 12;
+        let currentPage = 0;
 
-        // 1) 載入活動類型
-        $.ajax({
-          url: contextPath + "/tripactype/all",
-          type: "GET",
-          dataType: "json",
-          success: function (eventTypes) {
-            const $activitySelect = $("#activityTypeSelect");
-            $activitySelect.empty();
-            $activitySelect.append(`<option value="">請選擇活動類型</option>`);
-            eventTypes.forEach(function (typeStr) {
-              $activitySelect.append(
-                `<option value="${typeStr}">${typeStr}</option>`
-              );
-            });
-          },
-          error: function (xhr) {
-            console.error("無法取得行程活動類型清單:", xhr);
-          },
-        });
-
-        // 2) 載入行程地區
-        $.ajax({
-          url: contextPath + "/triparea/all",
-          type: "GET",
-          dataType: "json",
-          success: function (regionList) {
-            const $regionSelect = $("#regionSelect");
-            $regionSelect.empty();
-            $regionSelect.append(`<option value="">請選擇行程地區</option>`);
-            regionList.forEach(function (region) {
-              $regionSelect.append(
-                `<option value="${region}">${region}</option>`
-              );
-            });
-          },
-          error: function (xhr) {
-            console.error("無法取得行程地區清單:", xhr);
-          },
-        });
-
-        // 3) 監聽活動類型
-        $("#activityTypeSelect").on("change", function () {
-          const selectedEventType = $(this).val();
-          if (!selectedEventType) {
-            $("#tripCardsContainer").empty();
-            return;
-          }
-          // 呼叫 /tripactype/trips
-          $.ajax({
-            url: contextPath + "/tripactype/trips",
-            type: "GET",
-            data: { eventType: selectedEventType },
-            dataType: "json",
-            success: function (trips) {
-              console.log("共拿到幾筆資料?", trips.length);
-              currentTrips = trips;
-              currentPage = 1;
-              renderTripCards(trips);
-              renderPagination();
-            },
-            error: function (xhr) {
-              if (xhr.status === 404) {
-                $("#tripCardsContainer").empty();
-                console.log("沒有找到相關行程");
-              } else {
-                console.error("查詢行程活動失敗:", xhr);
+        // 檢查會員狀態的函數
+        async function checkLoginStatus() {
+          try {
+            const response = await fetch(
+              "/TIA104G2-SpringBoot/member/getCurrentMemberId",
+              {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
               }
-            },
-          });
-        });
+            );
 
-        // 4) 監聽地區
-        $("#regionSelect").on("change", function () {
-          const selectedRegion = $(this).val();
-          if (!selectedRegion) {
-            $("#tripCardsContainer").empty();
-            return;
-          }
-          // 呼叫 /triparea/search
-          $.ajax({
-            url: contextPath + "/triparea/search",
-            type: "GET",
-            data: { regionContent: selectedRegion },
-            dataType: "json",
-            success: function (resultList) {
-              console.log("地區查詢共拿到幾筆?", resultList.length);
-              currentTrips = resultList;
-              currentPage = 1;
-              renderTripCards(resultList);
-              renderPagination();
-            },
-            error: function (xhr) {
-              if (xhr.status === 404) {
-                $("#tripCardsContainer").empty();
-                console.log("沒有找到相關行程");
-              } else {
-                console.error("查詢行程地區失敗:", xhr);
-              }
-            },
-          });
-        });
+            // 檢查回應狀態
+            console.log("Response status:", response.status);
 
-        // 5) renderTripCards
-        function renderTripCards(trips) {
-          const $container = $("#tripCardsContainer");
-          $container.empty();
-          if (!trips || trips.length === 0) {
-            $container.append(`<p>目前沒有相關行程...</p>`);
-            return;
-          }
-
-          const startIndex = (currentPage - 1) * pageSize;
-          const endIndex = startIndex + pageSize;
-          const pageData = trips.slice(startIndex, endIndex);
-
-          pageData.forEach(function (trip) {
-            const tripTitle = trip.article_title || "未命名行程";
-            const tripAbstract = trip.trip_abstract || "沒有行程簡介";
-            const base64Photo = trip.coverImageUrl;
-            const coverImgUrl = base64Photo
-              ? base64Photo
-              : "https://via.placeholder.com/350x200?text=NoImage";
-
-            let authorName = trip.member_nickName || "未知作者";
-
-            const cardHtml = `
-            <div class="ticket-card">
-                <img src="${coverImgUrl}"
-                     onerror="this.onerror=null;this.src='https://via.placeholder.com/350x200?text=NoImage';"
-                     alt="${tripTitle}">
-                <div class="ticket-info">
-                    <h3 class="title">${tripTitle}</h3>
-                    <p class="author">${authorName}</p>
-                    <p class="abstract">${tripAbstract}</p>
-                    <!-- ...其他資訊 -->
-                </div>
-            </div>
-        `;
-            $container.append(cardHtml);
-          });
-        }
-        // 6) renderPagination
-        function renderPagination() {
-          const $pagination = $(".pagination");
-          $pagination.empty();
-          if (!currentTrips || currentTrips.length === 0) {
-            return;
-          }
-          const totalPages = Math.ceil(currentTrips.length / pageSize);
-          for (let p = 1; p <= totalPages; p++) {
-            const $pageLink = $(`<a href="#" class="page-number">${p}</a>`);
-            if (p === currentPage) {
-              $pageLink.addClass("active");
+            if (!response.ok) {
+              console.log("Response not ok");
+              return null;
             }
-            $pageLink.on("click", function (e) {
-              e.preventDefault();
-              currentPage = p;
-              renderTripCards(currentTrips);
-              renderPagination();
-            });
-            $pagination.append($pageLink);
+
+            const data = await response.json();
+            console.log("API回應內容:", data);
+
+            // 確保 memberId 存在且為數字
+            const memberId = parseInt(data.memberId);
+            console.log("解析後的 memberId:", memberId);
+
+            return memberId;
+          } catch (error) {
+            console.error("檢查登入狀態發生錯誤:", error);
+            return null;
           }
         }
+
+        // 初始檢查登入狀態
+        checkLoginStatus().then((memberId) => {
+          if (!memberId) {
+            // 未登入狀態
+            $(".save-btn, .follow-btn").click(function (e) {
+              e.preventDefault();
+              alert("請先登入會員才能使用此功能");
+              window.location.href = `${contextPath}/login`;
+            });
+          } else {
+            // 已登入狀態，設置按鈕功能
+            setupModalListeners();
+          }
+        });
+
+        // 加入防抖動函數
+        function debounce(func, wait) {
+          let timeout;
+          return function () {
+            const context = this;
+            const args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+              func.apply(context, args);
+            }, wait);
+          };
+        }
+
+        // 加入重置篩選器函數
+        function resetFilters() {
+          activitySelect.val("");
+          regionSelect.val("");
+        }
+
+        // 先載入活動類型和地區選項
+        function loadOptions() {
+          console.log("載入選項");
+          // 載入活動類型選項
+          $.ajax({
+            url: contextPath + "/tripactype/all",
+            type: "GET",
+            dataType: "json",
+            success: function (typeList) {
+              activitySelect.empty();
+              activitySelect.append(`<option value="">活動類型</option>`);
+              typeList.forEach(function (eventcontent) {
+                activitySelect.append(
+                  `<option value="${eventcontent}">${eventcontent}</option>`
+                );
+              });
+            },
+            error: function (xhr) {
+              console.error("無法取得活動類型清單:", xhr);
+              showErrorMessage("載入活動類型失敗");
+            },
+          });
+
+          // 載入地區選項
+          $.ajax({
+            url: contextPath + "/triparea/all",
+            type: "GET",
+            dataType: "json",
+            success: function (regions) {
+              regionSelect.empty();
+              regionSelect.append(`<option value="">地區</option>`);
+              regions.forEach(function (region) {
+                regionSelect.append(
+                  `<option value="${region}">${region}</option>`
+                );
+              });
+            },
+            error: function (xhr) {
+              console.error("無法取得地區清單:", xhr);
+              showErrorMessage("載入地區清單失敗");
+            },
+          });
+        }
+
+        // 初始加載選項和文章
+        loadOptions();
+
+        // 加載第一頁文章
+        loadArticles(0);
+
+        // 加載文章數據
+        function loadArticles(page = 0) {
+          $.ajax({
+            url: `${contextPath}/trip/all`,
+            type: "GET",
+            data: {
+              page: page,
+              size: pageSize,
+            },
+            success: function (response) {
+              if (response && response.content) {
+                currentArticles = transformTripsToArticles(response.content);
+                renderArticles(currentArticles);
+                renderPagination(response);
+              }
+            },
+            error: function (xhr) {
+              if (xhr.status === 404) {
+                showNoResultsMessage();
+              } else {
+                showErrorMessage("載入文章失敗");
+              }
+            },
+          });
+        }
+
+        // 轉換後端資料為前端文章格式
+        function transformTripsToArticles(tripDataList) {
+          return tripDataList.map((trip) => {
+            // 檢查是否有 Base64 圖片
+            const isBase64Image = trip.image && trip.image.startsWith("/");
+            const image = isBase64Image
+              ? `data:image/png;base64,${trip.image}`
+              : trip.image ||
+                "https://via.placeholder.com/350x200?text=NoImage";
+
+            return {
+              id: trip.id,
+              title: trip.title || "未命名行程",
+              author: trip.author || "未知作者",
+              description: trip.description || "沒有行程簡介",
+              image: image,
+              tags: trip.tags || [],
+              views: trip.views || 0,
+              likes: trip.likes || 0,
+              rating: trip.rating || 4.5,
+            };
+          });
+        }
+
+        // 渲染文章列表
+        function renderArticles(articles) {
+          articlesGrid.empty();
+
+          if (!articles || articles.length === 0) {
+            showNoResultsMessage();
+            return;
+          }
+
+          // 計算當前頁的資料
+          const startIndex = currentPage * pageSize;
+          const endIndex = startIndex + pageSize;
+          const pageArticles = articles.slice(startIndex, endIndex);
+
+          pageArticles.forEach((article) => {
+            const articleHTML = `
+            <article class="article-card">
+                <img src="${article.image}"
+                     alt="${article.title}"
+                     class="article-image"
+                     onerror="this.src='https://via.placeholder.com/350x200?text=NoImage';" />
+                <div class="article-content">
+                    <div class="article-meta">
+                        <span class="author">作者：${article.author}</span>
+                        <button class="follow-btn">追蹤</button>
+                    </div>
+                    <h2 class="article-title">${article.title}</h2>
+                    <p class="article-description">${article.description}</p>
+                    <div class="article-tags">
+                        ${article.tags
+                          .map((tag) => `<span class="tag">${tag}</span>`)
+                          .join("")}
+                    </div>
+                    <div class="article-stats">
+                        <span>👁️ ${article.views}</span>
+                        <span>❤️ ${article.likes}</span>
+                        <span class="rating">★★★★★ ${article.rating.toFixed(
+                          1
+                        )}</span>
+                    </div>
+                </div>
+            </article>
+          `;
+            articlesGrid.append(articleHTML);
+          });
+          // 加載文章數據
+          renderPagination(articles);
+        }
+
+        // 渲染分頁
+        function renderPagination(articles) {
+          const totalPages = Math.ceil(articles.length / pageSize);
+          const $pagination = $(".pagination");
+
+          // 如果不存在分頁容器，則創建一個
+          if ($pagination.length === 0) {
+            articlesGrid.after(
+              '<div class="pagination"><button class="page-btn prev-btn">上一頁</button><div class="page-numbers"></div><button class="page-btn next-btn">下一頁</button></div>'
+            );
+          }
+
+          const $pageNumbers = $(".page-numbers");
+          const $prevBtn = $(".prev-btn");
+          const $nextBtn = $(".next-btn");
+
+          $pageNumbers.empty();
+
+          // 設定上一頁/下一頁按鈕狀態
+          $prevBtn.prop("disabled", currentPage === 0);
+          $nextBtn.prop("disabled", currentPage === totalPages - 1);
+
+          let startPage = Math.max(0, currentPage - 2);
+          let endPage = Math.min(totalPages - 1, currentPage + 2);
+
+          if (endPage - startPage < 4) {
+            if (startPage === 0) {
+              endPage = Math.min(4, totalPages - 1);
+            } else {
+              startPage = Math.max(0, endPage - 4);
+            }
+          }
+
+          if (startPage > 0) {
+            $pageNumbers.append(
+              `<span class="page-number" data-page="0">1</span>`
+            );
+            if (startPage > 1) {
+              $pageNumbers.append('<span class="page-dots">...</span>');
+            }
+          }
+
+          for (let i = startPage; i <= endPage; i++) {
+            const $pageNumber = $(
+              `<span class="page-number${
+                i === currentPage ? " active" : ""
+              }" data-page="${i}">${i + 1}</span>`
+            );
+            $pageNumbers.append($pageNumber);
+          }
+
+          if (endPage < totalPages - 1) {
+            if (endPage < totalPages - 2) {
+              $pageNumbers.append('<span class="page-dots">...</span>');
+            }
+            $pageNumbers.append(
+              `<span class="page-number" data-page="${
+                totalPages - 1
+              }">${totalPages}</span>`
+            );
+          }
+        }
+
+        // 篩選器和搜尋功能 (活動類型、地區選擇、關鍵字搜尋)
+        function performSearch() {
+          const searchDTO = {
+            eventContent: $("#activity-type").val(),
+            regionContent: $("#region").val(),
+            keyword: $("#search-input").val().trim(),
+            page: currentPage,
+            size: pageSize,
+          };
+
+          console.log("Sending search request:", searchDTO); // 用於調試
+
+          $.ajax({
+            url: `${contextPath}/trip/search`,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(searchDTO),
+            success: function (response) {
+              console.log("Search response:", response); // 用於調試
+              if (response && response.content) {
+                currentArticles = transformTripsToArticles(response.content);
+                renderArticles(currentArticles);
+                renderPagination({
+                  content: response.content,
+                  totalPages: response.totalPages,
+                  totalElements: response.totalElements,
+                  number: response.currentPage,
+                });
+              } else {
+                articlesGrid.html(
+                  '<p class="no-results">沒有符合條件的行程</p>'
+                );
+                $(".pagination").hide();
+              }
+            },
+            error: function (xhr, status, error) {
+              console.error("Search error:", error); // 用於調試
+              console.error("Status:", status);
+              console.error("Response:", xhr.responseText);
+
+              if (xhr.status === 404) {
+                articlesGrid.html(
+                  '<p class="no-results">沒有符合條件的行程</p>'
+                );
+                $(".pagination").hide();
+              } else if (xhr.status === 405) {
+                console.error("方法不允許：請確認後端支援 POST 請求");
+                showErrorMessage("搜尋失敗，請聯繫系統管理員");
+              } else {
+                showErrorMessage("搜尋失敗，請稍後再試");
+              }
+            },
+          });
+        }
+
+        // 搜尋按鈕事件
+        $("#search-btn")
+          .off("click")
+          .on("click", function (e) {
+            e.preventDefault(); // 防止表單默認提交
+            performSearch();
+          });
+
+        //  Enter 鍵事件
+        $("#search-input")
+          .off("keypress")
+          .on("keypress", function (e) {
+            if (e.which === 13) {
+              e.preventDefault();
+              performSearch();
+            }
+          });
+
+        // 追蹤按鈕功能
+        $(".follow-btn").click(function () {
+          if (!isLoggedIn) {
+            alert("請先登入會員才能使用此功能");
+            window.location.href = `${contextPath}/login`;
+            return;
+          }
+
+          const btn = $(this);
+          if (btn.hasClass("followed")) {
+            btn.removeClass("followed").text("追蹤");
+          } else {
+            btn.addClass("followed").text("已追蹤");
+          }
+        });
       });
     </script>
   </body>
