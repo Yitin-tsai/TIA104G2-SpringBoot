@@ -21,15 +21,16 @@ import chilltrip.location.model.LocationVO;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @WebServlet("/location/location.do")
 public class LocationServlet extends HttpServlet {
-
+	@Autowired
 	private LocationService locationSvc;
 
-	public void init() {
-		locationSvc = new LocationService();
-	}
+//	public void init() {
+//		locationSvc = new LocationService();
+//	}
 
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {

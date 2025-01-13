@@ -650,11 +650,13 @@ public class MemberController {
 	@Transactional
 	public ResponseEntity<?> saveLocation(@RequestBody String requestBody, HttpSession session) {
 	    // 驗證會員登入狀態
-	    MemberVO member = (MemberVO) session.getAttribute("member");
-	    if (member == null) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-	                           .body(Map.of("message", "請先登入"));
+	
+	    Integer memberid = (Integer) session.getAttribute("memberId");
+	    if (memberid == null) {
+	    	return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	    			.body(Map.of("message", "請先登入"));
 	    }
+
 
 	    try {
 	        ObjectMapper mapper = new ObjectMapper();
@@ -670,7 +672,7 @@ public class MemberController {
 	        // 根據操作類型執行不同邏輯
 	        if ("new".equals(operationType)) {
 	            String collectionName = jsonNode.get("articleTitle").asText();
-	            TripVO newTrip = tripSvc.createNewCollection(member.getMemberId(), collectionName);
+	            TripVO newTrip = tripSvc.createNewCollection(memberid, collectionName);
 	            tripSvc.addLocationToTrip(newTrip.getTrip_id(), locationVO.getLocationid());
 	            
 	            return ResponseEntity.ok()

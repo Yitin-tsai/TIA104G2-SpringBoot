@@ -126,12 +126,288 @@ CREATE TABLE location (
     CONSTRAINT pk_location_location_id PRIMARY KEY (location_id),
     UNIQUE KEY uk_google_place_id (google_place_id)
 ) COMMENT='景點表';
+-- 赤崁樓
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJmyG9qoN2bjQRi5sGL5YH5YA',
+    '赤崁樓',
+    '700台南市中西區民族路二段212號',
+    23.000375, 120.202665,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
 
-insert into location (address,create_time,comments_number,score,location_name) values ('日本東京都文京區後樂','2024-12-12 20:00','3','5.0','東京巨蛋'); -- 我是第一天的巨蛋 --
-insert into location (address,create_time,comments_number,score,location_name) values ('東京都港區芝公園4丁目','2024-12-12 20:00','3','5.0','東京鐵塔'); -- 我是第一天的鐵塔 --
-insert into location (address,create_time,comments_number,score,location_name) values ('澀谷區宇田川町1番1號','2024-12-12 20:00','3','5.0','東京澀谷'); -- 我是第一天的澀谷 --
-insert into location (address,create_time,comments_number,score,location_name) values ('台北市','2024-12-12 20:00','101','4.0','101'); -- 測試 --
+-- 安平古堡
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJB4m_qXB2bjQRXXa1ma6_5X0',
+    '安平古堡',
+    '708台南市安平區國勝路82號',
+    23.001413, 120.160541,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
 
+-- 奇美博物館
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJ7WNrVuV1bjQRqL8VxOX_8VM',
+    '奇美博物館',
+    '717台南市仁德區文華路二段66號',
+    22.934736, 120.226998,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 藍晒圖文創園區
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJkQv-Poh2bjQR-O8bx4gxcBo',
+    '藍晒圖文創園區',
+    '700台南市中西區西門路一段689巷',
+    22.989629, 120.197934,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 林百貨
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJUYpnYYl2bjQRXHH7sxtQUMA',
+    '林百貨',
+    '700台南市中西區忠義路二段63號',
+    22.991843, 120.198873,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 台南美術館2館
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJ_____4h2bjQRA1bR5O2k8vM',
+    '台南美術館2館',
+    '700台南市中西區忠義路二段1號',
+    22.991277, 120.198479,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+
+-- 台北101
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJL44r5l2rQjQRB8xzGyoS5Jw',
+    '台北101',
+    '110台北市信義區信義路五段7號',
+    25.033976, 121.564472,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 國立故宮博物院
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJtd9Yn0upQjQRW_eXYgLrAQU',
+    '國立故宮博物院',
+    '111台北市士林區至善路二段221號',
+    25.102355, 121.548493,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 中正紀念堂
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJtV7kRxupQjQRFr6JNyhXZ-8',
+    '中正紀念堂',
+    '100台北市中正區中山南路21號',
+    25.034689, 121.521627,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 松山文創園區
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJLV6fpeCrQjQRR7K_15vXGD0',
+    '松山文創園區',
+    '110台北市信義區光復南路133號',
+    25.043888, 121.560349,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 龍山寺
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJ27R_N3epQjQRn8qcKog0FJQ',
+    '龍山寺',
+    '108台北市萬華區廣州街211號',
+    25.037100, 121.499960,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 北投圖書館
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJqSDYxdCmQjQRFqPCkwGGJwY',
+    '北投圖書館',
+    '112台北市北投區光明路251號',
+    25.137389, 121.506287,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 大安森林公園
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJSSr5Y8mrQjQRQeKuXJI9F3k',
+    '大安森林公園',
+    '106台北市大安區新生南路二段1號',
+    25.031663, 121.535833,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+
+
+-- 國立臺灣美術館
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJ7SJDghYWaTQRqxV6yW6M3qM',
+    '國立臺灣美術館',
+    '403台中市西區五權西路一段2號',
+    24.139994, 120.662907,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 審計新村
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJkzd-YRkWaTQRFxuXxI6r8Pg',
+    '審計新村',
+    '403台中市西區民生路368巷',
+    24.143514, 120.662249,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 台中歌劇院
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJB4PLFvEXaTQR9E0NHgHUXpE',
+    '台中國家歌劇院',
+    '407台中市西屯區惠來路二段101號',
+    24.162690, 120.640740,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 草悟道
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJ3b54mxgWaTQRZnXD4Bo3-Aw',
+    '草悟道',
+    '403台中市西區市民廣場',
+    24.144674, 120.662907,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 宮原眼科
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJE4ExJhsWaTQRXezXbwDfmyA',
+    '宮原眼科',
+    '400台中市中區中山路20號',
+    24.137861, 120.683567,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 高美濕地
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJseMYlKYUaTQR3mxS4PwRACA',
+    '高美濕地',
+    '436台中市清水區美堤街',
+    24.312368, 120.544137,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
+
+-- 東海大學路思義教堂
+INSERT INTO location (
+    google_place_id, location_name, address, 
+    latitude, longitude, score, rating_count, 
+    comments_number, create_time, update_time
+) VALUES (
+    'ChIJ8cn7YckVaTQROPxkPLKVyYA',
+    '東海大學路思義教堂',
+    '407台中市西屯區台灣大道四段1727號',
+    24.179851, 120.604669,
+    0.0, 0, 0,
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+);
 -- 公告 FK 平台方 --
  
  CREATE TABLE announcement (
