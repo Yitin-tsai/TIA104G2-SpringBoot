@@ -42,7 +42,16 @@ public class AnnounceService {
 	}
 
 	public void updateannounce(AnnounceVO announceVO) {
-		announceVO.setCoverphotoFromBase64();
+		  // 如果沒有提供新照片，則保留原照片
+	    if (announceVO.getCoverphotoBase64() == null) {
+	        AnnounceVO existingAnnounce = dao.getOne(announceVO.getAnnounceid());
+	        // 保留舊的照片
+	        announceVO.setCoverphoto(existingAnnounce.getCoverphoto());
+	    } else {
+	        // 如果提供了新照片，將 base64 轉換成 byte[] 並設置
+	        announceVO.setCoverphotoFromBase64();
+	    }
+		
 		dao.update(announceVO);
 	}
 

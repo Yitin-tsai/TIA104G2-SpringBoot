@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 
 import chilltrip.admin.model.AdminService;
 import chilltrip.admin.model.AdminVO;
+import chilltrip.announce.model.AnnounceVO;
 import chilltrip.chat.jedis.JedisHandleMessage;
 import chilltrip.member.model.MemberService;
 import chilltrip.member.model.MemberVO;
@@ -104,6 +105,29 @@ public class ChatRoomController  {
         }
     }
 	
+    @MessageMapping("/coedit")  // 用來處理來自 /app/chat 的消息
+    protected void coEdit(AnnounceVO announce) throws InterruptedException, IOException {
+    	
+    	System.out.println(announce);
+    	Map<Integer,String>  connectedSessions = ChatRoomController.getConnectedSession();
+    	ObjectMapper objectMapper = new ObjectMapper();
+    	
+    	// 根據 receiver 發送訊息給指定的客戶端
+    
+    			String response = objectMapper.writeValueAsString(announce);
+    			System.out.println("訊息字串 = " + response);
+    			
+    			messagingTemplate.convertAndSend("/user/"+ announce.getAnnounceid() +"/queue/coedit", response);
+//    			JedisHandleMessage.saveChatMessage(chatMessage.getSender(), chatMessage.getReceiver(), response);
+    			System.out.println("/user/"+announce.getAnnounceid()+"/queue/coedit");
+    			
+    			
+    		}
+    			
+    		
+    	
+    
+   
 
 	public static Map<Integer,String> getConnectedSession() {
 		return new HashMap<>(connectedSessions);

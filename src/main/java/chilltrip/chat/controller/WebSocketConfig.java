@@ -34,6 +34,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
         .setAllowedOriginPatterns("*")
         .addInterceptors(new MyHandshakeInterceptor())
         .withSockJS();
+        registry
+        .addEndpoint("/coedit")
+        .setAllowedOriginPatterns("*")
+        .addInterceptors(new MyHandshakeInterceptor())
+        .withSockJS();
     }
 //    @Override
 //    public void configureWebSocketTransport(WebSocketTransportRegistration registry) {

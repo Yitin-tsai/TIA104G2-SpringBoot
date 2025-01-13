@@ -19,6 +19,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import chilltrip.admin.model.AdminVO;
 
@@ -169,12 +170,15 @@ public class AnnounceDAOimpl implements AnnounceDAO {
 	}
 	
 	@Override
+	
 	public long getTotal() {
 		return getSession().createQuery("select count(*) from AnnounceVO", Long.class).uniqueResult();
 	}
 
 	@Override
+	
 	public AnnounceVO getOne(Integer announceid) {
+		
 		Transaction tx = getSession().beginTransaction();
 		AnnounceVO announce = getSession().get(AnnounceVO.class, announceid);
 		tx.commit();

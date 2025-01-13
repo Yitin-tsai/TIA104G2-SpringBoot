@@ -1,6 +1,7 @@
 package chilltrip.chat.jedis;
 
 import java.util.List;
+import java.util.Map;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -29,5 +30,21 @@ public class JedisHandleMessage {
 
 		jedis.close();
 	}
+//	public static void saveEdit(Map<String,String> editer, String message) {
+//		// 對雙方來說，都要各存著歷史聊天記錄
+//		String senderKey = new StringBuilder(sender).append(":").append(receiver).toString();
+//		String receiverKey = new StringBuilder(receiver).append(":").append(sender).toString();
+//		Strubg editerKey = "";
+//		for(String editers : editer.values()) {
+//			editerKey += editer
+//		}
+//		Jedis jedis = pool.getResource();
+//		jedis.rpush(senderKey, message);
+//		jedis.rpush(receiverKey, message);
+//		
+//		jedis.close();
+//	}
+	
+
 
 }

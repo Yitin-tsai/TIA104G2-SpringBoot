@@ -170,6 +170,10 @@ public class PageController {
     public String announceUpdate(@PathVariable int id) {
     	return "/frontend/announce_update";
     }
+    @GetMapping("/announceCoedit/{id}")
+    public String announceCoedit(@PathVariable int id) {
+    	return "/frontend/announce_coedit";
+    }
     //聊天室
     @GetMapping("/chatroom")
     public String chatroom(Model model) {
