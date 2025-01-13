@@ -3,6 +3,7 @@ package chilltrip.locationcomment.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,8 @@ public class LocationCommentServlet {
 	LocationCommentService commentSvc;
 	@Autowired
 	MemberService memberSvc;
-	
+	@Autowired
+	LocationService locationSvc;
 
 	@GetMapping("getByLocation/{id}")
 	private List<LocationCommentVO> getByLocation(@PathVariable("id") Integer locationid) throws IOException {
@@ -52,9 +54,9 @@ public class LocationCommentServlet {
 
 	}
 
-	@PostMapping("/update/{mid}/{lid}")
+	@PostMapping("/update/{lid}")
 	private ResponseEntity<String> updateLocationComment(@Valid @RequestBody LocationCommentVO locationCommentVO,
-			BindingResult result,@PathVariable("mid") Integer memberid ,@PathVariable("lid")Integer locationid) {
+			BindingResult result,@PathVariable("lid")Integer locationid,HttpServletRequest req) {
 		// TODO Auto-generated method stub
 		if (result.hasErrors()) {
 			StringBuilder errorMessage = new StringBuilder();
@@ -63,7 +65,10 @@ public class LocationCommentServlet {
 			}
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed: " + errorMessage.toString());
 		}
-		LocationService locationSvc= new LocationService();
+		Integer memberid = (Integer) req.getSession().getAttribute("memberId");
+		if(memberid != locationCommentVO.getMembervo().getMemberId()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed: " + "非本人留言無法編輯");
+		}
 		MemberVO member = memberSvc.getOneMember(memberid);
 		LocationVO location = locationSvc.getLocationById(locationid);
 		locationCommentVO.setLocationvo(location);
@@ -72,9 +77,9 @@ public class LocationCommentServlet {
 		return ResponseEntity.ok("success");
 	}
 
-	@PostMapping("/add/{mid}/{lid}")
+	@PostMapping("/add/{lid}")
 	private ResponseEntity<String> addLocationComment(@Valid @RequestBody LocationCommentVO locationCommentVO,
-			BindingResult result,@PathVariable("mid") Integer memberid ,@PathVariable("lid") Integer locationid) {
+			BindingResult result ,@PathVariable("lid") Integer locationid, HttpServletRequest req) {
 		// TODO Auto-generated method stub
 		if (result.hasErrors()) {
 			StringBuilder errorMessage = new StringBuilder();
@@ -83,8 +88,7 @@ public class LocationCommentServlet {
 			}
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed: " + errorMessage.toString());
 		}
-		LocationService locationSvc= new LocationService();
-		
+		Integer memberid = (Integer)  req.getSession().getAttribute("memberId");
 		MemberVO member = memberSvc.getOneMember(memberid);
 		LocationVO location = locationSvc.getLocationById(locationid);
 		locationCommentVO.setLocationvo(location);
