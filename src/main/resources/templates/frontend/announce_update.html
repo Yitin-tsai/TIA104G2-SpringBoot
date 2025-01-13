@@ -98,6 +98,21 @@ h2 {
     align-items: flex-start; /* 確保表單從上方開始 */
     padding: 20px;
 }
+/* 標題右邊按鈕的樣式 */
+#coeditButton {
+    padding: 5px 15px;
+    background-color: #FF9800;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* 懸停時按鈕顏色 */
+#coeditButton:hover {
+    background-color: #f57c00;
+}
 </style>
 
 </head>
@@ -151,7 +166,9 @@ h2 {
     <!-- 主體內容區 -->
 <div class="main-content">
   <div>
-      <h2>更新公告</h2>
+      <h2>更新公告
+        <button id="coeditButton" style="margin-left: 20px;">啟用共同編輯</button>
+      </h2>
       <form id="announceForm">
           <label for="title">標題:</label>
           <input type="text" id="title" name="title" required>
@@ -277,6 +294,11 @@ h2 {
                   }
               });
           }
+                    // 綁定按鈕的 click 事件
+                    document.getElementById('coeditButton').addEventListener('click', function() {
+                // 透過 announceid 跳轉到共同編輯頁面
+                window.location.href = '/TIA104G2-SpringBoot/announceCoedit/' + announceid;
+            });
   
           // 初始化日期選擇器
           $("#starttime, #endtime").datepicker({
