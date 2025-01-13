@@ -67,13 +67,13 @@ public class TripVO implements Serializable {
 
 	@Column(name = "abstract")
 	@Lob
-	private String trip_abstract; // abstract是保留字，所以做了修改
+	private String trip_abstract = ""; // abstract是保留字，所以做了修改
 
 	@Column(name = "create_time")
 	private Timestamp create_time;
 
 	@Column(name = "collections")
-	private Integer collections;
+	private Integer collections =0;
 
 	@Column(name = "status")
 	private Integer status;
@@ -85,16 +85,16 @@ public class TripVO implements Serializable {
 	private Integer overall_scored_people = 0;
 
 	@Column(name = "location_number")
-	private Integer location_number;
+	private Integer location_number = 0;
 
 	@Column(name = "article_title")
-	private String article_title;
+	private String article_title = "";
 
 	@Column(name = "visitors_number")
-	private Integer visitors_number;
+	private Integer visitors_number = 0;
 
 	@Column(name = "likes")
-	private Integer likes;
+	private Integer likes =0;
 
 	public Set<TripLikeVO> getTripLikevo() {
 		return tripLikevo;

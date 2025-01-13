@@ -565,8 +565,8 @@ trip_location_relation_id				int(11) not null auto_increment comment'行程景�
 sub_trip_id 					int(11) not null comment'子行程ID',
 location_id						int(11) not null comment'景點ID',
 `index`							int(2) not null comment'在子行程中的順序',
-time_start						timestamp not null comment '景點開始時間',
-time_end						timestamp not null comment'景點結束時間',
+time_start						timestamp comment '景點開始時間',
+time_end						timestamp comment'景點結束時間',
 constraint fk_trip_location_relation_sub_trip_sub_trip_id
 foreign key(sub_trip_id) references sub_trip(sub_trip_id),
 constraint fk_trip_location_relation_location_location_id

@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,8 @@ public class TripDAOImplJDBC implements TripDAO, AutoCloseable {
 	private static final String GET_TRIP_BY_ID = "SELECT trip_id, member_id, abstract, create_time, collections, status, overall_score, overall_scored_people, location_number, article_title, visitors_number, likes FROM trip WHERE trip_id=?";
 	// 根據文章標題模糊查詢文章
 	private static final String GET_TRIP_BY_NAME = "SELECT trip_id, member_id, abstract, create_time, collections, status, overall_score, overall_scored_people, location_number, article_title, visitors_number, likes FROM trip WHERE article_title LIKE ?";
+	// 只更新 location_number
+	private static final String UPDATE_LOCATION_NUMBER = "UPDATE trip SET location_number=? WHERE trip_id=?";
 
 	public TripDAOImplJDBC() {
 
@@ -117,6 +120,38 @@ public class TripDAOImplJDBC implements TripDAO, AutoCloseable {
 
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured. " + se.getMessage());
+		}
+	}
+
+	// 新增行程並返回主鍵
+	@Override
+	public void insertAndGetId(TripVO tripVO) {
+		try (PreparedStatement pstmt = getConnection().prepareStatement(INSERT_STMT, Statement.RETURN_GENERATED_KEYS)) {
+			pstmt.setInt(1, tripVO.getMemberId());
+			pstmt.setString(2, tripVO.getTrip_abstract());
+			pstmt.setTimestamp(3, tripVO.getCreate_time());
+			pstmt.setInt(4, tripVO.getCollections());
+			pstmt.setInt(5, tripVO.getStatus());
+			pstmt.setInt(6, tripVO.getOverall_score());
+			pstmt.setInt(7, tripVO.getOverall_scored_people());
+			pstmt.setInt(8, tripVO.getLocation_number());
+			pstmt.setString(9, tripVO.getArticle_title());
+			pstmt.setInt(10, tripVO.getVisitors_number());
+			pstmt.setInt(11, tripVO.getLikes());
+
+			pstmt.executeUpdate();
+
+			// 獲取自動生成的主鍵
+			try (ResultSet rs = pstmt.getGeneratedKeys()) {
+				if (rs.next()) {
+					tripVO.setTrip_id(rs.getInt(1));
+				} else {
+					throw new RuntimeException("無法獲取新增行程的 ID");
+				}
+			}
+
+		} catch (SQLException se) {
+			throw new RuntimeException("資料庫錯誤：" + se.getMessage());
 		}
 	}
 
@@ -367,6 +402,17 @@ public class TripDAOImplJDBC implements TripDAO, AutoCloseable {
 		return list;
 	}
 
+	// 只更新location_number 的方法
+	public void updateLocationNumber(Integer tripId, Integer locationNumber) {
+		try (PreparedStatement pstmt = getConnection().prepareStatement(UPDATE_LOCATION_NUMBER)) {
+			pstmt.setInt(1, locationNumber);
+			pstmt.setInt(2, tripId);
+			pstmt.executeUpdate();
+		} catch (SQLException se) {
+			throw new RuntimeException("更新景點數量時發生錯誤: " + se.getMessage());
+		}
+	}
+
 	@Override
 	public void close() {
 		if (this.connection != null) {
@@ -376,6 +422,7 @@ public class TripDAOImplJDBC implements TripDAO, AutoCloseable {
 				throw new RuntimeException("Failed to close the connection. " + e.getMessage());
 			}
 		}
+
 	}
 
 }
