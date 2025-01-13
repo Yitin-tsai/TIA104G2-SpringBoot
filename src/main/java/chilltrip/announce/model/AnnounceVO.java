@@ -15,6 +15,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -32,7 +33,7 @@ public class AnnounceVO {
 
 	@ManyToOne
 	@JoinColumn(name = "admin_id", referencedColumnName = "administrator_id")
-	@NotNull(message = "必須指定管理員")
+	
 	private AdminVO adminvo;
 
 	@Column(name = "title")
@@ -66,6 +67,7 @@ public class AnnounceVO {
 
 	@Transient
 	private String coverphotoBase64;
+	
 
 	public Integer getAnnounceid() {
 		return announceid;
