@@ -3,16 +3,20 @@ package chilltrip.location.model;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import chilltrip.location.dao.LocationDAO;
-import chilltrip.location.dao.LocationDAOImplJDBC;
 
+@Service
 public class LocationService {
 	
 	
 	private LocationDAO dao;
 	
-	public LocationService() {
-		dao = new LocationDAOImplJDBC();
+	
+	@Autowired
+	public LocationService(LocationDAO dao) {
+		this.dao = dao;
 	}
 	
 	
@@ -48,6 +52,10 @@ public class LocationService {
 	public List<Map<String, Object>> getLocationByName(String locationname) {
 		return dao.getLocationByName(locationname);
 		
+	}
+	
+	public LocationVO findByGooglePlaceId(String googlePlaceId) {
+	    return dao.findByGooglePlaceId(googlePlaceId);
 	}
 	
 	

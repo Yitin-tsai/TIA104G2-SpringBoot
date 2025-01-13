@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,10 +13,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import chilltrip.trip.dto.TripSearchDTO;
 import chilltrip.trip.model.TripService;
 
 @RestController
@@ -139,5 +144,64 @@ public class TripController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
 		}
 	}
+	
+	//輸入框模糊查詢：作者名稱、文章標題名稱、文章摘要字詞
+	@GetMapping("/trips/search")
+	public ResponseEntity<Map<String, Object>> searchTrips(
+	    @RequestParam String keyword,
+	    @RequestParam(defaultValue = "0") int page,
+	    @RequestParam(defaultValue = "12") int size
+	) {
+	    try {
+	        Pageable pageable = PageRequest.of(page, size);
+	        Page<Map<String, Object>> pageResult = tripSvc.getTripsByInputText(keyword, pageable);
+
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("content", pageResult.getContent());
+	        response.put("totalPages", pageResult.getTotalPages());
+	        response.put("totalElements", pageResult.getTotalElements());
+	        response.put("currentPage", page);
+
+	        return ResponseEntity.ok(response);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        Map<String, Object> errorResponse = new HashMap<>();
+	        errorResponse.put("error", e.getClass().getName());
+	        errorResponse.put("message", e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+	    }
+	}
+	
+	//search pro --> go頁面的三個參數的複合查詢
+	//複雜的請求跟查詢用post --> 其實是因為我把請求標頭搞爆了QQ
+	@PostMapping("/search")
+	public ResponseEntity<Map<String, Object>> searchTrips(@RequestBody TripSearchDTO searchDTO) {
+	    try {
+	        Pageable pageable = PageRequest.of(searchDTO.getPage(), searchDTO.getSize());
+	        Page<Map<String, Object>> pageResult = tripSvc.searchTrips(
+	            searchDTO.getEventContent(),
+	            searchDTO.getRegionContent(),
+	            searchDTO.getKeyword(),
+	            pageable
+	        );
+
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("content", pageResult.getContent());
+	        response.put("totalPages", pageResult.getTotalPages());
+	        response.put("totalElements", pageResult.getTotalElements());
+	        response.put("currentPage", searchDTO.getPage());
+
+	        return ResponseEntity.ok(response);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        Map<String, Object> errorResponse = new HashMap<>();
+	        errorResponse.put("error", e.getClass().getName());
+	        errorResponse.put("message", e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                           .body(errorResponse);
+	    }
+	}
+	
+
 
 }

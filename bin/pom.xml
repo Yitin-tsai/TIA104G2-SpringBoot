@@ -84,7 +84,6 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
-
 		<!-- 用途說明6: for log4j.properties -->
 		<!-- Spring Boot日誌系統預設是使用logback -->
 		<!-- 對於習慣了log4j的開發者，Spring Boot依然有很好的支援 -->

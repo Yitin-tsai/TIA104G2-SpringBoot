@@ -73,16 +73,16 @@ CONSTRAINT uk_phone UNIQUE (phone)
 create table trip (
 trip_id					int(11) not null auto_increment comment'行程ID',
 member_id				int(11) not null comment'會員ID',
-abstract				longtext not null comment'行程概述',
-create_time				timestamp default current_timestamp not null comment'文章建立時間',
+abstract				longtext comment'行程概述',
+create_time				timestamp default current_timestamp not null comment'建立時間',
 collections				int(8) comment'收藏數',
-status				    int(1) not null comment'文章狀態',
-overall_score			int(10) not null comment'總評分',
-overall_scored_people 	int(10) comment'總評分人數',
-location_number 		int(10) comment'景點數',
+status				    int(1) not null comment'文章狀態',  -- 0收藏景點 1收藏文章 2儲存文章草稿 3用戶發表的公開文章 4用戶發表的私人文章 5用戶已刪除文章 6管理員刪除文章 --
+overall_score			int(10) DEFAULT 0 comment'總評分',
+overall_scored_people 	int(10) DEFAULT 0 comment'總評分人數',
+location_number 		int(10) DEFAULT 0 comment'景點數', 
 article_title 			varchar(30) not null comment'文章標題',
-visitors_number			int(10) comment'瀏覽人數',
-likes					int(10) comment'點讚數',
+visitors_number			int(10) DEFAULT 0 comment'瀏覽人數',
+likes					int(10) DEFAULT 0 comment'點讚數',
 constraint fk_member_member_id
 foreign key (member_id) references member(member_id),
 constraint trip_id_pk primary key(trip_id)
@@ -110,14 +110,22 @@ insert into sub_trip (trip_id,`index`,content) values ('1','2','東京三日遊�
 insert into sub_trip (trip_id,`index`,content) values ('1','3','東京三日遊，第三天去了美術館、博物館、台場'); -- 我是第三天 --
 
 -- 景點 --
-create table location(
-location_id				int(11) not null auto_increment comment'景點ID',
-address					longtext not null comment'地址',
-create_time				timestamp default current_timestamp not null comment'建立時間',
-comments_number			int(8) comment'評論數',
-score					float(2) not null comment'評分',
-location_name			varchar(20) not null comment'地點名稱',
-constraint pk_location_location_id primary key(location_id))comment'景點表';
+CREATE TABLE location (
+    location_id          INT(11) NOT NULL AUTO_INCREMENT COMMENT '景點ID',
+    google_place_id      VARCHAR(255) NOT NULL COMMENT 'Google Place ID',
+    location_name        VARCHAR(100) NOT NULL COMMENT 'Google景點名稱',
+    address             LONGTEXT NOT NULL COMMENT 'Google地s址',
+    latitude            DECIMAL(10,8) COMMENT 'Google緯度',
+    longitude           DECIMAL(11,8) COMMENT 'Google經度',
+    score               FLOAT(2,1) DEFAULT 0.0 COMMENT '平均評分',
+    rating_count        INT DEFAULT 0 COMMENT '評分數量',
+    comments_number     INT DEFAULT 0 COMMENT '評論數量',
+    create_time         TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '景點建立時間',
+    update_time         TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Google資料更新時間',
+    
+    CONSTRAINT pk_location_location_id PRIMARY KEY (location_id),
+    UNIQUE KEY uk_google_place_id (google_place_id)
+) COMMENT='景點表';
 
 insert into location (address,create_time,comments_number,score,location_name) values ('日本東京都文京區後樂','2024-12-12 20:00','3','5.0','東京巨蛋'); -- 我是第一天的巨蛋 --
 insert into location (address,create_time,comments_number,score,location_name) values ('東京都港區芝公園4丁目','2024-12-12 20:00','3','5.0','東京鐵塔'); -- 我是第一天的鐵塔 --

@@ -4,15 +4,22 @@ package chilltrip.tripphoto.model;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import chilltrip.tripphoto.dao.TripphotoDAO;
 import chilltrip.tripphoto.dao.TripphotoDAOImplJDBC;
 
+@Service
 public class TripphotoService {
 
 	private TripphotoDAO dao;
 
-	public TripphotoService() {
-		dao = new TripphotoDAOImplJDBC();
+	
+	@Autowired
+	public TripphotoService(TripphotoDAO dao) {
+		this.dao = dao;
 	}
 
 	public TripphotoVO addTripphoto(TripphotoVO tripphotoVO) {

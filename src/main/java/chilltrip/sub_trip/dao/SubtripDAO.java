@@ -7,7 +7,7 @@ import chilltrip.sub_trip.model.SubtripVO;
 
 public interface SubtripDAO {
 	
-	public void insert(SubtripVO subtripVO);
+	public SubtripVO insert(SubtripVO subtripVO);
 	public void update(SubtripVO subtripVO);
 	public void delete(Integer subtripid);
 	public List<SubtripVO> getallsubtrip();
