@@ -14,6 +14,7 @@ import javax.sql.rowset.serial.SerialException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import chilltrip.location.model.LocationVO;
 import chilltrip.sub_trip.dao.SubtripDAO;
@@ -23,11 +24,12 @@ import chilltrip.sub_trip.model.SubtripVO;
 
 @WebServlet("/subtrip/subtrip.do")
 public class SubtripServlet extends HttpServlet {
+	
 
 	private SubtripService subtripSvc;
 
 	public void init() {
-		subtripSvc = new SubtripService();
+		subtripSvc = new SubtripService(null);
 	}
 
 	@Override
