@@ -740,7 +740,6 @@ public class MemberController {
 	    locationVO.setComments_number(0);
 	    locationVO.setCreate_time(new Timestamp(System.currentTimeMillis()));
 	    locationVO.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-	    
 	    return locationSvc.addlocation(locationVO);
 	}
 
