@@ -14,6 +14,7 @@ public interface TripLikeDAO {
 
 	public List<TripLikeVO> getByMember(Integer memberid);
 
+	public boolean getOne(Integer memberId, Integer tripId );
 	
 
 }
