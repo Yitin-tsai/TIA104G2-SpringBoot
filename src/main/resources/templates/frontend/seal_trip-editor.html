@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 上稿器api嵌入 -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.js"></script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: #f5f5f5;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+      }
+
+      .header {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .day-nav {
+        display: flex;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        background: #f8f9fa;
+      }
+
+      .day-nav button {
+        padding: 8px 12px;
+        border: none;
+        background: none;
+        cursor: pointer;
+      }
+
+      .day-nav button.active {
+        background: #0d6efd;
+        color: white;
+      }
+
+      .day-nav button:hover:not(.active) {
+        background: #e9ecef;
+      }
+
+      .search-input {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .main-content {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .spots-list {
+        width: 300px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 15px;
+      }
+
+      .add-spot-btn {
+        width: 100%;
+        padding: 8px;
+        background: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-bottom: 15px;
+      }
+
+      .title-abstract h2 {
+        font-size: 24px;
+        margin: 10px;
+      }
+
+      .spot-item {
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: relative;
+        background: #f8f9fa;
+      }
+
+      .spot-item img {
+        width: 80px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 4px;
+      }
+
+      .spot-content {
+        display: flex;
+        gap: 10px;
+      }
+
+      .spot-info h3 {
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+
+      .spot-info p {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .delete-spot {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: #666;
+      }
+
+      .map-container {
+        flex: 1;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        height: 400px;
+        background: #f8f9fa;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .action-btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .action-btn.primary {
+        background: #0d6efd;
+        color: white;
+      }
+
+      .editor {
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+      }
+
+      .toolbar {
+        padding: 8px;
+        border-bottom: 1px solid #e0e0e0;
+        background: #f8f9fa;
+        display: flex;
+        gap: 5px;
+      }
+
+      .toolbar button {
+        padding: 4px 8px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .toolbar button:hover {
+        background: #e9ecef;
+      }
+
+      .editor-content {
+        padding: 15px;
+        min-height: 300px;
+        width: 100%;
+        border: none;
+        resize: none;
+        outline: none;
+      }
+
+      .editor-footer {
+        padding: 15px;
+        background: #f8f9fa;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .editor-footer select {
+        padding: 6px 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        background: white;
+      }
+
+      .collaborators {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 200px;
+      }
+
+      .collaborator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+
+      .status-dot.online {
+        background: #28a745;
+      }
+
+      .status-dot.offline {
+        background: #dc3545;
+      }
+
+      /* 文章編輯器樣式 */
+      /* 自定義 Summernote 容器的寬度 */
+      .summernote-container {
+        width: 100%;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+
+      #summernote {
+        width: 100%;
+        margin: 0 auto; /* 置中 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="day-nav">
+          <button>&lt;</button>
+          <button class="active">第一天</button>
+          <button>&gt;</button>
+          <button>+</button>
+        </div>
+        <input type="text" class="search-input" placeholder="輸入行程名稱" />
+        <input type="text" class="search-input" placeholder="搜尋景點" />
+      </div>
+
+      <div class="main-content">
+        <div class="spots-list">
+          <button class="add-spot-btn">+ 新增景點</button>
+          <div class="spot-item">
+            <button class="delete-spot">×</button>
+            <div class="spot-content">
+              <img src="/api/placeholder/80/60" alt="spot" />
+              <div class="spot-info">
+                <h3>景點名稱 1</h3>
+                <p>3.0 ⭐️ (123)</p>
+              </div>
+            </div>
+          </div>
+          <div class="spot-item">
+            <button class="delete-spot">×</button>
+            <div class="spot-content">
+              <img src="/api/placeholder/80/60" alt="spot" />
+              <div class="spot-info">
+                <h3>景點名稱 2</h3>
+                <p>3.0 ⭐️ (123)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-container">
+          <img
+            src="/api/placeholder/800/400"
+            alt="map"
+            style="width: 100%; height: 100%; object-fit: cover"
+          />
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="action-btn primary">匯入行程</button>
+        <button class="action-btn primary">匯出行程</button>
+        <button class="action-btn primary">儲存行程</button>
+        <button class="action-btn primary">確認保存</button>
+        <button class="action-btn primary">邀請共編</button>
+      </div>
+
+      <!------摘要輸入框------>
+      <div class="editor">
+        <div class="title-abstract"><h2>文章摘要</h2></div>
+        <div class="toolbar">
+          <button>B</button>
+          <button>I</button>
+          <button>U</button>
+          <span style="width: 1px; background: #e0e0e0"></span>
+          <button>❶</button>
+          <button>❷</button>
+          <button>❸</button>
+        </div>
+        <textarea
+          class="editor-content"
+          placeholder="撰寫旅遊文章摘要..."
+        ></textarea>
+
+        <!------文章編輯器------>
+        <div class="summernote-container">
+          <div id="summernote"></div>
+        </div>
+
+        <div class="editor-footer">
+          <select>
+            <option>選擇活動類型</option>
+          </select>
+          <select>
+            <option>選擇地區</option>
+          </select>
+          <select>
+            <option>公開</option>
+            <option>私人</option>
+          </select>
+          <button class="action-btn primary">定時發布</button>
+          <button class="action-btn" style="background: #28a745; color: white">
+            立即發布
+          </button>
+          <button class="action-btn" style="border: 1px solid #e0e0e0">
+            儲存草稿
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="collaborators">
+      <h3 style="margin-bottom: 10px">共同編輯者</h3>
+      <div class="collaborator">
+        <span class="status-dot online"></span>
+        <span>使用者 A</span>
+      </div>
+      <div class="collaborator">
+        <span class="status-dot offline"></span>
+        <span>使用者 B</span>
+      </div>
+    </div>
+
+    <script>
+      // 上稿器video移除
+      $(document).ready(function () {
+        $("#summernote").summernote({
+          placeholder: "Hello Bootstrap 4",
+          tabsize: 2,
+          height: 500,
+          toolbar: [
+            ["style", ["style"]],
+            ["font", ["bold", "italic", "underline", "clear"]],
+            ["fontname", ["fontname"]],
+            ["color", ["color"]],
+            ["para", ["ul", "ol", "paragraph"]],
+            ["table", ["table"]],
+            ["insert", ["link", "picture"]], // 移除 'video' 按鈕
+            ["view", ["fullscreen", "codeview", "help"]],
+          ],
+        });
+      });
+
+      // Day navigation
+      const dayNav = document.querySelector(".day-nav");
+      dayNav.addEventListener("click", (e) => {
+        if (e.target.tagName === "BUTTON") {
+          const buttons = dayNav.querySelectorAll("button");
+          buttons.forEach((btn) => btn.classList.remove("active"));
+          if (!["<", ">", "+"].includes(e.target.textContent)) {
+            e.target.classList.add("active");
+          }
+        }
+      });
+
+      // Spot deletion
+      document.querySelectorAll(".delete-spot").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const spotItem = e.target.closest(".spot-item");
+          spotItem.remove();
+        });
+      });
+
+      // Rich text editor functionality
+      const toolbar = document.querySelector(".toolbar");
+      const editor = document.querySelector(".editor-content");
+
+      toolbar.addEventListener("click", (e) => {
+        if (e.target.tagName === "BUTTON") {
+          const command = {
+            B: "bold",
+            I: "italic",
+            U: "underline",
+            "❶": "formatBlock",
+            "❷": "formatBlock",
+            "❸": "formatBlock",
+          }[e.target.textContent];
+
+          const value =
+            {
+              "❶": "h1",
+              "❷": "h2",
+              "❸": "h3",
+            }[e.target.textContent] || null;
+
+          document.execCommand(command, false, value);
+        }
+      });
+
+      // Add new spot button
+      document.querySelector(".add-spot-btn").addEventListener("click", () => {
+        const spotsList = document.querySelector(".spots-list");
+        const newSpot = document.createElement("div");
+        newSpot.className = "spot-item";
+        newSpot.innerHTML = `
+        <button class="delete-spot">×</button>
+        <div class="spot-content">
+          <img src="/api/placeholder/80/60" alt="spot">
+          <div class="spot-info">
+            <h3>新景點</h3>
+            <p>尚未評分</p>
+          </div>
+        </div>
+      `;
+
+        newSpot.querySelector(".delete-spot").addEventListener("click", (e) => {
+          e.target.closest(".spot-item").remove();
+        });
+
+        spotsList.appendChild(newSpot);
+      });
+    </script>
+  </body>
+</html>
