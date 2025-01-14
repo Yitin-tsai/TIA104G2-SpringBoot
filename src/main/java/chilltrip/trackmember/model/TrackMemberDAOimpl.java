@@ -2,6 +2,7 @@ package chilltrip.trackmember.model;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -97,4 +98,20 @@ public class TrackMemberDAOimpl  implements TrackMemberDAO{
 		 return tracks != null ? tracks.intValue() : 0; 
 	}
 	
+	@Override
+	public boolean getOne(Integer memberId, Integer trackerId ) {
+		Session session = getSession();
+		session.beginTransaction();
+		
+		try {TrackMemberVO track = session.createQuery("FROM TrackMemberVO tm where tm.fans.memberId = :memberId and tm.trackedMember.memberId = :trackerId", TrackMemberVO.class)
+							.setParameter("memberId", memberId)
+							.setParameter("trackerId", trackerId)
+							.getSingleResult();
+			if(track != null)
+				return true;
+		}catch(NoResultException e) {
+			return false;
+		}
+		return false;							
+	}
 }

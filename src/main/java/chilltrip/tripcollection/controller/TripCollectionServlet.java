@@ -8,10 +8,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,20 +40,21 @@ public class TripCollectionServlet extends HttpServlet {
 	@Autowired
 	private TripService tripSvc;
 
-	@PostMapping("/add")
-	public String addTripCollection(@RequestParam Integer tripId, HttpServletRequest request) {
+	@PostMapping("/add/{tid}")
+	public ResponseEntity<String>  addTripCollection(@PathVariable("tid") Integer tripId, HttpServletRequest request) {
 		Integer memberId = (Integer) request.getSession().getAttribute("memberId");
 		
 		if (memberId == null) {
-            return "false not login";
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("nologin");
         }
+	
 		TripVO trip = tripSvc.getById(tripId);
 		MemberVO member = memberSvc.getOneMember(memberId);
 		TripCollectionVO tripCollectionVO = new TripCollectionVO();
 		tripCollectionVO.setMembervo(member);
 		tripCollectionVO.setTripvo(trip);
 		tripColSvc.addTripCollection(tripCollectionVO);
-		return "sucess";
+		return ResponseEntity.ok("success");
 	}
 
 	@PostMapping("/delete/{id}")
@@ -94,6 +98,15 @@ public class TripCollectionServlet extends HttpServlet {
 		responseMap.put("failed", true);
 	    responseMap.put("message", "Failed to find member or data");
 	    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMap);
+	}
+	
+	@GetMapping("checkCollection/{tid}")
+	public boolean checkCollection( @PathVariable("tid")Integer tripId,HttpServletRequest req) {
+		Integer memberId = (Integer) req.getSession().getAttribute("memberId");
+		if(memberId ==  null) {
+			return false;
+		}
+		return tripColSvc.checkCollection(memberId, tripId);
 	}
 
 }

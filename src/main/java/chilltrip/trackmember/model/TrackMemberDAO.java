@@ -18,7 +18,7 @@ public interface TrackMemberDAO {
 	
 	public Integer getTracksQty(Integer fansId);
 	
-	
+	public boolean getOne(Integer memberId, Integer trackerId );
 	
 	
 }

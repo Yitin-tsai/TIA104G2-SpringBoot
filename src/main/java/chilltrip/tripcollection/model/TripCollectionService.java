@@ -53,4 +53,11 @@ public class TripCollectionService {
 		}
 		return pageQty;
 	}
+	
+	public boolean checkCollection(Integer memberId, Integer tripId) {
+		return dao.getOne(memberId, tripId);
+		
+	}
+	
+	
 }

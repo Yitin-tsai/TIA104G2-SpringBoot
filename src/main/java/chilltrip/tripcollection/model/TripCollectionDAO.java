@@ -9,5 +9,5 @@ public interface TripCollectionDAO {
 	public List<TripCollectionVO> getByTrip(Integer tripid);
 	public List<TripCollectionVO> getByMember(Integer memberid  ,Integer currentPage);
 	long getTotalByMember(Integer memberid);
-	
+	public boolean getOne(Integer memberId, Integer tripId );
 }
