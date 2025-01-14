@@ -22,6 +22,12 @@ public class SubtripService {
 		dao.insert(subtripVO);
 		return subtripVO;
 	}
+	
+	public SubtripVO addSubtripAndGetId (SubtripVO subtripVO) {
+		dao.insertAndGetId(subtripVO);
+		return subtripVO;
+	}
+	
 
 	public SubtripVO getBySubtripId(Integer subtrip) {
 		return dao.getBySubtripId(subtrip);

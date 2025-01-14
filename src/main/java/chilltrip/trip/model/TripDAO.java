@@ -20,6 +20,9 @@ public interface TripDAO {
 	public void changeTripStatus(TripVO tripVO);
 	// 透過景點搜尋到相關文章
 	public List<Map<String, Object>> getTripByLocation(String location_name);
-	
+	//只更新location_number
+	void updateLocationNumber(Integer tripId, Integer locationNumber);
+	//新增並獲得主鍵
+	void insertAndGetId(TripVO tripVO);
 	
 }

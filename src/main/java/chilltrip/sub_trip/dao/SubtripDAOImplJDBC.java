@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,11 +69,37 @@ public class SubtripDAOImplJDBC implements SubtripDAO, AutoCloseable {
 			pstmt.setInt(2, subtripVO.getIndex());
 			pstmt.setClob(3, subtripVO.getContent());
 			pstmt.executeUpdate();
-
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured. " + se.getMessage());
 		}
 		return subtripVO;
+	}
+	
+	@Override
+	public SubtripVO insertAndGetId (SubtripVO subtripVO) {
+		System.out.println("SubtripDAO - 開始執行插入");
+	    try (PreparedStatement pstmt = getConnection().prepareStatement(INSERT_STMT, Statement.RETURN_GENERATED_KEYS)) {  // 加入 RETURN_GENERATED_KEYS
+	        pstmt.setInt(1, subtripVO.getTripid());
+	        pstmt.setInt(2, subtripVO.getIndex());
+	        pstmt.setClob(3, subtripVO.getContent());  
+	        
+	        int affectedRows = pstmt.executeUpdate();
+	        
+	        if (affectedRows > 0) {
+	            // 獲取自動生成的 ID
+	            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+	                if (generatedKeys.next()) {
+	                    subtripVO.setSubtripid(generatedKeys.getInt(1));
+	                } else {
+	                    throw new SQLException("建立子行程失敗，無法獲取ID");
+	                }
+	            }
+	        }
+	        return subtripVO;
+	        
+	    } catch (SQLException se) {
+	        throw new RuntimeException("A database error occured. " + se.getMessage());
+	    }
 	}
 
 	@Override

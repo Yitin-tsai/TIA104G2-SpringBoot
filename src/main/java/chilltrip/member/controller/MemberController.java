@@ -47,6 +47,8 @@ import chilltrip.sub_trip.model.SubtripService;
 import chilltrip.sub_trip.model.SubtripVO;
 import chilltrip.trip.model.TripService;
 import chilltrip.trip.model.TripVO;
+import chilltrip.triplocationrelation.model.TriplocationrelationService;
+import chilltrip.triplocationrelation.model.TriplocationrelationVO;
 import redis.clients.jedis.Jedis;
 
 @RestController
@@ -64,6 +66,9 @@ public class MemberController {
 
 	@Autowired
 	private SubtripService subtripSvc;
+
+	@Autowired
+	private TriplocationrelationService triplocationrelationSvc;
 
 	// 使用 Redis
 	private Jedis jedis = new Jedis("localhost", 6379);
@@ -464,24 +469,24 @@ public class MemberController {
 	// 太多請求需要驗證，改成攔截器，針對特定請求進行驗證
 	@GetMapping("/getCurrentMemberId")
 	public ResponseEntity<?> getCurrentMember(HttpSession session) {
-	    Integer memberId = (Integer) session.getAttribute("memberId");
-	    String nickName = (String) session.getAttribute("memberName");
-	    System.out.println("Session ID: " + session.getId());
-	    System.out.println("Session memberId: " + memberId);
-	    System.out.println("Session nickName: " + nickName);
-	    
-	    if (memberId == null) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-	    }
-	    
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("memberId", memberId);
-	    response.put("nickName", nickName);
-	    
-	    // 加入 log 來除錯
-	    System.out.println("getCurrentMemberId response: " + response);
-	    
-	    return ResponseEntity.ok(response);
+		Integer memberId = (Integer) session.getAttribute("memberId");
+		String nickName = (String) session.getAttribute("memberName");
+		System.out.println("Session ID: " + session.getId());
+		System.out.println("Session memberId: " + memberId);
+		System.out.println("Session nickName: " + nickName);
+
+		if (memberId == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("memberId", memberId);
+		response.put("nickName", nickName);
+
+		// 加入 log 來除錯
+		System.out.println("getCurrentMemberId response: " + response);
+
+		return ResponseEntity.ok(response);
 	}
 
 	// 獲取用戶的收藏清單
@@ -589,160 +594,227 @@ public class MemberController {
 	// 因為目前介面設計沒有讓用戶只能建立空清單，所以收藏當下會呼叫這一支
 	@PostMapping("/createCollectionAndAddLocation")
 	@Transactional
-	public ResponseEntity<?> createCollectionAndAddLocation(
-	    @RequestBody String requestBody,
-	    HttpSession session) {
-	    
+	public ResponseEntity<?> createCollectionAndAddLocation(@RequestBody String requestBody, HttpSession session) {
+
 		Integer memberId = (Integer) session.getAttribute("memberId");
 //	    MemberVO member = (MemberVO) session.getAttribute("member");
-	    if (memberId == null) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-	            .body(Map.of("message", "請先登入"));
-	    }
+		if (memberId == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "請先登入"));
+		}
 
-	    try {
-	        // 解析 JSON 字串
-	        JSONObject jsonObj = new JSONObject(requestBody);
-	        
-	        // 1. 建立新的收藏清單
-	        String collectionName = jsonObj.getString("articleTitle");
-	        TripVO newTrip = tripSvc.createNewCollection(memberId, collectionName);
+		try {
+			// 解析 JSON 字串
+			JSONObject jsonObj = new JSONObject(requestBody);
 
-	        // 2. 處理景點資料
-	        JSONObject locationObj = jsonObj.getJSONObject("location");
-	        LocationVO locationVO = locationSvc.findByGooglePlaceId(
-	            locationObj.getString("googlePlaceId")
-	        );
-	        
-	        if (locationVO == null) {
-	            // 建立新景點
-	            locationVO = new LocationVO();
-	            locationVO.setGooglePlaceId(locationObj.getString("googlePlaceId"));
-	            locationVO.setLocation_name(locationObj.getString("location_name"));
-	            locationVO.setAddress(locationObj.getString("address"));
-	            locationVO.setLatitude(new BigDecimal(locationObj.getString("latitude")));
-	            locationVO.setLongitude(new BigDecimal(locationObj.getString("longitude")));
-	            locationVO.setScore(0.0f);
-	            locationVO.setRatingCount(0);
-	            locationVO.setComments_number(0);
-	            locationVO.setCreate_time(new Timestamp(System.currentTimeMillis()));
-	            locationVO.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-	            
-	            locationVO = locationSvc.addlocation(locationVO);
-	        }
+			// 1. 建立新的收藏清單
+			String collectionName = jsonObj.getString("articleTitle");
+			TripVO newTrip = tripSvc.createNewCollection(memberId, collectionName);
 
-	        // 3. 建立子行程並建立關聯
-	        tripSvc.addLocationToTrip(newTrip.getTrip_id(), locationVO.getLocationid());
+			// 2. 處理景點資料
+			JSONObject locationObj = jsonObj.getJSONObject("location");
+			LocationVO locationVO = locationSvc.findByGooglePlaceId(locationObj.getString("googlePlaceId"));
 
-	        return ResponseEntity.ok()
-	            .body(Map.of("success", true, 
-	                        "message", "收藏清單建立成功",
-	                        "tripId", newTrip.getTrip_id()));
-	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	            .body(Map.of("success", false, 
-	                        "message", "建立失敗：" + e.getMessage()));
-	    }
-	}
-	
-	//如果把兩個控制器合併在一起會不會不容易失靈（？）
-	@PostMapping("/saveLocation")
-	@Transactional
-	public ResponseEntity<?> saveLocation(@RequestBody String requestBody, HttpSession session) {
-	    // 驗證會員登入狀態
-	
-	    Integer memberid = (Integer) session.getAttribute("memberId");
-	    if (memberid == null) {
-	    	return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-	    			.body(Map.of("message", "請先登入"));
-	    }
-
-
-	    try {
-	        ObjectMapper mapper = new ObjectMapper();
-	        JsonNode jsonNode = mapper.readTree(requestBody);
-	        
-	        // 取得操作類型和相關資料
-	        String operationType = jsonNode.get("type").asText();  // "new" 或 "existing"
-	        JsonNode locationNode = jsonNode.get("location");
-
-	        // 處理景點資料
-	        LocationVO locationVO = processLocationData(locationNode);
-	        
-	        // 根據操作類型執行不同邏輯
-	        if ("new".equals(operationType)) {
-	            String collectionName = jsonNode.get("articleTitle").asText();
-	            TripVO newTrip = tripSvc.createNewCollection(memberid, collectionName);
-	            tripSvc.addLocationToTrip(newTrip.getTrip_id(), locationVO.getLocationid());
-	            
-	            return ResponseEntity.ok()
-	                               .body(Map.of("success", true,
-	                                          "message", "收藏清單建立成功",
-	                                          "tripId", newTrip.getTrip_id()));
-	        } else {
-	        	
-	            Integer tripId = jsonNode.get("tripId").asInt();
-	            
-				locationVO.setGooglePlaceId(locationNode.get("googlePlaceId").asText());
-				locationVO.setLocation_name(locationNode.get("location_name").asText());
-				locationVO.setAddress(locationNode.get("address").asText());
-				locationVO.setLatitude(new BigDecimal(locationNode.get("latitude").asText()));
-				locationVO.setLongitude(new BigDecimal(locationNode.get("longitude").asText()));
+			if (locationVO == null) {
+				// 建立新景點
+				locationVO = new LocationVO();
+				locationVO.setGooglePlaceId(locationObj.getString("googlePlaceId"));
+				locationVO.setLocation_name(locationObj.getString("location_name"));
+				locationVO.setAddress(locationObj.getString("address"));
+				locationVO.setLatitude(new BigDecimal(locationObj.getString("latitude")));
+				locationVO.setLongitude(new BigDecimal(locationObj.getString("longitude")));
 				locationVO.setScore(0.0f);
 				locationVO.setRatingCount(0);
 				locationVO.setComments_number(0);
 				locationVO.setCreate_time(new Timestamp(System.currentTimeMillis()));
 				locationVO.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+
 				locationVO = locationSvc.addlocation(locationVO);
+			}
 
-				// 2. 建立子行程並建立關聯
-				SubtripVO subTripVO = new SubtripVO();
-				subTripVO.setTripid(tripId);
+			// 3. 建立子行程並建立關聯
+			tripSvc.addLocationToTrip(newTrip.getTrip_id(), locationVO.getLocationid());
 
-				// 獲取當前最大的 index
-				List<Map<String, Object>> existingSubTrips = subtripSvc.getByTripId(tripId);
-				int maxIndex = -1;
-				for (Map<String, Object> subTrip : existingSubTrips) {
-					int index = (Integer) subTrip.get("index");
-					if (index > maxIndex)
-						maxIndex = index;
-				}
-				subTripVO.setIndex(maxIndex + 1);
-				subTripVO.setContent(""); // 收藏景點時 content 為空
+			return ResponseEntity.ok()
+					.body(Map.of("success", true, "message", "收藏清單建立成功", "tripId", newTrip.getTrip_id()));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(Map.of("success", false, "message", "建立失敗：" + e.getMessage()));
+		}
+	}
 
-				subTripVO = subtripSvc.addSubtrip(subTripVO);
+//=======================把景點放入收藏的區塊==================================================
+	// 如果把兩個控制器合併在一起會不會不容易失靈（？）-->邏輯改成：新增的景點已存在就更新原有的景點資料-->也省去一定要寫排程器更新的困擾
+	@PostMapping("/saveLocation")
+	@Transactional
+	public ResponseEntity<?> saveLocation(@RequestBody String requestBody, HttpSession session) {
+	    Integer memberid = (Integer) session.getAttribute("memberId");
+	    if (memberid == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	                .body(Map.of("message", "請先登入"));
+	    }
 
-				// 3. 更新行程的景點數量
-				TripService tripSvc = new TripService();
-				TripVO tripVO = tripSvc.getById(tripId);
-				tripVO.setLocation_number(existingSubTrips.size() + 1);
-				tripSvc.updateTrip(tripVO);
-				
-	            return ResponseEntity.ok()
-	                               .body(Map.of("success", true,
-	                                          "message", "成功加入收藏"));
+	    try {
+	        ObjectMapper mapper = new ObjectMapper();
+	        JsonNode jsonNode = mapper.readTree(requestBody);
+	        String operationType = jsonNode.get("type").asText();
+	        JsonNode locationNode = jsonNode.get("location");
+
+	        // 1. 處理景點資料 - 檢查是否存在或需要更新
+	        LocationVO locationVO = processLocation(locationNode);
+
+	        if ("existing".equals(operationType)) {
+	            // 加入既有收藏
+	            return addToExistingCollection(jsonNode, locationVO);
+	        } else if ("new".equals(operationType)) {
+	            // 建立新的收藏清單
+	            return createNewCollection(jsonNode, memberid, locationVO);
+	        } else {
+	            throw new IllegalArgumentException("未知的操作類型");
 	        }
 	    } catch (Exception e) {
+	        e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                           .body(Map.of("success", false,
-	                                      "message", "操作失敗：" + e.getMessage()));
+	                .body(Map.of("success", false,
+	                        "message", "操作失敗：" + e.getMessage()));
 	    }
 	}
 
-	// 抽取共用的景點處理邏輯
-	private LocationVO processLocationData(JsonNode locationNode) {
-	    LocationVO locationVO = new LocationVO();
-	    locationVO.setGooglePlaceId(locationNode.get("googlePlaceId").asText());
-	    locationVO.setLocation_name(locationNode.get("locationName").asText());
-	    locationVO.setAddress(locationNode.get("address").asText());
-	    locationVO.setLatitude(new BigDecimal(locationNode.get("latitude").asText()));
-	    locationVO.setLongitude(new BigDecimal(locationNode.get("longitude").asText()));
-	    locationVO.setScore(0.0f);
-	    locationVO.setRatingCount(0);
-	    locationVO.setComments_number(0);
-	    locationVO.setCreate_time(new Timestamp(System.currentTimeMillis()));
-	    locationVO.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-	    return locationSvc.addlocation(locationVO);
+	private LocationVO processLocation(JsonNode locationNode) {
+	    try {
+	        String googlePlaceId = locationNode.get("googlePlaceId").asText();
+	        LocationVO locationVO = locationSvc.findByGooglePlaceId(googlePlaceId);
+	        
+	        if (locationVO == null) {
+	            // 創建新的景點
+	            locationVO = new LocationVO();
+	            locationVO.setGooglePlaceId(googlePlaceId);
+	            locationVO.setLocation_name(locationNode.get("locationName").asText());
+	            locationVO.setAddress(locationNode.get("address").asText());
+	            locationVO.setLatitude(BigDecimal.valueOf(locationNode.get("latitude").asDouble()));
+	            locationVO.setLongitude(BigDecimal.valueOf(locationNode.get("longitude").asDouble()));
+	            locationVO.setScore(0.0f);
+	            locationVO.setRatingCount(0);
+	            locationVO.setComments_number(0);
+	            locationVO.setCreate_time(new Timestamp(System.currentTimeMillis()));
+	            locationVO.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+	            return locationSvc.addlocation(locationVO);
+	        } else {
+	            // 更新既有景點
+	            locationVO.setLocation_name(locationNode.get("locationName").asText());
+	            locationVO.setAddress(locationNode.get("address").asText());
+	            locationVO.setLatitude(BigDecimal.valueOf(locationNode.get("latitude").asDouble()));
+	            locationVO.setLongitude(BigDecimal.valueOf(locationNode.get("longitude").asDouble()));
+	            locationVO.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+	            return locationSvc.updatelocation(locationVO);
+	        }
+	    } catch (Exception e) {
+	        throw new RuntimeException("處理景點資料時發生錯誤：" + e.getMessage());
+	    }
 	}
 
+	private ResponseEntity<?> addToExistingCollection(JsonNode jsonNode, LocationVO locationVO) {
+		try {
+	        Integer tripId = jsonNode.get("tripId").asInt();
+	        TripVO existingTrip = tripSvc.getById(tripId);
+	        if (existingTrip == null) {
+	            throw new RuntimeException("找不到指定的收藏清單");
+	        }
+
+	        // 建立子行程
+	        SubtripVO subTripVO = new SubtripVO();
+	        subTripVO.setTripid(tripId);
+	        subTripVO.setContent("");
+
+	        // 獲取當前最大的 index
+	        List<Map<String, Object>> existingSubTrips = subtripSvc.getByTripId(tripId);
+	        int maxIndex = existingSubTrips.stream()
+	                .mapToInt(subTrip -> (Integer) subTrip.get("index"))
+	                .max()
+	                .orElse(-1);
+	        
+	        subTripVO.setIndex(maxIndex + 1);
+	        subTripVO = subtripSvc.addSubtripAndGetId(subTripVO);
+
+	        if (subTripVO.getSubtripid() == null) {
+	            throw new RuntimeException("子行程保存失敗");
+	        }
+
+	        // 建立行程景點關係
+	        TriplocationrelationVO relationVO = new TriplocationrelationVO();
+	        relationVO.setSub_trip_id(subTripVO.getSubtripid());
+	        relationVO.setLocation_id(locationVO.getLocationid());
+	        relationVO.setIndex(maxIndex + 1);
+	        relationVO.setTime_start(null);  // 按需求設置為空
+	        relationVO.setTime_end(null);    // 按需求設置為空
+	        triplocationrelationSvc.addTriplocationrelation(relationVO);
+
+	        // 更新行程景點數量-->只更新景點數量
+	        Integer newLocationNumber = existingSubTrips.size() + 1;
+	        tripSvc.updateLocationNumber(tripId, newLocationNumber);
+
+	        return ResponseEntity.ok().body(Map.of("success", true, "message", "成功加入收藏"));
+	    } catch (Exception e) {
+	        throw new RuntimeException("加入既有收藏時發生錯誤：" + e.getMessage());
+	    }
+	}
+	
+	
+	private ResponseEntity<?> createNewCollection(JsonNode jsonNode, Integer memberid, LocationVO locationVO) {
+	    try {
+	        String collectionName = jsonNode.get("articleTitle").asText();
+	        
+	        // 創建新的trip
+	        TripVO newTrip = new TripVO();
+	        newTrip.setMemberId(memberid);
+	        newTrip.setArticle_title(collectionName);
+	        newTrip.setTrip_abstract(""); // 設置為空
+	        newTrip.setCreate_time(new Timestamp(System.currentTimeMillis()));
+	        newTrip.setCollections(0);     // 預設值
+	        newTrip.setStatus(0);          // 預設值
+	        newTrip.setOverall_score(0); // 預設值
+	        newTrip.setOverall_scored_people(0); // 預設值
+	        newTrip.setLocation_number(0);  // 初始為0
+	        newTrip.setLikes(0);           // 預設值
+	        
+	        newTrip = tripSvc.addTripAndGetId(newTrip);
+
+	        // 建立子行程
+	        SubtripVO subTripVO = new SubtripVO();
+	        Integer tripId = newTrip.getTrip_id();
+	        if (tripId == null) {
+	            throw new RuntimeException("建立子行程失敗：trip_id 為空");
+	        }
+	        subTripVO.setTripid(tripId);
+	        subTripVO.setIndex(0);  // 第一個景點
+	        subTripVO.setContent("");
+	        subTripVO = subtripSvc.addSubtripAndGetId(subTripVO);
+	        
+	        if (subTripVO == null || subTripVO.getSubtripid() == null) {
+	            throw new RuntimeException("建立子行程失敗：無法獲取 subtripid");
+	        }
+
+	        // 建立行程景點關係
+	        TriplocationrelationVO relationVO = new TriplocationrelationVO();
+	        relationVO.setSub_trip_id(subTripVO.getSubtripid());
+	        relationVO.setLocation_id(locationVO.getLocationid());
+	        relationVO.setIndex(0);
+	        relationVO.setTime_start(null);  // 按需求設置為空
+	        relationVO.setTime_end(null);    // 按需求設置為空
+	        triplocationrelationSvc.addTriplocationrelation(relationVO);
+
+	        // 更新行程景點數量
+	        tripSvc.updateLocationNumber(tripId, 1);
+
+	        return ResponseEntity.ok()
+	                .body(Map.of("success", true,
+	                        "message", "收藏清單建立成功",
+	                        "tripId", newTrip.getTrip_id()));
+	    } catch (Exception e) {
+	        throw new RuntimeException("建立新收藏時發生錯誤：" + e.getMessage());
+	    }
+	}
+	
+	
+	
+	
 }

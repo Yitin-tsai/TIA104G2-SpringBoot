@@ -25,7 +25,7 @@ public class SubtripVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "sub_trip_id", updatable = false)
-	private Integer subtripid;
+	private Integer sub_trip_id;
 
 	@ManyToOne
 	@JoinColumn(name = "trip_id", referencedColumnName = "trip_id")
@@ -41,11 +41,11 @@ public class SubtripVO {
 	private Clob content;
 
 	public Integer getSubtripid() {
-		return subtripid;
+		return sub_trip_id;
 	}
 
-	public void setSubtripid(Integer subtripid) {
-		this.subtripid = subtripid;
+	public void setSubtripid(Integer sub_trip_id) {
+		this.sub_trip_id = sub_trip_id;
 	}
 
 	public void setTripid(Integer tripid) {
@@ -73,18 +73,27 @@ public class SubtripVO {
 	}
 
 	public Clob getContent() {
-		return content;
+		 try {
+		        return (content != null) ? content : new SerialClob(new char[0]);
+		    } catch (SQLException e) {
+		        throw new RuntimeException("獲取 content 失敗", e);
+		    }
 	}
 
 	public void setContent(String content) throws SerialException, SQLException {
-		Clob clob = new SerialClob(content.toCharArray());
-		this.content = clob;
+		try {
+	        this.content = (content != null) ? 
+	            new SerialClob(content.toCharArray()) : 
+	            new SerialClob(new char[0]);
+	    } catch (SQLException e) {
+	        throw new RuntimeException("設置 content 失敗", e);
+	    }
 	}
 
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return new StringBuilder("SubtripVO [").append("subtripid=").append(subtripid).append(",tripVO=").append(tripVO)
+		return new StringBuilder("SubtripVO [").append("subtripid=").append(sub_trip_id).append(",tripVO=").append(tripVO)
 				.append(",index=").append(index).append(",content=").append(content).append("]").toString();
 	}
 }

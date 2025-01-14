@@ -502,5 +502,17 @@ public class TripService {
 			dao.update(tripVO);
 		}
 	}
+	
+	//只更新location_number
+	public void updateLocationNumber(Integer tripId, Integer locationNumber) {
+        dao.updateLocationNumber(tripId, locationNumber);
+    }
+	
+	//新增並獲得主鍵
+	public TripVO addTripAndGetId(TripVO tripVO) {
+	    dao.insertAndGetId(tripVO);
+	    return tripVO;
+	}
+	
 
 }

@@ -13,4 +13,5 @@ public interface SubtripDAO {
 	public List<SubtripVO> getallsubtrip();
 	public SubtripVO getBySubtripId(Integer subtrip);
 	public List<Map<String, Object>> getByTripId(Integer tripid);
+	SubtripVO insertAndGetId(SubtripVO subtripVO);
 }

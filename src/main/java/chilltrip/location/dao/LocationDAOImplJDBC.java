@@ -33,15 +33,15 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	private String userid = "root";
 	private String passwd = "123456";
 
-	private static final String INSERT_STMT = "INSERT INTO location (address, comments_number, score, location_name) VALUES (?,?,?,?);";
-	private static final String GET_ALL_STMT = "SELECT location_id,address, create_time, comments_number ,score, location_name FROM location order by location_id";
-	private static final String GET_ONE_STMT = "SELECT location_id,address, create_time, comments_number ,score, location_name FROM location WHERE location_id=?";
-	private static final String GET_BY_LOCATION_NAME_STMT = "SELECT location_id, address, create_time, comments_number ,score, location_name FROM location WHERE location_name =?";
+	private static final String INSERT_STMT = "INSERT INTO location (google_place_id, location_name, address, latitude, longitude, score, rating_count, comments_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String GET_ALL_STMT =  "SELECT location_id, google_place_id, location_name, address, latitude, longitude, score, rating_count, comments_number, create_time, update_time FROM location ORDER BY location_id";
+	private static final String GET_ONE_STMT = "SELECT location_id, google_place_id, location_name, address, latitude, longitude, score, rating_count, comments_number, create_time, update_time FROM location WHERE location_id = ?";
+	private static final String GET_BY_LOCATION_NAME_STMT = "SELECT location_id, google_place_id, location_name, address, latitude, longitude, score, rating_count, comments_number, create_time, update_time FROM location WHERE location_name = ?";
 	private static final String DELETE = "DELETE FROM location where location_id=?";
-	private static final String UPDATE = "UPDATE location set address=?, comments_number=?, score=?, location_name=? where location_id = ?";
+	private static final String UPDATE =  "UPDATE location SET google_place_id = ?, location_name = ?, address = ?, latitude = ?, longitude = ?, score = ?, rating_count = ?, comments_number = ? WHERE location_id = ?";
 
 	public LocationDAOImplJDBC() {
-		
+
 		// 建構子一開始確認是否有載入驅動程式，並且建立連線
 		try {
 			Class.forName(driver);
@@ -50,19 +50,62 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 			throw new RuntimeException("Couldn't load database driver or connect to database. " + e.getMessage());
 		}
 	}
-	
-	
+
 	private Connection getConnection() {
 		return this.connection;
+	}
+	
+	@Override
+	public void insertOrUpdate(LocationVO locationVO) {
+	    // 先檢查是否存在該 google_place_id
+	    String checkSql = "SELECT location_id FROM location WHERE google_place_id = ?";
+	    try (PreparedStatement checkStmt = getConnection().prepareStatement(checkSql)) {
+	        checkStmt.setString(1, locationVO.getGooglePlaceId());
+	        ResultSet rs = checkStmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            // 如果存在，執行更新
+	            try (PreparedStatement updateStmt = getConnection().prepareStatement(UPDATE)) {
+	                updateStmt.setString(1, locationVO.getGooglePlaceId());
+	                updateStmt.setString(2, locationVO.getLocation_name());
+	                updateStmt.setString(3, locationVO.getAddress());
+	                updateStmt.setBigDecimal(4, locationVO.getLatitude());
+	                updateStmt.setBigDecimal(5, locationVO.getLongitude());
+	                updateStmt.setFloat(6, locationVO.getScore());
+	                updateStmt.setInt(7, locationVO.getRatingCount());
+	                updateStmt.setInt(8, locationVO.getComments_number());
+	                updateStmt.setInt(9, rs.getInt("location_id"));
+	                updateStmt.executeUpdate();
+	            }
+	        } else {
+	            // 如果不存在，執行插入
+	            try (PreparedStatement insertStmt = getConnection().prepareStatement(INSERT_STMT)) {
+	                insertStmt.setString(1, locationVO.getGooglePlaceId());
+	                insertStmt.setString(2, locationVO.getLocation_name());
+	                insertStmt.setString(3, locationVO.getAddress());
+	                insertStmt.setBigDecimal(4, locationVO.getLatitude());
+	                insertStmt.setBigDecimal(5, locationVO.getLongitude());
+	                insertStmt.setFloat(6, locationVO.getScore());
+	                insertStmt.setInt(7, locationVO.getRatingCount());
+	                insertStmt.setInt(8, locationVO.getComments_number());
+	                insertStmt.executeUpdate();
+	            }
+	        }
+	    } catch (SQLException se) {
+	        throw new RuntimeException("A database error occured. " + se.getMessage());
+	    }
 	}
 
 	@Override
 	public void insert(LocationVO locationVO) {
 		try (PreparedStatement pstmt = getConnection().prepareStatement(INSERT_STMT)) {
-			pstmt.setString(1, locationVO.getAddress());
-			pstmt.setInt(2, locationVO.getComments_number());
-			pstmt.setFloat(3, locationVO.getScore());
-			pstmt.setString(4, locationVO.getLocation_name());
+			pstmt.setString(1, locationVO.getGooglePlaceId());
+			pstmt.setString(2, locationVO.getLocation_name());
+			pstmt.setString(3, locationVO.getAddress());pstmt.setBigDecimal(4, locationVO.getLatitude());    // DECIMAL(10,8)
+	        pstmt.setBigDecimal(5, locationVO.getLongitude());   // DECIMAL(11,8)
+	        pstmt.setFloat(6, locationVO.getScore());            // FLOAT(2,1)
+	        pstmt.setInt(7, locationVO.getRatingCount());        
+	        pstmt.setInt(8, locationVO.getComments_number());
 			pstmt.executeUpdate();
 
 		} catch (SQLException se) {
@@ -72,18 +115,23 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 
 	@Override
 	public void update(LocationVO locationVO) {
-		try (PreparedStatement pstmt = getConnection().prepareStatement(UPDATE)) {
-			pstmt.setString(1, locationVO.getAddress());
-			pstmt.setInt(2, locationVO.getComments_number());
-			pstmt.setFloat(3, locationVO.getScore());
-			pstmt.setString(4, locationVO.getLocation_name());
-			pstmt.setInt(5, locationVO.getLocationid());
-			pstmt.executeUpdate();
-
-		} catch (SQLException se) {
-			throw new RuntimeException("A database error occured. " + se.getMessage());
-		}
+	    try (PreparedStatement pstmt = getConnection().prepareStatement(UPDATE)) {
+	        // 按照 UPDATE SQL 的順序設置參數
+	        pstmt.setString(1, locationVO.getGooglePlaceId());
+	        pstmt.setString(2, locationVO.getLocation_name());
+	        pstmt.setString(3, locationVO.getAddress());
+	        pstmt.setBigDecimal(4, locationVO.getLatitude());
+	        pstmt.setBigDecimal(5, locationVO.getLongitude());
+	        pstmt.setFloat(6, locationVO.getScore());
+	        pstmt.setInt(7, locationVO.getRatingCount());
+	        pstmt.setInt(8, locationVO.getComments_number());
+	        pstmt.setInt(9, locationVO.getLocationid());
+	        pstmt.executeUpdate();
+	    } catch (SQLException se) {
+	        throw new RuntimeException("A database error occured. " + se.getMessage());
+	    }
 	}
+
 
 	@Override
 	public void delete(Integer locationid) {
@@ -95,119 +143,68 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 			throw new RuntimeException("A database error occured. " + se.getMessage());
 		}
 	}
-	
-	
+
 	private Session getSession() {
 		return factory.getCurrentSession();
 	}
+
 	@Override
 	public List<LocationVO> getAll() {
-		List<LocationVO> list = new ArrayList<>();
-		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_ALL_STMT);
-				ResultSet rs = pstmt.executeQuery()) {
-
-			while (rs.next()) {
-				LocationVO locationVO = new LocationVO();
-				locationVO.setLocationid(rs.getInt("location_id"));
-				locationVO.setAddress(rs.getString("address"));
-				locationVO.setCreate_time(rs.getTimestamp("create_time"));
-				locationVO.setComments_number(rs.getInt("comments_number"));
-				locationVO.setScore(rs.getFloat("score"));
-				locationVO.setLocation_name(rs.getString("location_name"));
-				list.add(locationVO);
-			}
-
-		} catch (SQLException se) {
-			throw new RuntimeException("A database error occured. " + se.getMessage());
-		}
-		return list;
+	    List<LocationVO> list = new ArrayList<>();
+	    try (PreparedStatement pstmt = getConnection().prepareStatement(GET_ALL_STMT);
+	         ResultSet rs = pstmt.executeQuery()) {
+	        while (rs.next()) {
+	            LocationVO locationVO = new LocationVO();
+	            locationVO.setLocationid(rs.getInt("location_id"));
+	            locationVO.setGooglePlaceId(rs.getString("google_place_id"));
+	            locationVO.setLocation_name(rs.getString("location_name"));
+	            locationVO.setAddress(rs.getString("address"));
+	            locationVO.setLatitude(rs.getBigDecimal("latitude"));
+	            locationVO.setLongitude(rs.getBigDecimal("longitude"));
+	            locationVO.setScore(rs.getFloat("score"));
+	            locationVO.setRatingCount(rs.getInt("rating_count"));
+	            locationVO.setComments_number(rs.getInt("comments_number"));
+	            locationVO.setCreate_time(rs.getTimestamp("create_time"));
+	            locationVO.setUpdateTime(rs.getTimestamp("update_time"));
+	            list.add(locationVO);
+	        }
+	    } catch (SQLException se) {
+	        throw new RuntimeException("A database error occured. " + se.getMessage());
+	    }
+	    return list;
 	}
 
 	@Override
 	public List<Map<String, Object>> getAllPro() {
-		List<Map<String, Object>> list = new ArrayList<>();
-		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_ALL_STMT);
-				ResultSet rs = pstmt.executeQuery()) {
-
-			while (rs.next()) {
-
-				Map<String, Object> map = new HashMap<>();
-
-				map.put("Location_id", rs.getInt("location_id"));
-				map.put("address", rs.getString("address"));
-				map.put("create_time", rs.getString("create_time"));
-				map.put("comments_number", rs.getString("comments_number"));
-				map.put("score", rs.getString("score"));
-				map.put("location_name", rs.getString("location_name"));
-				list.add(map);
-			}
-
-		} catch (SQLException se) {
-			throw new RuntimeException("A database error occured. " + se.getMessage());
-		}
-		return list;
+	    List<Map<String, Object>> list = new ArrayList<>();
+	    try (PreparedStatement pstmt = getConnection().prepareStatement(GET_ALL_STMT);
+	         ResultSet rs = pstmt.executeQuery()) {
+	        while (rs.next()) {
+	            Map<String, Object> map = new HashMap<>();
+	            map.put("location_id", rs.getInt("location_id"));
+	            map.put("google_place_id", rs.getString("google_place_id"));
+	            map.put("location_name", rs.getString("location_name"));
+	            map.put("address", rs.getString("address"));
+	            map.put("latitude", rs.getBigDecimal("latitude"));
+	            map.put("longitude", rs.getBigDecimal("longitude"));
+	            map.put("score", rs.getFloat("score"));
+	            map.put("rating_count", rs.getInt("rating_count"));
+	            map.put("comments_number", rs.getInt("comments_number"));
+	            map.put("create_time", rs.getTimestamp("create_time"));
+	            map.put("update_time", rs.getTimestamp("update_time"));
+	            list.add(map);
+	        }
+	    } catch (SQLException se) {
+	        throw new RuntimeException("A database error occured. " + se.getMessage());
+	    }
+	    return list;
 	}
 
 	@Override
 	public LocationVO getById(Integer locationid) {
-		LocationVO locationVO = null;
-		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_ONE_STMT)) {
-			pstmt.setInt(1, locationid);
-			try (ResultSet rs = pstmt.executeQuery()) {
-				if (rs.next()) {
-					locationVO = new LocationVO();
-					locationVO.setLocationid(rs.getInt("location_id"));
-					locationVO.setAddress(rs.getString("address"));
-					locationVO.setCreate_time(rs.getTimestamp("create_time"));
-					locationVO.setComments_number(rs.getInt("comments_number"));
-					locationVO.setScore(rs.getFloat("score"));
-					locationVO.setLocation_name(rs.getString("location_name"));
-				}
-			}
-
-		} catch (SQLException se) {
-			throw new RuntimeException("A database error occured. " + se.getMessage());
-		}
-		return locationVO;
-	}
-
-	@Override
-	public List<Map<String, Object>> getLocationByName(String location_name) {
-		List<Map<String, Object>> list = new ArrayList<>();
-		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_BY_LOCATION_NAME_STMT);) {
-			// 設定參數
-			pstmt.setString(1, location_name);
-
-			try (ResultSet rs = pstmt.executeQuery()) {
-				while (rs.next()) {
-
-					Map<String, Object> map = new HashMap<>();
-
-					map.put("location_id", rs.getInt("location_id"));
-					map.put("address", rs.getString("address"));
-					map.put("create_time", rs.getString("create_time"));
-					map.put("comments_number", rs.getString("comments_number"));
-					map.put("score", rs.getString("score"));
-					map.put("location_name", rs.getString("location_name"));
-					list.add(map);
-				}
-			}
-
-		} catch (SQLException se) {
-			throw new RuntimeException("A database error occured. " + se.getMessage());
-		}
-		return list;
-	}
-	
-	//用googleID找Location物件 --> 為了要確認這個物件是不是被創建了
-	@Override
-	public LocationVO findByGooglePlaceId(String googlePlaceId) {
 	    LocationVO locationVO = null;
-	    String GET_BY_GOOGLE_PLACE_ID = 
-	        "SELECT * FROM location WHERE google_place_id = ?";
-	    
-	    try (PreparedStatement pstmt = getConnection().prepareStatement(GET_BY_GOOGLE_PLACE_ID)) {
-	        pstmt.setString(1, googlePlaceId);
+	    try (PreparedStatement pstmt = getConnection().prepareStatement(GET_ONE_STMT)) {
+	        pstmt.setInt(1, locationid);
 	        try (ResultSet rs = pstmt.executeQuery()) {
 	            if (rs.next()) {
 	                locationVO = new LocationVO();
@@ -218,16 +215,74 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	                locationVO.setLatitude(rs.getBigDecimal("latitude"));
 	                locationVO.setLongitude(rs.getBigDecimal("longitude"));
 	                locationVO.setScore(rs.getFloat("score"));
+	                locationVO.setRatingCount(rs.getInt("rating_count"));
+	                locationVO.setComments_number(rs.getInt("comments_number"));
 	                locationVO.setCreate_time(rs.getTimestamp("create_time"));
 	                locationVO.setUpdateTime(rs.getTimestamp("update_time"));
-	                locationVO.setComments_number(rs.getInt("comments_number"));
-	                locationVO.setRatingCount(rs.getInt("rating_count"));
 	            }
 	        }
 	    } catch (SQLException se) {
 	        throw new RuntimeException("A database error occured. " + se.getMessage());
 	    }
 	    return locationVO;
+	}
+
+	@Override
+	public List<Map<String, Object>> getLocationByName(String location_name) {
+	    List<Map<String, Object>> list = new ArrayList<>();
+	    try (PreparedStatement pstmt = getConnection().prepareStatement(GET_BY_LOCATION_NAME_STMT)) {
+	        pstmt.setString(1, location_name);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            while (rs.next()) {
+	                Map<String, Object> map = new HashMap<>();
+	                map.put("location_id", rs.getInt("location_id"));
+	                map.put("google_place_id", rs.getString("google_place_id"));
+	                map.put("location_name", rs.getString("location_name"));
+	                map.put("address", rs.getString("address"));
+	                map.put("latitude", rs.getBigDecimal("latitude"));
+	                map.put("longitude", rs.getBigDecimal("longitude"));
+	                map.put("score", rs.getFloat("score"));
+	                map.put("rating_count", rs.getInt("rating_count"));
+	                map.put("comments_number", rs.getInt("comments_number"));
+	                map.put("create_time", rs.getTimestamp("create_time"));
+	                map.put("update_time", rs.getTimestamp("update_time"));
+	                list.add(map);
+	            }
+	        }
+	    } catch (SQLException se) {
+	        throw new RuntimeException("A database error occured. " + se.getMessage());
+	    }
+	    return list;
+	}
+
+	// 用googleID找Location物件 --> 為了要確認這個物件是不是被創建了
+	@Override
+	public LocationVO findByGooglePlaceId(String googlePlaceId) {
+		LocationVO locationVO = null;
+		String GET_BY_GOOGLE_PLACE_ID = "SELECT * FROM location WHERE google_place_id = ?";
+
+		try (PreparedStatement pstmt = getConnection().prepareStatement(GET_BY_GOOGLE_PLACE_ID)) {
+			pstmt.setString(1, googlePlaceId);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					locationVO = new LocationVO();
+					locationVO.setLocationid(rs.getInt("location_id"));
+					locationVO.setGooglePlaceId(rs.getString("google_place_id"));
+					locationVO.setLocation_name(rs.getString("location_name"));
+					locationVO.setAddress(rs.getString("address"));
+					locationVO.setLatitude(rs.getBigDecimal("latitude"));
+					locationVO.setLongitude(rs.getBigDecimal("longitude"));
+					locationVO.setScore(rs.getFloat("score"));
+					locationVO.setCreate_time(rs.getTimestamp("create_time"));
+					locationVO.setUpdateTime(rs.getTimestamp("update_time"));
+					locationVO.setComments_number(rs.getInt("comments_number"));
+					locationVO.setRatingCount(rs.getInt("rating_count"));
+				}
+			}
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. " + se.getMessage());
+		}
+		return locationVO;
 	}
 
 	@Override
