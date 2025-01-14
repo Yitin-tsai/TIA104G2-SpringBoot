@@ -39,5 +39,10 @@ public class TrackMemberService {
 		return dao.getTracksQty(memberId);
 	}
 	
+	public boolean checkTrack(Integer memberId, Integer trakcerId) {
+		return dao.getOne(memberId, trakcerId);
+		
+	}
+	
 	
 }
