@@ -85,4 +85,10 @@ public class TripLikeServlet {
 		
 	}
 	
+	@GetMapping("checkLike/{mid}/{tid}")
+	public boolean checkLike(@PathVariable("mid")Integer memberId , @PathVariable("tid")Integer tripId) {
+		
+		return tripLikeSvc.checkLike(memberId, tripId);
+	}
+	
 }
