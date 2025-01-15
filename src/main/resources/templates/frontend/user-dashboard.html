@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人主頁 - ChillTrip</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        :root {
+            --primary-color: #ff6600;
+            --secondary-color: #ffa07a;
+            --accent-color: #ffac81;
+            --gray-light: #f7f7f7;
+            --gray-medium: #8d8d8d;
+            --gray-dark: #4a4a4a;
+            --border-color: #e0e0e0;
+            --success-color: #4CAF50;
+            --card-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        body {
+            background-color: var(--gray-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 個人資料區域 */
+        .profile-header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            gap: 30px;
+        }
+
+        .profile-left {
+            flex: 0 0 200px;
+        }
+
+        .profile-right {
+            flex: 1;
+        }
+
+        .profile-avatar {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: var(--card-shadow);
+        }
+
+        .profile-name {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--gray-dark);
+        }
+
+        /* 追蹤數據 */
+        .follow-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            cursor: pointer;
+            padding: 10px 20px;
+            background: var(--gray-light);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: var(--orange-light);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            color: var(--gray-medium);
+            font-size: 14px;
+        }
+
+        /* 成就統計面板 */
+        .achievements {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .achievement-item {
+            padding: 15px;
+            border-radius: 8px;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .achievement-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .achievement-label {
+            color: var(--gray-medium);
+            font-size: 14px;
+        }
+
+        /* 內容選擇區 */
+        .content-filter {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-select {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 16px;
+            color: var(--gray-dark);
+            background: white;
+            min-width: 200px;
+        }
+
+        /* 文章網格 */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* 一般文章卡片 */
+        .article-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .article-content {
+            padding: 20px;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .article-title {
+            font-size: 18px;
+            color: var(--gray-dark);
+            margin-bottom: 10px;
+        }
+
+        .article-stats {
+            display: flex;
+            gap: 15px;
+            color: var(--gray-medium);
+            font-size: 14px;
+        }
+
+        /* 景點卡片特殊樣式 */
+        .place-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .place-name {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .place-address {
+            color: var(--gray-medium);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .place-rating {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .place-type {
+            display: inline-block;
+            padding: 4px 8px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--gray-dark);
+        }
+
+        /* 彈窗樣式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray-medium);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            color: var(--gray-dark);
+        }
+
+        .user-list {
+            list-style: none;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .user-name {
+            color: var(--gray-dark);
+            font-weight: 500;
+        }
+
+        /* 分頁控制器 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .page-link {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--gray-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-link:hover,
+        .page-link.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 個人資料區域 -->
+        <div class="profile-header">
+            <div class="profile-left">
+                <img src="/api/placeholder/200/200" alt="個人頭像" class="profile-avatar">
+            </div>
+            <div class="profile-right">
+                <h1 class="profile-name">愛旅遊的Seal</h1>
+                <div class="follow-stats">
+                    <div class="stat-item" id="followers">
+                        <div class="stat-number">1000</div>
+                        <div class="stat-label">追蹤者</div>
+                    </div>
+                    <div class="stat-item" id="following">
+                        <div class="stat-number">100</div>
+                        <div class="stat-label">正在追蹤</div>
+                    </div>
+                </div>
+
+                <!-- 成就統計 -->
+                <div class="achievements">
+                    <div class="achievement-grid">
+                        <div class="achievement-item">
+                            <div class="achievement-number">10,000</div>
+                            <div class="achievement-label">文章總瀏覽數</div>
+                        </div>
+                        <div class="achievement-item">
+                            <div class="achievement-number">1000</div>
+                            <div class="achievement-label">文章總點讚數</div>
+                        </div>
+                        <div class="achievement-item">
+                            <div class="achievement-number">1000</div>
+                            <div class="achievement-label">文章總收藏數</div>
+                        </div>
+                        <div class="achievement-item">
+                            <div class="achievement-number">100</div>
+                            <div class="achievement-label">總文章數</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 內容選擇區 -->
+        <div class="content-filter">
+            <select class="content-select" id="content-type">
+                <option value="public">公開文章</option>
+                <option value="private">私人文章</option>
+                <option value="saved-trips">收藏行程列表</option>
+                <option value="saved-places">收藏景點列表</option>
+                <option value="deleted">已刪除文章</option>
+                <option value="draft">草稿箱</option>
+            </select>
+        </div>
+
+        <!-- 文章網格 -->
+        <div class="articles-grid">
+            <!-- 一般文章卡片範例 -->
+            <div class="article-card">
+                <img src="/api/placeholder/400/320" alt="文章封面" class="article-image">
+                <div class="article-content">
+                    <div class="article-meta">
+                        <span class="article-date">2025/01/14</span>
+                        <span class="article-status">公開</span>
+                    </div>
+                    <h2 class="article-title">日本結緣神社10選</h2>
+                    <div class="article-stats">
+                        <span>👁️ 100</span>
+                        <span>❤️ 50</span>
+                        <span>⭐ 4.8</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 景點卡片範例 -->
+            <div class="place-card">
+                <h2 class="place-name">東京晴空塔</h2>
+                <div class="place-address">
+                    <i class="fas fa-map-marker-alt"></i>
+                    東京都墨田區押上1丁目1-2
+                </div>
+                <div class="place-rating">
+                    ★★★★★ 4.8
+                </div>
+                <span class="place-type">觀光景點</span>
+            </div>
+        </div>
+
+        <!-- 分頁 -->
+        <div class="pagination">
+            <span class="page-link">1</span>
+            <span class="page-link active">2</span>
+            <span class="page-link">3</span>
+            <span>...</span>
+            <span class="page-link">10</span>
+        </div>
+    </div>
+
+    <!-- 追蹤者列表彈窗 -->
+    <div class="modal" id="followers-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">追蹤者清單</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <ul class="user-list">
+                <!-- 追蹤者列表將由 JavaScript 動態生成 -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- 正在追蹤列表彈窗 -->
+    <div class="modal" id="following-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">正在追蹤</h3>
+                <button class="

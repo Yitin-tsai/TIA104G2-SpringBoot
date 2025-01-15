@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>個人主頁 - ChillTrip</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+
+      :root {
+        --primary-color: #4a4a4a;
+        --secondary-color: #6c757d;
+        --accent-color: #8d8d8d;
+        --gray-light: #f7f7f7;
+        --gray-medium: #8d8d8d;
+        --gray-dark: #4a4a4a;
+        --border-color: #e0e0e0;
+        --success-color: #4caf50;
+        --warning-color: #ff9800;
+      }
+
+      body {
+        background-color: var(--gray-light);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* 個人資料區域 */
+      .dashboard-header {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .profile-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .profile-info {
+        text-align: center;
+      }
+
+      .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin-bottom: 15px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        padding: 3px;
+        background-color: white;
+      }
+
+      .profile-name {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: var(--gray-dark);
+      }
+
+      .follow-stats {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .stat-item {
+        cursor: pointer;
+        padding: 8px 15px;
+        border-radius: 8px;
+        transition: all 0.3s;
+        border: none;
+        background: none;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .stat-item:hover {
+        background: var(--gray-light);
+      }
+
+      .stat-number {
+        font-weight: bold;
+        display: block;
+        color: var(--gray-dark);
+      }
+
+      .stat-label {
+        color: var(--gray-medium);
+      }
+
+      /* 成就統計卡片 */
+      .achievements-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .achievements-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .achievement-item {
+        padding: 15px;
+        border-radius: 10px;
+        background: var(--gray-light);
+        transition: transform 0.2s;
+        border: 1px solid var(--border-color);
+      }
+
+      .achievement-item:hover {
+        transform: translateY(-3px);
+      }
+
+      .achievement-label {
+        font-size: 14px;
+        color: var(--gray-medium);
+        margin-bottom: 5px;
+      }
+
+      .achievement-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--gray-dark);
+      }
+
+      /* 內容篩選器 */
+      .content-filter {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .filter-group {
+        display: flex;
+        gap: 15px;
+        flex-grow: 1;
+      }
+
+      .filter-select {
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        min-width: 200px;
+        transition: all 0.3s ease;
+      }
+
+      .filter-select:focus {
+        border-color: #4a4a4a;
+        outline: none;
+      }
+
+      .filter-button {
+        padding: 12px 24px;
+        background: var(--gray-dark);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.2s;
+      }
+
+      .filter-button:hover {
+        opacity: 0.9;
+      }
+
+      /* 文章卡片網格 */
+      .content-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        margin-bottom: 30px;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 20px;
+      }
+
+      .content-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        width: 100%;
+        max-width: 350px;
+        margin: 0 auto;
+      }
+
+      .content-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .card-body {
+        padding: 20px;
+      }
+
+      .card-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #4a4a4a;
+      }
+
+      .card-description {
+        font-size: 14px;
+        color: #6c757d;
+        margin-bottom: 15px;
+        line-height: 1.5;
+      }
+
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .card-stats {
+        display: flex;
+        gap: 15px;
+        color: #8d8d8d;
+        font-size: 14px;
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .action-button {
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+
+      .edit-btn {
+        background: #8d8d8d;
+        color: white;
+      }
+
+      .delete-btn {
+        background: #ff9800;
+        color: white;
+      }
+
+      .action-button:hover {
+        opacity: 0.9;
+      }
+
+      /* 分頁控制器樣式 */
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 30px;
+      }
+
+      .page-btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 8px;
+        background: #4a4a4a;
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .page-btn:disabled {
+        background: #e0e0e0;
+        cursor: not-allowed;
+      }
+
+      .page-numbers {
+        display: flex;
+        gap: 5px;
+      }
+
+      .page-number {
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .page-number:hover {
+        background: #f0f0f0;
+      }
+
+      .page-number.active {
+        background: #4a4a4a;
+        color: white;
+      }
+
+      /* 收藏景點布局 */
+      .places-layout {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        margin-bottom: 30px;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 20px;
+      }
+
+      /* 收藏景點卡片特殊樣式 */
+      .place-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .place-info {
+        flex-grow: 1;
+      }
+
+      .place-header {
+        margin-bottom: 20px;
+      }
+
+      .place-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #4a4a4a;
+        margin-bottom: 10px;
+      }
+
+      .place-address {
+        color: #6c757d;
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+
+      .place-rating {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .star-container {
+        display: flex;
+        gap: 2px;
+      }
+
+      .star {
+        color: #ffd700;
+        font-size: 18px;
+      }
+
+      .rating-text {
+        color: #6c757d;
+        font-size: 14px;
+      }
+
+      /* 評論列表樣式 */
+      .comments-list {
+        margin-bottom: 20px;
+      }
+
+      .comment-item {
+        padding: 15px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .comment-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .comment-user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 12px;
+      }
+
+      .comment-user-info {
+        flex-grow: 1;
+      }
+
+      .comment-user-name {
+        font-weight: bold;
+        color: var(--gray-dark);
+        margin-bottom: 2px;
+      }
+
+      .comment-rating {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .comment-rating .star {
+        font-size: 14px;
+      }
+
+      .comment-time {
+        color: var(--gray-medium);
+        font-size: 12px;
+      }
+
+      .comment-content {
+        margin: 10px 0;
+        color: var(--gray-dark);
+        line-height: 1.5;
+      }
+
+      .comment-image {
+        width: 200px;
+        height: 150px;
+        object-fit: cover; /* 確保圖片不會變形 */
+        border-radius: 8px;
+        margin-top: 10px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+
+      .comment-image:hover {
+        transform: scale(1.05);
+      }
+
+      .comments-section {
+        margin-top: 20px;
+        border-top: 1px solid #e0e0e0;
+        padding-top: 20px;
+      }
+
+      .comments-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #4a4a4a;
+        margin-bottom: 15px;
+      }
+
+      .comment-input-container {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+      }
+
+      .rating-star {
+        cursor: pointer;
+        font-size: 18px;
+        transition: color 0.2s ease;
+      }
+
+      .rating-input {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .rating-text {
+        color: var(--gray-medium);
+        font-size: 14px;
+      }
+
+      .comment-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .comment-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .upload-photo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #6c757d;
+        cursor: pointer;
+      }
+
+      .submit-comment {
+        padding: 8px 16px;
+        background: #4a90e2;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .submit-comment:hover {
+        background: #357abd;
+      }
+
+      /* Modal 樣式 */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+
+      .modal.active {
+        display: flex;
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-content {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--gray-medium);
+      }
+
+      .user-list {
+        list-style: none;
+      }
+
+      .user-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 15px;
+      }
+
+      /* 響應式設計 */
+      @media (max-width: 768px) {
+        .dashboard-header {
+          grid-template-columns: 1fr;
+        }
+
+        .achievements-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .content-filter {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .filter-group {
+          flex-direction: column;
+          width: 100%;
+        }
+
+        .filter-select {
+          width: 100%;
+        }
+
+        .filter-button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!------網站header------>
+    <header>
+      <nav class="top-nav">
+        <div class="nav-left">
+          <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+          <a href="#" class="nav-item nav-link" id="nav-product">購！票券</a>
+          <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
+          <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+        </div>
+        <div class="nav-center">
+          <a href="#" id="z-index">
+            <a href="/TIA104G2-SpringBoot/" id="z-index">
+              <img
+                th:src="@{/img/logo_black.png}"
+                alt="Chill Trip"
+                style="width: 150px; height: auto"
+              />
+            </a>
+          </a>
+        </div>
+        <div class="nav-right">
+          <a
+            href="/TIA104G2-SpringBoot/login"
+            class="nav-item nav-link active"
+            id="nav-login"
+            style="color: #ff6600"
+            >登入/註冊</a
+          >
+          <div class="nav-item dropdown">
+            <a
+              href="#"
+              class="nav-link dropdown-toggle"
+              data-toggle="dropdown"
+              style="color: #212529"
+              >會員中心</a
+            >
+            <div class="dropdown-menu rounded-0 m-0">
+              <a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a>
+              <a href="#" class="dropdown-item" id="nav-coupons">我的折價券</a>
+              <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
+            </div>
+          </div>
+          <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+          <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+        </div>
+      </nav>
+    </header>
+
+    <div aria-label="breadcrumb">
+      <ul class="breadcrumb" id="breadcrumb-nav">
+        <!-- 麵包屑導航項目將由 JavaScript 動態生成 -->
+      </ul>
+    </div>
+
+    <div class="container">
+      <!-- 個人資料和成就統計區域 -->
+      <div class="dashboard-header">
+        <div class="profile-card">
+          <div class="profile-info">
+            <img
+              src="/api/placeholder/120/120"
+              alt="用戶頭像"
+              class="profile-avatar"
+            />
+            <h1 class="profile-name">愛旅遊的Seal</h1>
+            <div class="follow-stats">
+              <button class="stat-item" id="followers-btn">
+                <span class="stat-number">1000</span>
+                <span class="stat-label">追蹤者</span>
+              </button>
+              <button class="stat-item" id="following-btn">
+                <span class="stat-number">100</span>
+                <span class="stat-label">正在追蹤</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="achievements-card">
+          <div class="achievements-grid">
+            <div class="achievement-item">
+              <div class="achievement-label">文章總瀏覽</div>
+              <div class="achievement-value">100,000</div>
+            </div>
+            <div class="achievement-item">
+              <div class="achievement-label">文章總按讚</div>
+              <div class="achievement-value">1000</div>
+            </div>
+            <div class="achievement-item">
+              <div class="achievement-label">文章總收藏</div>
+              <div class="achievement-value">1000</div>
+            </div>
+            <div class="achievement-item">
+              <div class="achievement-label">留言互動</div>
+              <div class="achievement-value">100</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 內容篩選器 -->
+      <div class="content-filter">
+        <div class="filter-group">
+          <select class="filter-select" id="content-type">
+            <option value="public">公開文章</option>
+            <option value="private">私人文章</option>
+            <option value="saved-trips">收藏行程</option>
+            <option value="saved-places">收藏景點</option>
+            <option value="deleted">已刪除文章</option>
+            <option value="drafts">草稿箱</option>
+          </select>
+
+          <select class="filter-select" id="sort-type">
+            <option value="">選擇排序方式</option>
+            <!-- 選項會由 JavaScript 動態生成 -->
+          </select>
+        </div>
+
+        <button id="apply-filter" class="filter-button">確認篩選</button>
+      </div>
+
+      <!-- 內容展示區域 -->
+      <div class="content-grid">
+        <!-- 一般文章卡片範例 -->
+        <div class="content-card">
+          <img
+            src="/api/placeholder/400/320"
+            alt="文章封面"
+            class="card-image"
+          />
+          <div class="card-body">
+            <h2 class="card-title">日本結緣神社10選</h2>
+            <p class="card-description">除了東京大神宮，還有這些絕美景點！</p>
+            <div class="card-footer">
+              <div class="card-stats">
+                <span>👁️ 100</span>
+                <span>❤️ 50</span>
+              </div>
+              <div class="card-actions">
+                <button class="action-button edit-btn">編輯</button>
+                <button class="action-button delete-btn">刪除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 收藏景點卡片範例 (預設隱藏) -->
+      <div class="place-card" style="display: none">
+        <div class="place-info">
+          <h3 class="place-title">淺草寺</h3>
+          <p class="place-details">
+            地址：東京都台東區淺草2-3-1<br />
+            營業時間：6:00-17:00
+          </p>
+          <div class="place-rating">★★★★★ 4.5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 追蹤者列表彈窗 -->
+    <div class="modal" id="followers-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>追蹤者列表</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <ul class="user-list">
+          <!-- 追蹤者列表項目將由 JavaScript 動態生成 -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- 正在追蹤列表彈窗 -->
+    <div class="modal" id="following-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>正在追蹤</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <ul class="user-list">
+          <!-- 正在追蹤列表項目將由 JavaScript 動態生成 -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- 導航欄nav的href載入器 -->
+    <script th:src="@{/js/navigation.js}"></script>
+    <!--景點與文章樣式管理與動態清單取得-->
+    <script src="/static/js/content-manager.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const breadcrumbNav = document.getElementById("breadcrumb-nav");
+        // 定義麵包屑導航的項目
+        const breadcrumbItems = [
+          { name: "首頁", link: "index.html" },
+          { name: "Go! 行程", link: "go.html" },
+        ];
+
+        // 動態生成麵包屑導航的 HTML 結構
+        breadcrumbItems.forEach((item, index) => {
+          const li = document.createElement("li");
+          li.className = "breadcrumb-item";
+          if (index === breadcrumbItems.length - 1) {
+            li.classList.add("active");
+            li.setAttribute("aria-current", "page");
+            li.textContent = item.name;
+          } else {
+            const a = document.createElement("a");
+            a.href = item.link;
+            a.textContent = item.name;
+            li.appendChild(a);
+          }
+          breadcrumbNav.appendChild(li);
+        });
+      });
+
+      //綁定編輯及刪除按鈕
+      const editBtns = document.querySelectorAll(".editBtn");
+      editBtns.forEach((button) => {
+        button.addEventListener("click", function () {
+          console.log("編輯");
+        });
+      });
+      const deleBtns = document.querySelectorAll(".deleBtn");
+      deleBtns.forEach((button) => {
+        button.addEventListener("click", function () {
+          console.log("刪除");
+        });
+      });
+    </script>
+
+    <script>
+      // 彈窗功能
+      const followersBtn = document.getElementById("followers-btn");
+      const followingBtn = document.getElementById("following-btn");
+      const followersModal = document.getElementById("followers-modal");
+      const followingModal = document.getElementById("following-modal");
+      const modalCloseButtons = document.querySelectorAll(".modal-close");
+
+      // 確保所有元素都存在
+      if (followersBtn && followingBtn && followersModal && followingModal) {
+        followersBtn.addEventListener("click", () => {
+          console.log("Followers clicked");
+          followersModal.classList.add("active");
+        });
+
+        followingBtn.addEventListener("click", () => {
+          console.log("Following clicked");
+          followingModal.classList.add("active");
+        });
+      }
+
+      modalCloseButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          followersModal.classList.remove("active");
+          followingModal.classList.remove("active");
+        });
+      });
+
+      // 點擊彈窗外部關閉彈窗
+      window.addEventListener("click", (e) => {
+        if (e.target === followersModal) {
+          followersModal.classList.remove("active");
+        }
+        if (e.target === followingModal) {
+          followingModal.classList.remove("active");
+        }
+      });
+
+      // 模擬從後端獲取數據並更新列表的函數
+      function updateLists() {
+        // 這裡將來會替換成真實的API調用
+        const mockUsers = [
+          { name: "用戶1", avatar: "/api/placeholder/40/40" },
+          { name: "用戶2", avatar: "/api/placeholder/40/40" },
+          { name: "用戶3", avatar: "/api/placeholder/40/40" },
+        ];
+
+        const generateUserList = (users) => {
+          return users
+            .map(
+              (user) => `
+                    <li class="user-item">
+                        <img src="${user.avatar}" alt="${user.name}" class="user-avatar">
+                        <span>${user.name}</span>
+                    </li>
+                `
+            )
+            .join("");
+        };
+
+        document.querySelector("#followers-modal .user-list").innerHTML =
+          generateUserList(mockUsers);
+        document.querySelector("#following-modal .user-list").innerHTML =
+          generateUserList(mockUsers);
+      }
+
+      // 初始化列表
+      updateLists();
+    </script>
+  </body>
+</html>

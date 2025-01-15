@@ -93,7 +93,6 @@ public class TripController {
 	@GetMapping("/activityfilter")
 	public ResponseEntity<Map<String, Object>> getTripsByEvent(@RequestParam String eventContent,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "12") int size) {
-
 		try {
 			// 建立分頁請求
 			Pageable pageable = PageRequest.of(page, size);
