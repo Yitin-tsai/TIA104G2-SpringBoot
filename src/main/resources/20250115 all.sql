@@ -42,8 +42,8 @@ CONSTRAINT admin_id_pk PRIMARY KEY (administrator_id));
 -- 一般用戶表 --
 CREATE TABLE member (
 member_id			INT(11) NOT NULL AUTO_INCREMENT COMMENT '會員ID',
-email			    VARCHAR(20) NOT NULL COMMENT '電子信箱',
-account			    VARCHAR(20) NOT NULL COMMENT '帳號',
+email			    VARCHAR(100) NOT NULL COMMENT '電子信箱',
+account			    VARCHAR(100) NOT NULL COMMENT '帳號',
 password			VARCHAR(15) NOT NULL COMMENT '密碼',
 name			    VARCHAR(10) NOT NULL COMMENT '姓名',
 phone			    VARCHAR(15) NOT NULL COMMENT '聯絡電話',
@@ -64,9 +64,9 @@ CONSTRAINT uk_account UNIQUE (account),
 CONSTRAINT uk_phone UNIQUE (phone)
 )COMMENT ' 一般用戶表';
 
- INSERT INTO member(email,account,password,name,phone,status,create_time,nick_name,gender) VALUES ('seal@abc.com', 'seal123','seal456','seal','0952123456','0','2024-12-01 08:00:00','seal','1');
- INSERT INTO member(email,account,password,name,phone,status,create_time,nick_name,gender) VALUES ('yuki@abc.com', 'yuki123','yuki456','yuki','0952123457','0','2024-12-01 09:00:00','yuki','1');
- INSERT INTO member(email,account,password,name,phone,status,create_time,nick_name,gender) VALUES ('et@abc.com', 'et123','et456','et','0952123458','0','2024-12-01 10:00:00','eatting','0');
+ INSERT INTO member(email,account,password,name,phone,status,create_time,nick_name,gender) VALUES ('seal@abc.com', 'seal@abc.com','seal456','seal','0952123456','0','2024-12-01 08:00:00','seal','1');
+ INSERT INTO member(email,account,password,name,phone,status,create_time,nick_name,gender) VALUES ('yuki@abc.com', 'yuki@abc.com','yuki456','yuki','0952123457','0','2024-12-01 09:00:00','yuki','1');
+ INSERT INTO member(email,account,password,name,phone,status,create_time,nick_name,gender) VALUES ('et@abc.com', 'et@abc.com','et456','et','0952123458','0','2024-12-01 10:00:00','eatting','0');
 
 
 -- 行程 --
@@ -505,9 +505,26 @@ CONSTRAINT pk_trip_location_id PRIMARY KEY (trip_location_id),
 CONSTRAINT fk_trip_id FOREIGN KEY (trip_id) REFERENCES trip(trip_id)
 )COMMENT '行程地區表';
 
- insert into itinerary_area(trip_id,region_content) values('1','東京');
- insert into itinerary_area(trip_id,region_content) values('2','台北');
- insert into itinerary_area(trip_id,region_content) values('3','桃園');
+ insert into itinerary_area(trip_id,region_content) values('1','臺北市');
+ insert into itinerary_area(trip_id,region_content) values('2','新北市');
+ insert into itinerary_area(trip_id,region_content) values('3','基隆市');
+ insert into itinerary_area(trip_id,region_content) values('4','桃園市');
+ insert into itinerary_area(trip_id,region_content) values('5','新竹市');
+ insert into itinerary_area(trip_id,region_content) values('6','新竹縣');
+ insert into itinerary_area(trip_id,region_content) values('7','宜蘭縣');
+ insert into itinerary_area(trip_id,region_content) values('8','臺中市');
+ insert into itinerary_area(trip_id,region_content) values('9','苗栗縣');
+ insert into itinerary_area(trip_id,region_content) values('10','彰化縣');
+ insert into itinerary_area(trip_id,region_content) values('11','南投縣');
+ insert into itinerary_area(trip_id,region_content) values('12','雲林縣');
+ insert into itinerary_area(trip_id,region_content) values('13','臺南市');
+ insert into itinerary_area(trip_id,region_content) values('14','嘉義市');
+ insert into itinerary_area(trip_id,region_content) values('15','嘉義縣');
+ insert into itinerary_area(trip_id,region_content) values('16','高雄市');
+ insert into itinerary_area(trip_id,region_content) values('17','屏東縣');
+ insert into itinerary_area(trip_id,region_content) values('18','澎湖縣');
+ insert into itinerary_area(trip_id,region_content) values('19','花蓮縣');
+ insert into itinerary_area(trip_id,region_content) values('20','臺東縣');
 
 -- 行程活動類型表 --
  CREATE TABLE itinerary_activity_type (
