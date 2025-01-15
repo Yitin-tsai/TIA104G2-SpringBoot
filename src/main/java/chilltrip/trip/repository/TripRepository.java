@@ -20,6 +20,7 @@ public interface TripRepository extends JpaRepository<TripVO, Integer> {
 	@Query(value = """
 						SELECT
 			trip.trip_id,
+			trip.member_id,
 			trip.article_title,
 			trip.abstract,
 			trip.visitors_number,
@@ -145,6 +146,7 @@ public interface TripRepository extends JpaRepository<TripVO, Integer> {
 	@Query(value = """
 					    SELECT
 			    trip.trip_id,
+			    trip.member_id,
 			    trip.article_title,
 			    trip.abstract,
 			    trip.visitors_number,
@@ -177,6 +179,7 @@ public interface TripRepository extends JpaRepository<TripVO, Integer> {
 	@Query(value = """
 						SELECT
 			trip.trip_id,
+			trip.member_id,
 			trip.article_title,
 			trip.abstract,
 			trip.visitors_number,
@@ -207,6 +210,7 @@ public interface TripRepository extends JpaRepository<TripVO, Integer> {
 	@Query(value = """
 						SELECT
 			trip.trip_id,
+			trip.member_id,
 			trip.article_title,
 			trip.abstract,
 			trip.visitors_number,
@@ -246,6 +250,7 @@ public interface TripRepository extends JpaRepository<TripVO, Integer> {
 	@Query(value = """
 			SELECT DISTINCT
 			    trip.trip_id AS trip_id,
+			    trip.member_id,
 			    trip.article_title AS article_title,
 			    trip.abstract AS abstract,
 			    trip.visitors_number AS visitors_number,
