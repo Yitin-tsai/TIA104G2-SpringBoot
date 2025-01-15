@@ -1,89 +1,162 @@
 // 全局變數
 const contentGrid = document.querySelector(".content-grid");
 console.log("Content grid element:", contentGrid);
-const contentTypeSelect = document.getElementById("content-type");
+const primaryFilter = document.getElementById("primary-filter");
+const secondaryFilter = document.getElementById("secondary-filter");
 const sortTypeSelect = document.getElementById("sort-type");
 const applyFilterBtn = document.getElementById("apply-filter");
 let currentPage = 0;
 const itemsPerPage = 12;
 let currentArticles = [];
+let currentPlaces = [];
 
 // 排序選項配置
-const sortOptions = {
-  articles: [
-    { value: "publish-time", label: "發表時間" },
-    { value: "popularity", label: "熱門程度" },
-    { value: "likes", label: "點讚數" },
-    { value: "saves", label: "收藏數" },
-    { value: "rating", label: "評分" },
-  ],
-  places: [
-    { value: "save-time", label: "收藏時間" },
-    { value: "comments", label: "評論數" },
-    { value: "rating", label: "評分" },
-  ],
+const filterOptions = {
+  "my-articles": {
+    options: [
+      { value: "public", label: "公開文章" },
+      { value: "private", label: "私人文章" },
+      { value: "drafts", label: "草稿箱" },
+      { value: "deleted", label: "已刪除文章" },
+    ],
+    sortOptions: [
+      { value: "publish-time", label: "發表時間" },
+      { value: "popularity", label: "熱門程度" },
+      { value: "likes", label: "點讚數" },
+      { value: "saves", label: "收藏數" },
+      { value: "rating", label: "評分" },
+    ],
+  },
+  "saved-articles": {
+    options: [], // 無子選項
+    sortOptions: [
+      { value: "publish-time", label: "發表時間" },
+      { value: "popularity", label: "熱門程度" },
+      { value: "likes", label: "點讚數" },
+      { value: "saves", label: "收藏數" },
+      { value: "rating", label: "評分" },
+    ],
+  },
+  "saved-places": {
+    options: [], // 從後端動態獲取景點列表
+    sortOptions: [
+      { value: "save-time", label: "收藏時間" },
+      { value: "comments", label: "評論數" },
+      { value: "rating", label: "評分" },
+    ],
+  },
 };
 
-// 更新排序選項函數
-function updateSortOptions(contentType) {
-  const options =
-    contentType === "saved-places" ? sortOptions.places : sortOptions.articles;
+// 監聽第一層選擇變化
+primaryFilter.addEventListener("change", async function (e) {
+  const selectedType = e.target.value;
 
-  sortTypeSelect.innerHTML = `
-        <option value="">選擇排序方式</option>
-        ${options
-          .map(
-            (option) => `
-            <option value="${option.value}">${option.label}</option>
-        `
-          )
-          .join("")}
-    `;
-}
+  // 清空並重置次級選擇器
+  secondaryFilter.innerHTML = '<option value="">請選擇</option>';
+  sortTypeSelect.innerHTML = '<option value="">選擇排序方式</option>';
 
-// 監聽內容類型選擇變化
-contentTypeSelect.addEventListener("change", function (e) {
-  console.log("Content type changed to:", e.target.value);
-  currentPage = 0; // 重置頁碼
-  updateSortOptions(e.target.value); // 更新排序選項
-  loadContent({
-    contentType: e.target.value,
-    sortBy: sortTypeSelect.value,
+  if (!selectedType) {
+    contentGrid.innerHTML = ""; // 清空內容
+    return;
+  }
+
+  const options = filterOptions[selectedType];
+
+  // 更新第二層選項
+  if (selectedType === "saved-places") {
+    try {
+      // 從後端獲取景點列表
+      const response = await fetch("/api/places/list");
+      const places = await response.json();
+      places.forEach((place) => {
+        const option = document.createElement("option");
+        option.value = place.id;
+        option.textContent = place.name;
+        secondaryFilter.appendChild(option);
+      });
+    } catch (error) {
+      console.error("無法載入景點列表:", error);
+      // 使用模擬數據作為備選
+      const mockPlaces = [
+        { id: "place1", name: "淺草寺" },
+        { id: "place2", name: "明治神宮" },
+      ];
+      mockPlaces.forEach((place) => {
+        const option = document.createElement("option");
+        option.value = place.id;
+        option.textContent = place.name;
+        secondaryFilter.appendChild(option);
+      });
+    }
+  } else if (options.options.length > 0) {
+    options.options.forEach((option) => {
+      const optionElement = document.createElement("option");
+      optionElement.value = option.value;
+      optionElement.textContent = option.label;
+      secondaryFilter.appendChild(optionElement);
+    });
+  }
+
+  // 更新排序選項
+  options.sortOptions.forEach((option) => {
+    const optionElement = document.createElement("option");
+    optionElement.value = option.value;
+    optionElement.textContent = option.label;
+    sortTypeSelect.appendChild(optionElement);
   });
 });
 
-// 確認按鈕只處理排序變更
-applyFilterBtn.addEventListener("click", function () {
-  const filters = {
-    contentType: contentTypeSelect.value,
-    sortBy: sortTypeSelect.value,
-  };
-  loadContent(filters);
-});
+// 確認按鈕處理所有篩選參數
+applyFilterBtn.addEventListener("click", async function () {
+  const primaryValue = primaryFilter.value;
+  const secondaryValue = secondaryFilter.value;
+  const sortValue = sortTypeSelect.value;
+  currentPage = 0; // 重置頁碼
 
-// 載入內容
-async function loadContent(filters) {
+  // 確保至少選擇了主要分類
+  if (!primaryValue) {
+    showErrorMessage("請選擇內容類型");
+    return;
+  }
+
   try {
-    // 根據內容類型更改容器的樣式
-    if (filters.contentType === "saved-places") {
-      contentGrid.style.display = "grid";
-      contentGrid.style.gridTemplateColumns = "repeat(3, 1fr)";
+    // 準備要送到後端的參數
+    const params = {
+      primaryFilter: primaryValue,
+      secondaryFilter: secondaryValue || null,
+      sortBy: sortValue || null,
+    };
+
+    // 構建 query string
+    const queryString = new URLSearchParams(params).toString();
+
+    // 發送請求到後端的統一入口點
+    const response = await fetch(`/api/content/filter?${queryString}`);
+    const data = await response.json();
+
+    // 根據 primaryFilter 決定渲染方式
+    if (primaryValue === "saved-places") {
       contentGrid.classList.add("places-layout");
       contentGrid.classList.remove("content-grid");
-
-      // 加載景點數據...
-    } else {
       contentGrid.style.display = "grid";
-      contentGrid.style.gridTemplateColumns = "repeat(3, 1fr)";
+      // 保存並渲染景點數據
+      currentPlaces = sortPlaces(data.content || [], params.sortBy);
+      renderPlaces(currentPlaces);
+      renderPagination(currentPlaces.length);
+    } else {
       contentGrid.classList.remove("places-layout");
       contentGrid.classList.add("content-grid");
-
-      // 加載文章數據...
+      contentGrid.style.display = "grid";
+      currentArticles = data.content || [];
+      renderArticles();
+      renderPagination(currentArticles.length);
     }
+  } catch (error) {
+    console.error("載入內容時發生錯誤:", error);
+    showErrorMessage("載入內容時發生錯誤");
 
-    if (filters.contentType === "saved-places") {
-      console.log("Rendering places");
-      // 模擬景點資料（保持不變）
+    // 使用模擬數據（測試用）
+    if (primaryValue === "saved-places") {
       const mockPlaces = [
         {
           name: "淺草寺",
@@ -101,13 +174,6 @@ async function loadContent(filters) {
               content: "很棒的景點！建築很漂亮，環境也很清幽。",
               image: "/api/placeholder/200/150",
             },
-            {
-              userName: "小花",
-              userAvatar: "/api/placeholder/40/40",
-              rating: 4.0,
-              time: "2024-01-12",
-              content: "氣氛很好，適合拍照。就是假日人比較多。",
-            },
           ],
         },
         {
@@ -117,45 +183,43 @@ async function loadContent(filters) {
           ratingCount: 800,
           saveTime: "2024-01-12",
           commentCount: 120,
-          comments: [
-            {
-              userName: "日本通",
-              userAvatar: "/api/placeholder/40/40",
-              rating: 5.0,
-              time: "2024-01-10",
-              content: "必去的景點！很有日本特色。",
-              image: "/api/placeholder/200/150",
-            },
-          ],
+          comments: [],
         },
       ];
-
-      const sortedPlaces = sortPlaces(mockPlaces, filters.sortBy);
-      renderPlaces(sortedPlaces);
-      renderPagination(sortedPlaces.length);
-      return;
+      contentGrid.classList.add("places-layout");
+      contentGrid.classList.remove("content-grid");
+      currentPlaces = sortPlaces(mockPlaces, sortValue);
+      renderPlaces(currentPlaces);
+      renderPagination(currentPlaces.length);
+    } else {
+      const mockArticles = [
+        {
+          id: 1,
+          title: "日本自由行攻略",
+          description: "詳細的日本自由行規劃指南",
+          image: "https://picsum.photos/400/320",
+          views: 1500,
+          likes: 300,
+        },
+        {
+          id: 2,
+          title: "京都賞櫻攻略",
+          description: "最佳賞櫻景點推薦",
+          image: "https://picsum.photos/400/320",
+          views: 2000,
+          likes: 450,
+        },
+      ];
+      contentGrid.classList.remove("places-layout");
+      contentGrid.classList.add("content-grid");
+      currentArticles = mockArticles;
+      renderArticles();
+      renderPagination(mockArticles.length);
     }
-
-    // 其他內容類型的處理
-    const endpoint = getEndpointByType(filters.contentType);
-    let url = endpoint;
-    if (filters.sortBy) {
-      url += `?sortBy=${filters.sortBy}`;
-    }
-
-    const response = await fetch(url);
-    const data = await response.json();
-
-    currentArticles = data;
-    renderArticles();
-    renderPagination(data.length);
-  } catch (error) {
-    console.error("Error loading content:", error);
-    showErrorMessage("載入內容失敗");
   }
-}
+});
 
-// 排序景點函數更新，同時保持評論數據
+// 排序景點函數
 function sortPlaces(places, sortBy) {
   if (!sortBy) return places;
 
@@ -173,21 +237,13 @@ function sortPlaces(places, sortBy) {
   });
 }
 
-// 根據內容類型獲取對應的 API endpoint
-function getEndpointByType(type) {
-  const endpoints = {
-    public: "/api/articles/public",
-    private: "/api/articles/private",
-    "saved-trips": "/api/trips/saved",
-    "saved-places": "/api/places/saved",
-    deleted: "/api/articles/deleted",
-    drafts: "/api/articles/drafts",
-  };
-  return endpoints[type] || endpoints.public;
-}
-
 // 渲染景點卡片
 function renderPlaces(places) {
+  if (!places || places.length === 0) {
+    contentGrid.innerHTML = "<div>暫無收藏景點</div>";
+    return;
+  }
+
   contentGrid.innerHTML = ""; // 清空現有內容
 
   const startIndex = currentPage * itemsPerPage;
@@ -207,7 +263,6 @@ function createPlaceCard(place) {
 
   // 產生星星評分HTML
   const generateStars = (rating, isInput = false) => {
-    // 添加 isInput 參數並設定默認值為 false
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       if (isInput) {
@@ -232,102 +287,76 @@ function createPlaceCard(place) {
     if (!comments.length) return "";
 
     return `
-            <div class="comments-list">
-                ${comments
-                  .map(
-                    (comment) => `
-                    <div class="comment-item">
-                        <div class="comment-header">
-                            <img src="${
-                              comment.userAvatar || "/api/placeholder/40/40"
-                            }" 
-                                 alt="${comment.userName}" 
-                                 class="comment-user-avatar">
-                            <div class="comment-user-info">
-                                <div class="comment-user-name">${
-                                  comment.userName
-                                }</div>
-                                <div class="comment-rating">
-                                    ${generateStars(comment.rating)}
-                                    <span class="comment-time">${
-                                      comment.time
-                                    }</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="comment-content">${comment.content}</div>
-                        ${
-                          comment.image
-                            ? `
-                            <img src="${comment.image}" 
-                                 alt="評論圖片" 
-                                 class="comment-image">
-                        `
-                            : ""
-                        }
-                    </div>
-                `
-                  )
-                  .join("")}
+        <div class="comments-list">
+          ${comments
+            .map(
+              (comment) => `
+            <div class="comment-item">
+              <div class="comment-header">
+                <img src="${comment.userAvatar || "/api/placeholder/40/40"}" 
+                     alt="${comment.userName}" 
+                     class="comment-user-avatar">
+                <div class="comment-user-info">
+                  <div class="comment-user-name">${comment.userName}</div>
+                  <div class="comment-rating">
+                    ${generateStars(comment.rating)}
+                    <span class="comment-time">${comment.time}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="comment-content">${comment.content}</div>
+              ${
+                comment.image
+                  ? `
+                <img src="${comment.image}" 
+                     alt="評論圖片" 
+                     class="comment-image">
+              `
+                  : ""
+              }
             </div>
-        `;
+          `
+            )
+            .join("")}
+        </div>
+      `;
   };
 
-  // 模擬評論數據
-  const mockComments = [
-    {
-      userName: "旅行者小明",
-      userAvatar: "/api/placeholder/40/40",
-      rating: 4.5,
-      time: "2024-01-13",
-      content: "很棒的景點！建築很漂亮，環境也很清幽。",
-      image: "/api/placeholder/200/150",
-    },
-    {
-      userName: "小花",
-      userAvatar: "/api/placeholder/40/40",
-      rating: 4.0,
-      time: "2024-01-12",
-      content: "氣氛很好，適合拍照。就是假日人比較多。",
-    },
-  ];
-
   card.innerHTML = `
-        <div class="place-header">
-            <div class="place-info">
-                <h3 class="place-title">${place.name}</h3>
-                <p class="place-address">${place.address}</p>
-                <div class="place-rating">
-                    <div class="star-container">
-                        ${generateStars(place.rating)}
-                    </div>
-                    <span class="rating-text">${place.rating.toFixed(1)} (${
+      <div class="place-header">
+        <div class="place-info">
+          <h3 class="place-title">${place.name}</h3>
+          <p class="place-address">${place.address}</p>
+          <div class="place-rating">
+            <div class="star-container">
+              ${generateStars(place.rating)}
+            </div>
+            <span class="rating-text">${place.rating.toFixed(1)} (${
     place.ratingCount
   } 則評價)</span>
-                </div>
-            </div>
+          </div>
         </div>
-
-        <div class="comments-section">
-            <h4 class="comments-title">評論區</h4>
-            ${generateComments(mockComments)}
-            <div class="comment-input-container">
-               <div class="rating-input" id="ratingInput">
-                ${generateStars(0, true)} 
-                <span class="rating-text"></span>
-                    <span class="rating-text"></span>
-                </div>
-                <textarea class="comment-input" placeholder="分享您的旅遊體驗..."></textarea>
-                <div class="comment-actions">
-                    <label class="upload-photo">
-                        <i class="fas fa-camera"></i>
-                        <span>上傳照片</span>
-                        <input type="file" accept="image/*" style="display: none;">
-                    </label>
-                    <button class="submit-comment">發布評論</button>
-                </div>
-            </div>
+      </div>
+  
+      <div class="comments-section">
+        <h4 class="comments-title">評論區</h4>
+        ${generateComments(place.comments)}
+        <div class="comment-input-container">
+          <div class="rating-input" id="ratingInput">
+            ${generateStars(0, true)} 
+            <span class="rating-text"></span>
+          </div>
+          <textarea class="comment-input" placeholder="分享您的旅遊體驗..."></textarea>
+          <div class="comment-actions">
+            <label class="upload-photo">
+              <i class="fas fa-camera"></i>
+              <span>上傳照片</span>
+              <input type="file" accept="image/*" style="display: none;">
+            </label>
+            <button class="submit-comment">發布評論</button>
+          </div>
         </div>
+      </div>
     `;
 
   // 添加評論相關的事件監聽器
@@ -389,30 +418,17 @@ function createPlaceCard(place) {
   fileInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (file) {
-      console.log("Selected file:", file.name);
+      console.log("已選擇檔案:", file.name);
     }
   });
 
-  // 提交評論事件（更新為包含評分）
+  // 提交評論事件
   submitButton.addEventListener("click", () => {
     const comment = commentInput.value;
-    console.log("Submit comment:", {
+    console.log("提交評論:", {
       rating: currentRating,
       comment: comment,
     });
-    // TODO: 這裡可以添加提交到後端的邏輯
-  });
-
-  fileInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      console.log("Selected file:", file.name);
-    }
-  });
-
-  submitButton.addEventListener("click", () => {
-    const comment = commentInput.value;
-    console.log("Submit comment:", comment);
   });
 
   return card;
@@ -421,7 +437,6 @@ function createPlaceCard(place) {
 // 渲染文章卡片
 function renderArticles() {
   contentGrid.innerHTML = ""; // 清空現有內容
-  contentGrid.style.display = "grid"; // 恢復網格布局
 
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -439,28 +454,28 @@ function createArticleCard(article) {
   card.className = "content-card";
 
   card.innerHTML = `
-        <img src="${article.image || "/api/placeholder/400/320"}" 
-             alt="${article.title}" 
-             class="card-image"
-             onerror="this.src='/api/placeholder/400/320'">
-        <div class="card-body">
-            <h2 class="card-title">${article.title}</h2>
-            <p class="card-description">${article.description}</p>
-            <div class="card-footer">
-                <div class="card-stats">
-                    <span>👁️ ${article.views || 0}</span>
-                    <span>❤️ ${article.likes || 0}</span>
-                </div>
-                <div class="card-actions">
-                    <button class="action-button edit-btn" data-id="${
-                      article.id
-                    }">編輯</button>
-                    <button class="action-button delete-btn" data-id="${
-                      article.id
-                    }">刪除</button>
-                </div>
-            </div>
+      <img src="${article.image || "https://picsum.photos/400/320"}" 
+       alt="${article.title}" 
+       class="card-image"
+       onerror="this.src='https://picsum.photos/400/320'">
+      <div class="card-body">
+        <h2 class="card-title">${article.title}</h2>
+        <p class="card-description">${article.description}</p>
+        <div class="card-footer">
+          <div class="card-stats">
+            <span>👁️ ${article.views || 0}</span>
+            <span>❤️ ${article.likes || 0}</span>
+          </div>
+          <div class="card-actions">
+            <button class="action-button edit-btn" data-id="${
+              article.id
+            }">編輯</button>
+            <button class="action-button delete-btn" data-id="${
+              article.id
+            }">刪除</button>
+          </div>
         </div>
+      </div>
     `;
 
   // 添加按鈕事件監聽器
@@ -521,13 +536,16 @@ function renderPagination(totalItems) {
 // 切換頁面
 function changePage(newPage) {
   currentPage = newPage;
-  const contentType = contentTypeSelect.value;
-  const sortBy = sortTypeSelect.value;
 
-  loadContent({
-    contentType: contentType,
-    sortBy: sortBy,
-  });
+  // 直接使用當前的數據重新渲染
+  const primaryValue = primaryFilter.value;
+  if (primaryValue === "saved-places" && currentPlaces.length > 0) {
+    renderPlaces(currentPlaces);
+    renderPagination(currentPlaces.length);
+  } else if (currentArticles.length > 0) {
+    renderArticles();
+    renderPagination(currentArticles.length);
+  }
 }
 
 // 編輯文章
@@ -550,11 +568,49 @@ function showErrorMessage(message) {
   console.error(message);
 }
 
-// 初始載入內容
+// 頁面載入初始化
 document.addEventListener("DOMContentLoaded", () => {
-  updateSortOptions("public"); // 設定初始排序選項
-  loadContent({
-    contentType: "public",
-    sortBy: "",
+  // 設置預設值
+  primaryFilter.value = "my-articles";
+  secondaryFilter.innerHTML = '<option value="">請選擇</option>';
+  filterOptions["my-articles"].options.forEach((option) => {
+    const optionElement = document.createElement("option");
+    optionElement.value = option.value;
+    optionElement.textContent = option.label;
+    secondaryFilter.appendChild(optionElement);
   });
+  secondaryFilter.value = "public";
+
+  // 設置排序選項
+  sortTypeSelect.innerHTML = '<option value="">選擇排序方式</option>';
+  filterOptions["my-articles"].sortOptions.forEach((option) => {
+    const optionElement = document.createElement("option");
+    optionElement.value = option.value;
+    optionElement.textContent = option.label;
+    sortTypeSelect.appendChild(optionElement);
+  });
+
+  // 使用模擬數據直接渲染初始內容，而不是觸發按鈕點擊
+  const mockArticles = [
+    {
+      id: 1,
+      title: "日本自由行攻略",
+      description: "詳細的日本自由行規劃指南",
+      image: "https://picsum.photos/400/320",
+      views: 1500,
+      likes: 300,
+    },
+    {
+      id: 2,
+      title: "京都賞櫻攻略",
+      description: "最佳賞櫻景點推薦",
+      image: "https://picsum.photos/400/320",
+      views: 2000,
+      likes: 450,
+    },
+  ];
+
+  currentArticles = mockArticles;
+  renderArticles();
+  renderPagination(mockArticles.length);
 });
