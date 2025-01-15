@@ -740,22 +740,26 @@
       <!-- 內容篩選器 -->
       <div class="content-filter">
         <div class="filter-group">
-          <select class="filter-select" id="content-type">
-            <option value="public">公開文章</option>
-            <option value="private">私人文章</option>
-            <option value="saved-trips">收藏行程</option>
+          <!-- 第一層篩選 -->
+          <select class="filter-select" id="primary-filter">
+            <option value="">選擇內容類型</option>
+            <option value="my-articles">我的文章</option>
+            <option value="saved-articles">收藏文章</option>
             <option value="saved-places">收藏景點</option>
-            <option value="deleted">已刪除文章</option>
-            <option value="drafts">草稿箱</option>
           </select>
 
+          <!-- 第二層篩選 (動態更新選項) -->
+          <select class="filter-select" id="secondary-filter">
+            <option value="">請先選擇內容類型</option>
+          </select>
+
+          <!-- 第三層篩選 (排序方式) -->
           <select class="filter-select" id="sort-type">
             <option value="">選擇排序方式</option>
-            <!-- 選項會由 JavaScript 動態生成 -->
           </select>
         </div>
 
-        <button id="apply-filter" class="filter-button">確認篩選</button>
+        <button id="apply-filter" class="filter-button">確認</button>
       </div>
 
       <!-- 內容展示區域 -->
