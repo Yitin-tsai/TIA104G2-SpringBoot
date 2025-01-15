@@ -21,8 +21,9 @@ public class TrackMemberService {
 		return trackMemberVO;
 	}
 
-	public void deleteTrack(Integer trackMemberId) {
-		dao.delete(trackMemberId);
+	public void deleteTrack(Integer memberId ,Integer trackerId) {
+		TrackMemberVO trackMemberVO = dao.getone(memberId, trackerId);
+		dao.delete(trackMemberVO);
 
 	}
 
