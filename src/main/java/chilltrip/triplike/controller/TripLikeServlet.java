@@ -56,9 +56,10 @@ public class TripLikeServlet {
 		tripLikeSvc.addTripLike(triplikeVO);
 		return ResponseEntity.ok("success");
 	}
-	@PostMapping("/delete/{id}")
-	public void deleTripLike(@PathVariable("id") Integer id ) {
-		tripLikeSvc.deleTripLike(id);
+	@PostMapping("/delete/{tid}")
+	public void deleTripLike(@PathVariable("tid") Integer tripid, HttpServletRequest req ) {
+		Integer memberid = (Integer) req.getSession().getAttribute("memberId");
+		tripLikeSvc.deleTripLike(memberid, tripid);
 	}
 	@GetMapping("getByTrip/{id}")
 	public List<TripLikeVO> getByTrip(@PathVariable("id")Integer tripId) {

@@ -1085,6 +1085,7 @@
           }
 
           articles.forEach((article) => {
+            
             // 處理 Base64 圖片
             const imageUrl = article.image.startsWith("data:")
               ? article.image
@@ -1099,7 +1100,7 @@
                 <div class="article-content">
                     <div class="article-meta">
                         <span class="author">作者：${article.author}</span>
-                        <button class="follow-btn">追蹤</button>
+                        <button class="follow-btn" data-id="${article.authorId}">追蹤</button>
                     </div>
                     <h2 class="article-title">${article.title}</h2>
                     <p class="article-description">${article.description}</p>
@@ -1119,8 +1120,53 @@
             </article>
         `;
             articlesGrid.insertAdjacentHTML("beforeend", articleHTML);
-          });
+            var authorId = article.authorId;
+                    // 綁定追蹤按鈕的點擊事件
+             // 針對單一的追蹤按鈕綁定事件
+        const followButton = document.querySelector(`button.follow-btn[data-id="${article.authorId}"]`);
+        if (followButton) {
+            followButton.addEventListener("click", function() {
+                followAuthor(article.authorId);  // 傳入該文章的 ID
+            });
         }
+      });
+  } 
+              // 定義 AJAX 請求的處理函式
+              function followAuthor(authorId) {
+                const url = `/TIA104G2-SpringBoot/trackMember/track/${authorId}`;
+
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.text(); // 只有成功才返回 JSON
+                    } else {
+                        return response.text(); // 其他情況返回錯誤訊息
+                    }
+                })
+                .then((data) => {
+                    // 根據後端的回應處理
+                    if (data === "nologin") {
+                        alert("尚未登入，請登入");
+                        window.location.href = "/TIA104G2-SpringBoot/login"; // 跳轉至登入頁面
+                    } else if (data === "success") {
+                        console.log("成功追蹤用戶:", data);
+                        alert("成功追蹤！");
+                    } else {
+                        alert("追蹤失敗，請稍後再試！");
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                    alert("發生錯誤，請稍後再試！");
+                });
+            }
+          });
+        
 
         function showErrorMessage(message) {
           const articlesGrid = document.querySelector(".articles-grid");
@@ -1135,7 +1181,10 @@
             articlesGrid.innerHTML = "<p>目前沒有熱門文章</p>";
           }
         }
-      });
+     
+
+   
+
 
   </script>
     

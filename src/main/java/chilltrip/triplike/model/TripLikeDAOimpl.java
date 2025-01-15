@@ -42,9 +42,8 @@ public class TripLikeDAOimpl implements TripLikeDAO {
 	}
 
 	@Override
-	public void delete(Integer tripLikeId) {
+	public void delete(TripLikeVO tripLikeVO) {
 		// TODO Auto-generated method stub
-		TripLikeVO tripLikeVO = getSession().get(TripLikeVO.class, tripLikeId);
 		try {
 			Session session = getSession();
 			session.beginTransaction();
@@ -94,6 +93,18 @@ public class TripLikeDAOimpl implements TripLikeDAO {
 			return false;
 		}
 		return false;							
+	}
+
+	@Override
+	public TripLikeVO getone(Integer memberId, Integer tripId) {
+		Session session = getSession();
+		session.beginTransaction();
+		
+		TripLikeVO like = session.createQuery("FROM TripLikeVO tl where tl.membervo.memberId = :memberId and tl.tripvo.trip_id = :tripId", TripLikeVO.class)
+							.setParameter("memberId", memberId)
+							.setParameter("tripId", tripId)
+							.getSingleResult();
+		return like;
 	}
 	
 

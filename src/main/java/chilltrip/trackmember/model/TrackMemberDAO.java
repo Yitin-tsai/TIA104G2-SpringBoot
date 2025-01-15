@@ -8,7 +8,7 @@ public interface TrackMemberDAO {
 
 	public void insert(TrackMemberVO trackMemberVO);
 	
-	public void delete(Integer trackMemberId);
+	public void delete(TrackMemberVO trackMemberVO);
 	
 	public List<MemberVO> getAllfans(Integer memberId);
 
@@ -19,6 +19,7 @@ public interface TrackMemberDAO {
 	public Integer getTracksQty(Integer fansId);
 	
 	public boolean getOne(Integer memberId, Integer trackerId );
-	
+
+	public TrackMemberVO getone(Integer memberId, Integer trackerId);
 	
 }
