@@ -25,9 +25,9 @@ public class TripCollectionService {
 		return tripCollectionVO;
 	}
 
-	public void deleTripCollection(Integer id) {
-
-		dao.delete(id);
+	public void deleTripCollection(Integer memberid ,  Integer tripid) {
+		
+		dao.delete(dao.getone(memberid, tripid));
 	}
 
 	public List<TripCollectionVO> getByTrip(Integer tripId) {

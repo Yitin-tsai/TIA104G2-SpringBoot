@@ -57,9 +57,10 @@ public class TripCollectionServlet extends HttpServlet {
 		return ResponseEntity.ok("success");
 	}
 
-	@PostMapping("/delete/{id}")
-	public void deleteTripCollection(@PathVariable("id") Integer id) {
-		tripColSvc.deleTripCollection(id);
+	@PostMapping("/delete/{tid}")
+	public void deleteTripCollection(@PathVariable("tid") Integer tripid,HttpServletRequest req) {
+		Integer memberid = (Integer) req.getSession().getAttribute("memberId");
+		tripColSvc.deleTripCollection(memberid,tripid);
 	}
 
 	@GetMapping("getByTrip/{id}")

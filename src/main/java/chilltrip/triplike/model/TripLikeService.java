@@ -19,8 +19,8 @@ public class TripLikeService {
 		return tripLikeVO;
 	}
 	
-	public void deleTripLike(Integer tripLikeId) {
-		dao.delete(tripLikeId);
+	public void deleTripLike(Integer memberId , Integer tripid) {
+		dao.delete(dao.getone(memberId, tripid));
 	}
 	
 	public List<TripLikeVO> getByTrip(Integer tripId) {

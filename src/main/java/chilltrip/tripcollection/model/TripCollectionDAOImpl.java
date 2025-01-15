@@ -45,9 +45,9 @@ public class TripCollectionDAOImpl implements TripCollectionDAO {
 	}
 
 	@Override
-	public void delete(Integer tripCollectionId) {
+	public void delete(TripCollectionVO tripCollectionVO) {
 		// TODO Auto-generated method stub
-		TripCollectionVO tripCollectionVO = getSession().get(TripCollectionVO.class, tripCollectionId);
+		
 		try {
 			Session session = getSession();
 			session.beginTransaction();
@@ -108,6 +108,18 @@ public class TripCollectionDAOImpl implements TripCollectionDAO {
 			return false;
 		}
 		return false;							
+	}
+
+	@Override
+	public TripCollectionVO getone(Integer memberId, Integer tripId) {
+		Session session = getSession();
+		session.beginTransaction();
+		
+		TripCollectionVO collection = session.createQuery("FROM TripCollectionVO tc where tc.membervo.memberId = :memberId and tc.tripvo.trip_id = :tripId", TripCollectionVO.class)
+							.setParameter("memberId", memberId)
+							.setParameter("tripId", tripId)
+							.getSingleResult();
+		return collection;
 	}
 	
 
