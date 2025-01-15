@@ -506,25 +506,25 @@ CONSTRAINT fk_trip_id FOREIGN KEY (trip_id) REFERENCES trip(trip_id)
 )COMMENT '行程地區表';
 
  insert into itinerary_area(trip_id,region_content) values('1','臺北市');
- insert into itinerary_area(trip_id,region_content) values('2','新北市');
- insert into itinerary_area(trip_id,region_content) values('3','基隆市');
- insert into itinerary_area(trip_id,region_content) values('4','桃園市');
- insert into itinerary_area(trip_id,region_content) values('5','新竹市');
- insert into itinerary_area(trip_id,region_content) values('6','新竹縣');
- insert into itinerary_area(trip_id,region_content) values('7','宜蘭縣');
- insert into itinerary_area(trip_id,region_content) values('8','臺中市');
- insert into itinerary_area(trip_id,region_content) values('9','苗栗縣');
- insert into itinerary_area(trip_id,region_content) values('10','彰化縣');
- insert into itinerary_area(trip_id,region_content) values('11','南投縣');
- insert into itinerary_area(trip_id,region_content) values('12','雲林縣');
- insert into itinerary_area(trip_id,region_content) values('13','臺南市');
- insert into itinerary_area(trip_id,region_content) values('14','嘉義市');
- insert into itinerary_area(trip_id,region_content) values('15','嘉義縣');
- insert into itinerary_area(trip_id,region_content) values('16','高雄市');
- insert into itinerary_area(trip_id,region_content) values('17','屏東縣');
- insert into itinerary_area(trip_id,region_content) values('18','澎湖縣');
- insert into itinerary_area(trip_id,region_content) values('19','花蓮縣');
- insert into itinerary_area(trip_id,region_content) values('20','臺東縣');
+ insert into itinerary_area(trip_id,region_content) values('1','新北市');
+ insert into itinerary_area(trip_id,region_content) values('1','基隆市');
+ insert into itinerary_area(trip_id,region_content) values('1','桃園市');
+ insert into itinerary_area(trip_id,region_content) values('1','新竹市');
+ insert into itinerary_area(trip_id,region_content) values('1','新竹縣');
+ insert into itinerary_area(trip_id,region_content) values('1','宜蘭縣');
+ insert into itinerary_area(trip_id,region_content) values('1','臺中市');
+ insert into itinerary_area(trip_id,region_content) values('1','苗栗縣');
+ insert into itinerary_area(trip_id,region_content) values('1','彰化縣');
+ insert into itinerary_area(trip_id,region_content) values('1','南投縣');
+ insert into itinerary_area(trip_id,region_content) values('1','雲林縣');
+ insert into itinerary_area(trip_id,region_content) values('1','臺南市');
+ insert into itinerary_area(trip_id,region_content) values('1','嘉義市');
+ insert into itinerary_area(trip_id,region_content) values('1','嘉義縣');
+ insert into itinerary_area(trip_id,region_content) values('1','高雄市');
+ insert into itinerary_area(trip_id,region_content) values('1','屏東縣');
+ insert into itinerary_area(trip_id,region_content) values('1','澎湖縣');
+ insert into itinerary_area(trip_id,region_content) values('1','花蓮縣');
+ insert into itinerary_area(trip_id,region_content) values('1','臺東縣');
 
 -- 行程活動類型表 --
  CREATE TABLE itinerary_activity_type (
