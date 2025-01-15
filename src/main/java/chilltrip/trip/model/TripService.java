@@ -158,31 +158,31 @@ public class TripService {
 
 			Map<String, Object> tripMap = new HashMap<>();
 			tripMap.put("id", tripArray[0]);
-
+			tripMap.put("authorId", tripArray[1]);
 			// 標題判斷
-			String title = (tripArray[1] == null || ((String) tripArray[1]).trim().isEmpty()) ? "未命名行程"
-					: (String) tripArray[1];
+			String title = (tripArray[2] == null || ((String) tripArray[2]).trim().isEmpty()) ? "未命名行程"
+					: (String) tripArray[2];
 			tripMap.put("title", title);
 
 			// 描述判斷
-			String description = (tripArray[2] == null || ((String) tripArray[2]).trim().isEmpty()) ? "沒有行程簡介"
-					: (String) tripArray[2];
+			String description = (tripArray[3] == null || ((String) tripArray[3]).trim().isEmpty()) ? "沒有行程簡介"
+					: (String) tripArray[3];
 			tripMap.put("description", description);
 
-			tripMap.put("views", tripArray[3]);
-			tripMap.put("likes", tripArray[4]);
-			tripMap.put("rating", tripArray[5]);
+			tripMap.put("views", tripArray[4]);
+			tripMap.put("likes", tripArray[5]);
+			tripMap.put("rating", tripArray[6]);
 
 			// 作者判斷
-			String author = (tripArray[6] == null || ((String) tripArray[6]).trim().isEmpty()) ? "未知作者"
-					: (String) tripArray[6];
+			String author = (tripArray[7] == null || ((String) tripArray[7]).trim().isEmpty()) ? "未知作者"
+					: (String) tripArray[7];
 			tripMap.put("author", author);
 
-			tripMap.put("image", tripArray[7]);
+			tripMap.put("image", tripArray[8]);
 			tripMap.put("tags", tags);
 
 			// 可以選擇是否要把熱門度分數也放進 Map
-			tripMap.put("popularityScore", tripArray[8]);
+			tripMap.put("popularityScore", tripArray[9]);
 
 			result.add(tripMap);
 		}

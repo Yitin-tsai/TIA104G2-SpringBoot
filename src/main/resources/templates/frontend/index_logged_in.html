@@ -106,6 +106,7 @@
 				<div class="nav-right">
 					<a href="#" class="nav-item nav-link" id="nav-profile">會員基本資料</a> <a
 						href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+						<button id="goToChatRoom"> 聊天室</button>
 				</div>
 			</nav>
 		</header>
@@ -121,86 +122,50 @@
 	</div>
 
 
-	<!------Chill精選行程文章------>
-	<div class="container-fluid py-5">
+	 <!------Chill精選行程文章------>
+	 <div class="container-fluid py-5">
 		<div class="container pt-5 pb-3">
-
-			<div class="text-center mb-5">
-				<h5 class="text-primary text-uppercase mb-3"
-					style="letter-spacing: 5px">最詩意的遠方，都折疊在ChillTrip.com等你一起來探索</h5>
-				<h1>Chill・精選行程</h1>
-			</div>
-
-			<div class="container-fluid py-5">
-				<div class="row pb-3">
-
-					<div class="col-lg-4 mb-4">
-						<div
-							class="blog-item position-relative overflow-hidden rounded mb-2">
-							<img class="img-fluid" src="img/travel-article1.jpg" alt="" /> <a
-								class="blog-overlay text-decoration-none" href="">
-								<h5 class="text-white mb-3">東京三日遊，帶你走進日本的文化與美食</h5>
-								<p class="text-primary m-0">Jan 01, 2050</p>
-							</a>
-						</div>
-					</div>
-
-					<div class="col-lg-4 mb-4">
-						<div
-							class="blog-item position-relative overflow-hidden rounded mb-2">
-							<img class="img-fluid" src="img/travel-article2.jpg" alt="" /> <a
-								class="blog-overlay text-decoration-none" href="">
-								<h5 class="text-white mb-3">京都和服體驗</h5>
-								<p class="text-primary m-0">Jan 01, 2050</p>
-							</a>
-						</div>
-					</div>
-
-					<div class="col-lg-4 mb-4">
-						<div
-							class="blog-item position-relative overflow-hidden rounded mb-2">
-							<img class="img-fluid" src="img/travel-article3.jpg" alt="" /> <a
-								class="blog-overlay text-decoration-none" href="">
-								<h5 class="text-white mb-3">海遊館一日遊</h5>
-								<p class="text-primary m-0">Jan 01, 2050</p>
-							</a>
-						</div>
-					</div>
-
-					<div class="col-lg-4 mb-4">
-						<div
-							class="blog-item position-relative overflow-hidden rounded mb-2">
-							<img class="img-fluid" src="img/travel-article4.jpg" alt="" /> <a
-								class="blog-overlay text-decoration-none" href="">
-								<h5 class="text-white mb-3">奈良鹿鹿遊</h5>
-								<p class="text-primary m-0">Jan 01, 2050</p>
-							</a>
-						</div>
-					</div>
-
-					<div class="col-lg-4 mb-4">
-						<div
-							class="blog-item position-relative overflow-hidden rounded mb-2">
-							<img class="img-fluid" src="img/travel-article2.jpg" alt="" /> <a
-								class="blog-overlay text-decoration-none" href="">
-								<h5 class="text-white mb-3">京都和服體驗</h5>
-								<p class="text-primary m-0">Jan 01, 2050</p>
-							</a>
-						</div>
-					</div>
-
-					<div class="col-lg-4 mb-4">
-						<div
-							class="blog-item position-relative overflow-hidden rounded mb-2">
-							<img class="img-fluid" src="img/travel-article3.jpg" alt="" /> <a
-								class="blog-overlay text-decoration-none" href="">
-								<h5 class="text-white mb-3">海遊館一日遊</h5>
-								<p class="text-primary m-0">Jan 01, 2050</p>
-							</a>
-						</div>
-					</div>
+		  <div class="text-center mb-5">
+			<h5
+			  class="text-primary text-uppercase mb-3"
+			  style="letter-spacing: 5px"
+			>
+			  最詩意的遠方，都折疊在ChillTrip.com等你一起來探索
+			</h5>
+			<h1>Chill・精選行程</h1>
+		  </div>
+  
+		  <div class="articles-grid">
+			<!-- 文章卡片範例 -->
+			<article class="article-card">
+			  <img
+				src="/api/placeholder/400/320"
+				alt="文章封面"
+				class="article-image"
+			  />
+			  <div class="article-content">
+				<div class="article-meta">
+				  <span class="author">作者：旅行家</span>
+				  <button class="follow-btn">追蹤</button>
 				</div>
-			</div>
+				<h2 class="article-title">日本結緣神社10選</h2>
+				<p class="article-description">
+				  除了東京大神宮，還有這些絕美景點！
+				</p>
+				<div class="article-tags">
+				  <span class="tag">文化景點</span>
+				  <span class="tag">東京</span>
+				  <span class="tag">神社</span>
+				</div>
+				<div class="article-stats">
+				  <span>👁️ 100</span>
+				  <span>❤️ 50</span>
+				  <span class="rating">★★★★★ 5.0</span>
+				</div>
+			  </div>
+			</article>
+			<!-- 更多文章卡片 -->
+		  </div>
 
 			<div class="text-center mb-5">
 				<h1>Chill・精選玩家</h1>
@@ -731,44 +696,276 @@
             document.getElementById("nav-cart").href = "./cart.html";
         });
     </script>
-	<script>  //動態生成公告圖片
-      document.addEventListener('DOMContentLoaded', function () {
-      const carouselContainer = document.querySelector('.banner-carousel-box');
-  
-      // 动态构建 API 的 URL，基于当前页面的 origin
-      const apiUrl = `${window.location.origin}${window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : ''}/announce/getAll`;
-  
-      // 使用 fetch 获取公告列表
-      fetch(apiUrl)
-          .then(response => response.json())  // 假设返回的是 JSON
-          .then(announcements => {
-              carouselContainer.innerHTML = '';
-  
-              announcements.forEach(announce => {
-                  const bannerItem = document.createElement('div');
-                  bannerItem.classList.add('banner-carousel');
+<script>
+	//動態生成公告圖片
+	document.addEventListener("DOMContentLoaded", function () {
+	  loadPopularArticles();
+	  const carouselContainer = document.querySelector(
+		".banner-carousel-box"
+	  );
 
-                  const link = document.createElement('a');
-                  const contextPath = window.location.pathname.split('/')[1];
-                  link.href = `${window.location.origin}${window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : ''}/announce/${announce.announceid}`; 
+	  // 动态构建 API 的 URL，基于当前页面的 origin
+	  const apiUrl = `${window.location.origin}${
+		window.location.pathname.split("/")[1]
+		  ? "/" + window.location.pathname.split("/")[1]
+		  : ""
+	  }/announce/getAll`;
+
+	  // 使用 fetch 获取公告列表
+	  fetch(apiUrl)
+		.then((response) => response.json()) // 假设返回的是 JSON
+		.then((announcements) => {
+		  carouselContainer.innerHTML = "";
+
+		  announcements.forEach((announce) => {
+			const bannerItem = document.createElement("div");
+			bannerItem.classList.add("banner-carousel");
+
+			const link = document.createElement("a");
+			const contextPath = window.location.pathname.split("/")[1];
+			link.href = `${window.location.origin}${
+			  window.location.pathname.split("/")[1]
+				? "/" + window.location.pathname.split("/")[1]
+				: ""
+			}/announce/${announce.announceid}`;
+
+			const img = document.createElement("img");
+			// 设置图片的 src 属性为 coverphotoBase64
+			if (announce.coverphotoBase64) {
+			  img.src = announce.coverphotoBase64; // 将 base64 编码的图片数据设置为 src
+			}
+			img.alt = announce.title; // 设置图片的 alt 属性为公告的标题
+
+			link.appendChild(img);
+			bannerItem.appendChild(link);
+
+			carouselContainer.appendChild(bannerItem);
+		  });
+		})
+		.catch((error) => {
+		  console.error("Error fetching announcements:", error);
+		});
+
+	  //載入熱門文章
+	  function loadPopularArticles() {
+		const articlesGrid = document.querySelector(".articles-grid");
+		if (!articlesGrid) {
+		  console.error("找不到文章列表容器");
+		  return;
+		}
+
+		const baseUrl = `${window.location.origin}${
+		  window.location.pathname.split("/")[1]
+			? "/" + window.location.pathname.split("/")[1]
+			: ""
+		}`;
+
+		fetch(`${baseUrl}/trip/popular`)
+		  .then((response) => response.json())
+		  .then((data) => {
+			if (data && data.content) {
+			  renderPopularArticles(data.content);
+			}
+		  })
+		  .catch((error) => {
+			console.error("載入熱門文章失敗:", error);
+			showErrorMessage("載入熱門文章失敗");
+		  });
+	  }
+
+	  function renderPopularArticles(articles) {
+		const articlesGrid = document.querySelector(".articles-grid");
+		if (!articlesGrid) return;
+
+		articlesGrid.innerHTML = "";
+
+		if (!articles || articles.length === 0) {
+		  showNoResultsMessage();
+		  return;
+		}
+
+		articles.forEach((article) => {
+		  
+		  // 處理 Base64 圖片
+		  const imageUrl = article.image.startsWith("data:")
+			? article.image
+			: `data:image/jpeg;base64,${article.image}`;
+
+		  const articleHTML = `
+		  <article class="article-card">
+			  <img src="${imageUrl}"
+				   alt="${article.title}"
+				   class="article-image"
+				   onerror="this.src='https://via.placeholder.com/350x200?text=NoImage';" />
+			  <div class="article-content">
+				  <div class="article-meta">
+					  <span class="author">作者：${article.author}</span>
+					  <button class="follow-btn" data-id="${article.authorId}">追蹤</button>
+				  </div>
+				  <h2 class="article-title">${article.title}</h2>
+				  <p class="article-description">${article.description}</p>
+				  <div class="article-tags">
+					  ${article.tags
+						.map((tag) => `<span class="tag">${tag}</span>`)
+						.join("")}
+				  </div>
+				  <div class="article-stats">
+					  <span>👁️ ${article.views}</span>
+					  <span>❤️ ${article.likes}</span>
+					  <span class="rating">★★★★★ ${Number(
+						article.rating
+					  ).toFixed(1)}</span>
+				  </div>
+			  </div>
+		  </article>
+	  `			;
+				articlesGrid.insertAdjacentHTML("beforeend", articleHTML);
+		  		//檢查是否已追蹤	
+				checkIfTracked(article.authorId);
+				var authorId = article.authorId;
+						// 綁定追蹤按鈕的點擊事件
+				// 針對單一的追蹤按鈕綁定事件
+		
+			});
+		}
+		function checkIfTracked(authorId) {
+				const url = `/TIA104G2-SpringBoot/trackMember/checkTrack/${authorId}`;
+
+				fetch(url)
+					.then((response) => response.json())
+					.then((isTracked) => {
+						const followButton = document.querySelector(`button.follow-btn[data-id="${authorId}"]`);
+						if (followButton) {
+							if (isTracked) {
+								// 顯示取消追蹤的按鈕
+								followButton.innerHTML = '追蹤中';
+								followButton.classList.add('cancelfollow-btn');
+								followButton.classList.remove('follow-btn');
+								followButton.removeEventListener('click', followHandler); // 移除原本的追蹤事件
+								followButton.addEventListener('click', cancelFollowHandler); // 綁定取消追蹤事件
+							} else {
+								// 顯示正常的追蹤按鈕
+								followButton.innerHTML = '追蹤';
+								followButton.classList.add('follow-btn');
+								followButton.classList.remove('cancelfollow-btn');
+								followButton.removeEventListener('click', cancelFollowHandler); // 移除取消追蹤事件
+								followButton.addEventListener('click', followHandler); // 綁定追蹤事件
+							}
+						}
+					})
+					.catch((error) => {
+						console.error("檢查是否追蹤失敗:", error);
+					});
+			}
+			// 追蹤某個作者的事件處理器
+				function followHandler(event) {
+					const authorId = event.target.getAttribute("data-id");
+					followAuthor(authorId);
+				}
+
+				// 取消追蹤某個作者的事件處理器
+				function cancelFollowHandler(event) {
+					const authorId = event.target.getAttribute("data-id");
+					if (confirm("確定取消關注?")) {
+						cancelFollow(authorId);
+					}
+				}
+
+				// 追蹤某個作者
+				function followAuthor(authorId) {
+					const url = `/TIA104G2-SpringBoot/trackMember/track/${authorId}`;
+
+					fetch(url, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+					})
+					.then((response) => response.text())
+					.then((data) => {
+						if (data === "nologin") {
+							alert("尚未登入，請登入");
+							window.location.href = "/TIA104G2-SpringBoot/login"; // 跳轉至登入頁面
+						} else if (data === "success") {
+							alert("成功追蹤！");
+							loadPopularArticles(); // 重新載入文章，更新按鈕狀態
+						} else {
+							alert("追蹤失敗，請稍後再試！");
+						}
+					})
+					.catch((error) => {
+						console.error(error);
+						alert("發生錯誤，請稍後再試！");
+					});
+				}
+
+				// 取消追蹤某個作者
+				function cancelFollow(authorId) {
+					const url = `/TIA104G2-SpringBoot/trackMember/deleteTrack/${authorId}`;
+
+					fetch(url, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+					})
+					.then((response) => response.text())
+					.then((data) => {
+						if (data === "success") {
+							alert("已取消追蹤！");
+							loadPopularArticles(); // 重新載入文章，更新按鈕狀態
+						} else {
+							alert("取消追蹤失敗，請稍後再試！");
+						}
+					})
+					.catch((error) => {
+						console.error(error);
+						alert("發生錯誤，請稍後再試！");
+					});
+				}
+				});	
+
+	  function showErrorMessage(message) {
+		const articlesGrid = document.querySelector(".articles-grid");
+		if (articlesGrid) {
+		  articlesGrid.innerHTML = `<div class="error-message">${message}</div>`;
+		}
+	  }
+
+	  function showNoResultsMessage() {
+		const articlesGrid = document.querySelector(".articles-grid");
+		if (articlesGrid) {
+		  articlesGrid.innerHTML = "<p>目前沒有熱門文章</p>";
+		}
+	  }
+   
+
+ 
+
+
+</script>
   
-                  const img = document.createElement('img');
-                  // 设置图片的 src 属性为 coverphotoBase64
-                  if (announce.coverphotoBase64) {
-                      img.src = announce.coverphotoBase64;  // 将 base64 编码的图片数据设置为 src
-                  }
-                  img.alt = announce.title;       // 设置图片的 alt 属性为公告的标题
-  
-                  link.appendChild(img);
-                  bannerItem.appendChild(link);
-  
-                  carouselContainer.appendChild(bannerItem);
-              });
-          })
-          .catch(error => {
-              console.error('Error fetching announcements:', error);
-          });
-  });</script>
+<script>
+  document.getElementById("goToChatRoom").addEventListener("click", function() {
+// 發送 AJAX 請求，獲取用戶名稱
+fetch('/TIA104G2-SpringBoot/chat/go')
+  .then(response => response.json())
+  .then(data => {
+	console.log(data);
+	// 假設返回的是 HTML 頁面，進行頁面跳轉
+	if (data.message === "success" ) {
+	  window.location.href = '/TIA104G2-SpringBoot/chatroom'; // 重定向到聊天室頁面
+	} else {
+	  alert("登入失敗或未授權");
+	}
+  })
+  .catch(error => {
+	console.error('Error:', error);
+	alert("錯誤，請稍後再試");
+  });
+});
+
+</script>
 	<!------修齊的JS------>
 	<!------主頁的幻燈片活動區------>
 	<script>

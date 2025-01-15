@@ -2,6 +2,7 @@ package chilltrip.trackmember.model;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -41,12 +42,12 @@ public class TrackMemberDAOimpl  implements TrackMemberDAO{
 	}
 
 	@Override
-	public void delete(Integer trackMemberId) {
+	public void delete(TrackMemberVO trackMemberVO) {
 		// TODO Auto-generated method stub
 		try {
 			Session session = getSession();
 			session.beginTransaction();
-			session.delete(trackMemberId);
+			session.delete(trackMemberVO);
 			session.getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -97,4 +98,34 @@ public class TrackMemberDAOimpl  implements TrackMemberDAO{
 		 return tracks != null ? tracks.intValue() : 0; 
 	}
 	
+	@Override
+	public boolean getOne(Integer memberId, Integer trackerId ) {
+		Session session = getSession();
+		session.beginTransaction();	
+		try {TrackMemberVO track = session.createQuery("FROM TrackMemberVO tm where tm.fans.memberId = :memberId and tm.trackedMember.memberId = :trackerId", TrackMemberVO.class)
+							.setParameter("memberId", memberId)
+							.setParameter("trackerId", trackerId)
+							.getSingleResult();
+			session.getTransaction().commit();
+			if(track != null)
+				return true;
+		}catch(NoResultException e) {
+			session.getTransaction().commit();
+			return false;
+		}
+		session.getTransaction().commit();
+		return false;							
+	}
+	
+	@Override
+	public TrackMemberVO getone(Integer memberId, Integer trackerId) {
+		Session session = getSession();
+		session.beginTransaction();	
+		TrackMemberVO track = session.createQuery("FROM TrackMemberVO tm where tm.fans.memberId = :memberId and tm.trackedMember.memberId = :trackerId", TrackMemberVO.class)
+							.setParameter("memberId", memberId)
+							.setParameter("trackerId", trackerId)
+							.getSingleResult();
+			session.getTransaction().commit();
+			return track;
+	}
 }

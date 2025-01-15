@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,25 +39,27 @@ public class TripLikeServlet {
 	private MemberService memberSvc;
 	
 	
-	@PostMapping("/add")
-	public String addTripLike(@RequestParam Integer tripId, HttpServletRequest request) {
+	@PostMapping("/add/{tid}")
+	public ResponseEntity<String> addTripLike(@PathVariable("tid") Integer tripId, HttpServletRequest request) {
 		Integer memberId = (Integer) request.getSession().getAttribute("memberId");
 		TripService tripSvc = new TripService();
 	
 		if (memberId == null) {
-            return "false not login";
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("nologin");
         }
+		
 		TripVO trip = tripSvc.getById(tripId);
 		MemberVO member = memberSvc.getOneMember(memberId);
 		TripLikeVO triplikeVO = new TripLikeVO();
 		triplikeVO.setMembervo(member);
 		triplikeVO.setTripvo(trip);
 		tripLikeSvc.addTripLike(triplikeVO);
-		return "sucess";
+		return ResponseEntity.ok("success");
 	}
-	@PostMapping("/delete/{id}")
-	public void deleTripLike(@PathVariable("id") Integer id ) {
-		tripLikeSvc.deleTripLike(id);
+	@PostMapping("/delete/{tid}")
+	public void deleTripLike(@PathVariable("tid") Integer tripid, HttpServletRequest req ) {
+		Integer memberid = (Integer) req.getSession().getAttribute("memberId");
+		tripLikeSvc.deleTripLike(memberid, tripid);
 	}
 	@GetMapping("getByTrip/{id}")
 	public List<TripLikeVO> getByTrip(@PathVariable("id")Integer tripId) {
@@ -83,6 +89,15 @@ public class TripLikeServlet {
 			return errormsg;
 		}
 		
+	}
+	
+	@GetMapping("checkLike/{tid}")
+	public boolean checkLike(HttpServletRequest req, @PathVariable("tid")Integer tripId) {
+		Integer memberId = (Integer) req.getSession().getAttribute("memberId");
+		if(memberId ==  null) {
+			return false;
+		}
+		return tripLikeSvc.checkLike(memberId, tripId);
 	}
 	
 }

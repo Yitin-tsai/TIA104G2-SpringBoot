@@ -2,9 +2,12 @@ package chilltrip.triplike.model;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import chilltrip.util.HibernateUtil;
@@ -14,7 +17,7 @@ public class TripLikeDAOimpl implements TripLikeDAO {
 	
 	private SessionFactory factory;
 	@Autowired
-	public TripLikeDAOimpl(SessionFactory factory) {
+	public TripLikeDAOimpl( @Qualifier("getSessionFactory") SessionFactory factory) {
 		this.factory = factory;
 	}
 
@@ -39,9 +42,8 @@ public class TripLikeDAOimpl implements TripLikeDAO {
 	}
 
 	@Override
-	public void delete(Integer tripLikeId) {
+	public void delete(TripLikeVO tripLikeVO) {
 		// TODO Auto-generated method stub
-		TripLikeVO tripLikeVO = getSession().get(TripLikeVO.class, tripLikeId);
 		try {
 			Session session = getSession();
 			session.beginTransaction();
@@ -76,6 +78,36 @@ public class TripLikeDAOimpl implements TripLikeDAO {
 		return list;
 	}
 	
+	
+	public boolean getOne(Integer memberId, Integer tripId ) {
+		Session session = getSession();
+		session.beginTransaction();
+		
+		try{TripLikeVO like = session.createQuery("FROM TripLikeVO tl where tl.membervo.memberId = :memberId and tl.tripvo.trip_id = :tripId", TripLikeVO.class)
+							.setParameter("memberId", memberId)
+							.setParameter("tripId", tripId)
+							.getSingleResult();
+			if(like != null)
+				return true;
+		}catch(NoResultException e) {
+			return false;
+		}
+		return false;							
+	}
+
+	@Override
+	public TripLikeVO getone(Integer memberId, Integer tripId) {
+		Session session = getSession();
+		session.beginTransaction();
+		
+		TripLikeVO like = session.createQuery("FROM TripLikeVO tl where tl.membervo.memberId = :memberId and tl.tripvo.trip_id = :tripId", TripLikeVO.class)
+							.setParameter("memberId", memberId)
+							.setParameter("tripId", tripId)
+							.getSingleResult();
+		return like;
+	}
+	
+
 	
 	
 }

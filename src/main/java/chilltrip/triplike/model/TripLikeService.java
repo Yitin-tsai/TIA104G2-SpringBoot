@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class TripLikeService {
 	
 	@Autowired
-	private TripLikeDAO dao;
+	private static TripLikeDAO dao;
 	
 	public TripLikeService(TripLikeDAOimpl dao) {
 		this.dao = dao;
@@ -19,8 +19,8 @@ public class TripLikeService {
 		return tripLikeVO;
 	}
 	
-	public void deleTripLike(Integer tripLikeId) {
-		dao.delete(tripLikeId);
+	public void deleTripLike(Integer memberId , Integer tripid) {
+		dao.delete(dao.getone(memberId, tripid));
 	}
 	
 	public List<TripLikeVO> getByTrip(Integer tripId) {
@@ -31,4 +31,7 @@ public class TripLikeService {
 	}
 	
 	
+	public boolean checkLike(Integer memberId ,Integer tripId) {
+		return dao.getOne(memberId, tripId); 
+		}
 }

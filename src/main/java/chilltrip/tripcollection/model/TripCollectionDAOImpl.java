@@ -4,11 +4,15 @@ import static chilltrip.util.Constants.PAGE_MAX_RESULT;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import chilltrip.triplike.model.TripLikeVO;
 import chilltrip.util.HibernateUtil;
 
 @Repository
@@ -17,7 +21,7 @@ public class TripCollectionDAOImpl implements TripCollectionDAO {
 	private SessionFactory factory;
 
 	@Autowired
-	public TripCollectionDAOImpl(SessionFactory factory) {
+	public TripCollectionDAOImpl(@Qualifier("getSessionFactory") SessionFactory factory) {
 		this.factory = factory;
 	}
 
@@ -41,9 +45,9 @@ public class TripCollectionDAOImpl implements TripCollectionDAO {
 	}
 
 	@Override
-	public void delete(Integer tripCollectionId) {
+	public void delete(TripCollectionVO tripCollectionVO) {
 		// TODO Auto-generated method stub
-		TripCollectionVO tripCollectionVO = getSession().get(TripCollectionVO.class, tripCollectionId);
+		
 		try {
 			Session session = getSession();
 			session.beginTransaction();
@@ -89,5 +93,34 @@ public class TripCollectionDAOImpl implements TripCollectionDAO {
 				.uniqueResult();
 
 	}
+	
+	public boolean getOne(Integer memberId, Integer tripId ) {
+		Session session = getSession();
+		session.beginTransaction();
+		
+		try{TripCollectionVO collection = session.createQuery("FROM TripCollectionVO tc where tc.membervo.memberId = :memberId and tc.tripvo.trip_id = :tripId", TripCollectionVO.class)
+							.setParameter("memberId", memberId)
+							.setParameter("tripId", tripId)
+							.getSingleResult();
+			if(collection != null)
+				return true;
+		}catch(NoResultException e) {
+			return false;
+		}
+		return false;							
+	}
+
+	@Override
+	public TripCollectionVO getone(Integer memberId, Integer tripId) {
+		Session session = getSession();
+		session.beginTransaction();
+		
+		TripCollectionVO collection = session.createQuery("FROM TripCollectionVO tc where tc.membervo.memberId = :memberId and tc.tripvo.trip_id = :tripId", TripCollectionVO.class)
+							.setParameter("memberId", memberId)
+							.setParameter("tripId", tripId)
+							.getSingleResult();
+		return collection;
+	}
+	
 
 }
