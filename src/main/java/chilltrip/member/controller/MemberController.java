@@ -814,7 +814,16 @@ public class MemberController {
 	    }
 	}
 	
-	
-	
+	// 驗證使用者是否已登入
+	@GetMapping("/checkLogin")
+    public ResponseEntity<Map<String, Object>> checkLogin(HttpSession session) {
+        Integer memberId = (Integer)session.getAttribute("memberId");
+        if (memberId == null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("loggedIn", false, "message", "尚未登入"));
+        }
+        return ResponseEntity.ok(Map.of("loggedIn", true, "memberId", memberId, "message", "已登入"));
+    }
 	
 }
