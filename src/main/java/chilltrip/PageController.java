@@ -16,7 +16,7 @@ public class PageController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("contextPath", "/TIA104G2-SpringBoot");
-        return "/frontend/index";
+        return "/frontend/index_logged_in";
     }
     
     @GetMapping("/loggedin")

@@ -222,6 +222,13 @@
 					</a>
 				</div>
 				<div class="nav-right">
+					<a
+					href="/TIA104G2-SpringBoot/login"
+					class="nav-item nav-link active"
+					id="nav-login"
+					style="color: #ff6600"
+					>登入/註冊</a
+					>
 					<a href="#" class="nav-item nav-link" id="nav-profile">會員基本資料</a> <a
 						href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
 						<button id="goToChatRoom"> 聊天室</button>
@@ -817,6 +824,7 @@
 <script>
 	//動態生成公告圖片
 	document.addEventListener("DOMContentLoaded", function () {
+		checkLogin();
 	  loadPopularArticles();
 	  const carouselContainer = document.querySelector(
 		".banner-carousel-box"
@@ -1059,7 +1067,41 @@
 		  articlesGrid.innerHTML = "<p>目前沒有熱門文章</p>";
 		}
 	  }
-   
+	  
+	  function checkLogin(){
+		fetch('/TIA104G2-SpringBoot/member/checkLogin')
+        .then((response) => response.json())
+        .then((data) => {
+            const loginButton = document.getElementById('nav-login');
+            if (data.loggedIn) {
+                // 如果已登入，將按鈕改為「登出」
+                loginButton.innerHTML = '登出';
+                loginButton.setAttribute('href', '/TIA104G2-SpringBoot/logout'); // 設定登出路徑
+
+                // 如果是點擊登出按鈕，發起登出請求
+                loginButton.addEventListener('click', function(event) {
+                    event.preventDefault();  // 防止默認跳轉行為
+                    fetch('/TIA104G2-SpringBoot/member/logout', {
+                        method: 'POST',
+                    })
+                    .then(() => {
+                        // 登出成功後，重新導向到登入頁面
+                        window.location.href = '/TIA104G2-SpringBoot/login';
+                    })
+                    .catch((error) => {
+                        console.error('登出失敗:', error);
+                    });
+                });
+            } else {
+                // 如果未登入，保持「登入/註冊」的原狀
+                loginButton.innerHTML = '登入/註冊';
+                loginButton.setAttribute('href', '/TIA104G2-SpringBoot/login'); // 確保指向登入頁面
+            }
+        })
+        .catch((error) => {
+            console.error('檢查登入狀態失敗:', error);
+        });
+	  }
 
  
 
