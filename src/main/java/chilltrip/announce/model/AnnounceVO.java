@@ -150,7 +150,7 @@ public class AnnounceVO {
 
 	public void setCoverphotoBase64(String coverphotoAsBase64) {
 		this.coverphotoBase64 = coverphotoAsBase64;
-		this.coverphoto = null;
+		
 	}
 	  public String getStarttimeStr() {
 	        if (starttime != null) {
