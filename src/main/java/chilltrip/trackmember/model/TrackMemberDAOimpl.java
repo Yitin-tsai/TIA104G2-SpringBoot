@@ -3,9 +3,12 @@ package chilltrip.trackmember.model;
 import java.util.List;
 
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -46,9 +49,9 @@ public class TrackMemberDAOimpl  implements TrackMemberDAO{
 		// TODO Auto-generated method stub
 		try {
 			Session session = getSession();
-			session.beginTransaction();
+			Transaction tx = session.beginTransaction();
 			session.delete(trackMemberVO);
-			session.getTransaction().commit();
+			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			getSession().getTransaction().rollback();
@@ -63,6 +66,7 @@ public class TrackMemberDAOimpl  implements TrackMemberDAO{
 				.setParameter("memberId", memberId)
 				.list();
 		 session.getTransaction().commit();
+		 
 			return list;
 		
 	}
@@ -109,11 +113,15 @@ public class TrackMemberDAOimpl  implements TrackMemberDAO{
 			session.getTransaction().commit();
 			if(track != null)
 				return true;
-		}catch(NoResultException e) {
-			session.getTransaction().commit();
+		}catch(NonUniqueResultException e) {
+			session.getTransaction().rollback();
 			return false;
 		}
-		session.getTransaction().commit();
+		catch (NoResultException e) {
+	        session.getTransaction().rollback(); // 需要回滾事務
+	        return false; // 如果沒有找到結果，返回 false
+	    }
+		session.getTransaction().rollback();
 		return false;							
 	}
 	
