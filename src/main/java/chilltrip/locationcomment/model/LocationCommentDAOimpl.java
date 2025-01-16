@@ -12,18 +12,20 @@ import org.springframework.stereotype.Repository;
 import chilltrip.location.model.LocationVO;
 import chilltrip.member.model.MemberVO;
 import chilltrip.util.HibernateUtil;
+
 @Repository
-public class LocationCommentDAOimpl implements LocationCommentDAO{
+public class LocationCommentDAOimpl implements LocationCommentDAO {
 	private SessionFactory factory;
-	
+
 	@Autowired
-	public LocationCommentDAOimpl( @Qualifier("getSessionFactory") SessionFactory factory) {
-        this.factory = factory;
-    }
+	public LocationCommentDAOimpl(@Qualifier("getSessionFactory") SessionFactory factory) {
+		this.factory = factory;
+	}
+
 	private Session getSession() {
 		return factory.getCurrentSession();
 	}
-	
+
 	@Override
 	public void insert(LocationCommentVO locationCommentVO) {
 		// TODO Auto-generated method stub
@@ -32,7 +34,7 @@ public class LocationCommentDAOimpl implements LocationCommentDAO{
 			session.beginTransaction();
 			session.save(locationCommentVO);
 			session.getTransaction().commit();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			getSession().getTransaction().rollback();
 		}
@@ -46,7 +48,7 @@ public class LocationCommentDAOimpl implements LocationCommentDAO{
 			session.beginTransaction();
 			session.update(locationCommentVO);
 			session.getTransaction().commit();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			getSession().getTransaction().rollback();
 		}
@@ -58,11 +60,11 @@ public class LocationCommentDAOimpl implements LocationCommentDAO{
 		try {
 			Session session = getSession();
 			session.beginTransaction();
-			LocationCommentVO locationCommentVO =session.get(LocationCommentVO.class, locationCommentId);
+			LocationCommentVO locationCommentVO = session.get(LocationCommentVO.class, locationCommentId);
 			session.delete(locationCommentVO);
 			session.getTransaction().commit();
 			return true;
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			getSession().getTransaction().rollback();
 			return false;
@@ -71,14 +73,15 @@ public class LocationCommentDAOimpl implements LocationCommentDAO{
 
 	@Override
 	public List<LocationCommentVO> getByLocation(Integer locationId) {
-		
+
 		Session session = getSession();
 		session.beginTransaction();
 		List<LocationCommentVO> list = new ArrayList<LocationCommentVO>();
 		LocationVO location = session.get(LocationVO.class, locationId);
-		for(LocationCommentVO locaCom: location.getLocationComment()) {
+		for (LocationCommentVO locaCom : location.getLocationComment()) {
 			list.add(locaCom);
 		}
+		session.getTransaction().commit();
 		return list;
 	}
 
@@ -89,19 +92,21 @@ public class LocationCommentDAOimpl implements LocationCommentDAO{
 		session.beginTransaction();
 		List<LocationCommentVO> list = new ArrayList<LocationCommentVO>();
 		MemberVO member = session.get(MemberVO.class, memberId);
-		for(LocationCommentVO memCom : member.getLocationComment()) {
+		for (LocationCommentVO memCom : member.getLocationComment()) {
 			list.add(memCom);
 		}
+		session.getTransaction().commit();
 		return list;
-		
+
 	}
+
 	@Override
 	public LocationCommentVO getById(Integer id) {
 		Session session = getSession();
 		session.beginTransaction();
-		LocationCommentVO comment =  session.get(LocationCommentVO.class, id);
+		LocationCommentVO comment = session.get(LocationCommentVO.class, id);
 		session.getTransaction().commit();
 		return comment;
 	}
-	
+
 }
