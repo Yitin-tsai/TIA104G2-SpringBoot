@@ -1,17 +1,13 @@
 package chilltrip.chat.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.handler.invocation.HandlerMethodReturnValueHandler;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
-import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -23,6 +19,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
         config.enableSimpleBroker("/topic");
         config.enableSimpleBroker("/user");
         config.setApplicationDestinationPrefixes("/app");
+        config.setCacheLimit(30720000);
         
     }
 
@@ -40,11 +37,18 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
         .addInterceptors(new MyHandshakeInterceptor())
         .withSockJS();
     }
-//    @Override
-//    public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
-//        // 配置 WebSocket 傳輸，這裡可以調整網絡設置等
-//    	registry.addDecoratorFactory( new MyWebSocketHandlerDecoratorFactory());
-//    }
-    
+
+    @Bean
+    public ServletServerContainerFactoryBean createServletServerContainerFactoryBean() {
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+        container.setMaxTextMessageBufferSize(32768000);
+        container.setMaxBinaryMessageBufferSize(32768000);
+        System.out.println("Websocket factory returned");
+        return container;
+    }
+    @Override
+    public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
+    	registry.setMessageSizeLimit(1000*1024);
+    }
    
 }
