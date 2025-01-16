@@ -102,11 +102,14 @@ public class TripCollectionDAOImpl implements TripCollectionDAO {
 							.setParameter("memberId", memberId)
 							.setParameter("tripId", tripId)
 							.getSingleResult();
+			session.getTransaction().commit();
 			if(collection != null)
 				return true;
 		}catch(NoResultException e) {
+			session.getTransaction().commit();
 			return false;
 		}
+		session.getTransaction().commit();
 		return false;							
 	}
 
