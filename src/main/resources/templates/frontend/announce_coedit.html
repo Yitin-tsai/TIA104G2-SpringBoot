@@ -499,7 +499,7 @@ function initializeWebSocket() {
 
             // 更新封面圖片
             if (announce.coverphotoBase64) {
-                var imagePreview = '<img src="' + announce.coverphotoBase64 + '" alt="封面圖片預覽" style="max-width: 100px; max-height: 100px;">';
+                var imagePreview = '<img src=data:image/jpeg;base64,"' + announce.coverphotoBase64 + '" alt="封面圖片預覽" style="max-width: 100px; max-height: 100px;">';
                 $('#coverphoto-preview').html(imagePreview);
             }
         });
