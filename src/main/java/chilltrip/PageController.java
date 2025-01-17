@@ -48,6 +48,7 @@ public class PageController {
 	}
 
 	// 第三人視角看「我的行程」-->未登入會員也可以看
+	@GetMapping("/viewMyTrip/{memberId}")
 	public String viewOtherTrip(@PathVariable Integer memberId, Model model) {
 		MemberVO memberVO = memberSvc.getMemberById(memberId);
 		if (memberVO == null) {
