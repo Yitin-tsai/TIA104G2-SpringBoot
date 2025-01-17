@@ -293,7 +293,7 @@ h2 {
 
     // 初始化日期選擇器
     $("#starttime, #endtime").datepicker({
-    dateFormat: 'yy/mm/dd',  // 使用 yyyy/mm/dd 格式
+    dateFormat: 'yy-mm-dd',  
     changeMonth: true,
     changeYear: true,
     });
@@ -440,8 +440,8 @@ h2 {
             announceid: announceid,  // 使用 URL 中的 announceid
             title: $('#title').val(),
             content: $('#content').val(),
-            starttime: ($('#starttime').val()),
-            endtime: ($('#endtime').val()),
+            starttime: formatDate($('#starttime').val()), // 確保日期格式正確
+            endtime: formatDate($('#endtime').val()),     // 確保日期格式正確
             coverphotoBase64: $('#coverphoto')[0].files.length > 0 ? $('#coverphoto')[0].files[0] : null
         };
 
@@ -463,8 +463,12 @@ h2 {
     }
 
     // 監控表單變更，並將整個公告資料推送到服務器
-    $('#title, #content, #starttime, #endtime').on('input', function() {
+    $('#title, #content').on('input', function() {
         sendAnnouncementUpdate();  // 發送更新到服務器
+    });
+
+    $("#starttime, #endtime").on('change', function() {
+    sendAnnouncementUpdate();  // 當日期選擇改變時發送更新
     });
 
     // 當用戶選擇新的封面圖片時，將圖片變更推送到服務器
@@ -472,7 +476,13 @@ h2 {
         sendAnnouncementUpdate();  // 發送更新到服務器
     });
 });
-
+function formatDate(dateStr) {
+    var date = new Date(dateStr);
+    var year = date.getFullYear();
+    var month = ('0' + (date.getMonth() + 1)).slice(-2); // 確保月份是兩位數
+    var day = ('0' + date.getDate()).slice(-2);          // 確保日期是兩位數
+    return year + '-' + month + '-' + day;               // 返回 yyyy-MM-dd 格式
+}
 // 初始化 WebSocket 連接
 function initializeWebSocket() {
     var path = window.location.pathname;
@@ -499,8 +509,9 @@ function initializeWebSocket() {
 
             // 更新封面圖片
             if (announce.coverphotoBase64) {
-                var imagePreview = '<img src="' + announce.coverphotoBase64 + '" alt="封面圖片預覽" style="max-width: 100px; max-height: 100px;">';
-                $('#coverphoto-preview').html(imagePreview);
+                var cleanBase64 = announce.coverphotoBase64.replace(/^"|"$/g, ''); // 使用正則表達式去除首尾的雙引號
+                var imagePreview = '<img src="data:image/jpeg;base64,' + cleanBase64 + '" alt="封面圖片預覽" style="max-width: 100px; max-height: 100px;">';
+                $('#coverphoto-preview').html(imagePreview);  // 顯示圖片
             }
         });
     });

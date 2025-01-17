@@ -110,7 +110,6 @@ public class MemberService {
 		return dao.updatePasswordByEmail(email, password);
 	}
 
-	// 這裡的 sendEmail 方法修正為使用從配置文件中讀取的帳號與密碼
 	public void sendEmail(String to, String subject, String body) throws MessagingException {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -121,7 +120,9 @@ public class MemberService {
 		helper.setSubject(subject); // 設置郵件主題
 		helper.setText(body); // 設置郵件內容
 
-		mailSender.send(message); // 發送郵件
+//		mailSender.send(message); // 發送郵件
+		
+		new Thread(()->mailSender.send(message)).start();
 	}
 
 	public MemberVO login(String email, String password) {
@@ -157,7 +158,7 @@ public class MemberService {
 	public void sendVerificationEmail(String email, String code) throws MessagingException {
 		String subject = "您的信箱驗證碼";
 		String body = "親愛的用戶您好,您的信箱驗證碼為: " + code + "，請於 5 分鐘內輸入驗證碼完成註冊。";
-		sendEmail(email, subject, body); // 使用上面的 sendEmail 方法發送郵件
+		sendEmail(email, subject, body); // 使用 sendEmail 方法發送郵件
 	}
 
 	public boolean verifyEmailCode(String email, String emailCode) {

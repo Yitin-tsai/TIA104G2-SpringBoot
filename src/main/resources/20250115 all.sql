@@ -34,9 +34,9 @@ create_time					timestamp DEFAULT CURRENT_TIMESTAMP  NOT NULL,
 nick_name					VARCHAR(15) NOT NULL,
 CONSTRAINT admin_id_pk PRIMARY KEY (administrator_id));
 
- INSERT INTO administrator(email, admin_account, admin_password ,admin_name, phone	,account_status,nick_name) VALUES ('seal@abc.com', 'seal123','seal456','seal','0952123456','1','seal');
- INSERT INTO administrator(email, admin_account, admin_password ,admin_name, phone	,account_status,nick_name) VALUES ('yuki@abc.com', 'yuki123','yuki456','yuki','0952123457','1','yuki');
- INSERT INTO administrator(email, admin_account, admin_password ,admin_name, phone	,account_status,nick_name) VALUES ('et@abc.com', 'et123','et456','et','0952123458','1','eatting');
+ INSERT INTO administrator(email, admin_account, admin_password ,admin_name, phone	,account_status,nick_name) VALUES ('seal@abc.com', 'seal123','seal456','seal','0952123456','1','seal管理員');
+ INSERT INTO administrator(email, admin_account, admin_password ,admin_name, phone	,account_status,nick_name) VALUES ('yuki@abc.com', 'yuki123','yuki456','yuki','0952123457','1','yuki管理員');
+ INSERT INTO administrator(email, admin_account, admin_password ,admin_name, phone	,account_status,nick_name) VALUES ('et@abc.com', 'et123','et456','et','0952123458','1','eatting管理員');
  
  
 -- 一般用戶表 --

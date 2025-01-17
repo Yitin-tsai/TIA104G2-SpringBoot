@@ -87,11 +87,14 @@ public class TripLikeDAOimpl implements TripLikeDAO {
 							.setParameter("memberId", memberId)
 							.setParameter("tripId", tripId)
 							.getSingleResult();
+			session.getTransaction().commit();
 			if(like != null)
 				return true;
 		}catch(NoResultException e) {
+			session.getTransaction().commit();
 			return false;
 		}
+		session.getTransaction().commit();
 		return false;							
 	}
 

@@ -1315,6 +1315,7 @@
               views: trip.views || 0,
               likes: trip.likes || 0,
               rating: trip.rating || 4.5,
+              authorId: trip.authorId,
             };
           });
         }
@@ -1334,6 +1335,7 @@
           const pageArticles = articles.slice(startIndex, endIndex);
 
           pageArticles.forEach((article) => {
+            console.log(article);
             const articleHTML = `
             <article class="article-card">
                 <img src="${article.image}"
@@ -1343,7 +1345,7 @@
                 <div class="article-content">
                     <div class="article-meta">
                         <span class="author">作者：${article.author}</span>
-                        <button class="follow-btn">追蹤</button>
+                        <button class="follow-btn" data-id="${article.authorId}">追蹤</button>
                     </div>
                     <h2 class="article-title">${article.title}</h2>
                     <p class="article-description">${article.description}</p>
@@ -1363,10 +1365,109 @@
             </article>
           `;
             articlesGrid.append(articleHTML);
+            checkIfTracked(article.authorId);
+				    var authorId = article.authorId;
           });
           // 加載文章數據
           renderPagination(articles);
         }
+        function checkIfTracked(authorId) {
+				const url = `/TIA104G2-SpringBoot/trackMember/checkTrack/${authorId}`;
+
+				fetch(url)
+					.then((response) => response.json())
+					.then((isTracked) => {
+						const followButton = document.querySelector(`button.follow-btn[data-id="${authorId}"]`);
+						if (followButton) {
+							if (isTracked) {
+								// 顯示取消追蹤的按鈕
+								followButton.innerHTML = '追蹤中';
+								followButton.classList.add('cancelfollow-btn');
+								followButton.classList.remove('follow-btn');
+								followButton.removeEventListener('click', followHandler); // 移除原本的追蹤事件
+								followButton.addEventListener('click', cancelFollowHandler); // 綁定取消追蹤事件
+							} else {
+								// 顯示正常的追蹤按鈕
+								followButton.innerHTML = '追蹤';
+								followButton.classList.add('follow-btn');
+								followButton.classList.remove('cancelfollow-btn');
+								followButton.removeEventListener('click', cancelFollowHandler); // 移除取消追蹤事件
+								followButton.addEventListener('click', followHandler); // 綁定追蹤事件
+							}
+						}
+					})
+					.catch((error) => {
+						console.error("檢查是否追蹤失敗:", error);
+					});
+			}
+      // 追蹤某個作者的事件處理器
+				function followHandler(event) {
+					const authorId = event.target.getAttribute("data-id");
+					followAuthor(authorId);
+				}
+
+				// 取消追蹤某個作者的事件處理器
+				function cancelFollowHandler(event) {
+					const authorId = event.target.getAttribute("data-id");
+					if (confirm("確定取消關注?")) {
+						cancelFollow(authorId);
+					}
+				}
+
+				// 追蹤某個作者
+				function followAuthor(authorId) {
+					const url = `/TIA104G2-SpringBoot/trackMember/track/${authorId}`;
+
+					fetch(url, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+					})
+					.then((response) => response.text())
+					.then((data) => {
+						if (data === "nologin") {
+							alert("尚未登入，請登入");
+							window.location.href = "/TIA104G2-SpringBoot/login"; // 跳轉至登入頁面
+						} else if (data === "success") {
+							alert("成功追蹤！");
+              loadArticles(0);
+							 // 重新載入文章，更新按鈕狀態
+						} else {
+							alert("追蹤失敗，請稍後再試！");
+						}
+					})
+					.catch((error) => {
+						console.error(error);
+						alert("發生錯誤，請稍後再試！");
+					});
+				}
+
+				// 取消追蹤某個作者
+				function cancelFollow(authorId) {
+					const url = `/TIA104G2-SpringBoot/trackMember/deleteTrack/${authorId}`;
+
+					fetch(url, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+					})
+					.then((response) => response.text())
+					.then((data) => {
+						if (data === "success") {
+							alert("已取消追蹤！");
+              loadArticles(0);
+							// 重新載入文章，更新按鈕狀態
+						} else {
+							alert("取消追蹤失敗，請稍後再試！");
+						}
+					})
+					.catch((error) => {
+						console.error(error);
+						alert("發生錯誤，請稍後再試！");
+					});
+				}
 
         // 渲染分頁
         function renderPagination(articles) {
