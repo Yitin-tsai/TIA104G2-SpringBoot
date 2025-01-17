@@ -235,6 +235,10 @@ class ArticleManager {
     // 重新綁定事件
     this.initializeEvents();
   }
+  updateReport(authorId){
+    const reportbtn = document.getElementById("reportBtn")
+  }
+
 }
 
 // 初始化文章管理器

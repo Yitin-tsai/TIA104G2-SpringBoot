@@ -30,21 +30,25 @@ public class JedisHandleMessage {
 
 		jedis.close();
 	}
-//	public static void saveEdit(Map<String,String> editer, String message) {
-//		// 對雙方來說，都要各存著歷史聊天記錄
-//		String senderKey = new StringBuilder(sender).append(":").append(receiver).toString();
-//		String receiverKey = new StringBuilder(receiver).append(":").append(sender).toString();
-//		Strubg editerKey = "";
-//		for(String editers : editer.values()) {
-//			editerKey += editer
-//		}
-//		Jedis jedis = pool.getResource();
-//		jedis.rpush(senderKey, message);
-//		jedis.rpush(receiverKey, message);
-//		
-//		jedis.close();
-//	}
-	
+	public static void saveNotice(String receiver, String message) {
+		// 對雙方來說，都要各存著歷史聊天記錄
+		
+		String receiverKey = new StringBuilder(receiver).append("-notice").toString();
+		Jedis jedis = pool.getResource();
+		jedis.rpush(receiverKey, message);
+		
+		jedis.close();
+	}
+
+	public static List<String> getHistoryNotice( String receiver) {
+		String key = new StringBuilder(receiver).append("-notice").toString();
+		Jedis jedis = null;
+		jedis = pool.getResource();
+		List<String> historyData = jedis.lrange(key, 0, -1);
+		System.out.println(historyData);
+		jedis.close();
+		return historyData;
+	}
 
 
 }
