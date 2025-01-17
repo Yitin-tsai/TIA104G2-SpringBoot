@@ -317,12 +317,14 @@ select {
 						href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
 				</div>
 				<div class="nav-center">
-					<a href="/TIA104G2-SpringBoot/" id="z-index"> <img th:src="@{/img/logo_black.png}"
-						alt="Chill Trip" style="width: 150px; height: auto" />
+					<a href="/TIA104G2-SpringBoot/" id="z-index"> <img
+						th:src="@{/img/logo_black.png}" alt="Chill Trip"
+						style="width: 150px; height: auto" />
 					</a>
 				</div>
 				<div class="nav-right">
-					<a href="/TIA104G2-SpringBoot/login" class="nav-item nav-link  active" id="nav-login"
+					<a href="/TIA104G2-SpringBoot/login"
+						class="nav-item nav-link  active" id="nav-login"
 						style="color: #FF6600;">登入/註冊</a>
 					<div class="nav-item dropdown">
 						<a href="#" class="nav-link dropdown-toggle"
@@ -358,13 +360,15 @@ select {
 			<div class="form-group">
 				<label class="required">會員暱稱</label> <input type="text"
 					id="nickName" name="nickName" placeholder="輸入暱稱" required>
-				<div id="nickNameError" style="color: #ff4444; font-size: 14px; display: none;">暱稱可以包括中文、英文、空格，但不可是特殊符號，長度需在2~15之間，且不允許開頭或結尾有空格</div>
+				<div id="nickNameError"
+					style="color: #ff4444; font-size: 14px; display: none;">暱稱可以包括中文、英文、空格，但不可是特殊符號，長度需在2~15之間，且不允許開頭或結尾有空格</div>
 			</div>
 
 			<div class="form-group">
-				<label class="required">真實姓名</label> <input type="text"
-					id="name" name="name" placeholder="輸入姓名" required>
-				<div id="nameError" style="color: #ff4444; font-size: 14px; display: none;">姓名可以包括中文、英文、空格，但不可是特殊符號，長度需在2~10之間，且不允許開頭或結尾有空格</div>
+				<label class="required">真實姓名</label> <input type="text" id="name"
+					name="name" placeholder="輸入姓名" required>
+				<div id="nameError"
+					style="color: #ff4444; font-size: 14px; display: none;">姓名可以包括中文、英文、空格，但不可是特殊符號，長度需在2~10之間，且不允許開頭或結尾有空格</div>
 			</div>
 
 			<div class="form-group">
@@ -383,7 +387,9 @@ select {
 			<div class="form-group">
 				<label class="required">聯絡電話</label> <input type="tel" id="phone"
 					name="phone" placeholder="輸入聯絡電話" required>
-				<div id="phoneError" style="color: #ff4444; font-size: 14px; display: none;">請輸入正確聯絡電話格式，手機或市話皆可，ex: 0912345678 或 02-12345678</div>
+				<div id="phoneError"
+					style="color: #ff4444; font-size: 14px; display: none;">請輸入正確聯絡電話格式，手機或市話皆可，ex:
+					0912345678 或 02-12345678</div>
 			</div>
 
 			<div class="form-group">
@@ -401,7 +407,8 @@ select {
 			<div class="form-group">
 				<label class="required">密碼</label> <input type="password"
 					id="password" name="password" placeholder="輸入密碼" required>
-				<div id="passwordError" style="color: #ff4444; font-size: 14px; display: none;">密碼只能是英文字母數字和_，長度需在5~15之間</div>
+				<div id="passwordError"
+					style="color: #ff4444; font-size: 14px; display: none;">密碼只能是英文字母數字和_，長度需在5~15之間</div>
 				<button type="button" class="password-toggle" data-target="password">
 					<svg class="eye-open" viewBox="0 0 24 24">
               <path
@@ -436,16 +443,22 @@ select {
 			<div class="form-group">
 				<label>公司統編</label> <input type="text" id="company" name="companyId"
 					placeholder="輸入公司統編">
+				<div id="companyIdError"
+					style="color: #ff4444; font-size: 14px; display: none;">公司統編為 8 位數字，且不能包含字母或特殊符號</div>
 			</div>
 
 			<div class="form-group">
 				<label>手機載具</label> <input type="text" id="mobile"
 					name="ereceiptCarrier" placeholder="輸入手機載具">
+				<div id="ereceiptCarrierError"
+					style="color: #ff4444; font-size: 14px; display: none;">手機載具格式錯誤，總長度是 8 個字符，第一碼必須是" / "，後續接 7 個字符可以是數字(0-9)、大寫英文字母(A-Z)、以及特殊符號(.、-、+)</div>
 			</div>
 
 			<div class="form-group">
 				<label>信用卡號</label> <input type="text" id="creditCard"
 					name="creditCard" placeholder="輸入信用卡號">
+				<div id="creditCardError"
+					style="color: #ff4444; font-size: 14px; display: none;">信用卡號輸入格式不正確，請輸入 13 至 19 位的數字</div>
 			</div>
 			<div class="form-group">
 				<label for="photo">上傳頭貼：</label> <input type="file" id="photo"
@@ -453,7 +466,8 @@ select {
 			</div>
 			<input type="hidden" name="register" value="register"> <input
 				type="submit" class="register-button" value="註冊" /> <a
-				href="/TIA104G2-SpringBoot/login" class="login-link" style="color: #ff4444;">已有帳號?點擊登入</a>
+				href="/TIA104G2-SpringBoot/login" class="login-link"
+				style="color: #ff4444;">已有帳號?點擊登入</a>
 		</form>
 	</div>
 	</main>
@@ -572,30 +586,30 @@ select {
 });
 
 
-    // 確認驗證碼
-    $(document).ready(function () {
-        $("button[name='checkrandomcode']").click(function () {
-            const email = $("#email").val();
-            const emailCode = $("#emailCode").val();
+    let isEmailVerified = false; // 初始 false
 
-            if (!email || !emailCode) {
-                alert("請輸入電子信箱及驗證碼");
-                return;
-            }
-
-            $.ajax({
-                type: "POST",
-                url: contextPath + "/member/checkrandomcode",
-                data: { email: email, emailCode: emailCode },
-                success: function (response) {
-                    alert(response); // 提示驗證成功
-                },
-                error: function (xhr) {
-                    alert(xhr.responseText || "驗證碼驗證失敗");
-                }
-            });
-        });
-    });
+ // 使用者按「確認驗證碼」按鈕後:
+ $("button[name='checkrandomcode']").click(function () {
+   const email = $("#email").val();
+   const emailCode = $("#emailCode").val();
+   if (!email || !emailCode) {
+     alert("請輸入電子信箱及驗證碼");
+     return;
+   }
+   $.ajax({
+     type: "POST",
+     url: contextPath + "/member/checkrandomcode",
+     data: { email: email, emailCode: emailCode },
+     success: function (response) {
+       alert(response); // "驗證碼確認成功！"
+       isEmailVerified = true;  // 驗證通過 => 設為true
+     },
+     error: function (xhr) {
+       alert(xhr.responseText || "驗證碼驗證失敗");
+       isEmailVerified = false; // 驗證失敗 => 繼續是 false
+     }
+   });
+ });
 
     // 密碼顯示開關功能
     document.querySelectorAll('.password-toggle').forEach(button => {
@@ -661,6 +675,42 @@ select {
             isValid = false;
         } else {
             document.getElementById("confirmpasswordError").style.display = 'none'; // 隱藏錯誤訊息
+        }
+        
+        // 驗證公司統編
+        const companyId = document.getElementById("company").value;
+        const companyIdPattern = /^\d{8}$/;
+        if (companyId !== "" && !companyIdPattern.test(companyId)) {
+            document.getElementById("companyIdError").style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById("companyIdError").style.display = 'none';
+        }
+        
+        // 驗證手機載具
+        const ereceiptCarrier = document.getElementById("mobile").value;
+        const ereceiptCarrierPattern = /^\/[0-9A-Z.\-+]{7}$/;
+        if (ereceiptCarrier !== "" && !ereceiptCarrierPattern.test(ereceiptCarrier)) {
+            document.getElementById("ereceiptCarrierError").style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById("ereceiptCarrierError").style.display = 'none';
+        }
+        
+        // 驗證信用卡號
+        const creditCard = document.getElementById("creditCard").value;
+        const creditCardPattern = /^(\d{4}[-\s]?){3}\d{4}$|^\d{13,19}$/;
+        if (creditCard !== "" && !creditCardPattern.test(creditCard)) {
+            document.getElementById("creditCardError").style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById("creditCardError").style.display = 'none';
+        }
+        
+     	// 檢查是否已通過 email 驗證
+        if (!isEmailVerified) {
+          alert("請先完成信箱驗證，才可以註冊");
+          return; // 直接return，不送出
         }
 
         // 如果所有欄位驗證通過，提交表單

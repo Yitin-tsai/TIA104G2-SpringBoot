@@ -110,6 +110,10 @@ public class MemberController {
 		if (storedCode == null || !storedCode.trim().equalsIgnoreCase(emailCode.trim())) {
 			return ResponseEntity.badRequest().body("無效的驗證碼，請重新驗證");
 		}
+		
+		// 將信箱驗證成功存入 Redis，並設置過期時間為 1 小時
+		jedis.setex("emailVerified:" + email, 3600, "true");
+		
 		return ResponseEntity.ok("驗證碼確認成功！");
 	}
 
@@ -117,6 +121,15 @@ public class MemberController {
 	@PostMapping("/register")
 	public ResponseEntity<String> registerMember(@RequestParam Map<String, String> paramMap, // 接收前端傳遞的 Map
 			@RequestParam(name = "photo", required = false) MultipartFile photoFile) {
+		
+		// 取得 email
+	    String email = paramMap.get("email");
+	    
+	    // 後端檢查 "該 email 是否有通過驗證"
+	    String verificationFlag = jedis.get("emailVerified:" + email);
+	    if (!"true".equals(verificationFlag)) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("信箱尚未驗證，請先完成信箱驗證");
+	    }
 
 		// 將 Map 轉換為 MemberVO
 		MemberVO memberVO = new MemberVO();
