@@ -12,7 +12,7 @@ import chilltrip.member.model.MemberVO;
 public class PageController {
     @Autowired
     private MemberService memberSvc;
-
+    
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("contextPath", "/TIA104G2-SpringBoot");
@@ -28,14 +28,15 @@ public class PageController {
   
 
     // 原有的頁面導航
+    //Go行程
     @GetMapping("/go")
     public String goPage() {
         return "/frontend/go";
     }
     
-    @GetMapping("/sealgo")
-    public String goSealPage() {
-        return "/frontend/sealgo";
+    @GetMapping("/tripeditor")
+    public String editTripByMemberId(Model model) {
+        return "/frontend/seal_trip_editor";
     }
 
     @GetMapping("/product")

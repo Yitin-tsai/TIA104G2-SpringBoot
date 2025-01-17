@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "chilltrip")
-@EntityScan("chilltrip.trip.model")
 public class Application extends SpringBootServletInitializer {
 	
 	@Override

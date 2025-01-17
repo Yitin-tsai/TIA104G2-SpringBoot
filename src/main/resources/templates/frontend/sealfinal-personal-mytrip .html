@@ -10,629 +10,739 @@
     />
     <style>
       * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
       }
 
       :root {
-        --primary-color: #4a4a4a;
-        --secondary-color: #6c757d;
-        --accent-color: #8d8d8d;
-        --gray-light: #f7f7f7;
-        --gray-medium: #8d8d8d;
-        --gray-dark: #4a4a4a;
-        --border-color: #e0e0e0;
-        --success-color: #4caf50;
-        --warning-color: #ff9800;
+      --primary-color: #4a4a4a;
+      --secondary-color: #6c757d;
+      --accent-color: #8d8d8d;
+      --gray-light: #f7f7f7;
+      --gray-medium: #8d8d8d;
+      --gray-dark: #4a4a4a;
+      --border-color: #e0e0e0;
+      --success-color: #4caf50;
+      --warning-color: #ff9800;
       }
 
       body {
-        background-color: var(--gray-light);
+      background-color: var(--gray-light);
       }
 
       .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
       }
 
       /* 個人資料區域 */
       .dashboard-header {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 30px;
-        margin-bottom: 30px;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 30px;
+      margin-bottom: 30px;
       }
 
       .profile-card {
-        background: white;
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
 
       .profile-info {
-        text-align: center;
+      text-align: center;
       }
 
       .profile-avatar {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        margin-bottom: 15px;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        padding: 3px;
-        background-color: white;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 3px;
+      background-color: white;
       }
 
       .profile-name {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 15px;
-        color: var(--gray-dark);
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: var(--gray-dark);
       }
 
       .follow-stats {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
       }
 
       .stat-item {
-        cursor: pointer;
-        padding: 8px 15px;
-        border-radius: 8px;
-        transition: all 0.3s;
-        border: none;
-        background: none;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+      cursor: pointer;
+      padding: 8px 15px;
+      border-radius: 8px;
+      transition: all 0.3s;
+      border: none;
+      background: none;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       }
 
       .stat-item:hover {
-        background: var(--gray-light);
+      background: var(--gray-light);
       }
 
       .stat-number {
-        font-weight: bold;
-        display: block;
-        color: var(--gray-dark);
+      font-weight: bold;
+      display: block;
+      color: var(--gray-dark);
       }
 
       .stat-label {
-        color: var(--gray-medium);
+      color: var(--gray-medium);
       }
 
       /* 成就統計卡片 */
       .achievements-card {
-        background: white;
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
 
       .achievements-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
       }
 
       .achievement-item {
-        padding: 15px;
-        border-radius: 10px;
-        background: var(--gray-light);
-        transition: transform 0.2s;
-        border: 1px solid var(--border-color);
+      padding: 15px;
+      border-radius: 10px;
+      background: var(--gray-light);
+      transition: transform 0.2s;
+      border: 1px solid var(--border-color);
       }
 
       .achievement-item:hover {
-        transform: translateY(-3px);
+      transform: translateY(-3px);
       }
 
       .achievement-label {
-        font-size: 14px;
-        color: var(--gray-medium);
-        margin-bottom: 5px;
+      font-size: 14px;
+      color: var(--gray-medium);
+      margin-bottom: 5px;
       }
 
       .achievement-value {
-        font-size: 24px;
-        font-weight: bold;
-        color: var(--gray-dark);
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--gray-dark);
       }
 
       /* 內容篩選器 */
       .content-filter {
-        background: white;
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 30px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      }
+
+      .filter-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
       }
 
       .filter-group {
-        display: flex;
-        gap: 15px;
-        flex-grow: 1;
+      display: flex;
+      gap: 15px;
+      flex-grow: 1;
       }
 
       .filter-select {
-        padding: 12px 15px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        font-size: 16px;
-        min-width: 200px;
-        transition: all 0.3s ease;
-      }
-
-      .filter-select:focus {
-        border-color: #4a4a4a;
-        outline: none;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      flex: 1;
+      min-width: 150px;
+      transition: all 0.3s ease;
       }
 
       .filter-button {
-        padding: 12px 24px;
-        background: var(--gray-dark);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: all 0.2s;
+      padding: 12px 24px;
+      background: var(--gray-dark);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+      white-space: nowrap;
       }
 
-      .filter-button:hover {
-        opacity: 0.9;
+      .publish-button {
+      padding: 12px 24px;
+      background: #ff9800;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+      white-space: nowrap;
+      }
+
+      .filter-button:hover,
+      .publish-button:hover {
+      opacity: 0.9;
       }
 
       /* 文章卡片網格 */
       .content-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 25px;
-        margin-bottom: 30px;
-        max-width: 1200px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin-bottom: 30px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 20px;
       }
 
       .content-card {
-        background: white;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-        width: 100%;
-        max-width: 350px;
-        margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      width: 100%;
+      max-width: 350px;
+      margin: 0 auto;
       }
 
       .content-card:hover {
-        transform: translateY(-5px);
+      transform: translateY(-5px);
       }
 
       .card-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
       }
 
       .card-body {
-        padding: 20px;
+      padding: 20px;
       }
 
       .card-title {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 10px;
-        color: #4a4a4a;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #4a4a4a;
       }
 
       .card-description {
-        font-size: 14px;
-        color: #6c757d;
-        margin-bottom: 15px;
-        line-height: 1.5;
+      font-size: 14px;
+      color: #6c757d;
+      margin-bottom: 15px;
+      line-height: 1.5;
       }
 
       .card-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 15px;
-        border-top: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid #e0e0e0;
       }
 
       .card-stats {
-        display: flex;
-        gap: 15px;
-        color: #8d8d8d;
-        font-size: 14px;
+      display: flex;
+      gap: 15px;
+      color: #8d8d8d;
+      font-size: 14px;
       }
 
       .card-actions {
-        display: flex;
-        gap: 10px;
+      display: flex;
+      gap: 10px;
       }
 
       .action-button {
-        padding: 6px 12px;
-        border-radius: 6px;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        transition: all 0.2s;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
       }
 
       .edit-btn {
-        background: #8d8d8d;
-        color: white;
+      background: #8d8d8d;
+      color: white;
       }
 
       .delete-btn {
-        background: #ff9800;
-        color: white;
+      background: #ff9800;
+      color: white;
       }
 
       .action-button:hover {
-        opacity: 0.9;
+      opacity: 0.9;
       }
 
       /* 分頁控制器樣式 */
       .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 30px;
       }
 
       .page-btn {
-        padding: 8px 16px;
-        border: none;
-        border-radius: 8px;
-        background: #4a4a4a;
-        color: white;
-        cursor: pointer;
-        transition: all 0.2s;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      background: #4a4a4a;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
       }
 
       .page-btn:disabled {
-        background: #e0e0e0;
-        cursor: not-allowed;
+      background: #e0e0e0;
+      cursor: not-allowed;
       }
 
       .page-numbers {
-        display: flex;
-        gap: 5px;
+      display: flex;
+      gap: 5px;
       }
 
       .page-number {
-        padding: 8px 12px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
       }
 
       .page-number:hover {
-        background: #f0f0f0;
+      background: #f0f0f0;
       }
 
       .page-number.active {
-        background: #4a4a4a;
-        color: white;
+      background: #4a4a4a;
+      color: white;
       }
 
       /* 收藏景點布局 */
       .places-layout {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 25px;
-        margin-bottom: 30px;
-        max-width: 1200px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 0 20px;
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin-bottom: 30px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 20px;
       }
 
       /* 收藏景點卡片特殊樣式 */
       .place-card {
-        background: white;
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
 
       .place-info {
-        flex-grow: 1;
+      flex-grow: 1;
       }
 
       .place-header {
-        margin-bottom: 20px;
+      margin-bottom: 20px;
       }
 
       .place-title {
-        font-size: 24px;
-        font-weight: bold;
-        color: #4a4a4a;
-        margin-bottom: 10px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #4a4a4a;
+      margin-bottom: 10px;
       }
 
       .place-address {
-        color: #6c757d;
-        font-size: 14px;
-        margin-bottom: 10px;
+      color: #6c757d;
+      font-size: 14px;
+      margin-bottom: 10px;
       }
 
       .place-rating {
-        display: flex;
-        align-items: center;
-        gap: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
       }
 
       .star-container {
-        display: flex;
-        gap: 2px;
+      display: flex;
+      gap: 2px;
       }
 
       .star {
-        color: #ffd700;
-        font-size: 18px;
+      color: #ffd700;
+      font-size: 18px;
       }
 
       .rating-text {
-        color: #6c757d;
-        font-size: 14px;
+      color: #6c757d;
+      font-size: 14px;
       }
 
       /* 評論列表樣式 */
       .comments-list {
-        margin-bottom: 20px;
+      margin-bottom: 20px;
       }
 
       .comment-item {
-        padding: 15px;
-        border-bottom: 1px solid #e0e0e0;
+      position: relative;
+      padding: 15px;
+      border-bottom: 1px solid #e0e0e0;
       }
 
+      /* 評論頭部區域樣式 */
       .comment-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
       }
 
       .comment-user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin-right: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 12px;
       }
 
       .comment-user-info {
-        flex-grow: 1;
+      flex-grow: 1;
       }
 
       .comment-user-name {
-        font-weight: bold;
-        color: var(--gray-dark);
-        margin-bottom: 2px;
+      font-weight: bold;
+      color: var(--gray-dark);
+      margin-bottom: 2px;
       }
 
       .comment-rating {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-
-      .comment-rating .star {
-        font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
       }
 
       .comment-time {
-        color: var(--gray-medium);
-        font-size: 12px;
+      color: var(--gray-medium);
+      font-size: 12px;
       }
 
+      /* 評論內容樣式 */
       .comment-content {
-        margin: 10px 0;
-        color: var(--gray-dark);
-        line-height: 1.5;
+      margin: 10px 0;
+      color: var(--gray-dark);
+      line-height: 1.5;
       }
 
       .comment-image {
-        width: 200px;
-        height: 150px;
-        object-fit: cover; /* 確保圖片不會變形 */
-        border-radius: 8px;
-        margin-top: 10px;
-        cursor: pointer;
-        transition: transform 0.2s ease;
+      width: 200px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
       }
 
       .comment-image:hover {
-        transform: scale(1.05);
+      transform: scale(1.05);
       }
 
-      .comments-section {
-        margin-top: 20px;
-        border-top: 1px solid #e0e0e0;
-        padding-top: 20px;
+      /* 評論操作按鈕樣式 */
+      .comment-actions-dropdown {
+      position: absolute;
+      top: 10px;
+      right: 10px;
       }
 
-      .comments-title {
-        font-size: 18px;
-        font-weight: bold;
-        color: #4a4a4a;
-        margin-bottom: 15px;
+      .comment-actions-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+      color: #6c757d;
+      transition: color 0.2s ease;
       }
 
+      .comment-actions-toggle:hover {
+      color: #4a4a4a;
+      }
+
+      .comment-actions-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: none;
+      z-index: 1000;
+      min-width: 120px;
+      }
+
+      .comment-actions-menu.show {
+      display: block;
+      animation: fadeIn 0.2s ease;
+      }
+
+      .comment-action-btn {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 8px 16px;
+      text-align: left;
+      border: none;
+      background: none;
+      cursor: pointer;
+      white-space: nowrap;
+      color: #4a4a4a;
+      transition: background-color 0.2s ease;
+      }
+
+      .comment-action-btn:hover {
+      background: #f8f9fa;
+      }
+
+      .comment-action-btn i {
+      margin-right: 8px;
+      width: 16px;
+      }
+
+      /* 操作按鈕顏色 */
+      .comment-action-btn.edit-comment-btn {
+      color: #2196F3;
+      }
+
+      .comment-action-btn.delete-comment-btn {
+      color: #F44336;
+      }
+
+      .comment-action-btn.report-comment-btn {
+      color: #FF9800;
+      }
+
+      /* 評論輸入區域樣式 */
       .comment-input-container {
-        background: #f8f9fa;
-        border-radius: 8px;
-        padding: 15px;
-      }
-
-      .rating-star {
-        cursor: pointer;
-        font-size: 18px;
-        transition: color 0.2s ease;
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
       }
 
       .rating-input {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .rating-text {
-        color: var(--gray-medium);
-        font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
       }
 
       .comment-input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        resize: vertical;
-        min-height: 80px;
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      resize: vertical;
+      min-height: 80px;
       }
 
       .comment-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       }
 
       .upload-photo {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #6c757d;
-        cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #6c757d;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      }
+
+      .upload-photo:hover {
+      color: #4a4a4a;
       }
 
       .submit-comment {
-        padding: 8px 16px;
-        background: #4a90e2;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.2s;
+      padding: 8px 16px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
       }
 
       .submit-comment:hover {
-        background: #357abd;
+      background: #357abd;
       }
 
       /* Modal 樣式 */
       .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
       }
 
       .modal.active {
-        display: flex;
-        opacity: 1;
-        pointer-events: auto;
+      display: flex;
+      opacity: 1;
+      pointer-events: auto;
       }
 
       .modal-content {
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        width: 90%;
-        max-width: 500px;
-        max-height: 80vh;
-        overflow-y: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
       }
 
       .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
       }
 
       .modal-close {
-        background: none;
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-        color: var(--gray-medium);
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--gray-medium);
       }
 
       .user-list {
-        list-style: none;
+      list-style: none;
       }
 
       .user-item {
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid var(--border-color);
       }
 
       .user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin-right: 15px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 15px;
       }
 
       /* 響應式設計 */
       @media (max-width: 768px) {
-        .dashboard-header {
-          grid-template-columns: 1fr;
-        }
+      .content-filter {
+        flex-direction: column;
+      }
 
-        .achievements-grid {
-          grid-template-columns: 1fr;
-        }
+      .filter-container {
+        flex-direction: column;
+        width: 100%;
+      }
 
-        .content-filter {
-          flex-direction: column;
-          gap: 15px;
-        }
+      .filter-group {
+        flex-direction: column;
+        width: 100%;
+      }
 
-        .filter-group {
-          flex-direction: column;
-          width: 100%;
-        }
+      .filter-select {
+        width: 100%;
+      }
 
-        .filter-select {
-          width: 100%;
-        }
+      .filter-button,
+      .publish-button {
+        width: 100%;
+      }
 
-        .filter-button {
-          width: 100%;
-        }
+      .comment-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .submit-comment {
+        width: 100%;
+      }
+
+      .comment-image {
+        width: 100%;
+        height: auto;
+      }
+      }
+
+      /* 評論區塊基本樣式 */
+      .comments-section {
+      margin-top: 20px;
+      border-top: 1px solid #e0e0e0;
+      padding-top: 20px;
+      }
+
+      .comments-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #4a4a4a;
+      margin-bottom: 15px;
+      }
+
+      /* 動畫效果 */
+      @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
       }
     </style>
   </head>
@@ -738,28 +848,32 @@
       </div>
 
       <!-- 內容篩選器 -->
+      <!-- 修改後的內容篩選器 HTML 結構 -->
       <div class="content-filter">
-        <div class="filter-group">
-          <!-- 第一層篩選 -->
-          <select class="filter-select" id="primary-filter">
-            <option value="">選擇內容類型</option>
-            <option value="my-articles">我的文章</option>
-            <option value="saved-articles">收藏文章</option>
-            <option value="saved-places">收藏景點</option>
-          </select>
+        <div class="filter-container">
+          <div class="filter-group">
+            <!-- 第一層篩選 -->
+            <select class="filter-select" id="primary-filter">
+              <option value="">選擇內容類型</option>
+              <option value="my-articles">我的文章</option>
+              <option value="saved-articles">收藏文章</option>
+              <option value="saved-places">收藏景點</option>
+            </select>
 
-          <!-- 第二層篩選 (動態更新選項) -->
-          <select class="filter-select" id="secondary-filter">
-            <option value="">請先選擇內容類型</option>
-          </select>
+            <!-- 第二層篩選 (動態更新選項) -->
+            <select class="filter-select" id="secondary-filter">
+              <option value="">請先選擇內容類型</option>
+            </select>
 
-          <!-- 第三層篩選 (排序方式) -->
-          <select class="filter-select" id="sort-type">
-            <option value="">選擇排序方式</option>
-          </select>
+            <!-- 第三層篩選 (排序方式) -->
+            <select class="filter-select" id="sort-type">
+              <option value="">選擇排序方式</option>
+            </select>
+          </div>
+
+          <button id="apply-filter" class="filter-button">確認</button>
         </div>
-
-        <button id="apply-filter" class="filter-button">確認</button>
+        <button id="publish-mytrip" class="publish-button">發文章</button>
       </div>
 
       <!-- 內容展示區域 -->
@@ -827,8 +941,108 @@
       </div>
     </div>
 
+    <!------網站footer------>
+    <footer>
+      <div class="social-links">
+        <div style="display: flex; gap: 10px">
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #3b5998;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-facebook-f"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #e1306c;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-instagram"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #ff0000;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-youtube"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="copyright">
+        Copyright © 2024 良心鮪魚股份有限公司
+        <a href="adminLogin">管理員登入</a>
+      </div>
+    </footer>
+
+    <!------ 共用JS ------>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
+      ><i class="fa fa-angle-double-up"></i
+    ></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 本地資源改用 Thymeleaf 語法 -->
+    <script th:src="@{/lib/easing/easing.min.js}"></script>
+    <script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+
+    <!-- Contact Javascript File -->
+    <script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
+    <script th:src="@{/mail/contact.js}"></script>
+
+    <!-- Template Javascript -->
+    <script th:src="@{/js/main.js}"></script>
+
     <!-- 導航欄nav的href載入器 -->
     <script th:src="@{/js/navigation.js}"></script>
+
     <!--景點與文章樣式管理與動態清單取得-->
     <script src="/static/js/content-manager.js"></script>
 
