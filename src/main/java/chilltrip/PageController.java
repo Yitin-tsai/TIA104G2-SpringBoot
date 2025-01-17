@@ -14,20 +14,21 @@ import chilltrip.member.model.MemberVO;
 
 @Controller
 public class PageController {
-	@Autowired
-	private MemberService memberSvc;
 
-	@GetMapping("/")
-	public String index(Model model) {
-		model.addAttribute("contextPath", "/TIA104G2-SpringBoot");
-		return "/frontend/index";
-	}
+	 @Autowired
+    private MemberService memberSvc;
 
-	@GetMapping("/loggedin")
-	public String indexLoggedIn(Model model) {
-		model.addAttribute("contextPath", "/TIA104G2-SpringBoot");
-		return "/frontend/index_logged_in";
-	}
+    @GetMapping("/")
+    public String index(Model model) {
+        model.addAttribute("contextPath", "/TIA104G2-SpringBoot");
+        return "/frontend/index_logged_in";
+    }
+    
+    @GetMapping("/loggedin")
+    public String indexLoggedIn(Model model) {
+    	model.addAttribute("contextPath", "/TIA104G2-SpringBoot");
+    	return "/frontend/index_logged_in";
+    }
 
 	// ------------修齊添加的url路徑（有些還在測試，只能用key的）---------------------------
 	// Go行程
@@ -247,5 +248,4 @@ public class PageController {
 	public String chatroom(Model model) {
 		return "/frontend/chat_vanilla copy";
 	}
-
 }

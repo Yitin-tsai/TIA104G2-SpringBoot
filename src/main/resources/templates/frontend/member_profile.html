@@ -223,7 +223,7 @@
 				<div class="info-value" id="password"></div>
 			</div>
 			<div class="info-row">
-				<div class="info-label">手機號碼</div>
+				<div class="info-label">聯絡電話</div>
 				<div class="info-value" id="phone"></div>
 			</div>
 			<div class="info-row">
@@ -363,7 +363,14 @@
 	        document.getElementById("birthday").textContent = profile.birthday;
 	        document.getElementById("companyId").textContent = profile.companyId;
 	        document.getElementById("receiptCarrier").textContent = profile.ereceiptCarrier;
-	        document.getElementById("creditCard").textContent = "*************"; // 隱藏信用卡號
+	     	// 先判斷是否有填信用卡
+	        if (profile.creditCard && profile.creditCard.trim() !== "") {
+	        	// 若有填，顯示 ****
+	        	document.getElementById("creditCard").textContent = "*************";
+	        }else {
+	        	// 若沒填，顯示空字串
+	        	document.getElementById("creditCard").textContent = "";
+	        }
 			memberid = profile.memberId;
 	        // 動態更新追蹤數與粉絲數
 	        document.getElementById("trackingNumber").textContent = profile.trackingNumber || 0;

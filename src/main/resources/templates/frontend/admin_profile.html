@@ -36,6 +36,9 @@
     gap: 2rem; /* 增加區塊之間的間距 */
     align-items: center; /* 垂直居中 */
 }
+.profile-info {
+        flex: 1;
+    }
 
 .profile-header {
     display: flex;
@@ -146,7 +149,54 @@
 .profile-links ul li a:hover {
     text-decoration: underline;
 }
+.notification-container {
+  position: relative;
+  margin-top: 1rem;
+    }
 
+.notification-icon {
+  position: relative;
+        display: inline-block;
+        cursor: pointer;
+    }
+    
+    .notification-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        padding: 5px;
+        font-size: 12px;
+    }
+
+    .notification-list {
+        position: absolute;
+        top: 0;
+        left: 110%;
+        background-color: white;
+        border: 1px solid #ddd;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .notification-list ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .notification-list li {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .notification-list li:last-child {
+        border-bottom: none;
+    }
 
 </style>
 
@@ -154,101 +204,95 @@
 
 <body>
 	<!------網站header------>
-    <div id="app">
-      <header>
-        <nav class="top-nav">
-          <div class="nav-left">
-            <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
-            <a href="#" class="nav-item nav-link" id="nav-product">購！票券</a>
-            <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
-            <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
-          </div>
-          <div class="nav-center">
-            <a href="#" id="z-index">
-              <img
-                th:src="@{/img/logo_black.png}"
-                alt="Chill Trip"
-                style="width: 150px; height: auto"
-              />
-            </a>
-          </div>
-          <div class="nav-right">
-            <div class="nav-item dropdown">
-              <a
-                href="#"
-                class="nav-link dropdown-toggle"
-                data-toggle="dropdown"
-                style="color: #212529"
-                >會員中心</a
-              >
-              <div class="dropdown-menu rounded-0 m-0">
-                <a href="#" class="dropdown-item" id="nav-basic-info"
-                  >基本資料</a
-                >
-                <a href="#" class="dropdown-item" id="nav-coupons"
-                  >我的折價券</a
-                >
-                <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
-              </div>
-            </div>
-            <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
-            <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
-          </div>
-        </nav>
-      </header>
-    </div>
-
-	<div class="profile-container">
-		<!-- 個人資料區 -->
-		<div class="profile-info">
-			<div class="profile-header">
-				<img id="photo" th:src="@{/img/logo_black.png}" class="photo">
-			</div>
-
-			<div class="profile-info">
-				<div class="info-row">
-					<div class="info-label">帳號</div>
-					<div class="info-value" id="account"></div>
+  
+	<div id="app">
+		<header>
+			<nav class="top-nav">
+				<div class="nav-left">
+					
 				</div>
-				<div class="info-row">
-					<div class="info-label">姓名</div>
-					<div class="info-value" id="name"></div>
+				<div class="nav-center">
+					<a href="#" id="z-index"> <a href="/TIA104G2-SpringBoot/loggedin"
+						id="z-index"> <img th:src="@{/img/logo_black.png}"
+							alt="Chill Trip" style="width: 150px; height: auto" />
+					</a>
+					</a>
 				</div>
-				<div class="info-row">
-					<div class="info-label">暱稱</div>
-					<div class="info-value" id="nickName"></div>
+				<div class="nav-right">
+	
+					
+						<button id="goToChatRoom"> 聊天室</button>
 				</div>
-				<div class="info-row">
-					<div class="info-label">電子郵件</div>
-					<div class="info-value" id="email"></div>
-				</div>
-				<div class="info-row">
-					<div class="info-label">密碼</div>
-					<div class="info-value" id="password"></div>
-				</div>
-				<div class="info-row">
-					<div class="info-label">手機號碼</div>
-					<div class="info-value" id="phone"></div>
-				</div>
-			</div>
-
-			<div class="profile-actions">
-				<a class="btn-edit" id="editButton" href="/TIA104G2-SpringBoot/adminUpdate">編輯資料</a>
-				<button class="btn-logout" id="logoutButton">登出</button>
-			</div>
-		</div>
-
-		<!-- 管理員專區 -->
-		<div class="profile-links">
-			<h4>管理員專區</h4>
-			<ul>
-				<li><a href="/TIA104G2-SpringBoot/adminList">查看管理員清單</a></li>
-				<li><a href="/TIA104G2-SpringBoot/announceList">查看公告清單</a></li>
-				<li><a href="/TIA104G2-SpringBoot/announceListById">我的公告清單</a></li>
-        <li><a href="/TIA104G2-SpringBoot/announceAdd">新增公告</a></li>
-			</ul>
-		</div>
+			</nav>
+		</header>
 	</div>
+
+    <div class="profile-container">
+      <!-- 個人資料區 -->
+      <div class="profile-info">
+          <div class="profile-header">
+              <img id="photo" th:src="@{/img/logo_black.png}" class="photo">
+          </div>
+  
+          <div class="profile-info">
+              <div class="info-row">
+                  <div class="info-label">帳號</div>
+                  <div class="info-value" id="account"></div>
+              </div>
+              <div class="info-row">
+                  <div class="info-label">姓名</div>
+                  <div class="info-value" id="name"></div>
+              </div>
+              <div class="info-row">
+                  <div class="info-label">暱稱</div>
+                  <div class="info-value" id="nickName"></div>
+              </div>
+              <div class="info-row">
+                  <div class="info-label">電子郵件</div>
+                  <div class="info-value" id="email"></div>
+              </div>
+              <div class="info-row">
+                  <div class="info-label">密碼</div>
+                  <div class="info-value" id="password"></div>
+              </div>
+              <div class="info-row">
+                  <div class="info-label">手機號碼</div>
+                  <div class="info-value" id="phone"></div>
+              </div>
+          </div>
+  
+          <div class="profile-actions">
+              <a class="btn-edit" id="editButton" href="/TIA104G2-SpringBoot/adminUpdate">編輯資料</a>
+              <button class="btn-logout" id="logoutButton">登出</button>
+          </div>
+      </div>
+  
+      <!-- 管理員專區 -->
+      <div class="profile-links">
+          <h4>管理員專區</h4>
+          <ul>
+              <li><a href="/TIA104G2-SpringBoot/adminList">查看管理員清單</a></li>
+              <li><a href="/TIA104G2-SpringBoot/announceList">查看公告清單</a></li>
+              <li><a href="/TIA104G2-SpringBoot/announceListById">我的公告清單</a></li>
+              <li><a href="/TIA104G2-SpringBoot/announceAdd">新增公告</a></li>
+          </ul>
+  
+          <!-- 通知圖標和通知列表 -->
+          <div class="notification-container">
+              <div id="notificationIcon" class="notification-icon">
+                  <img th:src="@{/img/bell-860.png}" alt="通知" />
+                  <span id="notificationCount" class="notification-count" style="display:none;">0</span>
+              </div>
+  
+              <!-- 通知列表 -->
+              <div id="notificationList" class="notification-list" style="display:none;">
+                  <ul id="notifications">
+                      <li>這是測試用的li</li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </div>
 
 	<!------網站footer------>
 	<footer>
@@ -308,6 +352,11 @@
 
     <!-- Template Javascript -->
     <script th:src="@{/js/main.js}"></script>
+     <!-- 引入 SockJS 客戶端 -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+
+<!-- 引入 STOMP 客戶端 -->
+<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 
     <!-- 導航欄nav的href載入器 -->
     	<!------修齊的JS------>
@@ -340,6 +389,61 @@
 				}
 			});
 		});
+
+   // 1. 連接到 WebSocket 服務
+    var socket = new SockJS("/TIA104G2-SpringBoot/notice");
+    var stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+
+        // 2. 訂閱通知頻道
+        stompClient.subscribe('/user/admin/queue/notice', function (messageOutput) {
+            var notice = messageOutput.body;
+            
+            // 3. 當收到通知時，顯示小紅點
+            var notificationCount = document.getElementById('notificationCount');
+            var currentCount = parseInt(notificationCount.innerHTML || '0');
+            notificationCount.innerHTML = currentCount + 1;
+            notificationCount.style.display = 'inline';
+
+            // 4. 顯示通知在列表中
+            var notifications = document.getElementById('notifications');
+            var li = document.createElement('li');
+            li.textContent = notice;
+            notifications.appendChild(li);
+        });
+        stompClient.subscribe('/user/admin/queue/notice.history', function (messageOutput) {
+        // 收到歷史通知後，動態更新通知列表
+        var historyNotifications = JSON.parse(messageOutput.body);
+        
+        // 取得通知列表元素
+        var notifications = document.getElementById('notifications');
+        notifications.innerHTML = ''; // 清空現有的通知列表
+
+        // 顯示每一個歷史通知
+        historyNotifications.forEach(function (notice) {
+            var li = document.createElement('li');
+            li.textContent = notice;
+            notifications.appendChild(li);
+        });
+
+        // 顯示通知列表
+        var notificationList = document.getElementById('notificationList');
+        notificationList.style.display = 'block';
+    });
+    });
+
+    // 5. 點擊鈴鐺顯示通知列表
+    document.getElementById('notificationIcon').addEventListener('click', function () {
+        var notificationList = document.getElementById('notificationList');
+        notificationList.style.display = notificationList.style.display === 'none' ? 'block' : 'none';
+
+        // 觸發發送請求以獲取歷史通知
+        stompClient.send("/app/notice.getHistory", {}, "admin");
+    });
+    
+
 	</script>
 	
 

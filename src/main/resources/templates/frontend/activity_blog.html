@@ -224,7 +224,10 @@
         
           </div>
 
-
+           <!-- 檢舉按鈕 -->
+    <div class="text-center mt-4">
+      <button id="reportButton" class="btn btn-danger">檢舉此公告</button>
+    </div>
     
     </div>
 
@@ -339,7 +342,11 @@
     <!-- 導航欄nav的href載入器 -->
     <script th:src="@{/js/navigation.js}"></script>
 
+<!-- 引入 SockJS 客戶端 -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
 
+<!-- 引入 STOMP 客戶端 -->
+<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
     <script>  //動態生成公告圖片
       document.addEventListener('DOMContentLoaded', function () {
       
@@ -420,6 +427,39 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error('Error fetching data:', error);
       });
   }
+      // 先檢查用戶是否已登入
+      fetch("/TIA104G2-SpringBoot/member/checkLogin")
+        .then(response => response.json())
+        .then(data => {
+          if (data.loggedIn) {
+            // 如果已登入，初始化 WebSocket 連接
+            var socket = new SockJS("/TIA104G2-SpringBoot/notice");
+            var stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function (frame) {
+              console.log('Connected: ' + frame);
+
+              // 綁定檢舉按鈕事件
+              document.getElementById('reportButton').addEventListener('click', function () {
+                // 檢舉功能
+                const currentUrl = window.location.href;
+                const noticeMessage = `您收到來自用戶的檢舉該公告，公告連結為: ${currentUrl}`;
+                stompClient.send("/app/notice.admin", {}, noticeMessage);
+                alert("檢舉已發送給管理員！");
+              });
+            });
+
+          } else {
+            // 如果未登入，綁定檢舉按鈕，點擊時顯示提示並跳轉到登入頁面
+            document.getElementById('reportButton').addEventListener('click', function () {
+              alert("請先登入！");
+              window.location.href = "/TIA104G2-SpringBoot/login";
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error checking login status:', error);
+        });
 });
 </script>
 
