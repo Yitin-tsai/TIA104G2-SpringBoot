@@ -144,18 +144,17 @@
 }
 
 .password-input-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end; /* 使內容靠右 */
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end; /* 使內容靠右 */
 }
-
 
 .password-toggle {
 	position: absolute;
 	right: 10px;
 	top: 50%;
-    transform: translateY(-50%);
+	transform: translateY(-50%);
 	cursor: pointer;
 	background: none;
 	border: none;
@@ -253,21 +252,44 @@
 		</div>
 
 		<form id="editForm" onsubmit="handleSubmit(event)">
+			<div class="form-group">
+				<p style="color: #ff4444">*為必填項目</p>
+			</div>
 			<!-- 唯讀欄位 -->
 			<div class="form-group">
-				<label class="form-label">姓名</label> <input type="email"
+				<label class="form-label">會員暱稱<span style="color: #ff4444;">*</span></label> <input type="text"
+					class="form-control" id="nickName" name="nickName"
+					placeholder="可輸入中文、英文，長度需在2~15之間" >
+				<div id="nickNameError"
+					style="color: #ff4444; font-size: 14px; display: none;">暱稱可以包括中文、英文，但不可是特殊符號，長度需在2~15之間</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="form-label">真實姓名<span style="color: #ff4444;">*</span></label> <input type="email"
 					class="form-control readonly-field" id="name" readonly>
 			</div>
-
+			
 			<div class="form-group">
-				<label class="form-label">暱稱</label> <input type="text"
-					class="form-control" id="nickName" name="nickName">
-				<div id="nickNameError"
-					style="color: #ff4444; font-size: 14px; display: none;">暱稱可以包括中文、英文、空格，但不可是特殊符號，長度需在2~15之間，且不允許開頭或結尾有空格</div>
+				<label class="form-label">性別 <span style="color: #ff4444;">*</span></label> <input type="text"
+					class="form-control readonly-field" id="gender" readonly>
 			</div>
 
 			<div class="form-group">
-				<label class="form-label">電子郵件</label> <input type="email"
+				<label class="form-label">生日</label> <input type="date"
+					class="form-control readonly-field" id="birthday" readonly>
+			</div>
+			
+			<div class="form-group">
+				<label class="form-label">聯絡電話 <span style="color: #ff4444;">*</span></label> <input type="tel"
+					class="form-control" id="phone" name="phone"
+					placeholder="手機或市話皆可，ex:0912345678 或 02-12345678">
+				<div id="phoneError"
+					style="color: #ff4444; font-size: 14px; display: none;">請輸入正確聯絡電話格式，手機或市話皆可，ex:
+					0912345678 或 02-12345678</div>
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">電子信箱 <span style="color: #ff4444;">*</span></label> <input type="email"
 					class="form-control readonly-field" id="email" readonly>
 			</div>
 
@@ -275,7 +297,8 @@
 				<label class="form-label">新密碼</label>
 				<div class="password-input-container">
 					<input type="password" class="form-control" id="password"
-						name="password" onkeyup="checkPasswordMatch()">
+						name="password" onkeyup="checkPasswordMatch()"
+						placeholder="新密碼只能是英文字母和數字，長度需在5~15之間">
 					<button type="button" class="password-toggle"
 						data-target="password">
 						<svg class="eye-open" viewBox="0 0 24 24">
@@ -289,14 +312,15 @@
 					</button>
 				</div>
 				<div id="passwordError"
-						style="color: #ff4444; font-size: 14px; display: none;">密碼只能是英文字母數字和_，長度需在5~15之間</div>
+					style="color: #ff4444; font-size: 14px; display: none;">密碼只能是英文字母和數字，長度需在5~15之間</div>
 			</div>
 
 			<div class="form-group">
 				<label class="form-label">確認新密碼</label>
 				<div class="password-input-container">
 					<input type="password" class="form-control" id="confirmPassword"
-						name="confirmPassword" onkeyup="checkPasswordMatch()">
+						name="confirmPassword" onkeyup="checkPasswordMatch()"
+						placeholder="再次輸入新密碼，只能是英文字母和數字，長度需在5~15之間">
 					<button type="button" class="password-toggle"
 						data-target="confirmPassword">
 						<svg class="eye-open" viewBox="0 0 24 24">
@@ -313,26 +337,9 @@
 			</div>
 
 			<div class="form-group">
-				<label class="form-label">聯絡電話</label> <input type="tel"
-					class="form-control" id="phone" name="phone">
-				<div id="phoneError"
-					style="color: #ff4444; font-size: 14px; display: none;">請輸入正確聯絡電話格式，手機或市話皆可，ex:
-					0912345678 或 02-12345678</div>
-			</div>
-
-			<div class="form-group">
-				<label class="form-label">性別</label> <input type="text"
-					class="form-control readonly-field" id="gender" readonly>
-			</div>
-
-			<div class="form-group">
-				<label class="form-label">生日</label> <input type="date"
-					class="form-control readonly-field" id="birthday" readonly>
-			</div>
-
-			<div class="form-group">
 				<label class="form-label">公司統編</label> <input type="text"
-					class="form-control" id="companyId" name="companyId">
+					class="form-control" id="companyId" name="companyId"
+					placeholder="可輸入 8 位數字，且不能包含字母或特殊符號">
 				<div id="companyIdError"
 					style="color: #ff4444; font-size: 14px; display: none;">公司統編為
 					8 位數字，且不能包含字母或特殊符號</div>
@@ -340,7 +347,8 @@
 
 			<div class="form-group">
 				<label class="form-label">手機載具</label> <input type="text"
-					class="form-control" id="ereceiptCarrier" name="ereceiptCarrier">
+					class="form-control" id="ereceiptCarrier" name="ereceiptCarrier"
+					placeholder="總長 8 個字，第一碼必須是 / ，後面可以是數字、大寫英文、以及特殊符號">
 				<div id="ereceiptCarrierError"
 					style="color: #ff4444; font-size: 14px; display: none;">手機載具格式錯誤，總長度是
 					8 個字符，第一碼必須是" / "，後續接 7 個字符可以是數字(0-9)、大寫英文字母(A-Z)、以及特殊符號(.、-、+)</div>
@@ -348,7 +356,8 @@
 
 			<div class="form-group">
 				<label class="form-label">信用卡號</label> <input type="text"
-					class="form-control" id="creditCard" name="creditCard">
+					class="form-control" id="creditCard" name="creditCard"
+					placeholder="請輸入 13 至 19 位的數字">
 				<div id="creditCardError"
 					style="color: #ff4444; font-size: 14px; display: none;">信用卡號輸入格式不正確，請輸入
 					13 至 19 位的數字</div>
