@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,28 +47,41 @@ public class TripController {
 		}
 	}
 
-	@GetMapping("/all")
-	public ResponseEntity<Map<String, Object>> getAllTrips(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "12") int size) {
+	@RequestMapping(value = "/all", method = {RequestMethod.GET, RequestMethod.POST})
+	public ResponseEntity<Map<String, Object>> getAllTrips(
+	    @RequestParam(defaultValue = "0") int page,
+	    @RequestParam(defaultValue = "12") int size,
+	    @RequestBody(required = false) Map<String, Object> body) {  // 新增 RequestBody 參數
+		
+		System.out.println("Received request - page: " + page + ", size: " + size);
+	    if (body != null) {
+	        System.out.println("Request body: " + body);
+	    }
+	    
+	    try {
+	        // 如果是 POST 請求且有 body，從 body 中獲取參數
+	        if (body != null) {
+	            page = body.containsKey("page") ? ((Number)body.get("page")).intValue() : page;
+	            size = body.containsKey("size") ? ((Number)body.get("size")).intValue() : size;
+	        }
 
-		try {
-			Pageable pageable = PageRequest.of(page, size);
-			Page<Map<String, Object>> pageResult = tripSvc.getTrips(pageable);
+	        Pageable pageable = PageRequest.of(page, size);
+	        Page<Map<String, Object>> pageResult = tripSvc.getTrips(pageable);
 
-			Map<String, Object> response = new HashMap<>();
-			response.put("content", pageResult.getContent());
-			response.put("totalPages", pageResult.getTotalPages());
-			response.put("totalElements", pageResult.getTotalElements());
-			response.put("currentPage", page);
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("content", pageResult.getContent());
+	        response.put("totalPages", pageResult.getTotalPages());
+	        response.put("totalElements", pageResult.getTotalElements());
+	        response.put("currentPage", page);
 
-			return ResponseEntity.ok(response);
-		} catch (Exception e) {
-			e.printStackTrace(); // 在控制台打印詳細錯誤
-			Map<String, Object> errorResponse = new HashMap<>();
-			errorResponse.put("error", e.getClass().getName());
-			errorResponse.put("message", e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-		}
+	        return ResponseEntity.ok(response);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        Map<String, Object> errorResponse = new HashMap<>();
+	        errorResponse.put("error", e.getClass().getName());
+	        errorResponse.put("message", e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+	    }
 	}
 
 	// 首頁熱門文章 API

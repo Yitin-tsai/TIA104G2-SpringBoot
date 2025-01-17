@@ -83,6 +83,11 @@ public class TripService {
 
 	@Transactional(readOnly = true)
 	public Page<Map<String, Object>> getTrips(Pageable pageable) {
+		
+		   System.out.println("Getting trips with page: " + 
+	                pageable.getPageNumber() + " and size: " + 
+	                pageable.getPageSize());
+		   
 		Page<Object[]> tripsPage = tripRepository.findAllTripsWithDetails(pageable);
 
 		return tripsPage.map(tripArray -> {

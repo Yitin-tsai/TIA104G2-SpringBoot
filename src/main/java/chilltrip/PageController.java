@@ -41,8 +41,8 @@ public class PageController {
 	// 創建自己的新文章（非共編）
 	@GetMapping("/editor/create")
 	public String showCreateEditor(HttpServletRequest request) {
-		Integer loginMemberId = (Integer) request.getAttribute("loginMemberId");
-		if (loginMemberId == null) {
+		Integer MemberId = (Integer) request.getAttribute("MemberId");
+		if (MemberId == null) {
 			return "redirect:/login";
 		}
 		return "frontend/seal_trip_editor";
