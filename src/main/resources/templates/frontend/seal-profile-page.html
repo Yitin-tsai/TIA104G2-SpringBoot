@@ -18,15 +18,15 @@
       }
 
       :root {
-        --primary-color: #ff6600;
-        --secondary-color: #ffa07a;
-        --accent-color: #ffac81;
-        --gray-light: #f7f7f7;
-        --gray-medium: #8d8d8d;
-        --gray-dark: #4a4a4a;
-        --border-color: #e0e0e0;
-        --orange-light: #fff0e6;
-        --orange-medium: #ffd6c0;
+        --primary-color: #4a4a4a; /* 深灰色 - 主要色彩 */
+        --secondary-color: #6b6b6b; /* 中灰色 - 次要色彩 */
+        --accent-color: #858585; /* 淺灰色 - 強調色彩 */
+        --gray-light: #f5f5f5; /* 極淺灰色 - 背景色 */
+        --gray-medium: #8d8d8d; /* 中灰色 - 輔助色 */
+        --gray-dark: #333333; /* 深灰色 - 文字色 */
+        --border-color: #dedede; /* 淺灰色 - 邊框色 */
+        --orange-light: #f0f0f0; /* 取代原本的橘色系 */
+        --orange-medium: #e0e0e0; /* 取代原本的橘色系 */
       }
 
       body {
@@ -98,10 +98,10 @@
 
       .follow-btn {
         padding: 8px 20px;
-        border: 1px solid #3498db;
+        border: 1px solid var(--gray-dark);
         border-radius: 20px;
         background: transparent;
-        color: #3498db;
+        color: var(--gray-dark);
         cursor: pointer;
         transition: all 0.2s;
       }
@@ -136,13 +136,13 @@
       }
 
       .follow-btn:hover {
-        background: var(--primary-color);
+        background: var(--gray-dark);
         color: white;
-        border-color: var(--primary-color);
+        border-color: var(--gray-dark);
       }
 
       .follow-btn.following {
-        background: #3498db;
+        background: var(--gray-dark);
         color: white;
       }
 
@@ -164,6 +164,17 @@
         border-radius: 4px;
         background: white;
         min-width: 120px;
+        color: var(--gray-dark);
+      }
+
+      select:hover {
+        border-color: var(--gray-medium);
+      }
+
+      select:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(74, 74, 74, 0.2);
       }
 
       /* 文章列表 */
@@ -184,6 +195,7 @@
 
       .article-card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       }
 
       .article-image {
@@ -226,6 +238,7 @@
         padding: 4px 8px;
         border-radius: 4px;
         font-size: 12px;
+        color: var(--gray-dark);
       }
 
       .article-stats {
@@ -233,6 +246,20 @@
         justify-content: space-between;
         color: #666;
         font-size: 14px;
+      }
+
+      .filter-btn {
+        padding: 8px 20px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .filter-btn:hover {
+        background-color: var(--secondary-color);
       }
 
       /* 彈窗樣式 */
@@ -261,6 +288,7 @@
         max-width: 500px;
         max-height: 80vh;
         overflow-y: auto;
+        border: 1px solid var(--border-color);
       }
 
       .modal-header {
@@ -286,6 +314,10 @@
         align-items: center;
         padding: 10px;
         border-bottom: 1px solid var(--border-color);
+      }
+
+      .user-item:hover {
+        background-color: var(--gray-light);
       }
 
       .user-avatar {
@@ -316,6 +348,33 @@
         background: var(--accent-color);
         color: white;
         border-color: var(--accent-color);
+      }
+
+      /* 修改社交媒體圖標顏色 */
+      .social-links a:nth-child(1) div {
+        background-color: var(--gray-dark);
+      }
+
+      .social-links a:nth-child(2) div {
+        background-color: var(--secondary-color);
+      }
+
+      .social-links a:nth-child(3) div {
+        background-color: var(--primary-color);
+      }
+
+      /* 導航欄樣式修改 */
+      .nav-item.nav-link.active {
+        color: var(--primary-color) !important;
+      }
+
+      /* 麵包屑導航樣式修改 */
+      .breadcrumb-item a {
+        color: var(--gray-dark);
+      }
+
+      .breadcrumb-item.active {
+        color: var(--gray-medium);
       }
     </style>
   </head>
@@ -407,23 +466,18 @@
       <div class="filter-section">
         <select id="activity-type">
           <option value="">活動類型</option>
-          <option value="cultural">文化景點</option>
-          <option value="nature">自然風景</option>
-          <option value="food">美食</option>
         </select>
         <select id="region">
           <option value="">地區</option>
-          <option value="taipei">台北</option>
-          <option value="tokyo">東京</option>
-          <option value="osaka">大阪</option>
         </select>
         <select id="sort">
           <option value="date">發表時間</option>
-          <option value="date">熱門程度</option>
+          <option value="popularity">熱門程度</option>
           <option value="likes">點讚數</option>
           <option value="saves">收藏數</option>
           <option value="rating">評分</option>
         </select>
+        <button id="filter-submit" class="filter-btn">確認</button>
       </div>
 
       <!-- 文章列表 -->
@@ -451,7 +505,6 @@
             <div class="article-stats">
               <span>👁️ 100</span>
               <span>❤️ 50</span>
-              <span>2025-1-1</span>
               <span class="rating">★★★★★ 5.0</span>
             </div>
           </div>
@@ -495,81 +548,108 @@
       </div>
     </div>
 
+    <!------網站footer------>
     <footer>
-      <div class="social-links">
-        <div style="display: flex; gap: 10px">
-          <a
-            href="https://facebook.com"
-            target="_blank"
-            style="text-decoration: none"
-          >
-            <div
-              style="
-                width: 50px;
-                height: 50px;
-                background-color: #3b5998;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              "
+        <div class="social-links">
+          <div style="display: flex; gap: 10px">
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              style="text-decoration: none"
             >
-              <i
-                class="fab fa-facebook-f"
-                style="color: white; font-size: 24px"
-              ></i>
-            </div>
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            style="text-decoration: none"
-          >
-            <div
-              style="
-                width: 50px;
-                height: 50px;
-                background-color: #e1306c;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              "
+              <div
+                style="
+                  width: 50px;
+                  height: 50px;
+                  background-color: #3b5998;
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
+                <i
+                  class="fab fa-facebook-f"
+                  style="color: white; font-size: 24px"
+                ></i>
+              </div>
+            </a>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              style="text-decoration: none"
             >
-              <i
-                class="fab fa-instagram"
-                style="color: white; font-size: 24px"
-              ></i>
-            </div>
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            style="text-decoration: none"
-          >
-            <div
-              style="
-                width: 50px;
-                height: 50px;
-                background-color: #ff0000;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              "
+              <div
+                style="
+                  width: 50px;
+                  height: 50px;
+                  background-color: #e1306c;
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
+                <i
+                  class="fab fa-instagram"
+                  style="color: white; font-size: 24px"
+                ></i>
+              </div>
+            </a>
+            <a
+              href="https://youtube.com"
+              target="_blank"
+              style="text-decoration: none"
             >
-              <i
-                class="fab fa-youtube"
-                style="color: white; font-size: 24px"
-              ></i>
-            </div>
-          </a>
+              <div
+                style="
+                  width: 50px;
+                  height: 50px;
+                  background-color: #ff0000;
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
+                <i
+                  class="fab fa-youtube"
+                  style="color: white; font-size: 24px"
+                ></i>
+              </div>
+            </a>
+          </div>
         </div>
-      </div>
-    </footer>
-
-    <!-- 導航欄nav的href載入器 -->
-    <script th:src="@{/js/navigation.js}"></script>
+        <div class="copyright">
+            Copyright © 2024 良心鮪魚股份有限公司
+            <a href="adminLogin">管理員登入</a>
+          </div>
+      </footer>
+  
+      <!------ 共用JS ------>
+      <!-- Back to Top -->
+      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
+        ><i class="fa fa-angle-double-up"></i
+      ></a>
+  
+      <!-- JavaScript Libraries -->
+      <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+  
+      <!-- 本地資源改用 Thymeleaf 語法 -->
+      <script th:src="@{/lib/easing/easing.min.js}"></script>
+      <script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+  
+      <!-- Contact Javascript File -->
+      <script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
+      <script th:src="@{/mail/contact.js}"></script>
+  
+      <!-- Template Javascript -->
+      <script th:src="@{/js/main.js}"></script>
+  
+      <!-- 導航欄nav的href載入器 -->
+      <script th:src="@{/js/navigation.js}"></script>
+  
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -671,6 +751,166 @@
 
       // 初始化列表
       updateLists();
+    </script>
+
+    <script>
+      // 定義每頁顯示的文章數量
+      const ITEMS_PER_PAGE = 12;
+
+      // 初始化篩選器和分頁
+      document.addEventListener("DOMContentLoaded", function () {
+        // 初始化選單選項
+        initializeFilters();
+
+        // 註冊篩選按鈕事件
+        document
+          .getElementById("filter-submit")
+          .addEventListener("click", function () {
+            fetchArticles(1); // 重新篩選時從第一頁開始
+          });
+      });
+
+      // 初始化篩選選項
+      async function initializeFilters() {
+        try {
+          // 獲取活動類型選項
+          const activityTypes = await fetch("/api/activity-types");
+          const activityTypesData = await activityTypes.json();
+          populateSelect("activity-type", activityTypesData);
+
+          // 獲取地區選項
+          const regions = await fetch("/api/regions");
+          const regionsData = await regions.json();
+          populateSelect("region", regionsData);
+        } catch (error) {
+          console.error("Error loading filter options:", error);
+        }
+      }
+
+      // 填充下拉選單選項
+      function populateSelect(selectId, options) {
+        const select = document.getElementById(selectId);
+        // 保留第一個預設選項
+        const defaultOption = select.firstElementChild;
+        select.innerHTML = "";
+        select.appendChild(defaultOption);
+
+        options.forEach((option) => {
+          const optionElement = document.createElement("option");
+          optionElement.value = option.value;
+          optionElement.textContent = option.label;
+          select.appendChild(optionElement);
+        });
+      }
+
+      // 獲取篩選參數
+      function getFilterParams() {
+        return {
+          activityType: document.getElementById("activity-type").value,
+          region: document.getElementById("region").value,
+          sort: document.getElementById("sort").value,
+        };
+      }
+
+      // 獲取文章列表
+      async function fetchArticles(page) {
+        try {
+          const filters = getFilterParams();
+          const response = await fetch("/api/articles", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...filters,
+              page: page,
+              itemsPerPage: ITEMS_PER_PAGE,
+            }),
+          });
+
+          const data = await response.json();
+
+          // 渲染文章列表
+          renderArticles(data.articles);
+          // 更新分頁
+          updatePagination(data.totalPages, page);
+        } catch (error) {
+          console.error("Error fetching articles:", error);
+        }
+      }
+
+      // 渲染文章列表
+      function renderArticles(articles) {
+        const grid = document.querySelector(".articles-grid");
+        grid.innerHTML = "";
+
+        articles.forEach((article) => {
+          const articleCard = createArticleCard(article);
+          grid.appendChild(articleCard);
+        });
+      }
+
+      // 創建文章卡片
+      function createArticleCard(article) {
+        const card = document.createElement("div");
+        card.className = "article-card";
+        card.innerHTML = `
+        <img src="${article.image}" alt="${
+          article.title
+        }" class="article-image">
+        <div class="article-content">
+            <div class="article-meta">
+                <span class="author">${article.author}</span>
+            </div>
+            <h2 class="article-title">${article.title}</h2>
+            <p class="article-description">${article.description}</p>
+            <div class="article-tags">
+                ${article.tags
+                  .map((tag) => `<span class="tag">${tag}</span>`)
+                  .join("")}
+            </div>
+            <div class="article-stats">
+                <span>👁️ ${article.views}</span>
+                <span>❤️ ${article.likes}</span>
+                <span class="rating">★${article.rating.toFixed(1)}</span>
+            </div>
+        </div>
+    `;
+        return card;
+      }
+
+      // 更新分頁
+      function updatePagination(totalPages, currentPage) {
+        const pagination = document.querySelector(".pagination");
+        pagination.innerHTML = "";
+
+        // 生成分頁按鈕
+        for (let i = 1; i <= totalPages; i++) {
+          if (
+            i === 1 || // 第一頁
+            i === totalPages || // 最後一頁
+            (i >= currentPage - 1 && i <= currentPage + 1) // 當前頁的前後一頁
+          ) {
+            const pageLink = document.createElement("span");
+            pageLink.className = `page-link${
+              i === currentPage ? " active" : ""
+            }`;
+            pageLink.textContent = i;
+            pageLink.addEventListener("click", () => fetchArticles(i));
+            pagination.appendChild(pageLink);
+          } else if (
+            (i === currentPage - 2 && currentPage > 3) ||
+            (i === currentPage + 2 && currentPage < totalPages - 2)
+          ) {
+            const dots = document.createElement("span");
+            dots.textContent = "...";
+            pagination.appendChild(dots);
+          }
+        }
+      }
+
+      // 初次載入時獲取第一頁的文章
+      fetchArticles(1);
     </script>
   </body>
 </html>

@@ -1,92 +1,94 @@
  
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChillTrip</title>
 
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ChillTrip</title>
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
 
-<!-- Favicon -->
-<link href="img/favicon.ico" rel="icon" />
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-<!-- Google Web Fonts -->
-<link rel="preconnect" href="https://fonts.gstatic.com" />
-<link
-	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-	rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
 
-<!-- Font Awesome -->
-<link
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
-	rel="stylesheet" />
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
 
-<!-- Customized Bootstrap Stylesheet -->
-<link th:href="@{/css/style.css}" rel="stylesheet" />
-<link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
+    <style>
+      .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        width: 80%;
+        margin: 0 auto;
+        overflow: hidden;
+        border-bottom: 3px dotted #eee;
+        padding-top: 30px;
+        padding-bottom: 30px;
+      }
 
-<style>
-.row {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	position: relative;
-	width: 80%;
-	margin: 0 auto;
-	overflow: hidden;
-	border-bottom: 3px dotted #eee;
-	padding-top: 30px;
-	padding-bottom: 30px;
-}
+      .banner-carousel-box {
+        display: flex;
+        box-sizing: border-box;
+        justify-content: center;
+        align-items: center;
+        height: 300px;
+        transition: transform 0.5s ease-in-out;
+      }
 
-.banner-carousel-box {
-	display: flex;
-	box-sizing: border-box;
-	justify-content: center;
-	align-items: center;
-	height: 300px;
-	transition: transform 0.5s ease-in-out;
-}
+      .banner-carousel {
+        min-width: 100%;
+        box-sizing: border-box;
+      }
 
-.banner-carousel {
-	min-width: 100%;
-	box-sizing: border-box;
-}
+      .banner-carousel img {
+        width: 100%;
+        display: block;
+      }
 
-.banner-carousel img {
-	width: 100%;
-	display: block;
-}
+      .row .prev,
+      .row .next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        font-size: 18px;
+        z-index: 10;
+      }
 
-.row .prev, .row .next {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	background-color: rgba(0, 0, 0, 0.5);
-	color: white;
-	border: none;
-	cursor: pointer;
-	padding: 10px;
-	font-size: 18px;
-	z-index: 10;
-}
+      .row .prev {
+        left: 10px;
+      }
 
-.row .prev {
-	left: 10px;
-}
+      .row .next {
+        right: 10px;
+      }
 
-.row .next {
-	right: 10px;
-}
+      .banner-carousel-box .banner-carousel img {
+        width: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+      }
 
-.banner-carousel-box .banner-carousel img {
-	width: 100%;
-	display: block;
-	object-fit: cover;
-	object-position: center;
-}
-  
-.banner-carousel-box .banner-carousel img {
+      .banner-carousel-box .banner-carousel img {
         width: 100%;
         display: block;
         object-fit: cover;
@@ -139,36 +141,39 @@
       }
 
       .follow-btn {
-        border: 1px solid #9ca3af;
-        background: transparent;
-        color: #6b7280;
-        padding: 2px 10px;
-        border-radius: 12px;
-        font-size: 12px;
-        font-weight: normal;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        position: relative;
-        min-width: 52px;
-        display: inline-block;
-        text-align: center;
-      }
+    border: 1px solid #9ca3af;
+    background: transparent;
+    color: #6b7280;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: normal;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    min-width: 52px;
+    display: inline-block;
+    text-align: center;
+}
 
-      .follow-btn:hover {
-        background-color: #f3f4f6;
-        border-color: #6b7280;
-      }
+/* 未追蹤狀態的hover效果 */
+.follow-btn:hover {
+    background-color: #f3f4f6;
+    border-color: #6b7280;
+}
 
-      .follow-btn.followed {
-        background-color: #6b7280;
-        border-color: #6b7280;
-        color: white;
-      }
+/* 追蹤中的樣式 */
+.follow-btn.following {
+    background-color: #6b7280;
+    border-color: #6b7280;
+    color: white;
+}
 
-      .follow-btn.followed:hover {
-        background-color: #4b5563;
-        border-color: #4b5563;
-      }
+/* 追蹤中狀態的hover效果 */
+.follow-btn.following:hover {
+    background-color: #4b5563;
+    border-color: #4b5563;
+}
 
       .article-title {
         font-size: 18px;
@@ -206,7 +211,7 @@
       }
     </style>
   </head>
-      
+
   <body>
     <!------網站header------>
     <div id="app">
@@ -257,7 +262,7 @@
             </div>
             <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
             <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
-            <button id="goToChatRoom"> 聊天室</button>
+            <button id="goToChatRoom">聊天室</button>
           </div>
         </nav>
       </header>
@@ -876,20 +881,6 @@
 
     <!------網站footer------>
     <footer>
-      <div class="d-flex justify-content-start mt-4">
-        <a class="btn btn-outline-light btn-square mr-2" href="#"
-          ><i class="fab fa-twitter"></i
-        ></a>
-        <a class="btn btn-outline-light btn-square mr-2" href="#"
-          ><i class="fab fa-facebook-f"></i
-        ></a>
-        <a class="btn btn-outline-light btn-square mr-2" href="#"
-          ><i class="fab fa-linkedin-in"></i
-        ></a>
-        <a class="btn btn-outline-light btn-square" href="#"
-          ><i class="fab fa-instagram"></i
-        ></a>
-      </div>
       <div class="social-links">
         <div style="display: flex; gap: 10px">
           <a
@@ -959,12 +950,6 @@
             </div>
           </a>
         </div>
-
-        <!-- 加載 Font Awesome 圖標庫 -->
-        <link
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-          rel="stylesheet"
-        />
       </div>
       <div class="copyright">
         Copyright © 2024 良心鮪魚股份有限公司
@@ -994,9 +979,9 @@
     <script th:src="@{/js/main.js}"></script>
 
     <!-- 導航欄nav的href載入器 -->
-    <!------修齊的JS------>
     <script th:src="@{/js/navigation.js}"></script>
-	<script>
+
+    <script>
       //動態生成公告圖片
       document.addEventListener("DOMContentLoaded", function () {
         loadPopularArticles();
@@ -1085,7 +1070,6 @@
           }
 
           articles.forEach((article) => {
-            
             // 處理 Base64 圖片
             const imageUrl = article.image.startsWith("data:")
               ? article.image
@@ -1100,7 +1084,9 @@
                 <div class="article-content">
                     <div class="article-meta">
                         <span class="author">作者：${article.author}</span>
-                        <button class="follow-btn" data-id="${article.authorId}">追蹤</button>
+                        <button class="follow-btn" data-id="${
+                          article.authorId
+                        }">追蹤</button>
                     </div>
                     <h2 class="article-title">${article.title}</h2>
                     <p class="article-description">${article.description}</p>
@@ -1121,94 +1107,91 @@
         `;
             articlesGrid.insertAdjacentHTML("beforeend", articleHTML);
             var authorId = article.authorId;
-                    // 綁定追蹤按鈕的點擊事件
-             // 針對單一的追蹤按鈕綁定事件
-        const followButton = document.querySelector(`button.follow-btn[data-id="${article.authorId}"]`);
-        if (followButton) {
-            followButton.addEventListener("click", function() {
-                followAuthor(article.authorId);  // 傳入該文章的 ID
+            // 綁定追蹤按鈕的點擊事件
+            // 針對單一的追蹤按鈕綁定事件
+            const followButton = document.querySelector(
+              `button.follow-btn[data-id="${article.authorId}"]`
+            );
+            if (followButton) {
+              followButton.addEventListener("click", function () {
+                followAuthor(article.authorId); // 傳入該文章的 ID
+              });
+            }
+          });
+        }
+        // 定義 AJAX 請求的處理函式
+        function followAuthor(authorId) {
+          const url = `/TIA104G2-SpringBoot/trackMember/track/${authorId}`;
+
+          fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.text(); // 只有成功才返回 JSON
+              } else {
+                return response.text(); // 其他情況返回錯誤訊息
+              }
+            })
+            .then((data) => {
+              // 根據後端的回應處理
+              if (data === "nologin") {
+                alert("尚未登入，請登入");
+                window.location.href = "/TIA104G2-SpringBoot/login"; // 跳轉至登入頁面
+              } else if (data === "success") {
+                console.log("成功追蹤用戶:", data);
+                alert("成功追蹤！");
+              } else {
+                alert("追蹤失敗，請稍後再試！");
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              alert("發生錯誤，請稍後再試！");
             });
         }
       });
-  } 
-              // 定義 AJAX 請求的處理函式
-              function followAuthor(authorId) {
-                const url = `/TIA104G2-SpringBoot/trackMember/track/${authorId}`;
 
-                fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                })
-                .then((response) => {
-                    if (response.ok) {
-                        return response.text(); // 只有成功才返回 JSON
-                    } else {
-                        return response.text(); // 其他情況返回錯誤訊息
-                    }
-                })
-                .then((data) => {
-                    // 根據後端的回應處理
-                    if (data === "nologin") {
-                        alert("尚未登入，請登入");
-                        window.location.href = "/TIA104G2-SpringBoot/login"; // 跳轉至登入頁面
-                    } else if (data === "success") {
-                        console.log("成功追蹤用戶:", data);
-                        alert("成功追蹤！");
-                    } else {
-                        alert("追蹤失敗，請稍後再試！");
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                    alert("發生錯誤，請稍後再試！");
-                });
-            }
-          });
-        
-
-        function showErrorMessage(message) {
-          const articlesGrid = document.querySelector(".articles-grid");
-          if (articlesGrid) {
-            articlesGrid.innerHTML = `<div class="error-message">${message}</div>`;
-          }
+      function showErrorMessage(message) {
+        const articlesGrid = document.querySelector(".articles-grid");
+        if (articlesGrid) {
+          articlesGrid.innerHTML = `<div class="error-message">${message}</div>`;
         }
-
-        function showNoResultsMessage() {
-          const articlesGrid = document.querySelector(".articles-grid");
-          if (articlesGrid) {
-            articlesGrid.innerHTML = "<p>目前沒有熱門文章</p>";
-          }
-        }
-     
-
-   
-
-
-  </script>
-    
-  <script>
-    document.getElementById("goToChatRoom").addEventListener("click", function() {
-  // 發送 AJAX 請求，獲取用戶名稱
-  fetch('/TIA104G2-SpringBoot/chat/go')
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      // 假設返回的是 HTML 頁面，進行頁面跳轉
-      if (data.message === "success" ) {
-        window.location.href = '/TIA104G2-SpringBoot/chatroom'; // 重定向到聊天室頁面
-      } else {
-        alert("登入失敗或未授權");
       }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert("錯誤，請稍後再試");
-    });
-});
 
-  </script>
+      function showNoResultsMessage() {
+        const articlesGrid = document.querySelector(".articles-grid");
+        if (articlesGrid) {
+          articlesGrid.innerHTML = "<p>目前沒有熱門文章</p>";
+        }
+      }
+    </script>
+
+    <script>
+      document
+        .getElementById("goToChatRoom")
+        .addEventListener("click", function () {
+          // 發送 AJAX 請求，獲取用戶名稱
+          fetch("/TIA104G2-SpringBoot/chat/go")
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              // 假設返回的是 HTML 頁面，進行頁面跳轉
+              if (data.message === "success") {
+                window.location.href = "/TIA104G2-SpringBoot/chatroom"; // 重定向到聊天室頁面
+              } else {
+                alert("登入失敗或未授權");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("錯誤，請稍後再試");
+            });
+        });
+    </script>
 
     <!------主頁的幻燈片活動區------>
     <script>

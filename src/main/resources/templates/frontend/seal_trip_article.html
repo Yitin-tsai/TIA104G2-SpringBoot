@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: #f5f5f5;
+        color: #333;
+      }
+
+      .article-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .article-header {
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .article-title {
+        font-size: 32px;
+        margin-bottom: 15px;
+        color: #c5332b;
+      }
+
+      .article-meta {
+        color: #f17575;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+
+      .article-stats {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        margin: 15px 0;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .star-rating {
+        color: #ffd700;
+      }
+
+      .article-tags {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 15px 0;
+      }
+
+      .tag {
+        background: #f0f0f0;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        color: #666;
+        text-decoration: none;
+      }
+
+      .tags-group {
+        display: flex;
+        gap: 8px;
+      }
+
+      .stats-group {
+        display: flex;
+        gap: 20px;
+      }
+
+      .tag:hover {
+        background: #e0e0e0;
+      }
+
+      .collect-btn,.follow-btn,
+      .rating-btn,.report-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 12px;
+        border: 1px solid #f17575;
+        background: white;
+        border-radius: 16px;
+        color: #f17575;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 12px;
+      }
+
+      .collect-btn i,
+      .rating-btn i,.follow-btn i,.report-btn i {
+        font-size: 12px;
+      }
+
+      .article-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin: 8px 0;
+      }
+
+      .stat-item .fa-eye,
+      .stat-item .fa-heart {
+        font-size: 16px;
+      }
+
+      .loading {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      /* 新的封面圖片容器樣式 */
+      .cover-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 40%; /* 固定寬高比 */
+        margin-bottom: 30px;
+        background: #f0f0f0;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      /* 新的封面圖片樣式 */
+      .cover-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .article-abstract {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        line-height: 1.6;
+      }
+
+      .day-navigation {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        background: #fff;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow-x: auto;
+      }
+
+      .day-btn {
+        padding: 8px 16px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        border-radius: 4px;
+        color: #666;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+
+      .day-btn:hover {
+        background: #f0f0f0;
+      }
+
+      .day-btn.active {
+        background: #666;
+        color: white;
+      }
+
+      .content-wrapper {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .spots-list {
+        width: 300px;
+        flex-shrink: 0;
+      }
+
+      .spot-item {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .spot-item h3 {
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: #333;
+      }
+
+      .spot-time {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 8px;
+      }
+
+      .spot-address {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .map-container {
+        flex-grow: 1;
+        height: 500px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .day-content {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        line-height: 1.6;
+      }
+
+      .day-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+
+      .day-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+      }
+
+      @media (max-width: 768px) {
+        .content-wrapper {
+          flex-direction: column;
+        }
+
+        .spots-list {
+          width: 100%;
+        }
+
+        .map-container {
+          height: 300px;
+        }
+
+        .cover-container {
+          padding-bottom: 60%; /* 移動版更高的寬高比 */
+        }
+      }
+
+      .article-stats {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .article-actions {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 10px 0;
+      }
+
+      .collect-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border: 1px solid #f17575;
+        background: white;
+        border-radius: 20px;
+        color: #f17575;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .collect-btn:hover {
+        background: #fff1f1;
+      }
+
+      .collect-btn.active {
+        background: #f17575;
+        color: white;
+      }
+
+      .collect-btn i {
+        font-size: 14px;
+      }
+
+      .rating-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border: 1px solid #f17575;
+        background: white;
+        border-radius: 20px;
+        color: #f17575;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .rating-btn:hover {
+        background: #fff1f1;
+      }
+
+      .rating-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+
+      .rating-modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        min-width: 300px;
+      }
+
+      .rating-stars {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+      }
+
+      .rating-stars i {
+        font-size: 24px;
+        color: #ddd;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .rating-stars i:hover,
+      .rating-stars i.active {
+        color: #ffd700;
+      }
+
+      .rating-modal-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .rating-modal-btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .rating-modal-btn.submit {
+        background: #f17575;
+        color: white;
+      }
+
+      .rating-modal-btn.cancel {
+        background: #eee;
+        color: #666;
+      }
+
+      .rating-modal-btn:hover {
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 文章標籤 -->
+    <div class="article-container">
+      <header class="article-header">
+        <h1 class="article-title">東京五日遊行程安排</h1>
+
+        <!-- 標籤和統計資訊 -->
+        <div class="article-stats">
+          <div class="tags-group">
+            <a href="#" class="tag" data-tag-id="1">美食</a>
+            <a href="#" class="tag" data-tag-id="2">景點</a>
+          </div>
+          <div class="stats-group">
+            <div class="stat-item">
+              <i class="fas fa-eye"></i>
+              <span id="view-count">0</span>
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-heart"></i>
+              <span id="favorite-count">0</span>
+            </div>
+            <div class="stat-item">
+              <div class="star-rating" id="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+              </div>
+              <span id="rating-value">0.0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 新增的操作按鈕區域 -->
+        <div class="article-actions">
+            <button id="followBtn" class="follow-btn">
+                <i class="far fa-plus"></i>
+                <span>追蹤作者</span>
+          <button id="collectBtn" class="collect-btn">
+            <i class="far fa-heart"></i>
+            <span>收藏文章</span>
+          </button>
+          <button id="ratingBtn" class="rating-btn">
+            <i class="far fa-star"></i>
+            <span>給予評分</span>
+            <button id="reportBtn" class="report-btn">
+                <i class="far fa-flag"></i>
+                <span>檢舉</span>
+          </button>
+        </div>
+
+        <!-- 評分彈窗 -->
+        <div id="ratingModal" class="rating-modal">
+          <div class="rating-modal-content">
+            <h3>給予評分</h3>
+            <div class="rating-stars">
+              <i class="far fa-star" data-rating="1"></i>
+              <i class="far fa-star" data-rating="2"></i>
+              <i class="far fa-star" data-rating="3"></i>
+              <i class="far fa-star" data-rating="4"></i>
+              <i class="far fa-star" data-rating="5"></i>
+            </div>
+            <div class="rating-modal-buttons">
+              <button class="rating-modal-btn cancel">取消</button>
+              <button class="rating-modal-btn submit">確認</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="article-meta">
+          <span>發布時間: <span id="publish-time">2025-1-1 20:00</span></span>
+          <span> • </span>
+          <span>作者: <span id="author-name">愛旅遊的Seal</span></span>
+        </div>
+
+        <!-- 封面大圖 -->
+        <div class="cover-container">
+          <img class="cover-image" src="https://picsum.photos/1440/800" alt="旅遊封面" />
+        </div>
+      </header>
+
+      <div class="article-abstract">
+        探訪台北最具特色的景点景點！從松山文創園區的寧靜藝術氛圍，展開一趟舒適且文化氣息豐富的旅程。
+      </div>
+
+      <div class="day-navigation">
+        <button class="day-btn active">第一天</button>
+        <button class="day-btn">第二天</button>
+        <button class="day-btn">第三天</button>
+        <button class="day-btn">第四天</button>
+        <button class="day-btn">第五天</button>
+      </div>
+
+      <div class="content-wrapper">
+        <div class="spots-list">
+          <div class="spot-item">
+            <h3>松山文創園區</h3>
+            <div class="spot-time">09:00 - 11:00</div>
+            <div class="spot-address">台北市信義區光復南路133號</div>
+          </div>
+          <div class="spot-item">
+            <h3>台北101</h3>
+            <div class="spot-time">11:30 - 14:00</div>
+            <div class="spot-address">台北市信義區信義路五段7號</div>
+          </div>
+        </div>
+
+        <div class="map-container" id="map">
+          <!-- Google Map will be loaded here -->
+        </div>
+      </div>
+
+      <div class="day-content">
+        <h2 class="day-title">第一天</h2>
+        <p>
+          今天的行程從松山文創園區開始，這裡是台北最具代表性的文創基地之一。園區內保留了許多日治時期的建築，現在已經轉變為展覽、表演、市集等多元用途的文創空間。
+        </p>
+        <p>
+          接著我們前往台北101，這裡不只是台北的地標建築，更是一個集結美食、購物、觀景的複合式景點。特別推薦大家一定要上89樓的觀景台，在這裡可以將整個台北盆地的美景盡收眼底。
+        </p>
+      </div>
+    </div>
+
+    <script src="/static/js/trip_article.js"></script>
+    <script>
+      // Day navigation functionality
+      const dayButtons = document.querySelectorAll(".day-btn");
+      dayButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          dayButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+        });
+      });
+
+      // Initialize Google Map
+      async function initMap() {
+        const { Map } = await google.maps.importLibrary("maps");
+        const map = new Map(document.getElementById("map"), {
+          center: { lat: 25.033976, lng: 121.564714 },
+          zoom: 14,
+        });
+
+        // Add markers for spots
+        const spots = [
+          { lat: 25.0478, lng: 121.5598, title: "松山文創園區" },
+          { lat: 25.0338, lng: 121.5645, title: "台北101" },
+        ];
+
+        spots.forEach((spot) => {
+          new google.maps.Marker({
+            position: { lat: spot.lat, lng: spot.lng },
+            map: map,
+            title: spot.title,
+          });
+        });
+      }
+
+      // Load Google Maps
+      ((g) => {
+        var h,
+          a,
+          k,
+          p = "The Google Maps JavaScript API",
+          c = "google",
+          l = "importLibrary",
+          q = "__ib__",
+          m = document,
+          b = window;
+        b = b[c] || (b[c] = {});
+        var d = b.maps || (b.maps = {}),
+          r = new Set(),
+          e = new URLSearchParams(),
+          u = () =>
+            h ||
+            (h = new Promise(async (f, n) => {
+              await (a = m.createElement("script"));
+              e.set("libraries", [...r] + "");
+              for (k in g)
+                e.set(
+                  k.replace(/[A-Z]/g, (t) => "_" + t[0].toLowerCase()),
+                  g[k]
+                );
+              e.set("callback", c + ".maps." + q);
+              a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+              d[q] = f;
+              a.onerror = () => (h = n(Error(p + " could not load.")));
+              a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+              m.head.append(a);
+            }));
+        d[l]
+          ? console.warn(p + " only loads once. Ignoring:", g)
+          : (d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)));
+      })({
+        key: "YOUR_GOOGLE_MAPS_API_KEY",
+        v: "weekly",
+      });
+
+      initMap();
+    </script>
+  </body>
+</html>

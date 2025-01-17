@@ -134,7 +134,7 @@ public interface TripRepository extends JpaRepository<TripVO, Integer> {
 			FROM trip
 			LEFT JOIN member ON trip.member_id = member.member_id
 			LEFT JOIN trip_photo ON trip.trip_id = trip_photo.trip_id AND trip_photo.photo_type = 0
-			
+
 			WHERE trip.create_time >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
 			AND trip.status = 3
 			ORDER BY popularity_score DESC

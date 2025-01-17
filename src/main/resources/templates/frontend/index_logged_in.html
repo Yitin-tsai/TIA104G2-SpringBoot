@@ -1,5 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChillTrip</title>
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
+
+    <style>
+      .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        width: 80%;
+        margin: 0 auto;
+        overflow: hidden;
+        border-bottom: 3px dotted #eee;
+        padding-top: 30px;
+        padding-bottom: 30px;
+      }
+
+      .banner-carousel-box {
+        display: flex;
+        box-sizing: border-box;
+        justify-content: center;
+        align-items: center;
+        height: 300px;
+        transition: transform 0.5s ease-in-out;
+      }
+
+      .banner-carousel {
+        min-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .banner-carousel img {
+        width: 100%;
+        display: block;
+      }
+
+      .row .prev,
+      .row .next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        font-size: 18px;
+        z-index: 10;
+      }
+
+      .row .prev {
+        left: 10px;
+      }
+
+      .row .next {
+        right: 10px;
+      }
+
+      .banner-carousel-box .banner-carousel img {
+=======
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -84,14 +166,10 @@
 	object-position: center;
 }
   
-.banner-carousel-box .banner-carousel img {
-        width: 100%;
-        display: block;
-        object-fit: cover;
-        object-position: center;
-      }
+
 /* 文章卡片樣式 */
 .articles-grid {
+
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
@@ -140,7 +218,7 @@
         background: transparent;
         color: #6b7280;
         padding: 2px 10px;
-        border-radius: 12px;
+        border-radius: 12px; /* 圓角設定 */
         font-size: 12px;
         font-weight: normal;
         cursor: pointer;
@@ -156,13 +234,14 @@
         border-color: #6b7280;
       }
 
-      .follow-btn.followed {
+      .follow-btn.following {
         background-color: #6b7280;
         border-color: #6b7280;
         color: white;
+        border-radius: 12px; /* 確保追蹤中狀態保持相同的圓角 */
       }
 
-      .follow-btn.followed:hover {
+      .follow-btn.following:hover {
         background-color: #4b5563;
         border-color: #4b5563;
       }
@@ -830,10 +909,7 @@
 	  const carouselContainer = document.querySelector(
 		".banner-carousel-box"
 	  );
-
-	  // 动态构建 API 的 URL，基于当前页面的 origin
-	  
-
+	 
 	   //动态构建 API 的 URL，基于当前页面的 origin
         const apiUrl = `${window.location.origin}${
           window.location.pathname.split("/")[1]
@@ -875,6 +951,7 @@
           .catch((error) => {
             console.error("Error fetching announcements:", error);
           });
+
 
 	  //載入熱門文章
 	  function loadPopularArticles() {
@@ -922,6 +999,7 @@
 			: `data:image/jpeg;base64,${article.image}`;
 
 		  const articleHTML = `
+
 		  <article class="article-card">
 			  <img src="${imageUrl}"
 				   alt="${article.title}"
@@ -935,20 +1013,17 @@
 				  <h2 class="article-title">${article.title}</h2>
 				  <p class="article-description">${article.description}</p>
 				  <div class="article-tags">
-					  ${article.tags
-						.map((tag) => `<span class="tag">${tag}</span>`)
-						.join("")}
+					  ${article.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}
 				  </div>
 				  <div class="article-stats">
 					  <span>👁️ ${article.views}</span>
 					  <span>❤️ ${article.likes}</span>
-					  <span class="rating">★★★★★ ${Number(
-						article.rating
-					  ).toFixed(1)}</span>
+					  <span class="rating">★★★★★ ${Number(article.rating).toFixed(1)}</span>
 				  </div>
 			  </div>
 		  </article>
-	  `			;
+
+	  `	;
 				articlesGrid.insertAdjacentHTML("beforeend", articleHTML);
 		  		//檢查是否已追蹤	
 				checkIfTracked(article.authorId);
@@ -1133,6 +1208,7 @@ fetch('/TIA104G2-SpringBoot/chat/go')
 	<!------修齊的JS------>
 	<!------主頁的幻燈片活動區------>
 	<script>
+
       document.addEventListener("DOMContentLoaded", function () {
         const carouselInner = document.querySelector(".banner-carousel-box");
         const items = document.querySelectorAll(".banner-carousel");
@@ -1160,8 +1236,6 @@ fetch('/TIA104G2-SpringBoot/chat/go')
           updateCarousel();
         }, 3000);
       });
-    
-
     </script>
-</body>
+  </body>
 </html>

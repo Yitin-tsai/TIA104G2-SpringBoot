@@ -18,8 +18,9 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new LoginCheckInterceptor()).addPathPatterns("/member/createCollectionAndAddLocation",
-				"/member/addLocationToCollection", "/member/locationCollections"
+				"/member/addLocationToCollection", "/member/locationCollections", "/viewMyTrip/**"
 		// ... 其他需要驗證的路徑
+		).excludePathPatterns("/viewOtherTrip/**" // 排除公開瀏覽的頁面
 		);
 	}
 

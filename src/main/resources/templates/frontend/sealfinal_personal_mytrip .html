@@ -59,13 +59,49 @@
       }
 
       .profile-avatar {
-        width: 120px;
-        height: 120px;
+        width: 150px;
+        height: 150px;
+        /* 確保在所有瀏覽器中都是圓形 */
         border-radius: 50%;
-        margin-bottom: 15px;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+
+        /* 確保圖片不會變形 */
+        object-fit: cover;
+        -webkit-object-fit: cover;
+
+        /* 確保容器和圖片大小一致 */
+        display: block;
+        margin: 0 auto 15px auto;
+
+        /* 邊框效果 */
         border: 1px solid rgba(0, 0, 0, 0.1);
         padding: 3px;
         background-color: white;
+
+        /* 確保圖片位置正確 */
+        position: relative;
+
+        /* 增加平滑過渡效果 */
+        transition: all 0.3s ease;
+        -webkit-transition: all 0.3s ease;
+
+        /* 修復 Safari 中可能的溢出問題 */
+        overflow: hidden;
+
+        /* 提升圖層，避免被其他元素覆蓋 */
+        z-index: 1;
+      }
+
+      /* 確保圖片本身也是圓形的 */
+      .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        -webkit-object-fit: cover;
+        border-radius: 50%;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
       }
 
       .profile-name {
@@ -157,6 +193,14 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 20px;
+      }
+
+      .filter-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex: 1;
       }
 
       .filter-group {
@@ -170,13 +214,9 @@
         border: 2px solid #e0e0e0;
         border-radius: 8px;
         font-size: 16px;
-        min-width: 200px;
+        flex: 1;
+        min-width: 150px;
         transition: all 0.3s ease;
-      }
-
-      .filter-select:focus {
-        border-color: #4a4a4a;
-        outline: none;
       }
 
       .filter-button {
@@ -188,9 +228,23 @@
         cursor: pointer;
         font-size: 16px;
         transition: all 0.2s;
+        white-space: nowrap;
       }
 
-      .filter-button:hover {
+      .publish-button {
+        padding: 12px 24px;
+        background: #ff9800;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+
+      .filter-button:hover,
+      .publish-button:hover {
         opacity: 0.9;
       }
 
@@ -402,10 +456,12 @@
       }
 
       .comment-item {
+        position: relative;
         padding: 15px;
         border-bottom: 1px solid #e0e0e0;
       }
 
+      /* 評論頭部區域樣式 */
       .comment-header {
         display: flex;
         align-items: center;
@@ -435,15 +491,12 @@
         gap: 5px;
       }
 
-      .comment-rating .star {
-        font-size: 14px;
-      }
-
       .comment-time {
         color: var(--gray-medium);
         font-size: 12px;
       }
 
+      /* 評論內容樣式 */
       .comment-content {
         margin: 10px 0;
         color: var(--gray-dark);
@@ -453,7 +506,7 @@
       .comment-image {
         width: 200px;
         height: 150px;
-        object-fit: cover; /* 確保圖片不會變形 */
+        object-fit: cover;
         border-radius: 8px;
         margin-top: 10px;
         cursor: pointer;
@@ -464,40 +517,91 @@
         transform: scale(1.05);
       }
 
-      .comments-section {
-        margin-top: 20px;
-        border-top: 1px solid #e0e0e0;
-        padding-top: 20px;
+      /* 評論操作按鈕樣式 */
+      .comment-actions-dropdown {
+        position: absolute;
+        top: 10px;
+        right: 10px;
       }
 
-      .comments-title {
-        font-size: 18px;
-        font-weight: bold;
+      .comment-actions-toggle {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #6c757d;
+        transition: color 0.2s ease;
+      }
+
+      .comment-actions-toggle:hover {
         color: #4a4a4a;
-        margin-bottom: 15px;
       }
 
+      .comment-actions-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 1000;
+        min-width: 120px;
+      }
+
+      .comment-actions-menu.show {
+        display: block;
+        animation: fadeIn 0.2s ease;
+      }
+
+      .comment-action-btn {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 8px 16px;
+        text-align: left;
+        border: none;
+        background: none;
+        cursor: pointer;
+        white-space: nowrap;
+        color: #4a4a4a;
+        transition: background-color 0.2s ease;
+      }
+
+      .comment-action-btn:hover {
+        background: #f8f9fa;
+      }
+
+      .comment-action-btn i {
+        margin-right: 8px;
+        width: 16px;
+      }
+
+      /* 操作按鈕顏色 */
+      .comment-action-btn.edit-comment-btn {
+        color: #2196f3;
+      }
+
+      .comment-action-btn.delete-comment-btn {
+        color: #f44336;
+      }
+
+      .comment-action-btn.report-comment-btn {
+        color: #ff9800;
+      }
+
+      /* 評論輸入區域樣式 */
       .comment-input-container {
         background: #f8f9fa;
         border-radius: 8px;
         padding: 15px;
       }
 
-      .rating-star {
-        cursor: pointer;
-        font-size: 18px;
-        transition: color 0.2s ease;
-      }
-
       .rating-input {
         display: flex;
         align-items: center;
         gap: 10px;
-      }
-
-      .rating-text {
-        color: var(--gray-medium);
-        font-size: 14px;
+        margin-bottom: 10px;
       }
 
       .comment-input {
@@ -522,6 +626,11 @@
         gap: 8px;
         color: #6c757d;
         cursor: pointer;
+        transition: color 0.2s ease;
+      }
+
+      .upload-photo:hover {
+        color: #4a4a4a;
       }
 
       .submit-comment {
@@ -531,7 +640,7 @@
         border: none;
         border-radius: 8px;
         cursor: pointer;
-        transition: background-color 0.2s;
+        transition: background-color 0.2s ease;
       }
 
       .submit-comment:hover {
@@ -608,17 +717,13 @@
 
       /* 響應式設計 */
       @media (max-width: 768px) {
-        .dashboard-header {
-          grid-template-columns: 1fr;
-        }
-
-        .achievements-grid {
-          grid-template-columns: 1fr;
-        }
-
         .content-filter {
           flex-direction: column;
-          gap: 15px;
+        }
+
+        .filter-container {
+          flex-direction: column;
+          width: 100%;
         }
 
         .filter-group {
@@ -630,8 +735,49 @@
           width: 100%;
         }
 
-        .filter-button {
+        .filter-button,
+        .publish-button {
           width: 100%;
+        }
+
+        .comment-actions {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .submit-comment {
+          width: 100%;
+        }
+
+        .comment-image {
+          width: 100%;
+          height: auto;
+        }
+      }
+
+      /* 評論區塊基本樣式 */
+      .comments-section {
+        margin-top: 20px;
+        border-top: 1px solid #e0e0e0;
+        padding-top: 20px;
+      }
+
+      .comments-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #4a4a4a;
+        margin-bottom: 15px;
+      }
+
+      /* 動畫效果 */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
       }
     </style>
@@ -738,28 +884,38 @@
       </div>
 
       <!-- 內容篩選器 -->
+      <!-- 修改後的內容篩選器 HTML 結構 -->
       <div class="content-filter">
-        <div class="filter-group">
-          <!-- 第一層篩選 -->
-          <select class="filter-select" id="primary-filter">
-            <option value="">選擇內容類型</option>
-            <option value="my-articles">我的文章</option>
-            <option value="saved-articles">收藏文章</option>
-            <option value="saved-places">收藏景點</option>
-          </select>
+        <div class="filter-container">
+          <div class="filter-group">
+            <!-- 第一層篩選 -->
+            <select class="filter-select" id="primary-filter">
+              <option value="">選擇內容類型</option>
+              <option value="my-articles">我的文章</option>
+              <option value="saved-articles">收藏文章</option>
+              <option value="saved-places">收藏景點</option>
+            </select>
 
-          <!-- 第二層篩選 (動態更新選項) -->
-          <select class="filter-select" id="secondary-filter">
-            <option value="">請先選擇內容類型</option>
-          </select>
+            <!-- 第二層篩選 (動態更新選項) -->
+            <select class="filter-select" id="secondary-filter">
+              <option value="">請先選擇內容類型</option>
+            </select>
 
-          <!-- 第三層篩選 (排序方式) -->
-          <select class="filter-select" id="sort-type">
-            <option value="">選擇排序方式</option>
-          </select>
+            <!-- 第三層篩選 (排序方式) -->
+            <select class="filter-select" id="sort-type">
+              <option value="">選擇排序方式</option>
+            </select>
+          </div>
+
+          <button id="apply-filter" class="filter-button">確認</button>
         </div>
-
-        <button id="apply-filter" class="filter-button">確認</button>
+        <button
+          id="publish-mytrip"
+          class="publish-button"
+          th:onclick="|window.location.href='@{/trip/editor/create}'|"
+        >
+          發文章
+        </button>
       </div>
 
       <!-- 內容展示區域 -->
@@ -827,8 +983,108 @@
       </div>
     </div>
 
+    <!------網站footer------>
+    <footer>
+      <div class="social-links">
+        <div style="display: flex; gap: 10px">
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #3b5998;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-facebook-f"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #e1306c;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-instagram"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #ff0000;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-youtube"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="copyright">
+        Copyright © 2024 良心鮪魚股份有限公司
+        <a href="adminLogin">管理員登入</a>
+      </div>
+    </footer>
+
+    <!------ 共用JS ------>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
+      ><i class="fa fa-angle-double-up"></i
+    ></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 本地資源改用 Thymeleaf 語法 -->
+    <script th:src="@{/lib/easing/easing.min.js}"></script>
+    <script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+
+    <!-- Contact Javascript File -->
+    <script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
+    <script th:src="@{/mail/contact.js}"></script>
+
+    <!-- Template Javascript -->
+    <script th:src="@{/js/main.js}"></script>
+
     <!-- 導航欄nav的href載入器 -->
     <script th:src="@{/js/navigation.js}"></script>
+
     <!--景點與文章樣式管理與動態清單取得-->
     <script src="/static/js/content-manager.js"></script>
 

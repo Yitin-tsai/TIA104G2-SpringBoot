@@ -167,12 +167,22 @@ applyFilterBtn.addEventListener("click", async function () {
           commentCount: 150,
           comments: [
             {
+              id: "comment1", // 添加評論 ID
               userName: "旅行者小明",
               userAvatar: "/api/placeholder/40/40",
               rating: 4.5,
               time: "2024-01-13",
               content: "很棒的景點！建築很漂亮，環境也很清幽。",
               image: "/api/placeholder/200/150",
+            },
+            {
+              id: "comment2", // 添加評論 ID
+              userName: "小花",
+              userAvatar: "/api/placeholder/40/40",
+              rating: 5,
+              time: "2024-01-12",
+              content: "必去景點！人潮很多但秩序良好。",
+              image: null,
             },
           ],
         },
@@ -183,7 +193,17 @@ applyFilterBtn.addEventListener("click", async function () {
           ratingCount: 800,
           saveTime: "2024-01-12",
           commentCount: 120,
-          comments: [],
+          comments: [
+            {
+              id: "comment3", // 添加評論 ID
+              userName: "小王",
+              userAvatar: "/api/placeholder/40/40",
+              rating: 4.7,
+              time: "2024-01-11",
+              content: "環境很清幽，非常適合放鬆心情。",
+              image: "/api/placeholder/200/150",
+            },
+          ],
         },
       ];
       contentGrid.classList.add("places-layout");
@@ -287,151 +307,162 @@ function createPlaceCard(place) {
     if (!comments.length) return "";
 
     return `
-        <div class="comments-list">
-          ${comments
-            .map(
-              (comment) => `
-            <div class="comment-item">
-              <div class="comment-header">
-                <img src="${comment.userAvatar || "/api/placeholder/40/40"}" 
-                     alt="${comment.userName}" 
-                     class="comment-user-avatar">
-                <div class="comment-user-info">
-                  <div class="comment-user-name">${comment.userName}</div>
-                  <div class="comment-rating">
-                    ${generateStars(comment.rating)}
-                    <span class="comment-time">${comment.time}</span>
-                  </div>
-                </div>
+    <div class="comments-list">
+      ${comments
+        .map(
+          (comment) => `
+        <div class="comment-item" data-comment-id="${comment.id}">
+          <div class="comment-header">
+            <img src="${comment.userAvatar || "/api/placeholder/40/40"}" 
+                 alt="${comment.userName}" 
+                 class="comment-user-avatar">
+            <div class="comment-user-info">
+              <div class="comment-user-name">${comment.userName}</div>
+              <div class="comment-rating">
+                ${generateStars(comment.rating)}
+                <span class="comment-time">${comment.time}</span>
               </div>
-              <div class="comment-content">${comment.content}</div>
-              ${
-                comment.image
-                  ? `
-                <img src="${comment.image}" 
-                     alt="評論圖片" 
-                     class="comment-image">
-              `
-                  : ""
-              }
             </div>
+            <div class="comment-actions-dropdown">
+              <!-- 改用更明顯的「...」符號 -->
+              <button class="comment-actions-toggle" title="評論操作選項">
+                ⋮
+              </button>
+              <div class="comment-actions-menu">
+                <button class="comment-action-btn edit-comment-btn">
+                  ✎ 編輯
+                </button>
+                <button class="comment-action-btn delete-comment-btn">
+                  🗑️ 刪除
+                </button>
+                <button class="comment-action-btn report-comment-btn">
+                  ⚠️ 檢舉
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="comment-content">${comment.content}</div>
+          ${
+            comment.image
+              ? `
+            <img src="${comment.image}" 
+                 alt="評論圖片" 
+                 class="comment-image">
           `
-            )
-            .join("")}
+              : ""
+          }
         </div>
-      `;
+      `
+        )
+        .join("")}
+    </div>
+  `;
   };
 
   card.innerHTML = `
-      <div class="place-header">
-        <div class="place-info">
-          <h3 class="place-title">${place.name}</h3>
-          <p class="place-address">${place.address}</p>
-          <div class="place-rating">
-            <div class="star-container">
-              ${generateStars(place.rating)}
-            </div>
-            <span class="rating-text">${place.rating.toFixed(1)} (${
+    <div class="place-header">
+      <div class="place-info">
+        <h3 class="place-title">${place.name}</h3>
+        <p class="place-address">${place.address}</p>
+        <div class="place-rating">
+          <div class="star-container">
+            ${generateStars(place.rating)}
+          </div>
+          <span class="rating-text">${place.rating.toFixed(1)} (${
     place.ratingCount
   } 則評價)</span>
-          </div>
         </div>
       </div>
-  
-      <div class="comments-section">
-        <h4 class="comments-title">評論區</h4>
-        ${generateComments(place.comments)}
-        <div class="comment-input-container">
-          <div class="rating-input" id="ratingInput">
-            ${generateStars(0, true)} 
-            <span class="rating-text"></span>
-          </div>
-          <textarea class="comment-input" placeholder="分享您的旅遊體驗..."></textarea>
-          <div class="comment-actions">
-            <label class="upload-photo">
-              <i class="fas fa-camera"></i>
-              <span>上傳照片</span>
-              <input type="file" accept="image/*" style="display: none;">
-            </label>
-            <button class="submit-comment">發布評論</button>
-          </div>
+    </div>
+
+    <div class="comments-section">
+      <h4 class="comments-title">評論區</h4>
+      ${generateComments(place.comments)}
+      <div class="comment-input-container">
+        <div class="rating-input" id="ratingInput">
+          ${generateStars(0, true)} 
+          <span class="rating-text"></span>
+        </div>
+        <textarea class="comment-input" placeholder="分享您的旅遊體驗..."></textarea>
+        <div class="comment-actions">
+          <label class="upload-photo">
+            <i class="fas fa-camera"></i>
+            <span>上傳照片</span>
+            <input type="file" accept="image/*" style="display: none;">
+          </label>
+          <button class="submit-comment">發布評論</button>
         </div>
       </div>
-    `;
+    </div>
+  `;
+
+  // 評論相關的事件監聽器
+  const addCommentEventListeners = () => {
+    card.querySelectorAll(".comment-item").forEach((commentEl) => {
+      const commentId = commentEl.dataset.commentId;
+      const actionsToggle = commentEl.querySelector(".comment-actions-toggle");
+      const actionsMenu = commentEl.querySelector(".comment-actions-menu");
+
+      // 切換選單顯示
+      actionsToggle?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        actionsMenu.classList.toggle("show");
+      });
+
+      // 編輯評論
+      commentEl
+        .querySelector(".edit-comment-btn")
+        ?.addEventListener("click", () => {
+          handleEditComment(commentId);
+        });
+
+      // 刪除評論
+      commentEl
+        .querySelector(".delete-comment-btn")
+        ?.addEventListener("click", () => {
+          handleDeleteComment(commentId);
+        });
+
+      // 檢舉評論
+      commentEl
+        .querySelector(".report-comment-btn")
+        ?.addEventListener("click", () => {
+          handleReportComment(commentId);
+        });
+    });
+
+    // 點擊其他地方關閉選單
+    document.addEventListener("click", () => {
+      card.querySelectorAll(".comment-actions-menu.show").forEach((menu) => {
+        menu.classList.remove("show");
+      });
+    });
+  };
 
   // 添加評論相關的事件監聽器
-  const fileInput = card.querySelector('input[type="file"]');
-  const submitButton = card.querySelector(".submit-comment");
-  const commentInput = card.querySelector(".comment-input");
-  const ratingStars = card.querySelectorAll(".rating-star");
-  const ratingText = card.querySelector(".rating-input .rating-text");
-  let currentRating = 0;
-
-  // 添加評分功能的事件監聽
-  ratingStars.forEach((star) => {
-    // 滑鼠懸停效果
-    star.addEventListener("mouseenter", () => {
-      const rating = parseInt(star.dataset.rating);
-      ratingStars.forEach((s, index) => {
-        if (index < rating) {
-          s.textContent = "★";
-          s.style.color = "#ffd700";
-        } else {
-          s.textContent = "☆";
-          s.style.color = "#e0e0e0";
-        }
-      });
-      ratingText.textContent = `${rating}.0 分`;
-    });
-
-    // 點擊評分
-    star.addEventListener("click", () => {
-      currentRating = parseInt(star.dataset.rating);
-      ratingStars.forEach((s, index) => {
-        if (index < currentRating) {
-          s.textContent = "★";
-          s.style.color = "#ffd700";
-        } else {
-          s.textContent = "☆";
-          s.style.color = "#e0e0e0";
-        }
-      });
-    });
-  });
-
-  // 滑鼠離開評分區域時的處理
-  const ratingInput = card.querySelector(".rating-input");
-  ratingInput.addEventListener("mouseleave", () => {
-    ratingStars.forEach((star, index) => {
-      if (index < currentRating) {
-        star.textContent = "★";
-        star.style.color = "#ffd700";
-      } else {
-        star.textContent = "☆";
-        star.style.color = "#e0e0e0";
-      }
-    });
-    ratingText.textContent = currentRating ? `${currentRating}.0 分` : "";
-  });
-
-  // 文件上傳事件
-  fileInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      console.log("已選擇檔案:", file.name);
-    }
-  });
-
-  // 提交評論事件
-  submitButton.addEventListener("click", () => {
-    const comment = commentInput.value;
-    console.log("提交評論:", {
-      rating: currentRating,
-      comment: comment,
-    });
-  });
+  addCommentEventListeners();
 
   return card;
+}
+
+// 評論操作處理函數
+function handleEditComment(commentId) {
+  console.log("編輯評論:", commentId);
+  // TODO: 實現編輯評論功能
+}
+
+function handleDeleteComment(commentId) {
+  if (confirm("確定要刪除這則評論嗎？")) {
+    console.log("刪除評論:", commentId);
+    // TODO: 實現刪除評論功能
+  }
+}
+
+function handleReportComment(commentId) {
+  if (confirm("確定要檢舉這則評論嗎？")) {
+    console.log("檢舉評論:", commentId);
+    // TODO: 實現檢舉評論功能
+  }
 }
 
 // 渲染文章卡片
@@ -453,37 +484,62 @@ function createArticleCard(article) {
   const card = document.createElement("div");
   card.className = "content-card";
 
+  // 獲取當前選擇的內容類型
+  const currentContentType = primaryFilter.value;
+
+  // 根據內容類型決定按鈕的 HTML
+  const getActionButtons = () => {
+    if (currentContentType === "saved-articles") {
+      // 收藏文章只顯示「移除收藏」按鈕
+      return `
+        <button class="action-button delete-btn" data-id="${article.id}">移除收藏</button>
+      `;
+    } else {
+      // 我的文章顯示「編輯」和「刪除」按鈕
+      return `
+        <button class="action-button edit-btn" data-id="${article.id}">編輯</button>
+        <button class="action-button delete-btn" data-id="${article.id}">刪除</button>
+      `;
+    }
+  };
+
   card.innerHTML = `
-      <img src="${article.image || "https://picsum.photos/400/320"}" 
-       alt="${article.title}" 
-       class="card-image"
-       onerror="this.src='https://picsum.photos/400/320'">
-      <div class="card-body">
-        <h2 class="card-title">${article.title}</h2>
-        <p class="card-description">${article.description}</p>
-        <div class="card-footer">
-          <div class="card-stats">
-            <span>👁️ ${article.views || 0}</span>
-            <span>❤️ ${article.likes || 0}</span>
-          </div>
-          <div class="card-actions">
-            <button class="action-button edit-btn" data-id="${
-              article.id
-            }">編輯</button>
-            <button class="action-button delete-btn" data-id="${
-              article.id
-            }">刪除</button>
-          </div>
+    <img src="${article.image || "https://picsum.photos/400/320"}" 
+     alt="${article.title}" 
+     class="card-image"
+     onerror="this.src='https://picsum.photos/400/320'">
+    <div class="card-body">
+      <h2 class="card-title">${article.title}</h2>
+      <p class="card-description">${article.description}</p>
+      <div class="card-footer">
+        <div class="card-stats">
+          <span>👁️ ${article.views || 0}</span>
+          <span>❤️ ${article.likes || 0}</span>
+        </div>
+        <div class="card-actions">
+          ${getActionButtons()}
         </div>
       </div>
-    `;
+    </div>
+  `;
 
   // 添加按鈕事件監聽器
-  const editBtn = card.querySelector(".edit-btn");
   const deleteBtn = card.querySelector(".delete-btn");
+  const editBtn = card.querySelector(".edit-btn");
 
-  editBtn.addEventListener("click", () => handleEdit(article.id));
-  deleteBtn.addEventListener("click", () => handleDelete(article.id));
+  // 根據內容類型設定不同的刪除行為
+  deleteBtn.addEventListener("click", () => {
+    if (currentContentType === "saved-articles") {
+      handleRemoveSaved(article.id);
+    } else {
+      handleDelete(article.id);
+    }
+  });
+
+  // 只有在編輯按鈕存在時才添加事件監聽器
+  if (editBtn) {
+    editBtn.addEventListener("click", () => handleEdit(article.id));
+  }
 
   return card;
 }
@@ -548,13 +604,22 @@ function changePage(newPage) {
   }
 }
 
-// 編輯文章
+// 處理移除收藏的函數
+function handleRemoveSaved(articleId) {
+  if (confirm("確定要移除這篇收藏的文章嗎？")) {
+    console.log("移除收藏文章:", articleId);
+    // TODO: 實現移除收藏的 API 調用
+    // 可以在這裡添加與後端的通信邏輯
+  }
+}
+
+// 編輯函數
 function handleEdit(articleId) {
   console.log("編輯文章:", articleId);
   // TODO: 實現編輯功能
 }
 
-// 刪除文章
+// 刪除函數
 function handleDelete(articleId) {
   if (confirm("確定要刪除這篇文章嗎？")) {
     console.log("刪除文章:", articleId);
