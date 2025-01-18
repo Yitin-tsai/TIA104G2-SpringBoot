@@ -41,14 +41,15 @@ public class PageController {
 	// 創建自己的新文章（非共編）
 	@GetMapping("/editor/create")
 	public String showCreateEditor(HttpServletRequest request) {
-		Integer loginMemberId = (Integer) request.getAttribute("loginMemberId");
-		if (loginMemberId == null) {
+		Integer MemberId = (Integer) request.getAttribute("MemberId");
+		if (MemberId == null) {
 			return "redirect:/login";
 		}
 		return "frontend/seal_trip_editor";
 	}
 
 	// 第三人視角看「我的行程」-->未登入會員也可以看
+	@GetMapping("/viewMyTrip/{memberId}")
 	public String viewOtherTrip(@PathVariable Integer memberId, Model model) {
 		MemberVO memberVO = memberSvc.getMemberById(memberId);
 		if (memberVO == null) {

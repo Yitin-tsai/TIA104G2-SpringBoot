@@ -208,12 +208,11 @@
 
 <body>
 	<!------網站header------>
-	<div id="app">
 		<header>
 			<nav class="top-nav">
 				<div class="nav-left">
 					<a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a> <a
-						href="#" class="nav-item nav-link" id="nav-mygo">我的行程</a>
+						href="#" class="nav-item nav-link" id="nav-mygo">My！行程</a>
 				</div>
 				<div class="nav-center">
 					<a href="#" id="z-index"> <a href="/TIA104G2-SpringBoot/loggedin"
@@ -236,7 +235,6 @@
 				</div>
 			</nav>
 		</header>
-	</div>
 
 	<!------主頁的幻燈片活動區------>
 	<div class="container-fluid">
@@ -809,20 +807,7 @@
 	<!------修齊的JS------>
 	<script th:src="@{/js/navigation.js}"></script>
 
-	<!-- 導航欄nav的href載入器 -->
-	<!-- <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("nav-go").href = "./go.html";
-            document.getElementById("nav-product").href = "./product.html";
-            document.getElementById("nav-profile").href = "./profile.html";
-            document.getElementById("nav-guide").href = "./guide.html";
-            document.getElementById("nav-basic-info").href = "./basic_info.html";
-            document.getElementById("nav-coupons").href = "./coupons.html";
-            document.getElementById("nav-orders").href = "./orders.html";
-            document.getElementById("nav-support").href = "./support.html";
-            document.getElementById("nav-cart").href = "./cart.html";
-        });
-    </script> -->
+	
 <script>
 	//動態生成公告圖片
 	document.addEventListener("DOMContentLoaded", function () {

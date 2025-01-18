@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-tw">
   <head>
     <meta charset="UTF-8" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>東京五日遊行程安排</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -25,17 +26,21 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
+        border-radius: 8px;
+        background-color: rgba(239, 161, 161, 0.105);
       }
 
       .article-header {
         margin-bottom: 30px;
         text-align: center;
+        background-color: #d8b4b330;
       }
 
       .article-title {
         font-size: 32px;
         margin-bottom: 15px;
         color: #c5332b;
+        background-color: #deb2af2f;
       }
 
       .article-meta {
@@ -94,8 +99,9 @@
         background: #e0e0e0;
       }
 
-      .collect-btn,.follow-btn,
-      .rating-btn,.report-btn {
+      .collect-btn,
+      .follow-btn,
+      .report-btn {
         display: flex;
         align-items: center;
         gap: 4px;
@@ -110,7 +116,8 @@
       }
 
       .collect-btn i,
-      .rating-btn i,.follow-btn i,.report-btn i {
+      .follow-btn i,
+      .report-btn i {
         font-size: 12px;
       }
 
@@ -138,7 +145,7 @@
         padding-bottom: 40%; /* 固定寬高比 */
         margin-bottom: 30px;
         background: #f0f0f0;
-        border-radius: 8px;
+        
         overflow: hidden;
       }
 
@@ -154,7 +161,7 @@
       }
 
       .article-abstract {
-        background: #fff;
+        background: rgba(239, 120, 46, 0.08);
         padding: 20px;
         border-radius: 8px;
         margin-bottom: 30px;
@@ -166,7 +173,7 @@
         display: flex;
         gap: 10px;
         margin-bottom: 20px;
-        background: #fff;
+        background: #3933331c;
         padding: 10px;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -202,14 +209,40 @@
       .spots-list {
         width: 300px;
         flex-shrink: 0;
+        max-height: 500px; /* 與地圖同高 */
+        overflow-y: auto; /* 超出時顯示滾動條 */
+        padding-right: 10px; /* 為滾動條預留空間 */
+      }
+
+      /* 美化滾動條樣式 */
+      .spots-list::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .spots-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+      }
+
+      .spots-list::-webkit-scrollbar-thumb {
+        background: #c5c5c5;
+        border-radius: 3px;
+      }
+
+      .spots-list::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
       }
 
       .spot-item {
-        background: white;
+        background: #3933331c;
         padding: 15px;
         border-radius: 8px;
         margin-bottom: 15px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .spot-item:last-child {
+        margin-bottom: 0;
       }
 
       .spot-item h3 {
@@ -238,11 +271,11 @@
       }
 
       .day-content {
-        background: white;
+        background: #3933331c;
         padding: 20px;
         border-radius: 8px;
         margin-bottom: 30px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgba(38, 16, 4, 0.396);
         line-height: 1.6;
       }
 
@@ -255,6 +288,7 @@
 
       .day-title {
         font-size: 24px;
+        color: #190504;
         margin-bottom: 20px;
         padding-bottom: 10px;
         border-bottom: 1px solid #eee;
@@ -267,6 +301,8 @@
 
         .spots-list {
           width: 100%;
+          max-height: 300px; /* 手機版時的高度限制 */
+          margin-bottom: 20px; /* 與地圖的間距 */
         }
 
         .map-container {
@@ -320,46 +356,6 @@
         font-size: 14px;
       }
 
-      .rating-btn {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 16px;
-        border: 1px solid #f17575;
-        background: white;
-        border-radius: 20px;
-        color: #f17575;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-
-      .rating-btn:hover {
-        background: #fff1f1;
-      }
-
-      .rating-modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-      }
-
-      .rating-modal-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        text-align: center;
-        min-width: 300px;
-      }
-
       .rating-stars {
         display: flex;
         justify-content: center;
@@ -407,9 +403,285 @@
       .rating-modal-btn:hover {
         opacity: 0.8;
       }
+
+      /* 評論區整體樣式 */
+      .comments-section {
+        max-width: 1200px;
+        margin: 5px auto;
+        padding: 20px;
+        background: rgba(239, 161, 161, 0.105);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .comments-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #c5332b;
+      }
+
+      /* 評論列表樣式 */
+      .comment-item {
+        display: flex;
+        gap: 15px;
+        padding: 20px;
+        border-radius: 8px;
+        background: #3933331c;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .comment-avatar img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .comment-content {
+        flex: 1;
+      }
+
+      .comment-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+
+      .user-name {
+        font-weight: bold;
+        color: #333;
+        margin-right: 10px;
+      }
+
+      .comment-rating {
+        color: #ffd700;
+        font-size: 14px;
+      }
+
+      .comment-time {
+        color: #666;
+        font-size: 12px;
+      }
+
+      .comment-text {
+        margin: 10px 0;
+        line-height: 1.6;
+      }
+
+      .comment-photos {
+        display: flex;
+        gap: 10px;
+        margin: 10px 0;
+        flex-wrap: wrap;
+      }
+
+      .comment-photos img {
+        width: 200px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 4px;
+      }
+
+      .comment-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .comment-actions button {
+        padding: 4px 8px;
+        border: none;
+        background: none;
+        color: #666;
+        cursor: pointer;
+        font-size: 12px;
+        transition: color 0.3s;
+      }
+
+      .comment-actions button:hover {
+        color: #f17575;
+      }
+
+      /* 分頁控制樣式 */
+      .comments-pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .page-btn {
+        padding: 5px 10px;
+        border: 1px solid #e0e0e0;
+        background: white;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .page-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* 評論表單樣式 */
+      .comment-form {
+        position: relative;
+        padding-bottom: 20px;
+      }
+
+      .comment-form h3 {
+        margin-bottom: 15px;
+        color: #333;
+      }
+
+      .star-input {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .star-input i {
+        font-size: 16px;
+        color: #ddd;
+        cursor: pointer;
+      }
+
+      .star-input i.fas {
+        color: #ffd700;
+      }
+
+      .comment-form textarea {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        resize: vertical;
+        margin-bottom: 15px;
+      }
+
+      .photo-upload {
+        margin-bottom: 15px;
+      }
+
+      .upload-btn {
+        padding: 8px 16px;
+        background: #f5f5f5;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .upload-btn:hover {
+        background: #e65c5c;
+      }
+
+      .photo-preview {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+
+      .submit-btn {
+        padding: 10px 20px;
+        background: #c5332b;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .submit-btn:hover {
+        background: #a62b24;
+      }
+
+      @media (max-width: 768px) {
+        .comment-photos img {
+          width: 100%;
+          height: auto;
+        }
+      }
+
+      .comment-form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .upload-btn,
+      .submit-btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+        gap: 6px;
+        transition: opacity 0.3s;
+      }
+
+      .upload-btn {
+        background: #f5f5f5;
+        color: #666;
+        border: 1px solid #ddd;
+      }
+
+      .submit-btn {
+        background: #f17575;
+        color: white;
+      }
+
+      .upload-btn:hover,
+      .submit-btn:hover {
+        opacity: 0.8;
+      }
+
+      .upload-btn i,
+      .submit-btn i {
+        font-size: 14px;
+      }
+
+      /* 新增底部容器樣式 */
+      .comment-form-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+      }
+
+      /* 評分區塊樣式 */
+      .rating-input {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .star-input {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .star-input i {
+        font-size: 16px;
+        color: #ddd;
+        cursor: pointer;
+      }
+
+      .star-input i.fas {
+        color: #ffd700;
+      }
     </style>
   </head>
   <body>
+
     <!-- 文章標籤 -->
     <div class="article-container">
       <header class="article-header">
@@ -445,38 +717,18 @@
 
         <!-- 新增的操作按鈕區域 -->
         <div class="article-actions">
-            <button id="followBtn" class="follow-btn">
-                <i class="far fa-plus"></i>
-                <span>追蹤作者</span>
+          <button id="followBtn" class="follow-btn">
+            <i class="far fa-plus"></i>
+            <span>追蹤作者</span>
+          </button>
           <button id="collectBtn" class="collect-btn">
             <i class="far fa-heart"></i>
             <span>收藏文章</span>
           </button>
-          <button id="ratingBtn" class="rating-btn">
-            <i class="far fa-star"></i>
-            <span>給予評分</span>
-            <button id="reportBtn" class="report-btn">
-                <i class="far fa-flag"></i>
-                <span>檢舉</span>
+          <button id="reportBtn" class="report-btn">
+            <i class="far fa-flag"></i>
+            <span>檢舉</span>
           </button>
-        </div>
-
-        <!-- 評分彈窗 -->
-        <div id="ratingModal" class="rating-modal">
-          <div class="rating-modal-content">
-            <h3>給予評分</h3>
-            <div class="rating-stars">
-              <i class="far fa-star" data-rating="1"></i>
-              <i class="far fa-star" data-rating="2"></i>
-              <i class="far fa-star" data-rating="3"></i>
-              <i class="far fa-star" data-rating="4"></i>
-              <i class="far fa-star" data-rating="5"></i>
-            </div>
-            <div class="rating-modal-buttons">
-              <button class="rating-modal-btn cancel">取消</button>
-              <button class="rating-modal-btn submit">確認</button>
-            </div>
-          </div>
         </div>
 
         <div class="article-meta">
@@ -487,7 +739,11 @@
 
         <!-- 封面大圖 -->
         <div class="cover-container">
-          <img class="cover-image" src="https://picsum.photos/1440/800" alt="旅遊封面" />
+          <img
+            class="cover-image"
+            src="https://picsum.photos/1440/800"
+            alt="旅遊封面"
+          />
         </div>
       </header>
 
@@ -496,25 +752,12 @@
       </div>
 
       <div class="day-navigation">
-        <button class="day-btn active">第一天</button>
-        <button class="day-btn">第二天</button>
-        <button class="day-btn">第三天</button>
-        <button class="day-btn">第四天</button>
-        <button class="day-btn">第五天</button>
+        <!-- 天數按鈕將由 JS 動態生成 -->
       </div>
 
       <div class="content-wrapper">
         <div class="spots-list">
-          <div class="spot-item">
-            <h3>松山文創園區</h3>
-            <div class="spot-time">09:00 - 11:00</div>
-            <div class="spot-address">台北市信義區光復南路133號</div>
-          </div>
-          <div class="spot-item">
-            <h3>台北101</h3>
-            <div class="spot-time">11:30 - 14:00</div>
-            <div class="spot-address">台北市信義區信義路五段7號</div>
-          </div>
+          <!-- 移除固定的景點卡片，將由 JS 動態生成 -->
         </div>
 
         <div class="map-container" id="map">
@@ -533,81 +776,109 @@
       </div>
     </div>
 
+    <div class="comments-section">
+      <h2 class="comments-title">文章評論</h2>
+
+      <!-- 評論列表 -->
+      <div class="comments-list">
+        <!-- 單個評論樣板 -->
+        <div class="comment-item">
+          <div class="comment-avatar">
+            <img src="https://picsum.photos/50/50" alt="User Avatar" />
+          </div>
+          <div class="comment-content">
+            <div class="comment-header">
+              <div class="comment-user-info">
+                <span class="user-name">快樂旅行者</span>
+                <div class="comment-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <span>4.0</span>
+                </div>
+              </div>
+              <div class="comment-time">2024-01-15 14:30</div>
+            </div>
+            <div class="comment-text">
+              這篇文章整理得很詳細，對我的行程規劃幫助很大！特別喜歡松山文創園區的介紹，
+              讓我對這個地方有更深入的了解。
+            </div>
+            <div class="comment-photos">
+              <img
+                src="https://picsum.photos/200/150?random=1"
+                alt="Comment photo"
+              />
+              <img
+                src="https://picsum.photos/200/150?random=2"
+                alt="Comment photo"
+              />
+            </div>
+            <div class="comment-actions">
+              <button class="comment-edit">
+                <i class="far fa-edit"></i> 編輯
+              </button>
+              <button class="comment-delete">
+                <i class="far fa-trash-alt"></i> 刪除
+              </button>
+              <button class="comment-report">
+                <i class="far fa-flag"></i> 檢舉
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分頁控制 -->
+      <div class="comments-pagination">
+        <button class="page-btn" disabled>&lt;</button>
+        <span class="page-info">第 1 頁，共 5 頁</span>
+        <button class="page-btn">&gt;</button>
+      </div>
+
+      <!-- 評論輸入區域 -->
+      <div class="comment-form">
+        <h3>發表評論</h3>
+
+        <textarea placeholder="分享您的想法..."></textarea>
+
+        <div class="photo-preview"></div>
+
+        <div class="comment-form-footer">
+          <div class="rating-input">
+            <span>評分：</span>
+            <div class="star-input">
+              <i class="far fa-star" data-rating="1"></i>
+              <i class="far fa-star" data-rating="2"></i>
+              <i class="far fa-star" data-rating="3"></i>
+              <i class="far fa-star" data-rating="4"></i>
+              <i class="far fa-star" data-rating="5"></i>
+            </div>
+          </div>
+
+          <div class="comment-form-actions">
+            <button
+              class="upload-btn"
+              onclick="document.getElementById('commentPhotos').click()"
+            >
+              <i class="far fa-images"></i>上傳照片
+            </button>
+            <button class="submit-btn">
+              <i class="far fa-paper-plane"></i>發表評論
+            </button>
+          </div>
+        </div>
+        <input
+          type="file"
+          id="commentPhotos"
+          multiple
+          accept="image/*"
+          style="display: none"
+        />
+      </div>
+    </div>
+
     <script src="/static/js/trip_article.js"></script>
-    <script>
-      // Day navigation functionality
-      const dayButtons = document.querySelectorAll(".day-btn");
-      dayButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          dayButtons.forEach((btn) => btn.classList.remove("active"));
-          button.classList.add("active");
-        });
-      });
-
-      // Initialize Google Map
-      async function initMap() {
-        const { Map } = await google.maps.importLibrary("maps");
-        const map = new Map(document.getElementById("map"), {
-          center: { lat: 25.033976, lng: 121.564714 },
-          zoom: 14,
-        });
-
-        // Add markers for spots
-        const spots = [
-          { lat: 25.0478, lng: 121.5598, title: "松山文創園區" },
-          { lat: 25.0338, lng: 121.5645, title: "台北101" },
-        ];
-
-        spots.forEach((spot) => {
-          new google.maps.Marker({
-            position: { lat: spot.lat, lng: spot.lng },
-            map: map,
-            title: spot.title,
-          });
-        });
-      }
-
-      // Load Google Maps
-      ((g) => {
-        var h,
-          a,
-          k,
-          p = "The Google Maps JavaScript API",
-          c = "google",
-          l = "importLibrary",
-          q = "__ib__",
-          m = document,
-          b = window;
-        b = b[c] || (b[c] = {});
-        var d = b.maps || (b.maps = {}),
-          r = new Set(),
-          e = new URLSearchParams(),
-          u = () =>
-            h ||
-            (h = new Promise(async (f, n) => {
-              await (a = m.createElement("script"));
-              e.set("libraries", [...r] + "");
-              for (k in g)
-                e.set(
-                  k.replace(/[A-Z]/g, (t) => "_" + t[0].toLowerCase()),
-                  g[k]
-                );
-              e.set("callback", c + ".maps." + q);
-              a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
-              d[q] = f;
-              a.onerror = () => (h = n(Error(p + " could not load.")));
-              a.nonce = m.querySelector("script[nonce]")?.nonce || "";
-              m.head.append(a);
-            }));
-        d[l]
-          ? console.warn(p + " only loads once. Ignoring:", g)
-          : (d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)));
-      })({
-        key: "YOUR_GOOGLE_MAPS_API_KEY",
-        v: "weekly",
-      });
-
-      initMap();
-    </script>
   </body>
 </html>
