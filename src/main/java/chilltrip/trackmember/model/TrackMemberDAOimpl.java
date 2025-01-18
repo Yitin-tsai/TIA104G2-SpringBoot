@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
-
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;

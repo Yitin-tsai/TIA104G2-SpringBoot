@@ -59,9 +59,17 @@ public class TrackMemberServlet {
 
 	@PostMapping("/deleteTrack/{id}")
 	public ResponseEntity<String> deleteTrack(@PathVariable("id") Integer id,HttpServletRequest req) {
-		Integer memberId = (Integer) req.getSession().getAttribute("memberId");
-		
-		trackMemSvc.deleteTrack(memberId,id);
+		Integer fansId = (Integer) req.getSession().getAttribute("memberId");
+		System.out.println(fansId);
+		if(fansId == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("nologin");
+		}
+		MemberVO fans = membersvc.getOneMember(fansId);
+		MemberVO tracker = membersvc.getOneMember(id);
+	
+		trackMemSvc.deleteTrack(fansId,id);
+		membersvc.updateMember(fans);
+		membersvc.updateMember(tracker);
 		return ResponseEntity.ok("success");
 	}
 

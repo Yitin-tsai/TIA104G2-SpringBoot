@@ -105,11 +105,12 @@
 
 		<!-- hibernate-core 核心 -->  <!--
 		spring-boot-starter-data-jpa(2.7.0) 已內建 Hibernate 5.6.9 依賴，但預設未下載 -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<!-- <version>5.6.9.Final</version> -->
-		</dependency>
+		
+		
+	<!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core -->
+		
+
+
 
 		<!-- hibernate-c3p0 連線池 -->               <!--
 		spring-boot 已內建依賴，但預設未下載 -->

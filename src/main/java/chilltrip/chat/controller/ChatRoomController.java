@@ -3,8 +3,10 @@ package chilltrip.chat.controller;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,31 @@ public class ChatRoomController {
 			System.out.println("New session connected admin: " + adminid + " with username " + userName);
 		}
 
+		getOnlineUsers();
+	}
+
+	@MessageMapping("/chat.removeUser")
+	public void removeUser(@Payload Map<String, String> payload) throws Exception {
+		if (payload.get("memberId") != null) {
+			Integer memberid = Integer.valueOf(payload.get("memberId"));
+			connectedSessions.remove(memberid);
+			System.out.println("Session disconnected member: " + memberid);
+		}
+		if (payload.get("adminId") != null) {
+			Integer adminid = Integer.valueOf(payload.get("adminId"));
+			connectedSessions.remove(adminid);
+			System.out.println("Session disconnected admin: " + adminid);
+		}
+
+		// 每次有用戶斷開，推送更新的在線用戶列表
+		getOnlineUsers();
+	}
+
+	public void getOnlineUsers() {
+		Set<String> onlineUsers = new HashSet<>(connectedSessions.values());
+		System.out.println(onlineUsers);
+        // 推送更新的用戶列表到所有訂閱了"/topic/onlineUsers"的用戶
+        messagingTemplate.convertAndSend("/user/all/queue/onlineUsers", onlineUsers);
 	}
 
 	@MessageMapping("/chat.getHistory")
@@ -70,14 +97,6 @@ public class ChatRoomController {
 		chatMessage.setMessage(historyMsg);
 		messagingTemplate.convertAndSend("/user/" + chatMessage.getSender() + "/queue/history", chatMessage);
 		System.out.println("這是得到歷史訊息" + chatMessage);
-	}
-
-	// 當連接被關閉時觸發
-	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		String userName = (String) session.getAttributes().get("userName");
-		Integer userId = (Integer) session.getAttributes().get("useaId");
-		connectedSessions.remove(userId, userName);// 當用戶斷開連接時將其從在線用戶列表中移除
-		System.out.println("Session ID " + session.getId() + " disconnected");
 	}
 
 	@MessageMapping("/chat") // 用來處理來自 /app/chat 的消息
@@ -110,44 +129,40 @@ public class ChatRoomController {
 	protected void coEdit(AnnounceVO announce) throws InterruptedException, IOException {
 
 		System.out.println(announce);
-		ObjectMapper objectMapper = new ObjectMapper();
-
 		messagingTemplate.convertAndSend("/user/" + announce.getAnnounceid() + "/queue/coedit", announce);
 		System.out.println("/user/" + announce.getAnnounceid() + "/queue/coedit");
 
 	}
 
 	@MessageMapping("/notice") // 用來處理來自 /app/chat 的消息
-	protected void notice(String receiver , String notice) throws InterruptedException, IOException {
+	protected void notice(String receiver, String notice) throws InterruptedException, IOException {
 
-		System.out.println(receiver + notice );
+		System.out.println(receiver + notice);
 		messagingTemplate.convertAndSend("/user/" + receiver + "/queue/notice", notice);
 		JedisHandleMessage.saveNotice(receiver, notice);
-		System.out.println("通知" + notice +  "發送給" + receiver );
+		System.out.println("通知" + notice + "發送給" + receiver);
 
 	}
-	
+
 	@MessageMapping("/notice.admin") // 用來處理來自 /app/chat 的消息
 	protected void noticeAdmin(String notice) throws InterruptedException, IOException {
 
-		System.out.println( notice );
+		System.out.println(notice);
 		messagingTemplate.convertAndSend("/user/admin/queue/notice", notice);
 		JedisHandleMessage.saveNotice("admin", notice);
-		System.out.println("通知" + notice +  "發送給管理員");
+		System.out.println("通知" + notice + "發送給管理員");
 
 	}
-	
-	
-	
+
 	@MessageMapping("/notice.getHistory")
 	public void getHistoryNotice(String receiver) {
-		
+
 		Gson gson = new Gson();
 		List<String> historyData = JedisHandleMessage.getHistoryNotice(receiver);
 		String historyMsg = gson.toJson(historyData);
-		
-		messagingTemplate.convertAndSend("/user/"+ receiver +"/queue/notice.history", historyMsg);
-            System.out.println("這是得到歷史訊息" + historyMsg);
+
+		messagingTemplate.convertAndSend("/user/" + receiver + "/queue/notice.history", historyMsg);
+		System.out.println("這是得到歷史訊息" + historyMsg);
 	}
 
 	public static Map<Integer, String> getConnectedSession() {
