@@ -604,6 +604,8 @@ var stompClient = null; // 這裡定義 stompClient 變數
 var receiverName= "";
  // 發送請求獲取用戶名稱
  document.addEventListener('DOMContentLoaded', function () {
+  // 禁用發送按鈕
+    document.getElementById('sendButton').disabled = true;
     fetch('/TIA104G2-SpringBoot/chat/go')
         .then(response => response.json())
         .then(data => {
@@ -665,42 +667,38 @@ function initializeWebSocket() {
               displayMessages(); // 更新訊息顯示
           });
 
+           // 訂閱在線用戶列表更新
+           stompClient.subscribe("/user/all/queue/onlineUsers", function (message) {
+            console.log("Received online users list: ", message.body); // 調試輸出
+            var onlineUsers = JSON.parse(message.body); // 解析在線用戶列表
+            updateUserList(onlineUsers); // 更新用戶列表顯示
+           });  
         // 發送用戶初始化訊息
         stompClient.send("/app/chat.addUser", {}, JSON.stringify({userName: username1, memberId: memberid, adminId: adminid}));
 
-        // 顯示用戶列表或其他初始化操作
-        displayUserList();  
     });
 }
 
 
 
-// 顯示用戶列表
-function displayUserList() {
+
+// 更新用戶列表顯示
+function updateUserList(users) {
     var userListContainer = document.getElementById('userList');
     userListContainer.innerHTML = ''; // 清空之前的內容
 
-    // 發送請求獲取在線用戶列表
-    fetch('/TIA104G2-SpringBoot/chat/onlineUsers')
-        .then(response => response.json())
-        .then(data => {
-            users = data; // 更新在線用戶列表
-            // 動態生成用戶列表
-            users.forEach(function(user) {
-                var userItem = document.createElement("div");
-                userItem.classList.add("user-item");
-                userItem.textContent = user;
+    // 動態生成用戶列表
+    users.forEach(function (user) {
+        var userItem = document.createElement("div");
+        userItem.classList.add("user-item");
+        userItem.textContent = user;
 
-                userItem.addEventListener('click', function() {
-                    changeChat(user);
-                });
-
-                userListContainer.appendChild(userItem);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching online users:', error);
+        userItem.addEventListener('click', function () {
+            changeChat(user);
         });
+
+        userListContainer.appendChild(userItem);
+    });
 }
 
 //改變聊天對象
@@ -718,6 +716,10 @@ function changeChat(receiver) {
    
      // 發送請求歷史訊息的請求
     stompClient.send("/app/chat.getHistory", {}, JSON.stringify(chatMessage));
+
+    displayMessages();
+     // 啟用發送按鈕
+     document.getElementById('sendButton').disabled = false;
 }
 
 
@@ -725,6 +727,10 @@ function changeChat(receiver) {
 function displayMessages() {
     var messagesContainer = document.getElementById('messagesContainer');
     messagesContainer.innerHTML = ''; // 清空之前的訊息
+
+    if (currentReceiver === "") {
+        return; // 如果還沒有選擇聊天對象，則不顯示任何訊息
+    }
 
     // 動態顯示訊息
     messages.forEach(function(message) {
@@ -746,6 +752,11 @@ function displayMessages() {
 
 // 發送訊息
 document.getElementById('sendButton').addEventListener('click', function() {
+  if (currentReceiver === "") {
+        alert("請選擇一個聊天對象");
+        return; // 如果沒有選擇聊天對象，則不發送訊息
+    }
+
     var messageInput = document.getElementById('messageInput');
     var messageContent = messageInput.value.trim();
     if (messageContent !== "") {
@@ -764,6 +775,21 @@ document.getElementById('sendButton').addEventListener('click', function() {
     }
 });
 
+// 在 WebSocket 初始化後添加頁面離開事件監聽
+window.addEventListener("beforeunload", function () {
+    if (username1) {
+        // 構建要發送的離線通知消息
+        var leaveMessage = {
+            memberId: memberid,  // 或者你也可以使用 adminId
+            adminId: adminid     // 取決於後端需要的是 memberId 還是 adminId
+        };
+
+        // 發送離線消息
+        if (stompClient && stompClient.connected) {
+            stompClient.send("/app/chat.removeUser", {}, JSON.stringify(leaveMessage));
+        }
+    }
+});
 
   
   </script>
