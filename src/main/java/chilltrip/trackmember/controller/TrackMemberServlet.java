@@ -66,9 +66,7 @@ public class TrackMemberServlet {
 		}
 		MemberVO fans = membersvc.getOneMember(fansId);
 		MemberVO tracker = membersvc.getOneMember(id);
-		TrackMemberVO trackMembervo =new TrackMemberVO();
-		trackMembervo.setFans(fans);
-		trackMembervo.setTrackedMember(tracker);
+	
 		trackMemSvc.deleteTrack(fansId,id);
 		membersvc.updateMember(fans);
 		membersvc.updateMember(tracker);
