@@ -137,7 +137,7 @@ public class AdminServlet {
 		} else if (!adminnickname.trim().matches(adminnicknameReg)) {
 			errorMsgs.put("nickname", "管理員暱稱只能是中、英文字母、數字和_ , 且長度必需在2到20之間");
 		}
-
+		adminnickname += "管理員";
 		AdminVO adminVO = new AdminVO();
 		adminVO.setAdminaccount(adminaccount);
 		adminVO.setAdminpassword(adminpassword);
@@ -216,13 +216,14 @@ public class AdminServlet {
 
 		Integer status = adminvo.getStatus();
 
-		String adminnickname = adminvo.getAdminnickname();
+		String adminnickname = adminvo.getAdminnickname() ;
 		String adminnicknameReg = "^[(\\u4e00-\\u9fa5)(a-zA-Z0-9_)]{2,20}$";
 		if (adminnickname == null || adminnickname.trim().length() == 0) {
 			errorMsgs.put("nickname", "管理員暱稱請勿空白");
 		} else if (!adminnickname.trim().matches(adminnicknameReg)) {
 			errorMsgs.put("nickname", "管理員暱稱只能是中、英文字母、數字和_ , 且長度必需在2到20之間");
 		}
+		adminnickname += "管理員";
 
 		AdminVO adminVO = new AdminVO();
 
