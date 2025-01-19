@@ -360,6 +360,10 @@ h2 {
                         } else if (message.includes("封面圖片")) {
                             $("#coverphoto-error").text(message);
                         }
+                         // 檢查是否是"非此公告創建者無法更新"的錯誤訊息
+                    if (message.includes("管理人員無權限修改")) {
+                        alert("非此公告創建者無法更新");
+                    }
                     });
                 }
             });
@@ -406,6 +410,10 @@ h2 {
                         } else if (message.includes("封面圖片")) {
                             $("#coverphoto-error").text(message);
                         }
+                         // 檢查是否是"非此公告創建者無法更新"的錯誤訊息
+                    if (message.includes("管理人員無權限修改")) {
+                        alert("非此公告創建者無法更新");
+                    }
                     });
                 }
             });
