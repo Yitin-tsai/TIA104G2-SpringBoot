@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>Chill Trip - 行程編輯器</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation remains the same as original -->
+        <nav>
+            <!-- Previous navigation code -->
+        </nav>
+
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">我的行程</a></li>
+                <li class="breadcrumb-item active">編輯行程</li>
+            </ol>
+        </nav>
+
+        <!-- New Itinerary Edit Container -->
+        <div class="container-fluid itinerary-edit-section">
+            <div class="row">
+                <!-- Current Editing Itinerary List -->
+                <div class="col-md-3 current-itinerary-list">
+                    <h4>目前編輯行程</h4>
+                    <div class="itinerary-card">
+                        <h5>台北三日遊</h5>
+                        <div class="spots-list">
+                            <div class="spot-item active">
+                                <span>台北101</span>
+                                <div class="spot-details">
+                                    <input type="time" class="start-time" placeholder="開始時間">
+                                    <input type="time" class="end-time" placeholder="結束時間">
+                                </div>
+                            </div>
+                            <div class="spot-item">
+                                <span>故宮博物院</span>
+                                <div class="spot-details">
+                                    <input type="time" class="start-time" placeholder="開始時間">
+                                    <input type="time" class="end-time" placeholder="結束時間">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transportation & Time Details -->
+                <div class="col-md-9 transportation-details">
+                    <div class="transport-between-spots">
+                        <div class="transport-method">
+                            <label>交通方式：</label>
+                            <select class="form-control">
+                                <option>捷運</option>
+                                <option>公車</option>
+                                <option>計程車</option>
+                                <option>步行</option>
+                            </select>
+                        </div>
+                        <div class="travel-time">
+                            <span>預估旅行時間：15分鐘</span>
+                            <span>距離：3.2公里</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rest of the original editor container -->
+        <div id="editor_container">
+            <!-- Previous editor content -->
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

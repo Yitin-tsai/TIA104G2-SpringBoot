@@ -129,6 +129,8 @@ function clearMapMarkers() {
 // 處理搜尋結果
 function handleSearchResults(results, status) {
   if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+    console.log("Search results:", results); // 先看看搜尋結果包含什麼
+
     // 創建地圖邊界對象
     const bounds = new google.maps.LatLngBounds();
 
@@ -146,12 +148,19 @@ function handleSearchResults(results, status) {
       markers.push(marker);
       bounds.extend(place.geometry.location);
 
-      // 為標記添加點擊事件
+      // 為標記添加點擊事件，在呼叫 getDetails 時傳入完整的 place 物件
       marker.addListener("click", () => {
         service.getDetails(
           {
-            placeId: place.place_id,
-            fields: ["name", "formatted_address", "photos"], // 只獲取需要的欄位
+            placeId: place.place_id, // 這裡從搜尋結果中取得 place_id
+            fields: [
+              "place_id", // 確保要求 place_id
+              "name",
+              "formatted_address",
+              "photos",
+              "rating",
+              "user_ratings_total",
+            ], // 只獲取需要的欄位
           },
           (placeDetail, detailStatus) => {
             if (detailStatus === google.maps.places.PlacesServiceStatus.OK) {
@@ -174,6 +183,9 @@ function handleSearchResults(results, status) {
 
 // 顯示地點詳細信息窗口
 function showPlaceDetail(place, marker) {
+  // 首先記錄一下完整的 place 物件
+  console.log("Google Maps place 詳細資料:", place);
+
   // 處理照片部分
   const photoContent =
     place.photos && place.photos.length > 0
@@ -185,9 +197,9 @@ function showPlaceDetail(place, marker) {
                style="width: 100%; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 8px;">`
       : "";
 
-  // 準備景點數據
+  // 準備景點數據，並記錄
   const placeData = {
-    googlePlaceId: place.place_id,
+    googlePlaceId: place.place_id, // 確保這裡有值
     name: place.name,
     address: place.formatted_address,
     latitude: marker.getPosition().lat(),
@@ -196,7 +208,12 @@ function showPlaceDetail(place, marker) {
       place.photos && place.photos.length > 0
         ? place.photos[0].getUrl({ maxWidth: 200, maxHeight: 200 })
         : null,
+    // 添加評分和評論數量
+    rating: place.rating || 0,
+    reviewCount: place.user_ratings_total || 0,
   };
+
+  console.log("準備傳遞給 addPlaceToCurrentDay 的資料:", placeData);
 
   const infoWindow = new google.maps.InfoWindow({
     content: `
@@ -314,57 +331,130 @@ function addToCurrentDayList(placeData) {
 }
 
 // 將景點添加到當前天數的列表中
-window.addPlaceToCurrentDay = function (placeData) {
+window.addPlaceToCurrentDay = async function (placeData) {
+  console.log("addPlaceToCurrentDay 接收到的資料:", placeData);
+
+  // 1. 檢查當前列表
   const currentList = document.querySelector(
     `.spots-list[data-day="${currentDay}"]`
   );
-
   if (!currentList) {
     alert("請先選擇要添加景點的日期");
     return;
   }
 
-  // 確保不會添加到 "新增景點" 按鈕前面
-  const addSpotBtn = currentList.querySelector(".add-spot-btn");
+  // 2. 與後端通信，處理景點資料
+  try {
+    const response = await fetch(`${contextPath}/editor/location/check`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        googlePlaceId: placeData.googlePlaceId,
+        locationName: placeData.name,
+        address: placeData.address,
+        latitude: placeData.latitude,
+        longitude: placeData.longitude,
+      }),
+    });
 
+    if (!response.ok) {
+      throw new Error("景點確認失敗");
+    }
+
+    let locationData = await response.json();
+    console.log("後端回傳的景點資料:", locationData);
+
+    if (!locationData.id) {
+      throw new Error("後端未返回有效的位置ID");
+    }
+
+    // 將返回的資料合併到新對象中
+    const mergedData = {
+      ...placeData,
+      id: locationData.id,
+    };
+
+    // 建立並添加景點元素
+    createAndAddSpotElement(mergedData, currentList);
+  } catch (error) {
+    console.error("處理景點資料時發生錯誤:", error);
+    alert(`加入景點失敗: ${error.message}`);
+  }
+};
+
+// 將建立和渲染景點元素的邏輯分離出來
+function createAndAddSpotElement(placeData, currentList) {
   const spotElement = document.createElement("div");
   spotElement.className = "spot-item";
-  spotElement.innerHTML = `
-        <button class="delete-spot" style="color: #9e9e9e;">×</button>
-        <i class="fas fa-map-marker-alt location-icon" style="color: #9e9e9e;"></i>
-        <div class="spot-info">
-            <h3 style="color: #333; margin: 0 0 4px 0;">${placeData.name}</h3>
-            <p style="color: #666; margin: 4px 0 0 0; font-size: 12px;">
-                📍 ${placeData.address}
-            </p>
-            <div class="spot-time">
-                <div class="time-input-group">
-                    <label>開始時間：</label>
-                    <input type="datetime-local" class="time-input start-time">
-                </div>
-                <div class="time-input-group">
-                    <label>結束時間：</label>
-                    <input type="datetime-local" class="time-input end-time">
-                </div>
-            </div>
-        </div>
-    `;
 
+  // 檢查並記錄locationId的來源
+  console.log("正在創建景點元素，資料來源:", placeData);
+
+  // 構建要保存的景點資料
+  const spotInfo = {
+    locationId: placeData.id || placeData.locationId, // 確保使用正確的 ID
+    googlePlaceId: placeData.googlePlaceId,
+    name: placeData.name,
+    address: placeData.address,
+    latitude: placeData.latitude,
+    longitude: placeData.longitude,
+    rating: placeData.rating || 0,
+    reviewCount: placeData.reviewCount || 0,
+    dayIndex: currentDay,
+    isFromMap: true,
+  };
+
+  console.log("準備保存到 dataset 的完整資料:", spotInfo);
+  // 保存與確認資料
+  spotElement.dataset.spotInfo = JSON.stringify(spotInfo);
+  console.log(
+    "已保存到 dataset 的資料:",
+    JSON.parse(spotElement.dataset.spotInfo)
+  );
+
+  // 建立 HTML 結構
+  spotElement.innerHTML = `
+      <button class="delete-spot" style="color: #9e9e9e;">×</button>
+      <i class="fas fa-map-marker-alt location-icon" style="color: #9e9e9e;"></i>
+      <div class="spot-info">
+          <h3 style="color: #333; margin: 0 0 4px 0;">${placeData.name}</h3>
+          <p style="color: #666; margin: 4px 0 0 0; font-size: 12px;">
+              📍 ${placeData.address}
+          </p>
+          <div class="spot-time">
+              <div class="time-input-group">
+                  <label>開始時間：</label>
+                  <input type="datetime-local" class="time-input start-time">
+              </div>
+              <div class="time-input-group">
+                  <label>結束時間：</label>
+                  <input type="datetime-local" class="time-input end-time">
+              </div>
+          </div>
+      </div>
+  `;
+
+  // 綁定事件
+  bindSpotEvents(spotElement);
+
+  // 加入到列表
+  currentList.appendChild(spotElement);
+}
+
+// 將事件綁定邏輯分離出來
+function bindSpotEvents(spotElement) {
   // 綁定刪除事件
   spotElement.querySelector(".delete-spot").addEventListener("click", () => {
     spotElement.remove();
   });
 
-  // 綁定時間驗證
+  // 時間驗證相關
   const startTimeInput = spotElement.querySelector(".start-time");
   const endTimeInput = spotElement.querySelector(".end-time");
 
-  // 設置預設最小時間為當前時間
-  const now = new Date();
-  startTimeInput.min = now.toISOString().slice(0, 16);
-  endTimeInput.min = now.toISOString().slice(0, 16);
-
-  // 監聽開始時間變更
   startTimeInput.addEventListener("change", () => {
     endTimeInput.min = startTimeInput.value;
     if (endTimeInput.value && endTimeInput.value < startTimeInput.value) {
@@ -372,26 +462,13 @@ window.addPlaceToCurrentDay = function (placeData) {
     }
   });
 
-  // 監聽結束時間變更
   endTimeInput.addEventListener("change", () => {
     if (startTimeInput.value && endTimeInput.value < startTimeInput.value) {
       alert("結束時間必須晚於開始時間");
       endTimeInput.value = "";
     }
   });
-
-  // 保存景點資料
-  spotElement.dataset.spotInfo = JSON.stringify({
-    googlePlaceId: placeData.googlePlaceId,
-    name: placeData.name,
-    address: placeData.address,
-    latitude: placeData.latitude,
-    longitude: placeData.longitude,
-  });
-
-  // 將新景點加入到列表中，確保在 "新增景點" 按鈕後面
-  currentList.appendChild(spotElement);
-};
+}
 
 function collectAllDaysData() {
   const allData = [];

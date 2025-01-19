@@ -1,6 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chill Trip</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="Free HTML Templates" name="keywords" />
+    <meta content="Free HTML Templates" name="description" />
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
     <style>
       * {
         margin: 0;
@@ -51,7 +77,7 @@
 
       .cover-image-preview {
         width: 100%;
-        height: 300px;
+        height: 800px;
         border: 2px dashed #e0e0e0;
         border-radius: 4px;
         overflow: hidden;
@@ -91,7 +117,7 @@
       /* 左側區域 */
       .left-section {
         width: 300px;
-        min-width: 300px;
+        min-width: 350px;
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -254,16 +280,25 @@
         padding-right: 24px;
       }
 
-      .spot-info h3 {
-        margin: 0;
+      .rating-line,
+      .address-line {
+        display: block;
         font-size: 14px;
-        color: #333;
+        color: #666;
       }
 
-      .spot-info p {
-        margin: 2px 0 0 0;
-        font-size: 12px;
-        color: #666;
+      .saved-spot-item {
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 12px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .saved-spot-item h4 {
+        margin: 0 0 8px 0;
+        font-size: 16px;
+        color: #333;
       }
 
       .delete-spot {
@@ -481,13 +516,14 @@
 
       .collaborators {
         position: fixed;
-        top: 20px;
-        right: 20px;
+        bottom: 20px; /* 將位置移動到底部 */
+        right: 20px; /* 保持靠右 */
         background: white;
         padding: 15px;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         width: 200px;
+        z-index: 9999; /* 確保框永遠在最上層 */
       }
 
       .collaborator {
@@ -835,6 +871,172 @@
       .spots-list[data-day="1"] {
         display: block;
       }
+
+      .chat-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background-color: #f17575; /* 使用粉紅色系 */
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .chat-btn i {
+        font-size: 18px;
+      }
+
+      .chat-btn:hover {
+        background-color: #c5332b; /* 深紅色 */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      /* 點擊效果 */
+      .chat-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      /* 如果想要添加動畫效果 */
+      @keyframes bounce {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* 可以加入未讀訊息提示 */
+      .chat-btn.has-unread::after {
+        content: "";
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 10px;
+        height: 10px;
+        background-color: #ff4444;
+        border-radius: 50%;
+        animation: bounce 1s infinite;
+      }
+
+      #loginLogoutBtn {
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      #loginLogoutBtn:hover {
+        color: #f17575 !important;
+      }
+
+      /* 通知下拉選單樣式 */
+      .notification-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 320px;
+        max-height: 480px;
+        z-index: 1000;
+      }
+
+      .notification-dropdown.show {
+        display: block;
+      }
+
+      .notification-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .notification-header h3 {
+        color: #c5332b;
+        font-size: 16px;
+        margin: 0;
+      }
+
+      .notification-count {
+        background-color: #f17575;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 12px;
+        font-size: 12px;
+      }
+
+      .notification-list {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .notification-item {
+        display: flex;
+        padding: 12px 16px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .notification-item:hover {
+        background-color: #f9f9f9;
+      }
+
+      .notification-item.unread {
+        background-color: #fff5f5;
+      }
+
+      .notification-avatar {
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+      }
+
+      .notification-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .notification-content {
+        flex: 1;
+      }
+
+      .notification-text {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 4px;
+      }
+
+      .sender-name {
+        color: #c5332b;
+        font-weight: 500;
+      }
+
+      .notification-time {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .no-notifications {
+        padding: 20px;
+        text-align: center;
+        color: #666;
+      }
     </style>
   </head>
 
@@ -843,55 +1045,48 @@
     <header>
       <nav class="top-nav">
         <div class="nav-left">
-          <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
-          <a href="#" class="nav-item nav-link" id="nav-product">購！票券</a>
-          <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
-          <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+          <!-- 移除 href="#"，由 JS 控制導航 -->
+          <a class="nav-item nav-link" id="nav-go" role="button">Go！行程</a>
+          <a class="nav-item nav-link" id="nav-mygo" role="button">My！行程</a>
         </div>
+
         <div class="nav-center">
-          <a href="#" id="z-index">
-            <a href="/TIA104G2-SpringBoot/" id="z-index">
-              <img
-                th:src="@{/img/logo_black.png}"
-                alt="Chill Trip"
-                style="width: 150px; height: auto"
-              />
-            </a>
+          <!-- Logo也使用動態路徑 -->
+          <a id="nav-home" role="button">
+            <img
+              th:src="@{/img/logo_black.png}"
+              alt="Chill Trip"
+              class="nav-logo"
+              style="width: 150px; height: auto"
+            />
           </a>
         </div>
+
         <div class="nav-right">
           <a
-            href="/TIA104G2-SpringBoot/login"
-            class="nav-item nav-link active"
+            class="nav-item nav-link"
             id="nav-login"
-            style="color: #ff6600"
-            >登入/註冊</a
+            role="button"
+            style="color: #f17575"
+            >登入／註冊</a
           >
-          <div class="nav-item dropdown">
-            <a
-              href="#"
-              class="nav-link dropdown-toggle"
-              data-toggle="dropdown"
-              style="color: #212529"
-              >會員中心</a
-            >
-            <div class="dropdown-menu rounded-0 m-0">
-              <a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a>
-              <a href="#" class="dropdown-item" id="nav-coupons">我的折價券</a>
-              <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
-            </div>
+
+          <a class="nav-item nav-link" id="nav-profile" role="button"
+            >會員基本資料</a
+          >
+
+          <div class="nav-item nav-dropdown" id="nav-support">
+            <a class="nav-link" role="button">客服中心</a>
+            <!-- 下拉選單容器會由 JS 動態添加 -->
           </div>
-          <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
-          <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+
+          <button id="goToChatRoom" class="chat-btn" type="button">
+            <i class="fas fa-comments"></i>
+            聊天室
+          </button>
         </div>
       </nav>
     </header>
-
-    <div aria-label="breadcrumb">
-      <ul class="breadcrumb" id="breadcrumb-nav">
-        <!-- 麵包屑導航項目將由 JavaScript 動態生成 -->
-      </ul>
-    </div>
 
     <div class="container">
       <div class="main-content">
@@ -1099,11 +1294,16 @@
       th:src="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js}"
     ></script>
 
+    <!-- 身份管理 -->
+    <script th:src="@{/js/UserManager.js}"></script>
+
     <!-- 導航欄nav的href載入器 -->
-    <script th:src="@{/js/navigation.js}"></script>
+    <script th:src="@{/js/NavigationManager.js}"></script>
 
     <!-- Google Map -->
-    <script th:src="@{/js/maphsiuchi-fortripeditor.js}"></script>
-    <script th:src="@{/js/trip-editor.js}"></script>
+    <script th:src="@{/js/maphsiuchi_fortripeditor.js}"></script>
+
+    <!-- 行程編輯器專屬 -->
+    <script th:src="@{/js/trip_editor.js}"></script>
   </body>
 </html>

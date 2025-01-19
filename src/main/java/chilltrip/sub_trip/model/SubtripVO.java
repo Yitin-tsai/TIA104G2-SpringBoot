@@ -30,7 +30,8 @@ public class SubtripVO {
 	@ManyToOne
 	@JoinColumn(name = "trip_id", referencedColumnName = "trip_id")
 	private TripVO tripVO;
-
+	
+	@Column(name = "trip_id", insertable = false, updatable = false)  // 重要：加入這些屬性
 	private Integer tripid;
 
 	@Column(name = "index")

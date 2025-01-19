@@ -27,7 +27,7 @@ public class LocationVO  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "location_id", updatable = false)
-	private Integer locationid;
+	private Integer locationId;
 	
 	@Column(name = "google_place_id", unique = true, nullable = false)
     private String googlePlaceId;
@@ -76,12 +76,12 @@ public class LocationVO  {
 
 	
 
-	public Integer getLocationid() {
-		return locationid;
+	public Integer getLocationId() {
+		return locationId;
 	}
 
-	public void setLocationid(Integer locationid) {
-		this.locationid = locationid;
+	public void setLocationId(Integer locationId) {
+		this.locationId = locationId;
 	}
 
 	public String getGooglePlaceId() {
@@ -166,7 +166,7 @@ public class LocationVO  {
 
 	@Override
 	public String toString() {
-		return "locationVO [locationid=" + locationid + ", address=" + address + ", create_time=" + create_time
+		return "locationVO [locationid=" + locationId + ", address=" + address + ", create_time=" + create_time
 				+ ", comments_number=" + comments_number + ", score=" + score + ", location_name=" + location_name
 				+ "]";
 	}

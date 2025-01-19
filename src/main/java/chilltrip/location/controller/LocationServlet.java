@@ -77,7 +77,7 @@ public class LocationServlet extends HttpServlet {
 
 		for (LocationVO location : locationlist) {
 			JSONObject jsonRes = new JSONObject();
-			jsonRes.put("locationid", location.getLocationid());
+			jsonRes.put("locationid", location.getLocationId());
 			jsonRes.put("address", location.getAddress());
 			jsonRes.put("create_time", location.getCreate_time());
 			jsonRes.put("comments_number", location.getComments_number());
@@ -99,7 +99,7 @@ public class LocationServlet extends HttpServlet {
 		LocationVO locationVO = new LocationVO();
 		locationVO = locationSvc.getLocationById(locationid);
 		JSONObject jsonRes = new JSONObject();
-		jsonRes.put("locationid", locationVO.getLocationid());
+		jsonRes.put("locationid", locationVO.getLocationId());
 		jsonRes.put("address", locationVO.getAddress());
 		jsonRes.put("create_time", locationVO.getCreate_time());
 		jsonRes.put("comments_number", locationVO.getComments_number());

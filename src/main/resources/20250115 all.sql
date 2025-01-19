@@ -82,7 +82,7 @@ overall_scored_people 	int(10) DEFAULT 0 comment'總評分人數',
 location_number 		int(10) DEFAULT 0 comment'景點數', 
 article_title 			varchar(30) not null comment'文章標題',
 visitors_number			int(10) DEFAULT 0 comment'瀏覽人數',
-likes					int(10) DEFAULT 0 comment'點讚數',
+likes					int(10) DEFAULT 0 comment'收藏數',
 constraint fk_member_member_id
 foreign key (member_id) references member(member_id),
 constraint trip_id_pk primary key(trip_id)

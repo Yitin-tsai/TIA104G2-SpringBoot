@@ -1,11 +1,12 @@
 package chilltrip.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 import chilltrip.filter.LoginCheckInterceptor;
+import chilltrip.test.SessionInterceptor;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -23,5 +24,10 @@ public class WebConfig implements WebMvcConfigurer {
 		).excludePathPatterns("/viewOtherTrip/**" // 排除公開瀏覽的頁面
 		);
 	}
-
+	
+	@Bean
+    public SessionInterceptor sessionInterceptor() {
+        return new SessionInterceptor();
+    }
 }
+

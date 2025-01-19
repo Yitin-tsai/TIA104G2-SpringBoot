@@ -16,5 +16,6 @@ public interface LocationDAO {
 	public List<Map<String, Object>> getLocationByName(String location_name);
 	LocationVO findByGooglePlaceId(String googlePlaceId);
 	void insertOrUpdate(LocationVO locationVO);
+	Integer insertAndGetPk(LocationVO locationVO);
 
 }

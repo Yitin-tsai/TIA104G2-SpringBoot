@@ -25,73 +25,70 @@
     <link th:href="@{/css/style.css}" rel="stylesheet" />
     <link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
 
- 
+    <style>
+      .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        width: 80%;
+        margin: 0 auto;
+        overflow: hidden;
+        border-bottom: 3px dotted #eee;
+        padding-top: 30px;
+        padding-bottom: 30px;
+      }
 
-<style>
-.row {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	position: relative;
-	width: 80%;
-	margin: 0 auto;
-	overflow: hidden;
-	border-bottom: 3px dotted #eee;
-	padding-top: 30px;
-	padding-bottom: 30px;
-}
+      .banner-carousel-box {
+        display: flex;
+        box-sizing: border-box;
+        justify-content: center;
+        align-items: center;
+        height: 300px;
+        transition: transform 0.5s ease-in-out;
+      }
 
-.banner-carousel-box {
-	display: flex;
-	box-sizing: border-box;
-	justify-content: center;
-	align-items: center;
-	height: 300px;
-	transition: transform 0.5s ease-in-out;
-}
+      .banner-carousel {
+        min-width: 100%;
+        box-sizing: border-box;
+      }
 
-.banner-carousel {
-	min-width: 100%;
-	box-sizing: border-box;
-}
+      .banner-carousel img {
+        width: 100%;
+        display: block;
+      }
 
-.banner-carousel img {
-	width: 100%;
-	display: block;
-}
+      .row .prev,
+      .row .next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        font-size: 18px;
+        z-index: 10;
+      }
 
-.row .prev, .row .next {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	background-color: rgba(0, 0, 0, 0.5);
-	color: white;
-	border: none;
-	cursor: pointer;
-	padding: 10px;
-	font-size: 18px;
-	z-index: 10;
-}
+      .row .prev {
+        left: 10px;
+      }
 
-.row .prev {
-	left: 10px;
-}
+      .row .next {
+        right: 10px;
+      }
 
-.row .next {
-	right: 10px;
-}
+      .banner-carousel-box .banner-carousel img {
+        width: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+      }
 
-.banner-carousel-box .banner-carousel img {
-	width: 100%;
-	display: block;
-	object-fit: cover;
-	object-position: center;
-}
-  
-
-/* 文章卡片樣式 */
-.articles-grid {
-
+      /* 文章卡片樣式 */
+      .articles-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
@@ -202,622 +199,840 @@
         font-size: 14px;
         color: #666;
       }
-</style>
 
-</head>
+      /* 通知下拉選單樣式 */
+      .notification-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 320px;
+        max-height: 480px;
+        z-index: 1000;
+      }
 
-<body>
-	<!------網站header------>
-		<header>
-			<nav class="top-nav">
-				<div class="nav-left">
-					<a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a> <a
-						href="#" class="nav-item nav-link" id="nav-mygo">My！行程</a>
-				</div>
-				<div class="nav-center">
-					<a href="#" id="z-index"> <a href="/TIA104G2-SpringBoot/loggedin"
-						id="z-index"> <img th:src="@{/img/logo_black.png}"
-							alt="Chill Trip" style="width: 150px; height: auto" />
-					</a>
-					</a>
-				</div>
-				<div class="nav-right">
-					<a
-					href="/TIA104G2-SpringBoot/login"
-					class="nav-item nav-link active"
-					id="nav-login"
-					style="color: #ff6600"
-					>登入/註冊</a
-					>
-					<a href="#" class="nav-item nav-link" id="nav-profile">會員基本資料</a> <a
-						href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
-						<button id="goToChatRoom"> 聊天室</button>
-				</div>
-			</nav>
-		</header>
+      .notification-dropdown.show {
+        display: block;
+      }
 
-	<!------主頁的幻燈片活動區------>
-	<div class="container-fluid">
-		<div class="row">
-			<div class="banner-carousel-box"></div>
-			<button class="prev">❮</button>
-			<button class="next">❯</button>
-		</div>
-	</div>
+      .notification-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        border-bottom: 1px solid #eee;
+      }
 
+      .notification-header h3 {
+        color: #c5332b;
+        font-size: 16px;
+        margin: 0;
+      }
 
-	 <!------Chill精選行程文章------>
-	 <div class="container-fluid py-5">
-		<div class="container pt-5 pb-3">
-		  <div class="text-center mb-5">
-			<h5
-			  class="text-primary text-uppercase mb-3"
-			  style="letter-spacing: 5px"
-			>
-			  最詩意的遠方，都折疊在ChillTrip.com等你一起來探索
-			</h5>
-			<h1>Chill・精選行程</h1>
-		  </div>
-  
-		  <div class="articles-grid">
-			<!-- 文章卡片範例 -->
-			<article class="article-card">
-			  <img
-				src="/api/placeholder/400/320"
-				alt="文章封面"
-				class="article-image"
-			  />
-			  <div class="article-content">
-				<div class="article-meta">
-				  <span class="author">作者：旅行家</span>
-				  <button class="follow-btn">追蹤</button>
-				</div>
-				<h2 class="article-title">日本結緣神社10選</h2>
-				<p class="article-description">
-				  除了東京大神宮，還有這些絕美景點！
-				</p>
-				<div class="article-tags">
-				  <span class="tag">文化景點</span>
-				  <span class="tag">東京</span>
-				  <span class="tag">神社</span>
-				</div>
-				<div class="article-stats">
-				  <span>👁️ 100</span>
-				  <span>❤️ 50</span>
-				  <span class="rating">★★★★★ 5.0</span>
-				</div>
-			  </div>
-			</article>
-			<!-- 更多文章卡片 -->
-		  </div>
+      .notification-count {
+        background-color: #f17575;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 12px;
+        font-size: 12px;
+      }
 
-			<div class="text-center mb-5">
-				<h1>Chill・精選玩家</h1>
-			</div>
+      .notification-list {
+        max-height: 400px;
+        overflow-y: auto;
+      }
 
-			<div class="container-fluid py-5">
-				<div class="row">
-					<div class="col-md-6 col-lg-3 text-center team mb-4">
-						<div class="team-item rounded overflow-hidden mb-2">
-							<div class="team-img position-relative">
-								<img class="img-fluid" src="img/team-1.jpg" alt="" />
-								<div class="team-social">
-									<a class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-twitter"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-facebook-f"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-linkedin-in"></i></a>
-								</div>
-							</div>
-							<div class="bg-secondary p-4">
-								<h5>Yuki</h5>
-								<p class="m-0">東京旅遊達人</p>
-							</div>
-						</div>
-					</div>
+      .notification-item {
+        display: flex;
+        padding: 12px 16px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
 
-					<div class="col-md-6 col-lg-3 text-center team mb-4">
-						<div class="team-item rounded overflow-hidden mb-2">
-							<div class="team-img position-relative">
-								<img class="img-fluid" src="img/team-1.jpg" alt="" />
-								<div class="team-social">
-									<a class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-twitter"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-facebook-f"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-linkedin-in"></i></a>
-								</div>
-							</div>
-							<div class="bg-secondary p-4">
-								<h5>Yuki</h5>
-								<p class="m-0">東京旅遊達人</p>
-							</div>
-						</div>
-					</div>
+      .notification-item:hover {
+        background-color: #f9f9f9;
+      }
 
-					<div class="col-md-6 col-lg-3 text-center team mb-4">
-						<div class="team-item rounded overflow-hidden mb-2">
-							<div class="team-img position-relative">
-								<img class="img-fluid" src="img/team-1.jpg" alt="" />
-								<div class="team-social">
-									<a class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-twitter"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-facebook-f"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-linkedin-in"></i></a>
-								</div>
-							</div>
-							<div class="bg-secondary p-4">
-								<h5>Yuki</h5>
-								<p class="m-0">東京旅遊達人</p>
-							</div>
-						</div>
-					</div>
+      .notification-item.unread {
+        background-color: #fff5f5;
+      }
 
-					<div class="col-md-6 col-lg-3 text-center team mb-4">
-						<div class="team-item rounded overflow-hidden mb-2">
-							<div class="team-img position-relative">
-								<img class="img-fluid" src="img/team-1.jpg" alt="" />
-								<div class="team-social">
-									<a class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-twitter"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-facebook-f"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-linkedin-in"></i></a>
-								</div>
-							</div>
-							<div class="bg-secondary p-4">
-								<h5>Yuki</h5>
-								<p class="m-0">東京旅遊達人</p>
-							</div>
-						</div>
-					</div>
+      .notification-avatar {
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+      }
 
-					<div class="col-md-6 col-lg-3 text-center team mb-4">
-						<div class="team-item rounded overflow-hidden mb-2">
-							<div class="team-img position-relative">
-								<img class="img-fluid" src="img/team-1.jpg" alt="" />
-								<div class="team-social">
-									<a class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-twitter"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-facebook-f"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-linkedin-in"></i></a>
-								</div>
-							</div>
-							<div class="bg-secondary p-4">
-								<h5>Yuki</h5>
-								<p class="m-0">東京旅遊達人</p>
-							</div>
-						</div>
-					</div>
+      .notification-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+      }
 
-					<div class="col-md-6 col-lg-3 text-center team mb-4">
-						<div class="team-item rounded overflow-hidden mb-2">
-							<div class="team-img position-relative">
-								<img class="img-fluid" src="img/team-1.jpg" alt="" />
-								<div class="team-social">
-									<a class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-twitter"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-facebook-f"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-linkedin-in"></i></a>
-								</div>
-							</div>
-							<div class="bg-secondary p-4">
-								<h5>Yuki</h5>
-								<p class="m-0">東京旅遊達人</p>
-							</div>
-						</div>
-					</div>
+      .notification-content {
+        flex: 1;
+      }
 
-					<div class="col-md-6 col-lg-3 text-center team mb-4">
-						<div class="team-item rounded overflow-hidden mb-2">
-							<div class="team-img position-relative">
-								<img class="img-fluid" src="img/team-1.jpg" alt="" />
-								<div class="team-social">
-									<a class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-twitter"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-facebook-f"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-linkedin-in"></i></a>
-								</div>
-							</div>
-							<div class="bg-secondary p-4">
-								<h5>Yuki</h5>
-								<p class="m-0">東京旅遊達人</p>
-							</div>
-						</div>
-					</div>
+      .notification-text {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 4px;
+      }
 
-					<div class="col-md-6 col-lg-3 text-center team mb-4">
-						<div class="team-item rounded overflow-hidden mb-2">
-							<div class="team-img position-relative">
-								<img class="img-fluid" src="img/team-1.jpg" alt="" />
-								<div class="team-social">
-									<a class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-twitter"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-facebook-f"></i></a> <a
-										class="btn btn-outline-light btn-square mx-1" href="#"><i
-										class="fab fa-linkedin-in"></i></a>
-								</div>
-							</div>
-							<div class="bg-secondary p-4">
-								<h5>Yuki</h5>
-								<p class="m-0">東京旅遊達人</p>
-							</div>
-						</div>
-					</div>
+      .sender-name {
+        color: #c5332b;
+        font-weight: 500;
+      }
 
-				</div>
+      .notification-time {
+        font-size: 12px;
+        color: #666;
+      }
 
-			</div>
-		</div>
-	</div>
+      .no-notifications {
+        padding: 20px;
+        text-align: center;
+        color: #666;
+      }
+    </style>
+  </head>
 
-	<!------Chill探索套票------>
-	<div class="container-fluid py-5">
-		<div class="container pt-5 pb-3">
-			<div class="text-center mb-5">
-				<h5 class="text-primary text-uppercase mb-3"
-					style="letter-spacing: 5px">「世界這麼大，你想去看看？」Chill票券在手，讓你想去哪就去哪</h5>
-				<h1>Chill・推薦套票</h1>
-			</div>
+  <body>
+    <!------網站header------>
+    <header>
+      <nav class="top-nav">
+        <div class="nav-left">
+          <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+          <a href="#" class="nav-item nav-link" id="nav-mygo">My！行程</a>
+        </div>
+        <div class="nav-center">
+          <a href="/TIA104G2-SpringBoot/loggedin">
+            <img
+              th:src="@{/img/logo_black.png}"
+              alt="Chill Trip"
+              style="width: 150px; height: auto"
+            />
+          </a>
+        </div>
+        <div class="nav-right">
+          <a
+            href="/TIA104G2-SpringBoot/login"
+            class="nav-item nav-link active"
+            id="nav-login"
+            style="color: #ff6600"
+            >登入／註冊</a
+          >
+          <a href="#" class="nav-item nav-link" id="nav-profile"
+            >會員基本資料</a
+          >
+          <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+          <button id="goToChatRoom" class="chat-btn">
+            <i class="fas fa-comments"></i>
+            聊天室
+          </button>
+        </div>
+      </nav>
+    </header>
 
-			<div class="container-fluid py-5">
-				<div class="row">
-					<div class="col-lg-4 col-md-6 mb-4">
-						<div class="rounded overflow-hidden mb-2">
-							<img class="img-fluid" src="img/travel-article1.jpg" alt="" />
-							<div class="bg-secondary p-4">
-								<div class="d-flex justify-content-between mb-3">
-									<small class="m-0"><i
-										class="far fa-clock text-primary mr-2"></i>上架時間</small>
-								</div>
-								<a class="h5" href="">最chill的東京三日遊</a>
-								<div class="border-top mt-4 pt-4">
-									<div class="d-flex justify-content-between">
-										<h6 class="m-0">
-											<i class="fa fa-star text-primary mr-2"></i>5.0 <small>(人數)</small>
-										</h6>
-										<h5 class="m-0">$金額</h5>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+    <!------主頁的幻燈片活動區------>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="banner-carousel-box"></div>
+        <button class="prev">❮</button>
+        <button class="next">❯</button>
+      </div>
+    </div>
 
-					<div class="col-lg-4 col-md-6 mb-4">
-						<div class="rounded overflow-hidden mb-2">
-							<img class="img-fluid" src="img/travel-article1.jpg" alt="" />
-							<div class="bg-secondary p-4">
-								<div class="d-flex justify-content-between mb-3">
-									<small class="m-0"><i
-										class="far fa-clock text-primary mr-2"></i>上架時間</small>
-								</div>
-								<a class="h5" href="">最chill的東京三日遊</a>
-								<div class="border-top mt-4 pt-4">
-									<div class="d-flex justify-content-between">
-										<h6 class="m-0">
-											<i class="fa fa-star text-primary mr-2"></i>5.0 <small>(人數)</small>
-										</h6>
-										<h5 class="m-0">$金額</h5>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+    <!------Chill精選行程文章------>
+    <div class="container-fluid py-5">
+      <div class="container pt-5 pb-3">
+        <div class="text-center mb-5">
+          <h5
+            class="text-primary text-uppercase mb-3"
+            style="letter-spacing: 5px"
+          >
+            最詩意的遠方，都折疊在ChillTrip.com等你一起來探索
+          </h5>
+          <h1>Chill・精選行程</h1>
+        </div>
 
-					<div class="col-lg-4 col-md-6 mb-4">
-						<div class="rounded overflow-hidden mb-2">
-							<img class="img-fluid" src="img/travel-article1.jpg" alt="" />
-							<div class="bg-secondary p-4">
-								<div class="d-flex justify-content-between mb-3">
-									<small class="m-0"><i
-										class="far fa-clock text-primary mr-2"></i>上架時間</small>
-								</div>
-								<a class="h5" href="">最chill的東京三日遊</a>
-								<div class="border-top mt-4 pt-4">
-									<div class="d-flex justify-content-between">
-										<h6 class="m-0">
-											<i class="fa fa-star text-primary mr-2"></i>5.0 <small>(人數)</small>
-										</h6>
-										<h5 class="m-0">$金額</h5>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+        <div class="articles-grid">
+          <!-- 文章卡片範例 -->
+          <article class="article-card">
+            <img
+              src="/api/placeholder/400/320"
+              alt="文章封面"
+              class="article-image"
+            />
+            <div class="article-content">
+              <div class="article-meta">
+                <span class="author">作者：旅行家</span>
+                <button class="follow-btn">追蹤</button>
+              </div>
+              <h2 class="article-title">日本結緣神社10選</h2>
+              <p class="article-description">
+                除了東京大神宮，還有這些絕美景點！
+              </p>
+              <div class="article-tags">
+                <span class="tag">文化景點</span>
+                <span class="tag">東京</span>
+                <span class="tag">神社</span>
+              </div>
+              <div class="article-stats">
+                <span>👁️ 100</span>
+                <span>❤️ 50</span>
+                <span class="rating">★★★★★ 5.0</span>
+              </div>
+            </div>
+          </article>
+          <!-- 更多文章卡片 -->
+        </div>
 
-					<div class="col-lg-4 col-md-6 mb-4">
-						<div class="rounded overflow-hidden mb-2">
-							<img class="img-fluid" src="img/travel-article1.jpg" alt="" />
-							<div class="bg-secondary p-4">
-								<div class="d-flex justify-content-between mb-3">
-									<small class="m-0"><i
-										class="far fa-clock text-primary mr-2"></i>上架時間</small>
-								</div>
-								<a class="h5" href="">最chill的東京三日遊</a>
-								<div class="border-top mt-4 pt-4">
-									<div class="d-flex justify-content-between">
-										<h6 class="m-0">
-											<i class="fa fa-star text-primary mr-2"></i>5.0 <small>(人數)</small>
-										</h6>
-										<h5 class="m-0">$金額</h5>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+        <div class="text-center mb-5">
+          <h1>Chill・精選玩家</h1>
+        </div>
 
-					<div class="col-lg-4 col-md-6 mb-4">
-						<div class="rounded overflow-hidden mb-2">
-							<img class="img-fluid" src="img/travel-article1.jpg" alt="" />
-							<div class="bg-secondary p-4">
-								<div class="d-flex justify-content-between mb-3">
-									<small class="m-0"><i
-										class="far fa-clock text-primary mr-2"></i>上架時間</small>
-								</div>
-								<a class="h5" href="">最chill的東京三日遊</a>
-								<div class="border-top mt-4 pt-4">
-									<div class="d-flex justify-content-between">
-										<h6 class="m-0">
-											<i class="fa fa-star text-primary mr-2"></i>5.0 <small>(人數)</small>
-										</h6>
-										<h5 class="m-0">$金額</h5>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+        <div class="container-fluid py-5">
+          <div class="row">
+            <div class="col-md-6 col-lg-3 text-center team mb-4">
+              <div class="team-item rounded overflow-hidden mb-2">
+                <div class="team-img position-relative">
+                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <div class="team-social">
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-twitter"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-facebook-f"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-linkedin-in"></i
+                    ></a>
+                  </div>
+                </div>
+                <div class="bg-secondary p-4">
+                  <h5>Yuki</h5>
+                  <p class="m-0">東京旅遊達人</p>
+                </div>
+              </div>
+            </div>
 
-					<div class="col-lg-4 col-md-6 mb-4">
-						<div class="rounded overflow-hidden mb-2">
-							<img class="img-fluid" src="img/travel-article1.jpg" alt="" />
-							<div class="bg-secondary p-4">
-								<div class="d-flex justify-content-between mb-3">
-									<small class="m-0"><i
-										class="far fa-clock text-primary mr-2"></i>上架時間</small>
-								</div>
-								<a class="h5" href="">最chill的東京三日遊</a>
-								<div class="border-top mt-4 pt-4">
-									<div class="d-flex justify-content-between">
-										<h6 class="m-0">
-											<i class="fa fa-star text-primary mr-2"></i>5.0 <small>(人數)</small>
-										</h6>
-										<h5 class="m-0">$金額</h5>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+            <div class="col-md-6 col-lg-3 text-center team mb-4">
+              <div class="team-item rounded overflow-hidden mb-2">
+                <div class="team-img position-relative">
+                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <div class="team-social">
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-twitter"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-facebook-f"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-linkedin-in"></i
+                    ></a>
+                  </div>
+                </div>
+                <div class="bg-secondary p-4">
+                  <h5>Yuki</h5>
+                  <p class="m-0">東京旅遊達人</p>
+                </div>
+              </div>
+            </div>
 
-			<div class="text-center mb-5">
-				<h1>Chill・熱門排行榜套票</h1>
-			</div>
+            <div class="col-md-6 col-lg-3 text-center team mb-4">
+              <div class="team-item rounded overflow-hidden mb-2">
+                <div class="team-img position-relative">
+                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <div class="team-social">
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-twitter"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-facebook-f"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-linkedin-in"></i
+                    ></a>
+                  </div>
+                </div>
+                <div class="bg-secondary p-4">
+                  <h5>Yuki</h5>
+                  <p class="m-0">東京旅遊達人</p>
+                </div>
+              </div>
+            </div>
 
-			<div class="container-fluid py-5">
-				<div class="row">
-					<div class="col-lg-4 col-md-6 mb-4">
-						<div class="rounded overflow-hidden mb-2">
-							<img class="img-fluid" src="img/travel-article2.jpg" alt="" />
-							<div class="bg-secondary p-4">
-								<div class="d-flex justify-content-between mb-3">
-									<small class="m-0"><i
-										class="far fa-clock text-primary mr-2"></i>上架時間</small>
-								</div>
-								<a class="h5" href="">最chill的京都三日遊</a>
-								<div class="border-top mt-4 pt-4">
-									<div class="d-flex justify-content-between">
-										<h6 class="m-0">
-											<i class="fa fa-star text-primary mr-2"></i>5.0 <small>(人數)</small>
-										</h6>
-										<h5 class="m-0">$金額</h5>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+            <div class="col-md-6 col-lg-3 text-center team mb-4">
+              <div class="team-item rounded overflow-hidden mb-2">
+                <div class="team-img position-relative">
+                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <div class="team-social">
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-twitter"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-facebook-f"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-linkedin-in"></i
+                    ></a>
+                  </div>
+                </div>
+                <div class="bg-secondary p-4">
+                  <h5>Yuki</h5>
+                  <p class="m-0">東京旅遊達人</p>
+                </div>
+              </div>
+            </div>
 
-					<div class="col-lg-4 col-md-6 mb-4">
-						<div class="rounded overflow-hidden mb-2">
-							<img class="img-fluid" src="img/travel-article2.jpg" alt="" />
-							<div class="bg-secondary p-4">
-								<div class="d-flex justify-content-between mb-3">
-									<small class="m-0"><i
-										class="far fa-clock text-primary mr-2"></i>上架時間</small>
-								</div>
-								<a class="h5" href="">最chill的京都三日遊</a>
-								<div class="border-top mt-4 pt-4">
-									<div class="d-flex justify-content-between">
-										<h6 class="m-0">
-											<i class="fa fa-star text-primary mr-2"></i>5.0 <small>(人數)</small>
-										</h6>
-										<h5 class="m-0">$金額</h5>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+            <div class="col-md-6 col-lg-3 text-center team mb-4">
+              <div class="team-item rounded overflow-hidden mb-2">
+                <div class="team-img position-relative">
+                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <div class="team-social">
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-twitter"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-facebook-f"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-linkedin-in"></i
+                    ></a>
+                  </div>
+                </div>
+                <div class="bg-secondary p-4">
+                  <h5>Yuki</h5>
+                  <p class="m-0">東京旅遊達人</p>
+                </div>
+              </div>
+            </div>
 
-					<div class="col-lg-4 col-md-6 mb-4">
-						<div class="rounded overflow-hidden mb-2">
-							<img class="img-fluid" src="img/travel-article2.jpg" alt="" />
-							<div class="bg-secondary p-4">
-								<div class="d-flex justify-content-between mb-3">
-									<small class="m-0"><i
-										class="far fa-clock text-primary mr-2"></i>上架時間</small>
-								</div>
-								<a class="h5" href="">最chill的京都三日遊</a>
-								<div class="border-top mt-4 pt-4">
-									<div class="d-flex justify-content-between">
-										<h6 class="m-0">
-											<i class="fa fa-star text-primary mr-2"></i>5.0 <small>(人數)</small>
-										</h6>
-										<h5 class="m-0">$金額</h5>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+            <div class="col-md-6 col-lg-3 text-center team mb-4">
+              <div class="team-item rounded overflow-hidden mb-2">
+                <div class="team-img position-relative">
+                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <div class="team-social">
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-twitter"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-facebook-f"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-linkedin-in"></i
+                    ></a>
+                  </div>
+                </div>
+                <div class="bg-secondary p-4">
+                  <h5>Yuki</h5>
+                  <p class="m-0">東京旅遊達人</p>
+                </div>
+              </div>
+            </div>
 
-					<div class="col-lg-4 col-md-6 mb-4">
-						<div class="rounded overflow-hidden mb-2">
-							<img class="img-fluid" src="img/travel-article2.jpg" alt="" />
-							<div class="bg-secondary p-4">
-								<div class="d-flex justify-content-between mb-3">
-									<small class="m-0"><i
-										class="far fa-clock text-primary mr-2"></i>上架時間</small>
-								</div>
-								<a class="h5" href="">最chill的京都三日遊</a>
-								<div class="border-top mt-4 pt-4">
-									<div class="d-flex justify-content-between">
-										<h6 class="m-0">
-											<i class="fa fa-star text-primary mr-2"></i>5.0 <small>(人數)</small>
-										</h6>
-										<h5 class="m-0">$金額</h5>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+            <div class="col-md-6 col-lg-3 text-center team mb-4">
+              <div class="team-item rounded overflow-hidden mb-2">
+                <div class="team-img position-relative">
+                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <div class="team-social">
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-twitter"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-facebook-f"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-linkedin-in"></i
+                    ></a>
+                  </div>
+                </div>
+                <div class="bg-secondary p-4">
+                  <h5>Yuki</h5>
+                  <p class="m-0">東京旅遊達人</p>
+                </div>
+              </div>
+            </div>
 
-					<div class="col-lg-4 col-md-6 mb-4">
-						<div class="rounded overflow-hidden mb-2">
-							<img class="img-fluid" src="img/travel-article2.jpg" alt="" />
-							<div class="bg-secondary p-4">
-								<div class="d-flex justify-content-between mb-3">
-									<small class="m-0"><i
-										class="far fa-clock text-primary mr-2"></i>上架時間</small>
-								</div>
-								<a class="h5" href="">最chill的京都三日遊</a>
-								<div class="border-top mt-4 pt-4">
-									<div class="d-flex justify-content-between">
-										<h6 class="m-0">
-											<i class="fa fa-star text-primary mr-2"></i>5.0 <small>(人數)</small>
-										</h6>
-										<h5 class="m-0">$金額</h5>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+            <div class="col-md-6 col-lg-3 text-center team mb-4">
+              <div class="team-item rounded overflow-hidden mb-2">
+                <div class="team-img position-relative">
+                  <img class="img-fluid" src="img/team-1.jpg" alt="" />
+                  <div class="team-social">
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-twitter"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-facebook-f"></i
+                    ></a>
+                    <a class="btn btn-outline-light btn-square mx-1" href="#"
+                      ><i class="fab fa-linkedin-in"></i
+                    ></a>
+                  </div>
+                </div>
+                <div class="bg-secondary p-4">
+                  <h5>Yuki</h5>
+                  <p class="m-0">東京旅遊達人</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-					<div class="col-lg-4 col-md-6 mb-4">
-						<div class="rounded overflow-hidden mb-2">
-							<img class="img-fluid" src="img/travel-article2.jpg" alt="" />
-							<div class="bg-secondary p-4">
-								<div class="d-flex justify-content-between mb-3">
-									<small class="m-0"><i
-										class="far fa-clock text-primary mr-2"></i>上架時間</small>
-								</div>
-								<a class="h5" href="">最chill的京都三日遊</a>
-								<div class="border-top mt-4 pt-4">
-									<div class="d-flex justify-content-between">
-										<h6 class="m-0">
-											<i class="fa fa-star text-primary mr-2"></i>5.0 <small>(人數)</small>
-										</h6>
-										<h5 class="m-0">$金額</h5>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <!------Chill探索套票------>
+    <div class="container-fluid py-5">
+      <div class="container pt-5 pb-3">
+        <div class="text-center mb-5">
+          <h5
+            class="text-primary text-uppercase mb-3"
+            style="letter-spacing: 5px"
+          >
+            「世界這麼大，你想去看看？」Chill票券在手，讓你想去哪就去哪
+          </h5>
+          <h1>Chill・推薦套票</h1>
+        </div>
 
-	<!------網站footer------>
-	<footer>
-		<div class="d-flex justify-content-start mt-4">
-			<a class="btn btn-outline-light btn-square mr-2" href="#"><i
-				class="fab fa-twitter"></i></a> <a
-				class="btn btn-outline-light btn-square mr-2" href="#"><i
-				class="fab fa-facebook-f"></i></a> <a
-				class="btn btn-outline-light btn-square mr-2" href="#"><i
-				class="fab fa-linkedin-in"></i></a> <a
-				class="btn btn-outline-light btn-square" href="#"><i
-				class="fab fa-instagram"></i></a>
-		</div>
-		<div class="social-links">
-			<div style="display: flex; gap: 10px">
-				<a href="https://facebook.com" target="_blank"
-					style="text-decoration: none">
-					<div
-						style="width: 50px; height: 50px; background-color: #3b5998; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-						<i class="fab fa-facebook-f" style="color: white; font-size: 24px"></i>
-					</div>
-				</a> <a href="https://instagram.com" target="_blank"
-					style="text-decoration: none">
-					<div
-						style="width: 50px; height: 50px; background-color: #e1306c; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-						<i class="fab fa-instagram" style="color: white; font-size: 24px"></i>
-					</div>
-				</a> <a href="https://youtube.com" target="_blank"
-					style="text-decoration: none">
-					<div
-						style="width: 50px; height: 50px; background-color: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-						<i class="fab fa-youtube" style="color: white; font-size: 24px"></i>
-					</div>
-				</a>
-			</div>
+        <div class="container-fluid py-5">
+          <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="rounded overflow-hidden mb-2">
+                <img class="img-fluid" src="img/travel-article1.jpg" alt="" />
+                <div class="bg-secondary p-4">
+                  <div class="d-flex justify-content-between mb-3">
+                    <small class="m-0"
+                      ><i class="far fa-clock text-primary mr-2"></i
+                      >上架時間</small
+                    >
+                  </div>
+                  <a class="h5" href="">最chill的東京三日遊</a>
+                  <div class="border-top mt-4 pt-4">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="m-0">
+                        <i class="fa fa-star text-primary mr-2"></i>5.0
+                        <small>(人數)</small>
+                      </h6>
+                      <h5 class="m-0">$金額</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-			<!-- 加載 Font Awesome 圖標庫 -->
-			<link
-				href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-				rel="stylesheet" />
-		</div>
-		<div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
-		<a href="adminLogin">管理員登入</a>
-	</footer>
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="rounded overflow-hidden mb-2">
+                <img class="img-fluid" src="img/travel-article1.jpg" alt="" />
+                <div class="bg-secondary p-4">
+                  <div class="d-flex justify-content-between mb-3">
+                    <small class="m-0"
+                      ><i class="far fa-clock text-primary mr-2"></i
+                      >上架時間</small
+                    >
+                  </div>
+                  <a class="h5" href="">最chill的東京三日遊</a>
+                  <div class="border-top mt-4 pt-4">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="m-0">
+                        <i class="fa fa-star text-primary mr-2"></i>5.0
+                        <small>(人數)</small>
+                      </h6>
+                      <h5 class="m-0">$金額</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-	<!------ 共用JS ------>
-	<!-- Back to Top -->
-	<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i
-		class="fa fa-angle-double-up"></i></a>
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="rounded overflow-hidden mb-2">
+                <img class="img-fluid" src="img/travel-article1.jpg" alt="" />
+                <div class="bg-secondary p-4">
+                  <div class="d-flex justify-content-between mb-3">
+                    <small class="m-0"
+                      ><i class="far fa-clock text-primary mr-2"></i
+                      >上架時間</small
+                    >
+                  </div>
+                  <a class="h5" href="">最chill的東京三日遊</a>
+                  <div class="border-top mt-4 pt-4">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="m-0">
+                        <i class="fa fa-star text-primary mr-2"></i>5.0
+                        <small>(人數)</small>
+                      </h6>
+                      <h5 class="m-0">$金額</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-	<!-- JavaScript Libraries -->
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-	<script
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="rounded overflow-hidden mb-2">
+                <img class="img-fluid" src="img/travel-article1.jpg" alt="" />
+                <div class="bg-secondary p-4">
+                  <div class="d-flex justify-content-between mb-3">
+                    <small class="m-0"
+                      ><i class="far fa-clock text-primary mr-2"></i
+                      >上架時間</small
+                    >
+                  </div>
+                  <a class="h5" href="">最chill的東京三日遊</a>
+                  <div class="border-top mt-4 pt-4">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="m-0">
+                        <i class="fa fa-star text-primary mr-2"></i>5.0
+                        <small>(人數)</small>
+                      </h6>
+                      <h5 class="m-0">$金額</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-	<!-- 本地資源改用 Thymeleaf 語法 -->
-	<script th:src="@{/lib/easing/easing.min.js}"></script>
-	<script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="rounded overflow-hidden mb-2">
+                <img class="img-fluid" src="img/travel-article1.jpg" alt="" />
+                <div class="bg-secondary p-4">
+                  <div class="d-flex justify-content-between mb-3">
+                    <small class="m-0"
+                      ><i class="far fa-clock text-primary mr-2"></i
+                      >上架時間</small
+                    >
+                  </div>
+                  <a class="h5" href="">最chill的東京三日遊</a>
+                  <div class="border-top mt-4 pt-4">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="m-0">
+                        <i class="fa fa-star text-primary mr-2"></i>5.0
+                        <small>(人數)</small>
+                      </h6>
+                      <h5 class="m-0">$金額</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-	<!-- Contact Javascript File -->
-	<script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
-	<script th:src="@{/mail/contact.js}"></script>
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="rounded overflow-hidden mb-2">
+                <img class="img-fluid" src="img/travel-article1.jpg" alt="" />
+                <div class="bg-secondary p-4">
+                  <div class="d-flex justify-content-between mb-3">
+                    <small class="m-0"
+                      ><i class="far fa-clock text-primary mr-2"></i
+                      >上架時間</small
+                    >
+                  </div>
+                  <a class="h5" href="">最chill的東京三日遊</a>
+                  <div class="border-top mt-4 pt-4">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="m-0">
+                        <i class="fa fa-star text-primary mr-2"></i>5.0
+                        <small>(人數)</small>
+                      </h6>
+                      <h5 class="m-0">$金額</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-	<!-- Template Javascript -->
-	<script th:src="@{/js/main.js}"></script>
+        <div class="text-center mb-5">
+          <h1>Chill・熱門排行榜套票</h1>
+        </div>
 
-	<!-- 導航欄nav的href載入器 -->
-	<!------修齊的JS------>
-	<script th:src="@{/js/navigation.js}"></script>
+        <div class="container-fluid py-5">
+          <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="rounded overflow-hidden mb-2">
+                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <div class="bg-secondary p-4">
+                  <div class="d-flex justify-content-between mb-3">
+                    <small class="m-0"
+                      ><i class="far fa-clock text-primary mr-2"></i
+                      >上架時間</small
+                    >
+                  </div>
+                  <a class="h5" href="">最chill的京都三日遊</a>
+                  <div class="border-top mt-4 pt-4">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="m-0">
+                        <i class="fa fa-star text-primary mr-2"></i>5.0
+                        <small>(人數)</small>
+                      </h6>
+                      <h5 class="m-0">$金額</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-	
-<script>
-	//動態生成公告圖片
-	document.addEventListener("DOMContentLoaded", function () {
-		checkLogin();
-	  loadPopularArticles();
-	  const carouselContainer = document.querySelector(
-		".banner-carousel-box"
-	  );
-	 
-	   //动态构建 API 的 URL，基于当前页面的 origin
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="rounded overflow-hidden mb-2">
+                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <div class="bg-secondary p-4">
+                  <div class="d-flex justify-content-between mb-3">
+                    <small class="m-0"
+                      ><i class="far fa-clock text-primary mr-2"></i
+                      >上架時間</small
+                    >
+                  </div>
+                  <a class="h5" href="">最chill的京都三日遊</a>
+                  <div class="border-top mt-4 pt-4">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="m-0">
+                        <i class="fa fa-star text-primary mr-2"></i>5.0
+                        <small>(人數)</small>
+                      </h6>
+                      <h5 class="m-0">$金額</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="rounded overflow-hidden mb-2">
+                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <div class="bg-secondary p-4">
+                  <div class="d-flex justify-content-between mb-3">
+                    <small class="m-0"
+                      ><i class="far fa-clock text-primary mr-2"></i
+                      >上架時間</small
+                    >
+                  </div>
+                  <a class="h5" href="">最chill的京都三日遊</a>
+                  <div class="border-top mt-4 pt-4">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="m-0">
+                        <i class="fa fa-star text-primary mr-2"></i>5.0
+                        <small>(人數)</small>
+                      </h6>
+                      <h5 class="m-0">$金額</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="rounded overflow-hidden mb-2">
+                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <div class="bg-secondary p-4">
+                  <div class="d-flex justify-content-between mb-3">
+                    <small class="m-0"
+                      ><i class="far fa-clock text-primary mr-2"></i
+                      >上架時間</small
+                    >
+                  </div>
+                  <a class="h5" href="">最chill的京都三日遊</a>
+                  <div class="border-top mt-4 pt-4">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="m-0">
+                        <i class="fa fa-star text-primary mr-2"></i>5.0
+                        <small>(人數)</small>
+                      </h6>
+                      <h5 class="m-0">$金額</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="rounded overflow-hidden mb-2">
+                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <div class="bg-secondary p-4">
+                  <div class="d-flex justify-content-between mb-3">
+                    <small class="m-0"
+                      ><i class="far fa-clock text-primary mr-2"></i
+                      >上架時間</small
+                    >
+                  </div>
+                  <a class="h5" href="">最chill的京都三日遊</a>
+                  <div class="border-top mt-4 pt-4">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="m-0">
+                        <i class="fa fa-star text-primary mr-2"></i>5.0
+                        <small>(人數)</small>
+                      </h6>
+                      <h5 class="m-0">$金額</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="rounded overflow-hidden mb-2">
+                <img class="img-fluid" src="img/travel-article2.jpg" alt="" />
+                <div class="bg-secondary p-4">
+                  <div class="d-flex justify-content-between mb-3">
+                    <small class="m-0"
+                      ><i class="far fa-clock text-primary mr-2"></i
+                      >上架時間</small
+                    >
+                  </div>
+                  <a class="h5" href="">最chill的京都三日遊</a>
+                  <div class="border-top mt-4 pt-4">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="m-0">
+                        <i class="fa fa-star text-primary mr-2"></i>5.0
+                        <small>(人數)</small>
+                      </h6>
+                      <h5 class="m-0">$金額</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!------網站footer------>
+    <footer>
+      <div class="d-flex justify-content-start mt-4">
+        <a class="btn btn-outline-light btn-square mr-2" href="#"
+          ><i class="fab fa-twitter"></i
+        ></a>
+        <a class="btn btn-outline-light btn-square mr-2" href="#"
+          ><i class="fab fa-facebook-f"></i
+        ></a>
+        <a class="btn btn-outline-light btn-square mr-2" href="#"
+          ><i class="fab fa-linkedin-in"></i
+        ></a>
+        <a class="btn btn-outline-light btn-square" href="#"
+          ><i class="fab fa-instagram"></i
+        ></a>
+      </div>
+      <div class="social-links">
+        <div style="display: flex; gap: 10px">
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #3b5998;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-facebook-f"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #e1306c;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-instagram"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                background-color: #ff0000;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i
+                class="fab fa-youtube"
+                style="color: white; font-size: 24px"
+              ></i>
+            </div>
+          </a>
+        </div>
+
+        <!-- 加載 Font Awesome 圖標庫 -->
+        <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          rel="stylesheet"
+        />
+      </div>
+      <div class="copyright">Copyright © 2024 良心鮪魚股份有限公司</div>
+      <a href="adminLogin">管理員登入</a>
+    </footer>
+
+    <!------ 共用JS ------>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
+      ><i class="fa fa-angle-double-up"></i
+    ></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 本地資源改用 Thymeleaf 語法 -->
+    <script th:src="@{/lib/easing/easing.min.js}"></script>
+    <script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+
+    <!-- Contact Javascript File -->
+    <script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
+    <script th:src="@{/mail/contact.js}"></script>
+
+    <!-- Template Javascript -->
+    <script th:src="@{/js/main.js}"></script>
+
+    <!-- 導航欄nav的href載入器 -->
+    <!------修齊的JS------>
+    <script th:src="@{/js/navigation.js}"></script>
+
+    <script>
+      //動態生成公告圖片
+      document.addEventListener("DOMContentLoaded", function () {
+        checkLogin();
+        loadPopularArticles();
+        const carouselContainer = document.querySelector(
+          ".banner-carousel-box"
+        );
+
+        //动态构建 API 的 URL，基于当前页面的 origin
         const apiUrl = `${window.location.origin}${
           window.location.pathname.split("/")[1]
             ? "/" + window.location.pathname.split("/")[1]
@@ -859,53 +1074,51 @@
             console.error("Error fetching announcements:", error);
           });
 
+        //載入熱門文章
+        function loadPopularArticles() {
+          const articlesGrid = document.querySelector(".articles-grid");
+          if (!articlesGrid) {
+            console.error("找不到文章列表容器");
+            return;
+          }
 
-	  //載入熱門文章
-	  function loadPopularArticles() {
-		const articlesGrid = document.querySelector(".articles-grid");
-		if (!articlesGrid) {
-		  console.error("找不到文章列表容器");
-		  return;
-		}
+          const baseUrl = `${window.location.origin}${
+            window.location.pathname.split("/")[1]
+              ? "/" + window.location.pathname.split("/")[1]
+              : ""
+          }`;
 
-		const baseUrl = `${window.location.origin}${
-		  window.location.pathname.split("/")[1]
-			? "/" + window.location.pathname.split("/")[1]
-			: ""
-		}`;
+          fetch(`${baseUrl}/trip/popular`)
+            .then((response) => response.json())
+            .then((data) => {
+              if (data && data.content) {
+                renderPopularArticles(data.content);
+              }
+            })
+            .catch((error) => {
+              console.error("載入熱門文章失敗:", error);
+              showErrorMessage("載入熱門文章失敗");
+            });
+        }
 
-		fetch(`${baseUrl}/trip/popular`)
-		  .then((response) => response.json())
-		  .then((data) => {
-			if (data && data.content) {
-			  renderPopularArticles(data.content);
-			}
-		  })
-		  .catch((error) => {
-			console.error("載入熱門文章失敗:", error);
-			showErrorMessage("載入熱門文章失敗");
-		  });
-	  }
+        function renderPopularArticles(articles) {
+          const articlesGrid = document.querySelector(".articles-grid");
+          if (!articlesGrid) return;
 
-	  function renderPopularArticles(articles) {
-		const articlesGrid = document.querySelector(".articles-grid");
-		if (!articlesGrid) return;
+          articlesGrid.innerHTML = "";
 
-		articlesGrid.innerHTML = "";
+          if (!articles || articles.length === 0) {
+            showNoResultsMessage();
+            return;
+          }
 
-		if (!articles || articles.length === 0) {
-		  showNoResultsMessage();
-		  return;
-		}
+          articles.forEach((article) => {
+            // 處理 Base64 圖片
+            const imageUrl = article.image.startsWith("data:")
+              ? article.image
+              : `data:image/jpeg;base64,${article.image}`;
 
-		articles.forEach((article) => {
-		  
-		  // 處理 Base64 圖片
-		  const imageUrl = article.image.startsWith("data:")
-			? article.image
-			: `data:image/jpeg;base64,${article.image}`;
-
-		  const articleHTML = `
+            const articleHTML = `
 
 		  <article class="article-card">
 			  <img src="${imageUrl}"
@@ -930,192 +1143,192 @@
 			  </div>
 		  </article>
 
-	  `	;
-				articlesGrid.insertAdjacentHTML("beforeend", articleHTML);
-		  		//檢查是否已追蹤	
-				checkIfTracked(article.authorId);
-				var authorId = article.authorId;
-						// 綁定追蹤按鈕的點擊事件
-				// 針對單一的追蹤按鈕綁定事件
-		
-			});
-		}
-		function checkIfTracked(authorId) {
-				const url = `/TIA104G2-SpringBoot/trackMember/checkTrack/${authorId}`;
+	  `;
+            articlesGrid.insertAdjacentHTML("beforeend", articleHTML);
+            //檢查是否已追蹤
+            checkIfTracked(article.authorId);
+            var authorId = article.authorId;
+            // 綁定追蹤按鈕的點擊事件
+            // 針對單一的追蹤按鈕綁定事件
+          });
+        }
+        function checkIfTracked(authorId) {
+          const url = `/TIA104G2-SpringBoot/trackMember/checkTrack/${authorId}`;
 
-				fetch(url)
-					.then((response) => response.json())
-					.then((isTracked) => {
-						const followButton = document.querySelector(`button.follow-btn[data-id="${authorId}"]`);
-						if (followButton) {
-							if (isTracked) {
-								// 顯示取消追蹤的按鈕
-								followButton.innerHTML = '追蹤中';
-								followButton.classList.add('cancelfollow-btn');
-								followButton.classList.remove('follow-btn');
-								followButton.removeEventListener('click', followHandler); // 移除原本的追蹤事件
-								followButton.addEventListener('click', cancelFollowHandler); // 綁定取消追蹤事件
-							} else {
-								// 顯示正常的追蹤按鈕
-								followButton.innerHTML = '追蹤';
-								followButton.classList.add('follow-btn');
-								followButton.classList.remove('cancelfollow-btn');
-								followButton.removeEventListener('click', cancelFollowHandler); // 移除取消追蹤事件
-								followButton.addEventListener('click', followHandler); // 綁定追蹤事件
-							}
-						}
-					})
-					.catch((error) => {
-						console.error("檢查是否追蹤失敗:", error);
-					});
-			}
-			// 追蹤某個作者的事件處理器
-				function followHandler(event) {
-					const authorId = event.target.getAttribute("data-id");
-					followAuthor(authorId);
-				}
+          fetch(url)
+            .then((response) => response.json())
+            .then((isTracked) => {
+              const followButton = document.querySelector(
+                `button.follow-btn[data-id="${authorId}"]`
+              );
+              if (followButton) {
+                if (isTracked) {
+                  // 顯示取消追蹤的按鈕
+                  followButton.innerHTML = "追蹤中";
+                  followButton.classList.add("cancelfollow-btn");
+                  followButton.classList.remove("follow-btn");
+                  followButton.removeEventListener("click", followHandler); // 移除原本的追蹤事件
+                  followButton.addEventListener("click", cancelFollowHandler); // 綁定取消追蹤事件
+                } else {
+                  // 顯示正常的追蹤按鈕
+                  followButton.innerHTML = "追蹤";
+                  followButton.classList.add("follow-btn");
+                  followButton.classList.remove("cancelfollow-btn");
+                  followButton.removeEventListener(
+                    "click",
+                    cancelFollowHandler
+                  ); // 移除取消追蹤事件
+                  followButton.addEventListener("click", followHandler); // 綁定追蹤事件
+                }
+              }
+            })
+            .catch((error) => {
+              console.error("檢查是否追蹤失敗:", error);
+            });
+        }
+        // 追蹤某個作者的事件處理器
+        function followHandler(event) {
+          const authorId = event.target.getAttribute("data-id");
+          followAuthor(authorId);
+        }
 
-				// 取消追蹤某個作者的事件處理器
-				function cancelFollowHandler(event) {
-					const authorId = event.target.getAttribute("data-id");
-					if (confirm("確定取消關注?")) {
-						cancelFollow(authorId);
-					}
-				}
+        // 取消追蹤某個作者的事件處理器
+        function cancelFollowHandler(event) {
+          const authorId = event.target.getAttribute("data-id");
+          if (confirm("確定取消關注?")) {
+            cancelFollow(authorId);
+          }
+        }
 
-				// 追蹤某個作者
-				function followAuthor(authorId) {
-					const url = `/TIA104G2-SpringBoot/trackMember/track/${authorId}`;
+        // 追蹤某個作者
+        function followAuthor(authorId) {
+          const url = `/TIA104G2-SpringBoot/trackMember/track/${authorId}`;
 
-					fetch(url, {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-					})
-					.then((response) => response.text())
-					.then((data) => {
-						if (data === "nologin") {
-							alert("尚未登入，請登入");
-							window.location.href = "/TIA104G2-SpringBoot/login"; // 跳轉至登入頁面
-						} else if (data === "success") {
-							alert("成功追蹤！");
-							loadPopularArticles(); // 重新載入文章，更新按鈕狀態
-						} else {
-							alert("追蹤失敗，請稍後再試！");
-						}
-					})
-					.catch((error) => {
-						console.error(error);
-						alert("發生錯誤，請稍後再試！");
-					});
-				}
+          fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              if (data === "nologin") {
+                alert("尚未登入，請登入");
+                window.location.href = "/TIA104G2-SpringBoot/login"; // 跳轉至登入頁面
+              } else if (data === "success") {
+                alert("成功追蹤！");
+                loadPopularArticles(); // 重新載入文章，更新按鈕狀態
+              } else {
+                alert("追蹤失敗，請稍後再試！");
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              alert("發生錯誤，請稍後再試！");
+            });
+        }
 
-				// 取消追蹤某個作者
-				function cancelFollow(authorId) {
-					const url = `/TIA104G2-SpringBoot/trackMember/deleteTrack/${authorId}`;
+        // 取消追蹤某個作者
+        function cancelFollow(authorId) {
+          const url = `/TIA104G2-SpringBoot/trackMember/deleteTrack/${authorId}`;
 
-					fetch(url, {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-					})
-					.then((response) => response.text())
-					.then((data) => {
-						if (data === "success") {
-							alert("已取消追蹤！");
-							loadPopularArticles(); // 重新載入文章，更新按鈕狀態
-						} else {
-							alert("取消追蹤失敗，請稍後再試！");
-						}
-					})
-					.catch((error) => {
-						console.error(error);
-						alert("發生錯誤，請稍後再試！");
-					});
-				}
-				});	
+          fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              if (data === "success") {
+                alert("已取消追蹤！");
+                loadPopularArticles(); // 重新載入文章，更新按鈕狀態
+              } else {
+                alert("取消追蹤失敗，請稍後再試！");
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              alert("發生錯誤，請稍後再試！");
+            });
+        }
+      });
 
-	  function showErrorMessage(message) {
-		const articlesGrid = document.querySelector(".articles-grid");
-		if (articlesGrid) {
-		  articlesGrid.innerHTML = `<div class="error-message">${message}</div>`;
-		}
-	  }
+      function showErrorMessage(message) {
+        const articlesGrid = document.querySelector(".articles-grid");
+        if (articlesGrid) {
+          articlesGrid.innerHTML = `<div class="error-message">${message}</div>`;
+        }
+      }
 
-	  function showNoResultsMessage() {
-		const articlesGrid = document.querySelector(".articles-grid");
-		if (articlesGrid) {
-		  articlesGrid.innerHTML = "<p>目前沒有熱門文章</p>";
-		}
-	  }
-	  
-	  function checkLogin(){
-		fetch('/TIA104G2-SpringBoot/member/checkLogin')
-        .then((response) => response.json())
-        .then((data) => {
-            const loginButton = document.getElementById('nav-login');
+      function showNoResultsMessage() {
+        const articlesGrid = document.querySelector(".articles-grid");
+        if (articlesGrid) {
+          articlesGrid.innerHTML = "<p>目前沒有熱門文章</p>";
+        }
+      }
+
+      function checkLogin() {
+        fetch("/TIA104G2-SpringBoot/member/checkLogin")
+          .then((response) => response.json())
+          .then((data) => {
+            const loginButton = document.getElementById("nav-login");
             if (data.loggedIn) {
-                // 如果已登入，將按鈕改為「登出」
-                loginButton.innerHTML = '登出';
-                loginButton.setAttribute('href', '/TIA104G2-SpringBoot/logout'); // 設定登出路徑
+              // 如果已登入，將按鈕改為「登出」
+              loginButton.innerHTML = "登出";
+              loginButton.setAttribute("href", "/TIA104G2-SpringBoot/logout"); // 設定登出路徑
 
-                // 如果是點擊登出按鈕，發起登出請求
-                loginButton.addEventListener('click', function(event) {
-                    event.preventDefault();  // 防止默認跳轉行為
-                    fetch('/TIA104G2-SpringBoot/member/logout', {
-                        method: 'POST',
-                    })
-                    .then(() => {
-                        // 登出成功後，重新導向到登入頁面
-                        window.location.href = '/TIA104G2-SpringBoot/login';
-                    })
-                    .catch((error) => {
-                        console.error('登出失敗:', error);
-                    });
-                });
+              // 如果是點擊登出按鈕，發起登出請求
+              loginButton.addEventListener("click", function (event) {
+                event.preventDefault(); // 防止默認跳轉行為
+                fetch("/TIA104G2-SpringBoot/member/logout", {
+                  method: "POST",
+                })
+                  .then(() => {
+                    // 登出成功後，重新導向到登入頁面
+                    window.location.href = "/TIA104G2-SpringBoot/login";
+                  })
+                  .catch((error) => {
+                    console.error("登出失敗:", error);
+                  });
+              });
             } else {
-                // 如果未登入，保持「登入/註冊」的原狀
-                loginButton.innerHTML = '登入/註冊';
-                loginButton.setAttribute('href', '/TIA104G2-SpringBoot/login'); // 確保指向登入頁面
+              // 如果未登入，保持「登入/註冊」的原狀
+              loginButton.innerHTML = "登入/註冊";
+              loginButton.setAttribute("href", "/TIA104G2-SpringBoot/login"); // 確保指向登入頁面
             }
-        })
-        .catch((error) => {
-            console.error('檢查登入狀態失敗:', error);
+          })
+          .catch((error) => {
+            console.error("檢查登入狀態失敗:", error);
+          });
+      }
+    </script>
+
+    <script>
+      document
+        .getElementById("goToChatRoom")
+        .addEventListener("click", function () {
+          // 發送 AJAX 請求，獲取用戶名稱
+          fetch("/TIA104G2-SpringBoot/chat/go")
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              // 假設返回的是 HTML 頁面，進行頁面跳轉
+              if (data.message === "success") {
+                window.location.href = "/TIA104G2-SpringBoot/chatroom"; // 重定向到聊天室頁面
+              } else {
+                alert("登入失敗或未授權");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("錯誤，請稍後再試");
+            });
         });
-	  }
-
- 
-
-
-</script>
-  
-<script>
-  document.getElementById("goToChatRoom").addEventListener("click", function() {
-// 發送 AJAX 請求，獲取用戶名稱
-fetch('/TIA104G2-SpringBoot/chat/go')
-  .then(response => response.json())
-  .then(data => {
-	console.log(data);
-	// 假設返回的是 HTML 頁面，進行頁面跳轉
-	if (data.message === "success" ) {
-	  window.location.href = '/TIA104G2-SpringBoot/chatroom'; // 重定向到聊天室頁面
-	} else {
-	  alert("登入失敗或未授權");
-	}
-  })
-  .catch(error => {
-	console.error('Error:', error);
-	alert("錯誤，請稍後再試");
-  });
-});
-
-</script>
-	<!------修齊的JS------>
-	<!------主頁的幻燈片活動區------>
-	<script>
-
+    </script>
+    <!------修齊的JS------>
+    <!------主頁的幻燈片活動區------>
+    <script>
       document.addEventListener("DOMContentLoaded", function () {
         const carouselInner = document.querySelector(".banner-carousel-box");
         const items = document.querySelectorAll(".banner-carousel");

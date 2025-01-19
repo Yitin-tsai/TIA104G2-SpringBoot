@@ -146,7 +146,7 @@ public class AnnounceServelet {
 			}
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed: " + errorMessage.toString());
 		}
-		System.out.println("這是更新的公告照片本人"  + announce.getCoverphotoBase64());
+//		System.out.println("這是更新的公告照片本人"  + announce.getCoverphotoBase64());
 		if(announce.getCoverphotoBase64() == null ) {
 			System.out.println("沒有收到照片");
 			announce.setCoverphoto(announceIndata.getCoverphoto());

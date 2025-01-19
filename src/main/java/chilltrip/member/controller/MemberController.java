@@ -273,7 +273,7 @@ public class MemberController {
 				+ memberVO.getEreceiptCarrier() + ", " + "會員信用卡號:" + memberVO.getCreditCard() + ", " + "會員追蹤數:"
 				+ memberVO.getTrackingNumber() + ", " + "會員粉絲數:" + memberVO.getFansNumber() + ", "
 				+ "會員照片: (已轉換為Base64)");
-		System.out.println("圖片 Base64 資料：" + photoBase64);
+//		System.out.println("圖片 Base64 資料：" + photoBase64);
 
 		// 返回會員資料
 		return ResponseEntity.ok(response);
@@ -300,7 +300,7 @@ public class MemberController {
 
 		// 照片轉為 Base64
 		String photoBase64 = memberSvc.encodePhotoToBase64(memberVO);
-		response.put("photo", photoBase64);
+//		response.put("photo", photoBase64);
 
 		System.out.println("成功查詢公開資訊：" + response);
 
@@ -478,6 +478,8 @@ public class MemberController {
 		return ResponseEntity.ok("密碼更新成功，請重新登入");
 	}
 
+	
+//================================修齊-->用來放置需要會員驗證的請求====
 	// 獲取會員信息 只回傳暱稱跟id（因為帳密不能print在前端）
 	// 太多請求需要驗證，改成攔截器，針對特定請求進行驗證
 	@GetMapping("/getCurrentMemberId")
@@ -641,11 +643,11 @@ public class MemberController {
 				locationVO.setCreate_time(new Timestamp(System.currentTimeMillis()));
 				locationVO.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 
-				locationVO = locationSvc.addlocation(locationVO);
+				locationVO = locationSvc.addlocationAndGetPk(locationVO);
 			}
 
 			// 3. 建立子行程並建立關聯
-			tripSvc.addLocationToTrip(newTrip.getTrip_id(), locationVO.getLocationid());
+			tripSvc.addLocationToTrip(newTrip.getTrip_id(), locationVO.getLocationId());
 
 			return ResponseEntity.ok()
 					.body(Map.of("success", true, "message", "收藏清單建立成功", "tripId", newTrip.getTrip_id()));
@@ -710,7 +712,7 @@ public class MemberController {
 	            locationVO.setComments_number(0);
 	            locationVO.setCreate_time(new Timestamp(System.currentTimeMillis()));
 	            locationVO.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-	            return locationSvc.addlocation(locationVO);
+	            return locationSvc.addlocationAndGetPk(locationVO);
 	        } else {
 	            // 更新既有景點
 	            locationVO.setLocation_name(locationNode.get("locationName").asText());
@@ -755,7 +757,7 @@ public class MemberController {
 	        // 建立行程景點關係
 	        TriplocationrelationVO relationVO = new TriplocationrelationVO();
 	        relationVO.setSub_trip_id(subTripVO.getSubtripid());
-	        relationVO.setLocation_id(locationVO.getLocationid());
+	        relationVO.setLocation_id(locationVO.getLocationId());
 	        relationVO.setIndex(maxIndex + 1);
 	        relationVO.setTime_start(null);  // 按需求設置為空
 	        relationVO.setTime_end(null);    // 按需求設置為空
@@ -809,7 +811,7 @@ public class MemberController {
 	        // 建立行程景點關係
 	        TriplocationrelationVO relationVO = new TriplocationrelationVO();
 	        relationVO.setSub_trip_id(subTripVO.getSubtripid());
-	        relationVO.setLocation_id(locationVO.getLocationid());
+	        relationVO.setLocation_id(locationVO.getLocationId());
 	        relationVO.setIndex(0);
 	        relationVO.setTime_start(null);  // 按需求設置為空
 	        relationVO.setTime_end(null);    // 按需求設置為空
