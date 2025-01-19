@@ -112,6 +112,7 @@ public class ChatRoomController {
 				// 只有發送給 receiver 的會話
 				String response = objectMapper.writeValueAsString(chatMessage);
 				System.out.println("訊息字串 = " + response);
+				
 				messagingTemplate.convertAndSend("/user/" + chatMessage.getSender() + "/queue/messages", response);
 				messagingTemplate.convertAndSend("/user/" + chatMessage.getReceiver() + "/queue/messages", response);
 				JedisHandleMessage.saveChatMessage(chatMessage.getSender(), chatMessage.getReceiver(), response);

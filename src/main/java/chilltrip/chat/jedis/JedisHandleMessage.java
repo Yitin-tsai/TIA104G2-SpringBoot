@@ -27,7 +27,7 @@ public class JedisHandleMessage {
 		Jedis jedis = pool.getResource();
 		jedis.rpush(senderKey, message);
 		jedis.rpush(receiverKey, message);
-
+		
 		jedis.close();
 	}
 	public static void saveNotice(String receiver, String message) {
@@ -36,7 +36,6 @@ public class JedisHandleMessage {
 		String receiverKey = new StringBuilder(receiver).append("-notice").toString();
 		Jedis jedis = pool.getResource();
 		jedis.rpush(receiverKey, message);
-		
 		jedis.close();
 	}
 
