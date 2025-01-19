@@ -790,7 +790,6 @@ public class MemberController {
 	        newTrip.setOverall_scored_people(0); // 預設值
 	        newTrip.setLocation_number(0);  // 初始為0
 	        newTrip.setLikes(0);           // 預設值
-	        
 	        newTrip = tripSvc.addTripAndGetId(newTrip);
 
 	        // 建立子行程
