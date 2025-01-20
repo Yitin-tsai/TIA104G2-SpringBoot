@@ -10,6 +10,11 @@ let currentDay = 1;
 let totalDays = 1;
 let currentCollectionId = null;
 let currentMemberId = null;
+const TRIP_STATUS = {
+  DRAFT: 2,
+  PUBLIC: 3,
+  PRIVATE: 4,
+};
 
 // 在 DOMContentLoaded 之前先檢查會員狀態
 async function checkMemberAuth() {
@@ -702,7 +707,7 @@ function createSavedSpotElement(spot) {
 function bindSpotEvents(spotElement) {
   // 綁定刪除事件
   spotElement.querySelector(".delete-spot").addEventListener("click", () => {
-      spotElement.remove();
+    spotElement.remove();
   });
 
   // 綁定時間驗證
@@ -710,17 +715,17 @@ function bindSpotEvents(spotElement) {
   const endTimeInput = spotElement.querySelector(".end-time");
 
   startTimeInput.addEventListener("change", () => {
-      endTimeInput.min = startTimeInput.value;
-      if (endTimeInput.value && endTimeInput.value < startTimeInput.value) {
-          endTimeInput.value = "";
-      }
+    endTimeInput.min = startTimeInput.value;
+    if (endTimeInput.value && endTimeInput.value < startTimeInput.value) {
+      endTimeInput.value = "";
+    }
   });
 
   endTimeInput.addEventListener("change", () => {
-      if (startTimeInput.value && endTimeInput.value < startTimeInput.value) {
-          alert("結束時間必須晚於開始時間");
-          endTimeInput.value = "";
-      }
+    if (startTimeInput.value && endTimeInput.value < startTimeInput.value) {
+      alert("結束時間必須晚於開始時間");
+      endTimeInput.value = "";
+    }
   });
 }
 
@@ -890,56 +895,64 @@ function initializeCoverImage() {
 function validateTripData(tripData) {
   // 檢查基本欄位
   if (!tripData.articleTitle?.trim()) {
-      throw new Error("請輸入行程標題");
+    throw new Error("請輸入行程標題");
   }
   if (!tripData.abstract?.trim()) {
-      throw new Error("請輸入行程摘要");
+    throw new Error("請輸入行程摘要");
   }
   if (!tripData.activityType) {
-      throw new Error("請選擇活動類型");
+    throw new Error("請選擇活動類型");
   }
   if (!tripData.region) {
-      throw new Error("請選擇地區");
+    throw new Error("請選擇地區");
   }
   if (!tripData.subTrips || tripData.subTrips.length === 0) {
-      throw new Error("至少需要一天的行程");
+    throw new Error("至少需要一天的行程");
   }
 
   // 檢查每天的行程內容
   tripData.subTrips.forEach((subTrip, index) => {
-      // 檢查每天是否有景點
-      if (!subTrip.spots || subTrip.spots.length === 0) {
-          throw new Error(`第 ${index + 1} 天未加入任何景點`);
-      }
-      
-      // 檢查每個景點的必要資訊
-      subTrip.spots.forEach((spot, spotIndex) => {
-          if (!spot.locationId) {
-              throw new Error(`第 ${index + 1} 天的第 ${spotIndex + 1} 個景點缺少位置ID`);
-          }
-          
-          // 如果有設置開始時間，結束時間也必須設置
-          if (spot.timeStart && !spot.timeEnd) {
-              throw new Error(`第 ${index + 1} 天的第 ${spotIndex + 1} 個景點缺少結束時間`);
-          }
-          
-          // 如果有設置時間，確保開始時間早於結束時間
-          if (spot.timeStart && spot.timeEnd) {
-              if (new Date(spot.timeStart) >= new Date(spot.timeEnd)) {
-                  throw new Error(`第 ${index + 1} 天的第 ${spotIndex + 1} 個景點的開始時間必須早於結束時間`);
-              }
-          }
-      });
+    // 檢查每天是否有景點
+    if (!subTrip.spots || subTrip.spots.length === 0) {
+      throw new Error(`第 ${index + 1} 天未加入任何景點`);
+    }
 
-      // 檢查天數索引是否正確
-      if (subTrip.index !== index + 1) {
-          throw new Error(`行程天數索引不正確：第 ${index + 1} 天`);
+    // 檢查每個景點的必要資訊
+    subTrip.spots.forEach((spot, spotIndex) => {
+      if (!spot.locationId) {
+        throw new Error(
+          `第 ${index + 1} 天的第 ${spotIndex + 1} 個景點缺少位置ID`
+        );
       }
+
+      // 如果有設置開始時間，結束時間也必須設置
+      if (spot.timeStart && !spot.timeEnd) {
+        throw new Error(
+          `第 ${index + 1} 天的第 ${spotIndex + 1} 個景點缺少結束時間`
+        );
+      }
+
+      // 如果有設置時間，確保開始時間早於結束時間
+      if (spot.timeStart && spot.timeEnd) {
+        if (new Date(spot.timeStart) >= new Date(spot.timeEnd)) {
+          throw new Error(
+            `第 ${index + 1} 天的第 ${
+              spotIndex + 1
+            } 個景點的開始時間必須早於結束時間`
+          );
+        }
+      }
+    });
+
+    // 檢查天數索引是否正確
+    if (subTrip.index !== index + 1) {
+      throw new Error(`行程天數索引不正確：第 ${index + 1} 天`);
+    }
   });
 
   // 確保 memberId 存在
   if (!tripData.memberId) {
-      throw new Error("找不到會員ID，請重新登入");
+    throw new Error("找不到會員ID，請重新登入");
   }
 
   return true; // 如果所有驗證都通過，返回 true
@@ -953,9 +966,7 @@ function initializePublishFunctions() {
   const publishBtn = document.querySelector(".action-btn.publish");
   if (publishBtn) {
     publishBtn.addEventListener("click", () => {
-      const isPublic =
-        document.querySelector("select:last-of-type").value === "公開";
-      handlePublish(isPublic ? 3 : 4);
+      handlePublish(); // 不需要傳入預設狀態，會從 select 中獲取
     });
   }
 
@@ -963,14 +974,18 @@ function initializePublishFunctions() {
   const draftBtn = document.querySelector(".action-btn.draft");
   if (draftBtn) {
     draftBtn.addEventListener("click", () => {
-      handlePublish(2);
+      handlePublish(TRIP_STATUS.DRAFT);
     });
   }
 }
 
-// 處理發布邏輯
-async function handlePublish(status) {
+// 處理公開、私人
+async function handlePublish(defaultStatus) {
   try {
+    // 從 select 元素獲取當前選擇的狀態值
+    const privacySelect = document.getElementById("privacy-setting");
+    const status = defaultStatus || parseInt(privacySelect.value, 10);
+
     // 先收集數據
     const tripData = await collectPublishData(status);
     if (!tripData) {
@@ -978,36 +993,12 @@ async function handlePublish(status) {
       return;
     }
 
-    // 驗證數據
-    validateTripData(tripData);
-
     // 確認是否要送出
     if (!confirm("確定要發布嗎？")) {
       return;
     }
 
-    // 在發送前檢查並打印收集到的數據
-    console.log("準備發送到後端的數據:", {
-      基本信息: {
-        標題: tripData.articleTitle,
-        摘要: tripData.abstract,
-        狀態: tripData.status,
-        活動類型: tripData.activityType,
-        地區: tripData.region,
-      },
-      景點信息: tripData.subTrips.map((trip) => ({
-        天數: trip.index,
-        景點數: trip.spots.length,
-        景點列表: trip.spots.map((spot) => ({
-          locationId: spot.locationId,
-          順序: spot.index,
-          開始時間: spot.timeStart,
-          結束時間: spot.timeEnd,
-        })),
-      })),
-    });
-
-    // 發送到後端
+    console.log("正在發送請求...");
     const response = await fetch(`${contextPath}/editor/publish`, {
       method: "POST",
       headers: {
@@ -1019,8 +1010,7 @@ async function handlePublish(status) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("伺服器錯誤詳情:", errorData);
-      throw new Error(`發布失敗: ${errorData.error || "未知錯誤"}`);
+      throw new Error(errorData.error || "發布失敗");
     }
 
     const result = await response.json();
@@ -1030,33 +1020,36 @@ async function handlePublish(status) {
     window.location.href = `${contextPath}/trip/${result.tripId}`;
   } catch (error) {
     console.error("發布過程中發生錯誤:", error);
-    console.error("錯誤堆疊:", error.stack);
     alert(`發布失敗: ${error.message}`);
   }
 }
 
-// 收集發布資料
+// 處理發布邏輯
 async function collectPublishData(status) {
-  // 基本資料結構
-  const tripData = {
-    memberId: currentMemberId,
-    articleTitle: document.querySelector(".search-input").value,
-    abstract: document.querySelector(".editor-content").value,
-    status: status,
-    createTime: new Date().toISOString(),
-    collections: 0, // 預設值
-    overallScore: 0, // 預設值
-    overallScoredPeople: 0, // 預設值
-    visitorNumber: 0, // 預設值
-    likes: 0, // 預設值
-    locationNumber: 0, // 將根據實際景點數量計算
-    subTrips: [],
-    activityType: document.getElementById("activity-type").value,
-    region: document.getElementById("region").value,
-    coverPhoto: null,
-  };
-
   try {
+    // 基本資料結構，修改欄位名稱以匹配後端 DTO
+    const tripData = {
+      memberId: currentMemberId,
+      articleTitle: document.querySelector(".search-input").value,
+      abstractContent: document.querySelector(".editor-content").value,
+      status: status,
+      createTime: new Date().toISOString(),
+      activityType: document.getElementById("activity-type").value,
+      region: document.getElementById("region").value,
+      daySchedules: [],
+      coverPhoto: null,
+    };
+
+    console.log("準備發送到後端的數據:");
+    console.log("基本信息:", {
+      標題: tripData.articleTitle,
+      摘要: tripData.abstractContent,
+      狀態: tripData.status,
+      活動類型: tripData.activityType,
+      地區: tripData.region,
+      會員ID: tripData.memberId,
+    });
+
     // 處理封面照片
     const coverPreview = document.getElementById("coverPreview");
     if (
@@ -1068,10 +1061,7 @@ async function collectPublishData(status) {
     }
 
     // 收集每天的資料
-    let totalLocations = 0;
     for (let day = 1; day <= totalDays; day++) {
-      console.log(`正在處理第 ${day} 天的數據`);
-
       // 獲取該天的編輯器內容
       const editorContent = $(`.summernote[data-day="${day}"]`).summernote(
         "code"
@@ -1086,54 +1076,68 @@ async function collectPublishData(status) {
         continue;
       }
 
-      // 獲取所有景點元素
+      // 獲取所有景點元素並轉換格式
       const spots = Array.from(spotsList.querySelectorAll(".spot-item")).map(
         (spotElement, index) => {
           const spotInfo = JSON.parse(spotElement.dataset.spotInfo || "{}");
-          console.log(`正在處理第 ${day} 天第 ${index + 1} 個景點:`, spotInfo);
 
-          if (!spotInfo.locationId) {
+          // 確保所有必要資訊都存在
+          if (!spotInfo.googlePlaceId) {
             throw new Error(
-              `第 ${day} 天第 ${
-                index + 1
-              } 個景點缺少位置ID，請確保所有景點都已正確保存`
+              `第 ${day} 天第 ${index + 1} 個景點缺少 Google Place ID`
             );
           }
 
+          console.log(
+            "景點信息:",
+            tripData.daySchedules.map((trip) => ({
+              天數: trip.index,
+              景點數: trip.spots.length,
+              景點列表: trip.spots.map((spot) => ({
+                地點ID: spot.locationId,
+                順序: spot.index,
+                開始時間: spot.startTime,
+                結束時間: spot.endTime,
+                名稱: spot.name,
+                地址: spot.address,
+              })),
+            }))
+          );
+
           return {
-            locationId: spotInfo.locationId,
+            googlePlaceId: spotInfo.googlePlaceId,
+            name: spotInfo.name,
+            address: spotInfo.address,
+            latitude: spotInfo.latitude,
+            longitude: spotInfo.longitude,
+            startTime: spotElement.querySelector(".start-time")?.value || null,
+            endTime: spotElement.querySelector(".end-time")?.value || null,
             index: index + 1,
-            timeStart: spotElement.querySelector(".start-time")?.value || "",
-            timeEnd: spotElement.querySelector(".end-time")?.value || "",
           };
         }
       );
 
-      // 累計總景點數
-      totalLocations += spots.length;
-
-      // 構建子行程數據
-      const subTrip = {
-        index: day, // 天數索引
-        content: editorContent, // 當天的內容
-        spots: spots, // 當天的景點列表
+      // 構建當天的行程數據
+      const daySchedule = {
+        index: day,
+        content: editorContent,
+        spots: spots,
       };
 
-      tripData.subTrips.push(subTrip);
-      console.log(`第 ${day} 天的數據已處理完成:`, subTrip);
+      tripData.daySchedules.push(daySchedule);
     }
-
-    // 更新總景點數
-    tripData.locationNumber = totalLocations;
 
     // 驗證必要欄位
     if (!tripData.articleTitle) throw new Error("請輸入標題");
-    if (!tripData.abstract) throw new Error("請輸入摘要");
+    if (!tripData.abstractContent) throw new Error("請輸入摘要");
     if (!tripData.activityType) throw new Error("請選擇活動類型");
     if (!tripData.region) throw new Error("請選擇地區");
-    if (tripData.subTrips.length === 0) throw new Error("至少需要一天的行程");
+    if (tripData.daySchedules.length === 0)
+      throw new Error("至少需要一天的行程");
 
-    console.log("完整行程數據:", tripData);
+    // 在發送前打印數據以便調試
+    console.log("準備發送到後端的完整數據:", JSON.stringify(tripData, null, 2));
+
     return tripData;
   } catch (error) {
     console.error("收集資料時發生錯誤:", error);

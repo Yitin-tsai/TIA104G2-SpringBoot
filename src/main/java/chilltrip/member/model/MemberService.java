@@ -1,8 +1,10 @@
 package chilltrip.member.model;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Base64;
 import java.util.List;
 import java.util.Set;
@@ -208,4 +210,37 @@ public class MemberService {
     public MemberVO getMemberById(Integer memberId) {
         return dao.getMemberById(memberId);
     }
+    
+    
+ // 假設照片存放在 resources/images/member 目錄下
+    private static final String PHOTO_PATH = "src/main/resources/ststic/img/member/";
+    
+    public void updateMemberPhotos() {
+        try {
+            // 取得所有會員
+            List<MemberVO> members = dao.getAll();
+            
+            for (MemberVO member : members) {
+                int memberId = member.getMemberId();
+                String photoPath = PHOTO_PATH + memberId + ".jpg"; // 照片命名為 1.jpg, 2.jpg, 3.jpg...
+                
+                File photoFile = new File(photoPath);
+                if (photoFile.exists()) {
+                    // 讀取照片文件
+                    byte[] photoBytes = Files.readAllBytes(photoFile.toPath());
+                    member.setPhoto(photoBytes);
+                    
+                    // 更新資料庫
+                    dao.update(member);
+                    System.out.println("成功更新會員 " + memberId + " 的照片");
+                } else {
+                    System.out.println("找不到會員 " + memberId + " 的照片檔案");
+                }
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 }

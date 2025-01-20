@@ -265,14 +265,14 @@ public class MemberController {
 		response.put("photo", photoBase64);
 
 		System.out.println("成功取得會員資料");
-		System.out.println("會員ID:" + memberVO.getMemberId() + ", " + "會員mail:" + memberVO.getEmail() + ", " + "會員帳號:"
-				+ memberVO.getAccount() + ", " + "會員密碼:" + memberVO.getPassword() + ", " + "會員姓名:" + memberVO.getName()
-				+ ", " + "會員電話:" + memberVO.getPhone() + ", " + "會員狀態:" + memberVO.getStatus() + ", " + "會員創立時間:"
-				+ memberVO.getCreateTime() + ", " + "會員暱稱:" + memberVO.getNickName() + ", " + "會員性別:" + genderStr + ", "
-				+ "會員生日:" + memberVO.getBirthday() + ", " + "會員公司統編:" + memberVO.getCompanyId() + ", " + "會員手機載具:"
-				+ memberVO.getEreceiptCarrier() + ", " + "會員信用卡號:" + memberVO.getCreditCard() + ", " + "會員追蹤數:"
-				+ memberVO.getTrackingNumber() + ", " + "會員粉絲數:" + memberVO.getFansNumber() + ", "
-				+ "會員照片: (已轉換為Base64)");
+//		System.out.println("會員ID:" + memberVO.getMemberId() + ", " + "會員mail:" + memberVO.getEmail() + ", " + "會員帳號:"
+//				+ memberVO.getAccount() + ", " + "會員密碼:" + memberVO.getPassword() + ", " + "會員姓名:" + memberVO.getName()
+//				+ ", " + "會員電話:" + memberVO.getPhone() + ", " + "會員狀態:" + memberVO.getStatus() + ", " + "會員創立時間:"
+//				+ memberVO.getCreateTime() + ", " + "會員暱稱:" + memberVO.getNickName() + ", " + "會員性別:" + genderStr + ", "
+//				+ "會員生日:" + memberVO.getBirthday() + ", " + "會員公司統編:" + memberVO.getCompanyId() + ", " + "會員手機載具:"
+//				+ memberVO.getEreceiptCarrier() + ", " + "會員信用卡號:" + memberVO.getCreditCard() + ", " + "會員追蹤數:"
+//				+ memberVO.getTrackingNumber() + ", " + "會員粉絲數:" + memberVO.getFansNumber() + ", "
+//				+ "會員照片: (已轉換為Base64)");
 //		System.out.println("圖片 Base64 資料：" + photoBase64);
 
 		// 返回會員資料

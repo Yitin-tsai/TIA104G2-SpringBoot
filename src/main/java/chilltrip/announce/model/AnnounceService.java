@@ -115,7 +115,7 @@ public class AnnounceService {
 			}
 			query.put(key, value);
 		}
-		System.out.println(query);
+//		System.out.println(query);
 
 		List<AnnounceVO> announceList = dao.getByCompositeQuery(query);
 		for (AnnounceVO announce : announceList) {

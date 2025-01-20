@@ -226,35 +226,41 @@ const ArticleManager = {
   // 建立文章 HTML
   createArticleHTML: function (article) {
     return `
-            <article class="article-card">
-                <img src="${article.image}"
-                     alt="${article.title}"
-                     class="article-image"
-                     onerror="this.src='https://via.placeholder.com/350x200?text=NoImage';" />
-                <div class="article-content">
-                    <div class="article-meta">
-                        <span class="author">作者：${article.author}</span>
-                        <button class="follow-btn" data-id="${
-                          article.authorId
-                        }">追蹤</button>
-                    </div>
-                    <h2 class="article-title">${article.title}</h2>
-                    <p class="article-description">${article.description}</p>
-                    <div class="article-tags">
-                        ${article.tags
-                          .map((tag) => `<span class="tag">${tag}</span>`)
-                          .join("")}
-                    </div>
-                    <div class="article-stats">
-                        <span>👁️ ${article.views}</span>
-                        <span>❤️ ${article.likes}</span>
-                        <span class="rating">★★★★★ ${article.rating.toFixed(
-                          1
-                        )}</span>
-                    </div>
+        <article class="article-card" style="cursor: pointer" onclick="window.location.href='${
+          this.config.contextPath
+        }/tripArticle/${article.id}'">
+            <img src="${article.image}"
+                 alt="${article.title}"
+                 class="article-image"
+                 onerror="this.src='/api/placeholder/350/200';" />
+            <div class="article-content">
+                <div class="article-meta">
+                    <span class="author">作者：${article.author}</span>
+                    <button class="follow-btn" 
+                            data-id="${article.authorId}"
+                            onclick="event.stopPropagation(); ArticleManager.followSystem.checkLoginAndFollow(${
+                              article.authorId
+                            })">
+                        追蹤
+                    </button>
                 </div>
-            </article>
-        `;
+                <h2 class="article-title">${article.title}</h2>
+                <p class="article-description">${article.description}</p>
+                <div class="article-tags">
+                    ${article.tags
+                      .map((tag) => `<span class="tag">${tag}</span>`)
+                      .join("")}
+                </div>
+                <div class="article-stats">
+                    <span>👁️ ${article.views}</span>
+                    <span>❤️ ${article.likes}</span>
+                    <span class="rating">★★★★★ ${article.rating.toFixed(
+                      1
+                    )}</span>
+                </div>
+            </div>
+        </article>
+    `;
   },
 
   // 渲染分頁

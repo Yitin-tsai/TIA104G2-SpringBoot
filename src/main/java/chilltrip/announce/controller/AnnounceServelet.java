@@ -159,7 +159,7 @@ public class AnnounceServelet {
 	@GetMapping("getById/{id}")
 	private AnnounceVO getAnnounce(@PathVariable("id") Integer announceid) throws IOException {
 		AnnounceVO announce = announceSvc.getById(announceid);
-		System.out.println(announce.getCoverphotoBase64());
+//		System.out.println(announce.getCoverphotoBase64());
 		return announceSvc.getById(announceid);
 
 	}

@@ -4,10 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>東京五日遊行程安排</title>
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
+
     <style>
       * {
         margin: 0;
@@ -74,6 +91,59 @@
         justify-content: center;
         gap: 10px;
         margin: 15px 0;
+      }
+
+      .chat-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background-color: #f17575; /* 使用粉紅色系 */
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .chat-btn i {
+        font-size: 18px;
+      }
+
+      .chat-btn:hover {
+        background-color: #c5332b; /* 深紅色 */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      /* 點擊效果 */
+      .chat-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      /* 導航欄樣式 */
+      .navbar {
+        background-color: white;
+        padding: 15px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--primary-color);
       }
 
       .tag {
@@ -678,6 +748,25 @@
       .star-input i.fas {
         color: #ffd700;
       }
+
+      .login-alert {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #f5c6cb;
+        border-radius: 4px;
+        text-align: center;
+      }
+
+      .need-auth {
+        /* 可以添加特殊的視覺提示 */
+        opacity: 0.9;
+      }
+
+      .comment-form {
+        display: none; /* 預設隱藏，登入後顯示 */
+      }
     </style>
   </head>
   <body>
@@ -685,31 +774,42 @@
     <header>
       <nav class="top-nav">
         <div class="nav-left">
-          <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
-          <a href="#" class="nav-item nav-link" id="nav-mygo">My！行程</a>
+          <!-- 移除 href="#"，由 JS 控制導航 -->
+          <a class="nav-item nav-link" id="nav-go" role="button">Go！行程</a>
+          <a class="nav-item nav-link" id="nav-mygo" role="button">My！行程</a>
         </div>
+
         <div class="nav-center">
-          <a href="/TIA104G2-SpringBoot/loggedin">
+          <!-- Logo也使用動態路徑 -->
+          <a id="nav-home" role="button">
             <img
               th:src="@{/img/logo_black.png}"
               alt="Chill Trip"
+              class="nav-logo"
               style="width: 150px; height: auto"
             />
           </a>
         </div>
+
         <div class="nav-right">
           <a
-            href="/TIA104G2-SpringBoot/login"
-            class="nav-item nav-link active"
+            class="nav-item nav-link"
             id="nav-login"
-            style="color: #ff6600"
+            role="button"
+            style="color: #f17575"
             >登入／註冊</a
           >
-          <a href="#" class="nav-item nav-link" id="nav-profile"
+
+          <a class="nav-item nav-link" id="nav-profile" role="button"
             >會員基本資料</a
           >
-          <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
-          <button id="goToChatRoom" class="chat-btn">
+
+          <div class="nav-item nav-dropdown" id="nav-support">
+            <a class="nav-link" role="button">客服中心</a>
+            <!-- 下拉選單容器會由 JS 動態添加 -->
+          </div>
+
+          <button id="goToChatRoom" class="chat-btn" type="button">
             <i class="fas fa-comments"></i>
             聊天室
           </button>
@@ -720,32 +820,23 @@
     <!-- 文章標籤 -->
     <div class="article-container">
       <header class="article-header">
-        <h1 class="article-title">東京五日遊行程安排</h1>
+        <h1 class="article-title"></h1>
 
         <!-- 標籤和統計資訊 -->
         <div class="article-stats">
-          <div class="tags-group">
-            <a href="#" class="tag" data-tag-id="1">美食</a>
-            <a href="#" class="tag" data-tag-id="2">景點</a>
-          </div>
+          <div class="tags-group"></div>
           <div class="stats-group">
             <div class="stat-item">
               <i class="fas fa-eye"></i>
-              <span id="view-count">0</span>
+              <span id="view-count"></span>
             </div>
             <div class="stat-item">
               <i class="fas fa-heart"></i>
-              <span id="favorite-count">0</span>
+              <span id="favorite-count"></span>
             </div>
             <div class="stat-item">
-              <div class="star-rating" id="rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
-                <i class="far fa-star"></i>
-              </div>
-              <span id="rating-value">0.0</span>
+              <div class="star-rating" id="rating"></div>
+              <span id="rating-value"></span>
             </div>
           </div>
         </div>
@@ -767,24 +858,18 @@
         </div>
 
         <div class="article-meta">
-          <span>發布時間: <span id="publish-time">2025-1-1 20:00</span></span>
+          <span>發布時間: <span id="publish-time"></span></span>
           <span> • </span>
-          <span>作者: <span id="author-name">愛旅遊的Seal</span></span>
+          <span>作者: <span id="author-name"></span></span>
         </div>
 
         <!-- 封面大圖 -->
         <div class="cover-container">
-          <img
-            class="cover-image"
-            src="https://picsum.photos/1440/800"
-            alt="旅遊封面"
-          />
+          <img class="cover-image" alt="旅遊封面" />
         </div>
       </header>
 
-      <div class="article-abstract">
-        探訪台北最具特色的景点景點！從松山文創園區的寧靜藝術氛圍，展開一趟舒適且文化氣息豐富的旅程。
-      </div>
+      <div class="article-abstract"></div>
 
       <div class="day-navigation">
         <!-- 天數按鈕將由 JS 動態生成 -->
@@ -801,13 +886,8 @@
       </div>
 
       <div class="day-content">
-        <h2 class="day-title">第一天</h2>
-        <p>
-          今天的行程從松山文創園區開始，這裡是台北最具代表性的文創基地之一。園區內保留了許多日治時期的建築，現在已經轉變為展覽、表演、市集等多元用途的文創空間。
-        </p>
-        <p>
-          接著我們前往台北101，這裡不只是台北的地標建築，更是一個集結美食、購物、觀景的複合式景點。特別推薦大家一定要上89樓的觀景台，在這裡可以將整個台北盆地的美景盡收眼底。
-        </p>
+        <h2 class="day-title"></h2>
+        <!-- 文章內容將由 JS 動態生成 -->
       </div>
     </div>
 
@@ -816,59 +896,13 @@
 
       <!-- 評論列表 -->
       <div class="comments-list">
-        <!-- 單個評論樣板 -->
-        <div class="comment-item">
-          <div class="comment-avatar">
-            <img src="https://picsum.photos/50/50" alt="User Avatar" />
-          </div>
-          <div class="comment-content">
-            <div class="comment-header">
-              <div class="comment-user-info">
-                <span class="user-name">快樂旅行者</span>
-                <div class="comment-rating">
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="far fa-star"></i>
-                  <span>4.0</span>
-                </div>
-              </div>
-              <div class="comment-time">2024-01-15 14:30</div>
-            </div>
-            <div class="comment-text">
-              這篇文章整理得很詳細，對我的行程規劃幫助很大！特別喜歡松山文創園區的介紹，
-              讓我對這個地方有更深入的了解。
-            </div>
-            <div class="comment-photos">
-              <img
-                src="https://picsum.photos/200/150?random=1"
-                alt="Comment photo"
-              />
-              <img
-                src="https://picsum.photos/200/150?random=2"
-                alt="Comment photo"
-              />
-            </div>
-            <div class="comment-actions">
-              <button class="comment-edit">
-                <i class="far fa-edit"></i> 編輯
-              </button>
-              <button class="comment-delete">
-                <i class="far fa-trash-alt"></i> 刪除
-              </button>
-              <button class="comment-report">
-                <i class="far fa-flag"></i> 檢舉
-              </button>
-            </div>
-          </div>
-        </div>
+        <!-- 動態生成的評論會在這裡 -->
       </div>
 
-      <!-- 分頁控制 -->
+      <!-- 分頁控制，保留現有的結構 -->
       <div class="comments-pagination">
         <button class="page-btn" disabled>&lt;</button>
-        <span class="page-info">第 1 頁，共 5 頁</span>
+        <span class="page-info">第 1 頁，共 1 頁</span>
         <button class="page-btn">&gt;</button>
       </div>
 
@@ -914,6 +948,34 @@
       </div>
     </div>
 
-    <script src="/static/js/trip_article.js"></script>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
+      ><i class="fa fa-angle-double-up"></i
+    ></a>
+
+    <!------ 共用JS ------>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 本地資源改用 Thymeleaf 語法 -->
+    <script th:src="@{/lib/easing/easing.min.js}"></script>
+    <script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+
+    <!-- Contact Javascript File -->
+    <script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
+    <script th:src="@{/mail/contact.js}"></script>
+
+    <!-- Template Javascript -->
+    <script th:src="@{/js/main.js}"></script>
+
+    <!-- 核心管理器（要按順序加載） -->
+    <script th:src="@{/js/UserManager.js}"></script>
+    <script th:src="@{/js/NavigationManager.js}"></script>
+    <script th:src="@{/js/ArticleAuthManager.js}"></script>
+
+    <!-- 頁面特定腳本 -->
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/trip_article.js}"></script>
   </body>
 </html>

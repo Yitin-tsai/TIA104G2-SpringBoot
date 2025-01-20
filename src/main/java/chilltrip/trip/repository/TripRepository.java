@@ -1,6 +1,9 @@
 package chilltrip.trip.repository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -312,4 +315,76 @@ public interface TripRepository extends JpaRepository<TripVO, Integer> {
 	Page<Object[]> searchTrips(@Param("eventContent") String eventContent, @Param("regionContent") String regionContent,
 			@Param("keyword") String keyword, Pageable pageable);
 
+	
+	//回傳到單一行程文章頁面
+	@Query(value = """
+		    SELECT 
+		        trip.trip_id as tripId,
+		        trip.article_title as title,
+		        member.member_id as authorId,
+		        member.nick_name as authorName,
+		        trip.create_time as publishTime,
+		        trip.abstract as tripAbstract,
+		        trip.visitors_number as viewCount,
+		        trip.collections as favoriteCount,
+		        CASE 
+		            WHEN trip.overall_scored_people > 0 
+		            THEN CAST(trip.overall_score AS DECIMAL) / CAST(trip.overall_scored_people AS DECIMAL)
+		            ELSE 0.0 
+		        END AS rating,
+		        COALESCE(
+		            (SELECT photo FROM trip_photo WHERE trip_id = trip.trip_id AND photo_type = 0 LIMIT 1),
+		            ''
+		        ) as coverPhoto
+		    FROM trip
+		    LEFT JOIN member ON trip.member_id = member.member_id
+		    WHERE trip.trip_id = :tripId
+		    LIMIT 1
+		""", nativeQuery = true)
+		Map<String, Object> findBasicInfo(@Param("tripId") Integer tripId);
+	
+	 // 基本查詢 by tripId，使用 membervo 而不是 member
+    @Query("SELECT trip FROM TripVO trip " +
+           "LEFT JOIN trip.membervo " +  // 直接使用關聯屬性名稱
+           "WHERE trip.trip_id = :tripId")
+    Optional<TripVO> findDetailsByTripId(@Param("tripId") Integer tripId);
+    
+    // 查詢該文章的地區標籤
+    @Query("SELECT area.regioncontent FROM TripAreaVO area " +
+           "WHERE area.tripid.trip_id = :tripId")
+    List<String> findRegionContentsByTripId(@Param("tripId") Integer tripId);
+    
+    // 查詢該文章的活動類型標籤
+    @Query("SELECT tripactype.eventcontent FROM TripactyperelaVO triprela " +
+           "JOIN triprela.eventtypeid tripactype " +
+           "WHERE triprela.tripid.trip_id = :tripId")
+    List<String> findEventContentsByTripId(@Param("tripId") Integer tripId);
+    
+    // 查詢是否被當前用戶收藏
+    @Query("SELECT COUNT(collection) > 0 FROM TripCollectionVO collection " +
+           "WHERE collection.tripvo.trip_id = :tripId AND collection.membervo.memberId = :memberId")
+    boolean findCollectionStatus(@Param("tripId") Integer tripId, @Param("memberId") Integer memberId);
+    
+ // 單一行程文章的子行程、景點與文章內容
+    @Query(value = """
+    	    SELECT 
+    	        sub_trip.index AS day_number,
+    	        sub_trip.content AS day_content,
+    	        COALESCE(location.location_name, '') as location_name,
+    	        COALESCE(location.address, '') as address,
+    	        COALESCE(location.google_place_id, '') as google_place_id,
+    	        COALESCE(location.latitude, 0) as latitude,
+    	        COALESCE(location.longitude, 0) as longitude,
+    	        trip_location_relation.time_start,
+    	        trip_location_relation.time_end,
+    	        COALESCE(trip_location_relation.index, 0) as spot_order
+    	    FROM sub_trip 
+    	    LEFT JOIN trip_location_relation 
+    	        ON sub_trip.sub_trip_id = trip_location_relation.sub_trip_id
+    	    LEFT JOIN location 
+    	        ON trip_location_relation.location_id = location.location_id
+    	    WHERE sub_trip.trip_id = :tripId
+    	    ORDER BY sub_trip.index, trip_location_relation.index
+    	    """, nativeQuery = true)
+    	List<Object[]> findTripDaysDetailsByTripId(@Param("tripId") Integer tripId);
 }
