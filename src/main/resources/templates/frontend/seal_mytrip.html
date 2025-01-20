@@ -1,13 +1,30 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>個人主頁 - ChillTrip</title>
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
       rel="stylesheet"
     />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link th:href="@{/css/yuki_style.css}" rel="stylesheet" />
+
     <style>
       * {
         margin: 0;
@@ -18,19 +35,70 @@
       }
 
       :root {
-        --primary-color: #4a4a4a;
-        --secondary-color: #6c757d;
-        --accent-color: #8d8d8d;
-        --gray-light: #f7f7f7;
-        --gray-medium: #8d8d8d;
-        --gray-dark: #4a4a4a;
-        --border-color: #e0e0e0;
-        --success-color: #4caf50;
-        --warning-color: #ff9800;
+        /* 主要顏色 */
+        --primary-color: #c5332b; /* 深紅色 */
+        --secondary-color: #f17575; /* 粉紅色 */
+
+        /* 背景色 */
+        --bg-light: #f5f5f5; /* 淺灰背景 */
+        --bg-pink-transparent: rgba(239, 161, 161, 0.105); /* 淺粉透明 */
+        --bg-pink-light: #d8b4b330; /* 淺粉色半透明 */
+
+        /* 邊框和陰影 */
+        --border-color: #d8b4b3; /* 淺粉色邊框 */
+        --shadow-color: rgba(38, 16, 4, 0.396); /* 深褐色陰影 */
+
+        /* 文字顏色 */
+        --text-dark: #333; /* 深色文字 */
+        --text-gray: #666; /* 灰色文字 */
       }
 
       body {
-        background-color: var(--gray-light);
+        background-color: #f5f5f5;
+      }
+
+      .breadcrumb {
+        background-color: transparent;
+        /* 移除背景色 */
+        list-style: none;
+        /* 移除列表樣式 */
+        display: flex;
+        padding: 0;
+        margin: 1rem 0;
+        top: 10px;
+      }
+
+      .breadcrumb-item {
+        font-size: calc(1rem - 4px);
+        /* 比 dropdown-item 小 4px */
+        color: #666 !important;
+        /* 預設顯示為灰色，並覆蓋 Bootstrap 預設樣式 */
+        text-decoration: none;
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+      }
+
+      .breadcrumb-item + .breadcrumb-item::before {
+        content: ">";
+        padding: 0 0.5rem;
+        color: #6c757d;
+      }
+
+      .breadcrumb-item a {
+        color: #6c757d !important;
+        /* 更改 a 標籤的預設顏色為灰色 */
+        text-decoration: none;
+        /* 移除下劃線 */
+      }
+
+      .breadcrumb-item a:hover {
+        color: #ff6600 !important;
+        /* 滑鼠移動到 a 標籤上時顯示為橘色 */
+      }
+
+      .breadcrumb-item.active {
+        color: #c5332b !important;
+        /* 最後一個元素顯示為橘色，並覆蓋 Bootstrap 預設樣式 */
       }
 
       .container {
@@ -48,7 +116,7 @@
       }
 
       .profile-card {
-        background: white;
+        background: #e65c5c1f;
         border-radius: 15px;
         padding: 25px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -108,7 +176,7 @@
         font-size: 24px;
         font-weight: bold;
         margin-bottom: 15px;
-        color: var(--gray-dark);
+        color: #c5332b;
       }
 
       .follow-stats {
@@ -120,6 +188,7 @@
 
       .stat-item {
         cursor: pointer;
+        color: #c5332b;
         padding: 8px 15px;
         border-radius: 8px;
         transition: all 0.3s;
@@ -132,13 +201,13 @@
       }
 
       .stat-item:hover {
-        background: var(--gray-light);
+        background: #cc8c89;
       }
 
       .stat-number {
         font-weight: bold;
         display: block;
-        color: var(--gray-dark);
+        color: #c55954;
       }
 
       .stat-label {
@@ -147,7 +216,7 @@
 
       /* 成就統計卡片 */
       .achievements-card {
-        background: white;
+        background: #e65c5c19;
         border-radius: 15px;
         padding: 25px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -162,9 +231,9 @@
       .achievement-item {
         padding: 15px;
         border-radius: 10px;
-        background: var(--gray-light);
+        background: #e65c5c19;
         transition: transform 0.2s;
-        border: 1px solid var(--border-color);
+        border: 1px solid #c5332b24;
       }
 
       .achievement-item:hover {
@@ -172,20 +241,20 @@
       }
 
       .achievement-label {
-        font-size: 14px;
-        color: var(--gray-medium);
+        font-size: 16px;
+        color: #360906;
         margin-bottom: 5px;
       }
 
       .achievement-value {
         font-size: 24px;
         font-weight: bold;
-        color: var(--gray-dark);
+        color: #48211f;
       }
 
       /* 內容篩選器 */
       .content-filter {
-        background: white;
+        background: #e65c5c19;
         border-radius: 15px;
         padding: 20px;
         margin-bottom: 30px;
@@ -221,7 +290,7 @@
 
       .filter-button {
         padding: 12px 24px;
-        background: var(--gray-dark);
+        background: #f17575;
         color: white;
         border: none;
         border-radius: 8px;
@@ -233,7 +302,7 @@
 
       .publish-button {
         padding: 12px 24px;
-        background: #ff9800;
+        background: #c5332b;
         color: white;
         border: none;
         border-radius: 8px;
@@ -329,12 +398,12 @@
       }
 
       .edit-btn {
-        background: #8d8d8d;
+        background: #f17575;
         color: white;
       }
 
       .delete-btn {
-        background: #ff9800;
+        background: #c5332b;
         color: white;
       }
 
@@ -355,14 +424,14 @@
         padding: 8px 16px;
         border: none;
         border-radius: 8px;
-        background: #4a4a4a;
+        background: #c5332b;
         color: white;
         cursor: pointer;
         transition: all 0.2s;
       }
 
       .page-btn:disabled {
-        background: #e0e0e0;
+        background: #f5a6a6;
         cursor: not-allowed;
       }
 
@@ -383,7 +452,7 @@
       }
 
       .page-number.active {
-        background: #4a4a4a;
+        background: #c5332b;
         color: white;
       }
 
@@ -448,203 +517,6 @@
       .rating-text {
         color: #6c757d;
         font-size: 14px;
-      }
-
-      /* 評論列表樣式 */
-      .comments-list {
-        margin-bottom: 20px;
-      }
-
-      .comment-item {
-        position: relative;
-        padding: 15px;
-        border-bottom: 1px solid #e0e0e0;
-      }
-
-      /* 評論頭部區域樣式 */
-      .comment-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-
-      .comment-user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin-right: 12px;
-      }
-
-      .comment-user-info {
-        flex-grow: 1;
-      }
-
-      .comment-user-name {
-        font-weight: bold;
-        color: var(--gray-dark);
-        margin-bottom: 2px;
-      }
-
-      .comment-rating {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-
-      .comment-time {
-        color: var(--gray-medium);
-        font-size: 12px;
-      }
-
-      /* 評論內容樣式 */
-      .comment-content {
-        margin: 10px 0;
-        color: var(--gray-dark);
-        line-height: 1.5;
-      }
-
-      .comment-image {
-        width: 200px;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-top: 10px;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-      }
-
-      .comment-image:hover {
-        transform: scale(1.05);
-      }
-
-      /* 評論操作按鈕樣式 */
-      .comment-actions-dropdown {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-      }
-
-      .comment-actions-toggle {
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 5px;
-        color: #6c757d;
-        transition: color 0.2s ease;
-      }
-
-      .comment-actions-toggle:hover {
-        color: #4a4a4a;
-      }
-
-      .comment-actions-menu {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        display: none;
-        z-index: 1000;
-        min-width: 120px;
-      }
-
-      .comment-actions-menu.show {
-        display: block;
-        animation: fadeIn 0.2s ease;
-      }
-
-      .comment-action-btn {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        padding: 8px 16px;
-        text-align: left;
-        border: none;
-        background: none;
-        cursor: pointer;
-        white-space: nowrap;
-        color: #4a4a4a;
-        transition: background-color 0.2s ease;
-      }
-
-      .comment-action-btn:hover {
-        background: #f8f9fa;
-      }
-
-      .comment-action-btn i {
-        margin-right: 8px;
-        width: 16px;
-      }
-
-      /* 操作按鈕顏色 */
-      .comment-action-btn.edit-comment-btn {
-        color: #2196f3;
-      }
-
-      .comment-action-btn.delete-comment-btn {
-        color: #f44336;
-      }
-
-      .comment-action-btn.report-comment-btn {
-        color: #ff9800;
-      }
-
-      /* 評論輸入區域樣式 */
-      .comment-input-container {
-        background: #f8f9fa;
-        border-radius: 8px;
-        padding: 15px;
-      }
-
-      .rating-input {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 10px;
-      }
-
-      .comment-input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        resize: vertical;
-        min-height: 80px;
-      }
-
-      .comment-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .upload-photo {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #6c757d;
-        cursor: pointer;
-        transition: color 0.2s ease;
-      }
-
-      .upload-photo:hover {
-        color: #4a4a4a;
-      }
-
-      .submit-comment {
-        padding: 8px 16px;
-        background: #4a90e2;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-      }
-
-      .submit-comment:hover {
-        background: #357abd;
       }
 
       /* Modal 樣式 */
@@ -780,6 +652,172 @@
           transform: translateY(0);
         }
       }
+
+      .chat-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background-color: #f17575; /* 使用粉紅色系 */
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .chat-btn i {
+        font-size: 18px;
+      }
+
+      .chat-btn:hover {
+        background-color: #c5332b; /* 深紅色 */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      /* 點擊效果 */
+      .chat-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      /* 如果想要添加動畫效果 */
+      @keyframes bounce {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* 可以加入未讀訊息提示 */
+      .chat-btn.has-unread::after {
+        content: "";
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 10px;
+        height: 10px;
+        background-color: #ff4444;
+        border-radius: 50%;
+        animation: bounce 1s infinite;
+      }
+
+      #loginLogoutBtn {
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      #loginLogoutBtn:hover {
+        color: #f17575 !important;
+      }
+
+      /* 通知下拉選單樣式 */
+      .notification-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 320px;
+        max-height: 480px;
+        z-index: 1000;
+      }
+
+      .notification-dropdown.show {
+        display: block;
+      }
+
+      .notification-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .notification-header h3 {
+        color: #c5332b;
+        font-size: 16px;
+        margin: 0;
+      }
+
+      .notification-count {
+        background-color: #f17575;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 12px;
+        font-size: 12px;
+      }
+
+      .notification-list {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .notification-item {
+        display: flex;
+        padding: 12px 16px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .notification-item:hover {
+        background-color: #f9f9f9;
+      }
+
+      .notification-item.unread {
+        background-color: #fff5f5;
+      }
+
+      .notification-avatar {
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+      }
+
+      .notification-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .notification-content {
+        flex: 1;
+      }
+
+      .notification-text {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 4px;
+      }
+
+      .sender-name {
+        color: #c5332b;
+        font-weight: 500;
+      }
+
+      .notification-time {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .no-notifications {
+        padding: 20px;
+        text-align: center;
+        color: #666;
+      }
     </style>
   </head>
   <body>
@@ -787,46 +825,45 @@
     <header>
       <nav class="top-nav">
         <div class="nav-left">
-          <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
-          <a href="#" class="nav-item nav-link" id="nav-product">購！票券</a>
-          <a href="#" class="nav-item nav-link" id="nav-profile">個人主頁</a>
-          <a href="#" class="nav-item nav-link" id="nav-guide">使用指南</a>
+          <!-- 移除 href="#"，由 JS 控制導航 -->
+          <a class="nav-item nav-link" id="nav-go" role="button">Go！行程</a>
+          <a class="nav-item nav-link" id="nav-mygo" role="button">My！行程</a>
         </div>
+
         <div class="nav-center">
-          <a href="#" id="z-index">
-            <a href="/TIA104G2-SpringBoot/" id="z-index">
-              <img
-                th:src="@{/img/logo_black.png}"
-                alt="Chill Trip"
-                style="width: 150px; height: auto"
-              />
-            </a>
+          <!-- Logo也使用動態路徑 -->
+          <a id="nav-home" role="button">
+            <img
+              th:src="@{/img/logo_black.png}"
+              alt="Chill Trip"
+              class="nav-logo"
+              style="width: 150px; height: auto"
+            />
           </a>
         </div>
+
         <div class="nav-right">
           <a
-            href="/TIA104G2-SpringBoot/login"
-            class="nav-item nav-link active"
+            class="nav-item nav-link"
             id="nav-login"
-            style="color: #ff6600"
-            >登入/註冊</a
+            role="button"
+            style="color: #f17575"
+            >登入／註冊</a
           >
-          <div class="nav-item dropdown">
-            <a
-              href="#"
-              class="nav-link dropdown-toggle"
-              data-toggle="dropdown"
-              style="color: #212529"
-              >會員中心</a
-            >
-            <div class="dropdown-menu rounded-0 m-0">
-              <a href="#" class="dropdown-item" id="nav-basic-info">基本資料</a>
-              <a href="#" class="dropdown-item" id="nav-coupons">我的折價券</a>
-              <a href="#" class="dropdown-item" id="nav-orders">歷史訂單</a>
-            </div>
+
+          <a class="nav-item nav-link" id="nav-profile" role="button"
+            >會員基本資料</a
+          >
+
+          <div class="nav-item nav-dropdown" id="nav-support">
+            <a class="nav-link" role="button">客服中心</a>
+            <!-- 下拉選單容器會由 JS 動態添加 -->
           </div>
-          <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
-          <a href="#" class="nav-item nav-link" id="nav-cart">購物車</a>
+
+          <button id="goToChatRoom" class="chat-btn" type="button">
+            <i class="fas fa-comments"></i>
+            聊天室
+          </button>
         </div>
       </nav>
     </header>
@@ -868,8 +905,8 @@
               <div class="achievement-value">100,000</div>
             </div>
             <div class="achievement-item">
-              <div class="achievement-label">文章總按讚</div>
-              <div class="achievement-value">1000</div>
+              <div class="achievement-label">文章平均分數</div>
+              <div class="achievement-value">4.5</div>
             </div>
             <div class="achievement-item">
               <div class="achievement-label">文章總收藏</div>
@@ -909,13 +946,7 @@
 
           <button id="apply-filter" class="filter-button">確認</button>
         </div>
-        <button
-          id="publish-mytrip"
-          class="publish-button"
-          th:onclick="|window.location.href='@{/trip/editor/create}'|"
-        >
-          發文章
-        </button>
+        <button id="publish-mytrip" class="publish-button">發文章</button>
       </div>
 
       <!-- 內容展示區域 -->
@@ -1079,14 +1110,14 @@
     <script th:src="@{/mail/jqBootstrapValidation.min.js}"></script>
     <script th:src="@{/mail/contact.js}"></script>
 
-    <!-- Template Javascript -->
-    <script th:src="@{/js/main.js}"></script>
-
-    <!-- 導航欄nav的href載入器 -->
-    <script th:src="@{/js/navigation.js}"></script>
+    <!-- 核心管理器（要按順序加載） -->
+    <script th:src="@{/js/UserManager.js}"></script>
+    <script th:src="@{/js/NavigationManager.js}"></script>
 
     <!--景點與文章樣式管理與動態清單取得-->
-    <script src="/static/js/content-manager.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/content-manager.js}"></script>
+    <script th:src="@{/js/mytrip-manager.js}"></script>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -1094,7 +1125,7 @@
         // 定義麵包屑導航的項目
         const breadcrumbItems = [
           { name: "首頁", link: "index.html" },
-          { name: "Go! 行程", link: "go.html" },
+          { name: "My! 行程", link: "go.html" },
         ];
 
         // 動態生成麵包屑導航的 HTML 結構

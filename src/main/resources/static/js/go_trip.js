@@ -1,13 +1,15 @@
 const ArticleManager = {
   // 常數與設定
   config: {
-    contextPath: "/TIA104G2-SpringBoot",
     pageSize: 12,
+    // contextPath 從 UserManager 取得
+    get contextPath() {
+      return UserManager.config.contextPath;
+    },
   },
 
   // 狀態管理
   state: {
-    isLoggedIn: false,
     currentPage: 0,
     currentArticles: [],
   },
@@ -37,35 +39,7 @@ const ArticleManager = {
 
     // 初始化功能
     this.loadOptions();
-    this.checkLoginStatus();
     this.loadArticles(0);
-  },
-
-  // 檢查登入狀態
-  checkLoginStatus: async function () {
-    try {
-      const response = await fetch(
-        `${this.config.contextPath}/member/getCurrentMemberId`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) return null;
-
-      const data = await response.json();
-      const memberId = parseInt(data.memberId);
-      this.state.isLoggedIn = !!memberId;
-      return memberId;
-    } catch (error) {
-      console.error("檢查登入狀態發生錯誤:", error);
-      return null;
-    }
   },
 
   // 事件綁定
@@ -182,6 +156,10 @@ const ArticleManager = {
 
   // 將 checkIfTracked 加入到 ArticleManager 物件中
   checkIfTracked: async function (authorId) {
+    // 每次調用時都檢查登入狀態
+    if (!UserManager.isLoggedIn()) {
+      return;
+    }
     try {
       const response = await fetch(
         `${this.config.contextPath}/trackMember/checkTrack/${authorId}`
@@ -361,9 +339,17 @@ const ArticleManager = {
   // 追蹤系統
   followSystem: {
     checkIfTracked: async function (authorId) {
+      // 使用 UserManager 檢查登入狀態
+      if (!UserManager.isLoggedIn()) {
+        return;
+      }
+
       try {
         const response = await fetch(
-          `${ArticleManager.config.contextPath}/trackMember/checkTrack/${authorId}`
+          `${UserManager.config.contextPath}/trackMember/checkTrack/${authorId}`,
+          {
+            credentials: "include",
+          }
         );
         const isTracked = await response.json();
         this.updateFollowButton(authorId, isTracked);
@@ -382,41 +368,124 @@ const ArticleManager = {
         button.innerHTML = "追蹤中";
         button.classList.add("cancelfollow-btn");
         button.classList.remove("follow-btn");
+        // 更新事件監聽器
+        button.onclick = () => this.cancelFollow(authorId);
       } else {
         button.innerHTML = "追蹤";
         button.classList.add("follow-btn");
         button.classList.remove("cancelfollow-btn");
+        // 更新事件監聽器
+        button.onclick = () => this.followAuthor(authorId);
       }
     },
 
     followAuthor: async function (authorId) {
+      // 使用 UserManager 檢查登入狀態
+      if (!UserManager.isLoggedIn()) {
+        alert("請先登入才能追蹤作者");
+        window.location.href = `${UserManager.config.contextPath}/login`;
+        return;
+      }
+
       try {
         const response = await fetch(
-          `${ArticleManager.config.contextPath}/trackMember/track/${authorId}`,
+          `${UserManager.config.contextPath}/trackMember/track/${authorId}`,
           {
             method: "POST",
+            credentials: "include",
             headers: { "Content-Type": "application/json" },
           }
         );
-        const data = await response.text();
-        this.handleFollowResponse(data);
+
+        if (response.ok) {
+          const data = await response.text();
+          if (data === "success") {
+            alert("成功追蹤！");
+            // 重新載入追蹤狀態
+            this.checkIfTracked(authorId);
+            ArticleManager.loadArticles(0);
+          } else {
+            alert("追蹤失敗，請稍後再試");
+          }
+        }
       } catch (error) {
-        console.error(error);
+        console.error("追蹤失敗:", error);
         alert("發生錯誤，請稍後再試！");
       }
     },
 
-    handleFollowResponse: function (data) {
-      if (data === "nologin") {
-        alert("尚未登入，請登入");
-        window.location.href = ArticleManager.config.contextPath + "/login";
-      } else if (data === "success") {
-        alert("成功追蹤！");
-        ArticleManager.loadArticles(0);
-      } else {
-        alert("追蹤失敗，請稍後再試！");
+    cancelFollow: async function (authorId) {
+      if (!UserManager.isLoggedIn()) return;
+
+      if (!confirm("確定要取消追蹤？")) return;
+
+      try {
+        const response = await fetch(
+          `${UserManager.config.contextPath}/trackMember/deleteTrack/${authorId}`,
+          {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.text();
+          if (data === "success") {
+            alert("已取消追蹤！");
+            // 重新載入追蹤狀態
+            this.checkIfTracked(authorId);
+            ArticleManager.loadArticles(0);
+          } else {
+            alert("取消追蹤失敗，請稍後再試");
+          }
+        }
+      } catch (error) {
+        console.error("取消追蹤失敗:", error);
+        alert("發生錯誤，請稍後再試！");
       }
     },
+  },
+
+  // 添加搜尋函數
+  performSearch: async function () {
+    try {
+      const searchDTO = {
+        keyword: this.elements.searchInput.val(), // 關鍵字搜尋
+        eventContent: this.elements.activitySelect.val(), // 活動類型
+        regionContent: this.elements.regionSelect.val(), // 地區
+        page: 0, // 從第一頁開始搜尋
+        size: this.config.pageSize,
+      };
+
+      const response = await $.ajax({
+        url: `${this.config.contextPath}/trip/search`,
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(searchDTO),
+      });
+
+      if (response && response.content) {
+        // 更新當前頁面狀態
+        this.state.currentPage = response.currentPage;
+        this.state.currentArticles = this.transformTripsToArticles(
+          response.content
+        );
+
+        // 渲染搜尋結果
+        this.renderArticles(this.state.currentArticles);
+        this.renderPagination({
+          totalPages: response.totalPages,
+          totalElements: response.totalElements,
+          number: response.currentPage,
+        });
+      } else {
+        this.showNoResultsMessage();
+      }
+    } catch (error) {
+      console.error("搜尋失敗:", error);
+      this.showErrorMessage("搜尋失敗，請稍後再試");
+    }
   },
 
   // 錯誤處理
@@ -435,6 +504,8 @@ const ArticleManager = {
 };
 
 // 初始化
-$(document).ready(() => {
+$(document).ready(async () => {
+  // 確保 UserManager 已初始化
+  await UserManager.init();
   ArticleManager.init();
 });

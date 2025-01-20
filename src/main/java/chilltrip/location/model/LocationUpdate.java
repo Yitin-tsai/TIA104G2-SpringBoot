@@ -29,7 +29,7 @@ public class LocationUpdate extends HttpServlet {
 		String location_name = req.getParameter("location_name");
 
 		LocationVO location = new LocationVO();
-		location.setLocationid(location_id);
+		location.setLocationId(location_id);
 		location.setAddress(address);
 		location.setComments_number(comments_number);
 		location.setScore(score);

@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -112,6 +113,40 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 			throw new RuntimeException("A database error occured. " + se.getMessage());
 		}
 	}
+	
+	
+	//返回自增主鍵
+	@Override
+	public Integer insertAndGetPk (LocationVO locationVO) {
+	    Integer generatedId = null;
+	    try (PreparedStatement pstmt = getConnection().prepareStatement(INSERT_STMT, 
+	            Statement.RETURN_GENERATED_KEYS)) {  // 請求返回生成的鍵
+	            
+	        pstmt.setString(1, locationVO.getGooglePlaceId());
+	        pstmt.setString(2, locationVO.getLocation_name());
+	        pstmt.setString(3, locationVO.getAddress());
+	        pstmt.setBigDecimal(4, locationVO.getLatitude());
+	        pstmt.setBigDecimal(5, locationVO.getLongitude());
+	        pstmt.setFloat(6, locationVO.getScore());
+	        pstmt.setInt(7, locationVO.getRatingCount());
+	        pstmt.setInt(8, locationVO.getComments_number());
+	        
+	        pstmt.executeUpdate();
+	        
+	        // 獲取自動生成的主鍵
+	        try (ResultSet rs = pstmt.getGeneratedKeys()) {
+	            if (rs.next()) {
+	                generatedId = rs.getInt(1);
+	                locationVO.setLocationId(generatedId);  // 設置 ID 到 VO 物件
+	            }
+	        }
+	        
+	        return generatedId;
+	        
+	    } catch (SQLException se) {
+	        throw new RuntimeException("A database error occured. " + se.getMessage());
+	    }
+	}
 
 	@Override
 	public void update(LocationVO locationVO) {
@@ -125,7 +160,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	        pstmt.setFloat(6, locationVO.getScore());
 	        pstmt.setInt(7, locationVO.getRatingCount());
 	        pstmt.setInt(8, locationVO.getComments_number());
-	        pstmt.setInt(9, locationVO.getLocationid());
+	        pstmt.setInt(9, locationVO.getLocationId());
 	        pstmt.executeUpdate();
 	    } catch (SQLException se) {
 	        throw new RuntimeException("A database error occured. " + se.getMessage());
@@ -155,7 +190,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	         ResultSet rs = pstmt.executeQuery()) {
 	        while (rs.next()) {
 	            LocationVO locationVO = new LocationVO();
-	            locationVO.setLocationid(rs.getInt("location_id"));
+	            locationVO.setLocationId(rs.getInt("location_id"));
 	            locationVO.setGooglePlaceId(rs.getString("google_place_id"));
 	            locationVO.setLocation_name(rs.getString("location_name"));
 	            locationVO.setAddress(rs.getString("address"));
@@ -208,7 +243,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 	        try (ResultSet rs = pstmt.executeQuery()) {
 	            if (rs.next()) {
 	                locationVO = new LocationVO();
-	                locationVO.setLocationid(rs.getInt("location_id"));
+	                locationVO.setLocationId(rs.getInt("location_id"));
 	                locationVO.setGooglePlaceId(rs.getString("google_place_id"));
 	                locationVO.setLocation_name(rs.getString("location_name"));
 	                locationVO.setAddress(rs.getString("address"));
@@ -266,7 +301,7 @@ public class LocationDAOImplJDBC implements LocationDAO, AutoCloseable {
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
 					locationVO = new LocationVO();
-					locationVO.setLocationid(rs.getInt("location_id"));
+					locationVO.setLocationId(rs.getInt("location_id"));
 					locationVO.setGooglePlaceId(rs.getString("google_place_id"));
 					locationVO.setLocation_name(rs.getString("location_name"));
 					locationVO.setAddress(rs.getString("address"));

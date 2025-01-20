@@ -55,7 +55,7 @@ public class TripController {
 		
 		System.out.println("Received request - page: " + page + ", size: " + size);
 	    if (body != null) {
-	        System.out.println("Request body: " + body);
+//	        System.out.println("Request body: " + body);
 	    }
 	    
 	    try {

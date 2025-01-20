@@ -145,7 +145,7 @@
         padding-bottom: 40%; /* 固定寬高比 */
         margin-bottom: 30px;
         background: #f0f0f0;
-        
+
         overflow: hidden;
       }
 
@@ -681,6 +681,41 @@
     </style>
   </head>
   <body>
+    <!------網站header------>
+    <header>
+      <nav class="top-nav">
+        <div class="nav-left">
+          <a href="#" class="nav-item nav-link" id="nav-go">Go！行程</a>
+          <a href="#" class="nav-item nav-link" id="nav-mygo">My！行程</a>
+        </div>
+        <div class="nav-center">
+          <a href="/TIA104G2-SpringBoot/loggedin">
+            <img
+              th:src="@{/img/logo_black.png}"
+              alt="Chill Trip"
+              style="width: 150px; height: auto"
+            />
+          </a>
+        </div>
+        <div class="nav-right">
+          <a
+            href="/TIA104G2-SpringBoot/login"
+            class="nav-item nav-link active"
+            id="nav-login"
+            style="color: #ff6600"
+            >登入／註冊</a
+          >
+          <a href="#" class="nav-item nav-link" id="nav-profile"
+            >會員基本資料</a
+          >
+          <a href="#" class="nav-item nav-link" id="nav-support">客服中心</a>
+          <button id="goToChatRoom" class="chat-btn">
+            <i class="fas fa-comments"></i>
+            聊天室
+          </button>
+        </div>
+      </nav>
+    </header>
 
     <!-- 文章標籤 -->
     <div class="article-container">

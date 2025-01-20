@@ -22,7 +22,6 @@ const filterOptions = {
     sortOptions: [
       { value: "publish-time", label: "發表時間" },
       { value: "popularity", label: "熱門程度" },
-      { value: "likes", label: "點讚數" },
       { value: "saves", label: "收藏數" },
       { value: "rating", label: "評分" },
     ],
@@ -32,7 +31,6 @@ const filterOptions = {
     sortOptions: [
       { value: "publish-time", label: "發表時間" },
       { value: "popularity", label: "熱門程度" },
-      { value: "likes", label: "點讚數" },
       { value: "saves", label: "收藏數" },
       { value: "rating", label: "評分" },
     ],

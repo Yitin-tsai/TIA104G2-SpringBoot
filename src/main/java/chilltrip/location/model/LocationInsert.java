@@ -31,7 +31,7 @@ public class LocationInsert extends HttpServlet {
 //		System.out.println(location_id+address+create_time+comments_number+score+location_name);
 
 		LocationVO location = new LocationVO();
-		location.setLocationid(location_id);
+		location.setLocationId(location_id);
 		location.setAddress(address);
 		location.setComments_number(comments_number);
 		location.setScore(score);
