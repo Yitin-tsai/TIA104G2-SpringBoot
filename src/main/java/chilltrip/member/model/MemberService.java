@@ -180,7 +180,7 @@ public class MemberService {
 
 	public byte[] getDefaultAvatar() {
 	    try {
-	        Resource resource = resourceLoader.getResource("classpath:static/frontend/img/avatar.png");
+	    	Resource resource = resourceLoader.getResource("classpath:static/img/avatar.png");
 	        if (!resource.exists()) {
 	            throw new IOException("預設大頭照未找到！");
 	        }
