@@ -389,6 +389,38 @@
         color: #666;
         font-size: 14px;
       }
+
+
+      .chat-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background-color: #f17575; /* 使用粉紅色系 */
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .chat-btn i {
+        font-size: 18px;
+      }
+
+      .chat-btn:hover {
+        background-color: #c5332b; /* 深紅色 */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      /* 點擊效果 */
+      .chat-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
     </style>
   </head>
 
@@ -405,7 +437,7 @@
             <a href="#" class="nav-item nav-link" id="nav-profile">活動管理</a>
           </div>
           <div class="nav-center">
-            <a href="#">
+            <a href="/TIA104G2-SpringBoot/home">
               <img
                 id="ChillTrip_logo"
                 src="./img/logo_black.png"
